@@ -1,23 +1,26 @@
 package io.simplelogin.android.module.login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
+import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
-import kotlinx.android.synthetic.main.activity_login.view.*
+import io.simplelogin.android.utils.enums.SocialService
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
@@ -42,8 +45,11 @@ class LoginActivity : BaseAppCompatActivity() {
         LoginManager.getInstance().logInWithReadPermissions(this, setOf("email"))
         LoginManager.getInstance().registerCallback(facebookCallbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(result: LoginResult?) {
-                result?.let {
-                    Log.d("fb", it.accessToken.token)
+
+                if (result?.accessToken?.token != null) {
+                    socialLogin(SocialService.FACEBOOK, result.accessToken?.token!!)
+                } else {
+                    Toast.makeText(this@LoginActivity, "Facebook access token is null", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -60,6 +66,7 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private fun loginWithGoogle() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestServerAuthCode(getString(R.string.google_web_client_id))
             .requestIdToken(getString(R.string.google_web_client_id))
             .requestEmail()
             .build()
@@ -83,9 +90,21 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            Log.d("google", account?.idToken)
+
+            if (account?.serverAuthCode != null) {
+                socialLogin(SocialService.GOOGLE, account.serverAuthCode!!)
+            } else {
+                Toast.makeText(this, "Google access token is null", Toast.LENGTH_SHORT).show()
+            }
+
         } catch (e: ApiException) {
             Toast.makeText(this, "Google sign in failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun socialLogin(service: SocialService, accessToken: String) {
+        val deviceName = Build.DEVICE
+
+        SLApiService.socialLogin(service, accessToken, deviceName)
     }
 }
