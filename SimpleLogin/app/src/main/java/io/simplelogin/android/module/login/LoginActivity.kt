@@ -21,16 +21,19 @@ import com.google.android.gms.tasks.Task
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
+import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SocialService
+import io.simplelogin.android.utils.enums.VerificationMode
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
-        private const val RC_SIGN_IN = 0 // Request code for Google Sign In
-        const val USER_LOGIN = "userLogin"
+        private const val RC_GOOGLE_SIGN_IN = 0 // Request code for Google Sign In
+        private const val RC_VERIFICATION = 1
     }
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var facebookCallbackManager: CallbackManager
 
@@ -45,7 +48,9 @@ class LoginActivity : BaseAppCompatActivity() {
         // Login
         binding.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateLoginButtonState()
             }
@@ -53,7 +58,9 @@ class LoginActivity : BaseAppCompatActivity() {
 
         binding.passwordTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateLoginButtonState()
             }
@@ -69,28 +76,65 @@ class LoginActivity : BaseAppCompatActivity() {
 
     override fun onBackPressed() = Unit
 
-    private fun loginWithFacebook() {
-        facebookCallbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance().logInWithReadPermissions(this, setOf("email"))
-        LoginManager.getInstance().registerCallback(facebookCallbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(result: LoginResult?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-                if (result?.accessToken?.token != null) {
-                    socialLogin(SocialService.FACEBOOK, result.accessToken?.token!!)
-                } else {
-                    Toast.makeText(this@LoginActivity, "Facebook access token is null", Toast.LENGTH_SHORT).show()
+        when (requestCode) {
+            RC_GOOGLE_SIGN_IN -> {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleGoogleSignInResult(task)
+            }
+
+            RC_VERIFICATION -> {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
+                        apiKey?.let { finalizeLogin(it) }
+                    }
+
+                    else -> Unit
                 }
             }
 
-            override fun onCancel() {
-                Toast.makeText(this@LoginActivity, "Facebook login cancelled", Toast.LENGTH_SHORT).show()
-            }
+            else -> facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
-            override fun onError(error: FacebookException?) {
-                Toast.makeText(this@LoginActivity, "Facebook login failed: ${error.toString()}", Toast.LENGTH_SHORT).show()
-            }
+    private fun loginWithFacebook() {
+        facebookCallbackManager = CallbackManager.Factory.create()
+        LoginManager.getInstance().logInWithReadPermissions(this, setOf("email"))
+        LoginManager.getInstance()
+            .registerCallback(facebookCallbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
 
-        })
+                    if (result?.accessToken?.token != null) {
+                        socialLogin(SocialService.FACEBOOK, result.accessToken?.token!!)
+                    } else {
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Facebook access token is null",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Facebook login cancelled",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onError(error: FacebookException?) {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Facebook login failed: ${error.toString()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
     }
 
     private fun loginWithGoogle() {
@@ -101,19 +145,7 @@ class LoginActivity : BaseAppCompatActivity() {
             .build()
 
         val googleSignInClient = GoogleSignIn.getClient(this, gso)
-        startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            RC_SIGN_IN -> {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleGoogleSignInResult(task)
-            }
-            else -> facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
-        }
+        startActivityForResult(googleSignInClient.signInIntent, RC_GOOGLE_SIGN_IN)
     }
 
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -127,7 +159,8 @@ class LoginActivity : BaseAppCompatActivity() {
             }
 
         } catch (e: ApiException) {
-            Toast.makeText(this, "Google sign in failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Google sign in failed: ${e.localizedMessage}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -151,7 +184,7 @@ class LoginActivity : BaseAppCompatActivity() {
                     if (error != null) {
                         toastError(error)
                     } else if (userLogin != null) {
-                        finalizeLogin(userLogin)
+                        processUserLogin(userLogin)
                     }
                 }
             }
@@ -168,16 +201,29 @@ class LoginActivity : BaseAppCompatActivity() {
                 if (error != null) {
                     toastError(error)
                 } else if (userLogin != null) {
-                    finalizeLogin(userLogin)
+                    processUserLogin(userLogin)
                 }
             }
         }
     }
 
-    private fun finalizeLogin(userLogin: UserLogin) {
-        val returnIntent = Intent()
-        returnIntent.putExtra(USER_LOGIN, userLogin)
-        setResult(Activity.RESULT_OK, returnIntent)
+    private fun processUserLogin(userLogin: UserLogin) {
+        when (userLogin.mfaEnabled) {
+            true -> userLogin.mfaKey?.let { mfaKey ->
+                val verificationIntent = Intent(this, VerificationActivity::class.java)
+                verificationIntent.putExtra(
+                    VerificationActivity.MFA_MODE,
+                    VerificationMode.Mfa(mfaKey)
+                )
+                startActivityForResult(verificationIntent, RC_VERIFICATION)
+            }
+
+            false -> userLogin.apiKey?.let { finalizeLogin(it) }
+        }
+    }
+
+    private fun finalizeLogin(apiKey: String) {
+        SLSharedPreferences.setApiKey(this, apiKey)
         finish()
     }
 }
