@@ -3,18 +3,18 @@ package io.simplelogin.android.module.login
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
@@ -36,6 +36,27 @@ class LoginActivity : BaseAppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Login
+        binding.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateLoginButtonState()
+            }
+        })
+
+        binding.passwordTextField.editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateLoginButtonState()
+            }
+        })
+
+        binding.loginButton.isEnabled = false // disable login button by default
+        binding.loginButton.setOnClickListener { login() }
+
+        // Social login
         binding.facebookButton.setOnClickListener { loginWithFacebook() }
         binding.googleButton.setOnClickListener { loginWithGoogle() }
     }
@@ -102,11 +123,32 @@ class LoginActivity : BaseAppCompatActivity() {
         }
     }
 
+    private fun updateLoginButtonState() {
+        val email = binding.emailTextField.editText?.text.toString()
+        val password = binding.passwordTextField.editText?.text.toString()
+
+        binding.loginButton.isEnabled = (email != "") && (password != "")
+    }
+
+    private fun login() {
+        val email = binding.emailTextField.editText?.text.toString()
+        val password = binding.passwordTextField.editText?.text.toString()
+        val deviceName = Build.DEVICE
+
+        if (email != "" && password != "") {
+            SLApiService.login(email, password, deviceName) { userLogin, error ->
+
+            }
+        } else {
+            Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun socialLogin(service: SocialService, accessToken: String) {
         val deviceName = Build.DEVICE
 
         SLApiService.socialLogin(service, accessToken, deviceName) { userLogin, error ->
-            
+
         }
     }
 }
