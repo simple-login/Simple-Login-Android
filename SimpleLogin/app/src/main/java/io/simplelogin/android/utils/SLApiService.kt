@@ -1,12 +1,14 @@
 package io.simplelogin.android.utils
 
 import android.util.Log
+import com.google.gson.Gson
 import io.simplelogin.android.BuildConfig
+import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.SocialService
+import io.simplelogin.android.utils.model.UserLogin
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import java.io.IOException
 
 private val BASE_URL = when (BuildConfig.BUILD_TYPE == "debug") {
@@ -19,7 +21,7 @@ private val client = OkHttpClient()
 object SLApiService {
     private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
 
-    fun socialLogin(socialService: SocialService, accessToken: String, device: String) {
+    fun socialLogin(socialService: SocialService, accessToken: String, device: String, completion: (userLogin: UserLogin?, error: SLError?) -> Unit) {
         val body = """
             {
                 "${socialService.serviceName}_token": "$accessToken",
@@ -39,17 +41,27 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> {
-                        Log.d("auth", "${response.code}")
-                        Log.d("auth", response.body?.string())
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val userLogin = Gson().fromJson(jsonString, UserLogin::class.java)
+                            if (userLogin != null) {
+                                completion(userLogin, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("UserLogin"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
                     }
 
                     400 -> {
                         // Bad request
-                        Log.d("auth", "${response.code}")
+                        completion(null, SLError.BadRequest("wrong token format"))
                     }
 
                     else -> {
-                        Log.d("auth", "${response.code}")
+                        completion(null, SLError.UnknownError("error code ${response.code}"))
                     }
                 }
             }

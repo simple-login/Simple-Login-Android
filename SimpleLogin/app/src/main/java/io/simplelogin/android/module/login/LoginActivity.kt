@@ -105,6 +105,8 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun socialLogin(service: SocialService, accessToken: String) {
         val deviceName = Build.DEVICE
 
-        SLApiService.socialLogin(service, accessToken, deviceName)
+        SLApiService.socialLogin(service, accessToken, deviceName) { userLogin, error ->
+            
+        }
     }
 }
