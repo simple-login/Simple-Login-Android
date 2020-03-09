@@ -21,6 +21,8 @@ import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SocialService
+import io.simplelogin.android.utils.extension.*
+import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
@@ -131,13 +133,25 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private fun login() {
+        dismissKeyboard()
+
         val email = binding.emailTextField.editText?.text.toString()
         val password = binding.passwordTextField.editText?.text.toString()
         val deviceName = Build.DEVICE
 
         if (email != "" && password != "") {
             SLApiService.login(email, password, deviceName) { userLogin, error ->
-
+                runOnUiThread {
+                    if (error != null) {
+                        toastError(error)
+                    } else if (userLogin != null) {
+                        if (userLogin.mfaEnabled) {
+                            startVerificationActivity(userLogin)
+                        } else {
+                            startHomeActivity(userLogin)
+                        }
+                    }
+                }
             }
         } else {
             Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
@@ -148,7 +162,25 @@ class LoginActivity : BaseAppCompatActivity() {
         val deviceName = Build.DEVICE
 
         SLApiService.socialLogin(service, accessToken, deviceName) { userLogin, error ->
-
+            runOnUiThread {
+                if (error != null) {
+                    toastError(error)
+                } else if (userLogin != null) {
+                    if (userLogin.mfaEnabled) {
+                        startVerificationActivity(userLogin)
+                    } else {
+                        startHomeActivity(userLogin)
+                    }
+                }
+            }
         }
+    }
+
+    private fun startVerificationActivity(userLogin: UserLogin) {
+
+    }
+
+    private fun startHomeActivity(userLogin: UserLogin) {
+
     }
 }
