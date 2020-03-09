@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -37,6 +38,9 @@ class LoginActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Change status bar background color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
 
         // Login
         binding.emailTextField.editText?.addTextChangedListener(object : TextWatcher {

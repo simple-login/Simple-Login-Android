@@ -20,16 +20,24 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     private lateinit var binding: ActivityStartUpBinding
+    private var waitingForResult = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStartUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (waitingForResult) return
 
         val apiKey = SLSharedPreferences.getApiKey(this)
         if (apiKey == null) {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivityForResult(loginIntent, RC_LOGIN)
+            waitingForResult = true
         } else {
             startHomeActivity()
         }
@@ -63,7 +71,7 @@ class StartupActivity : BaseAppCompatActivity()  {
                             }
                         }
                     }
-                    else -> Unit
+                    else -> waitingForResult = false
                 }
             }
 
@@ -77,11 +85,11 @@ class StartupActivity : BaseAppCompatActivity()  {
                         startHomeActivity()
                     }
 
-                    else -> Unit
+                    else -> waitingForResult = false
                 }
             }
 
-            else -> Unit
+            else -> waitingForResult = false
         }
     }
 

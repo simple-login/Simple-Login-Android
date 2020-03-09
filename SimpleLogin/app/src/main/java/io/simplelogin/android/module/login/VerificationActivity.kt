@@ -1,5 +1,6 @@
 package io.simplelogin.android.module.login
 
+import android.app.Activity
 import android.os.Bundle
 import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -16,10 +17,13 @@ class VerificationActivity : BaseAppCompatActivity() {
         binding = ActivityVerificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mfaKey = intent.getStringExtra(MFA_KEY)
-        mfaKey?.let {
-            binding.textView.text = mfaKey
+        binding.cancelButton.setOnClickListener {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
         }
+
+        val mfaKey = intent.getStringExtra(MFA_KEY)
+
     }
 
     override fun onBackPressed() = Unit

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "io.simplelogin.android"
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
