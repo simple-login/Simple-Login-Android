@@ -21,4 +21,6 @@ class VerificationActivity : BaseAppCompatActivity() {
             binding.textView.text = mfaKey
         }
     }
+
+    override fun onBackPressed() = Unit
 }

@@ -63,6 +63,8 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.googleButton.setOnClickListener { loginWithGoogle() }
     }
 
+    override fun onBackPressed() = Unit
+
     private fun loginWithFacebook() {
         facebookCallbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().logInWithReadPermissions(this, setOf("email"))

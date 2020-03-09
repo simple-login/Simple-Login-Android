@@ -12,4 +12,6 @@ class HomeActivity : BaseAppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
+    override fun onBackPressed() = Unit
 }
