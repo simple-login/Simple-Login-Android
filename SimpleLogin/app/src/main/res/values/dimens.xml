@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbarTitleSize">18sp</dimen>
+    <dimen name="verificationCodeTextSize">20sp</dimen>
+    <dimen name="numPadTextSize">35sp</dimen>
 </resources>

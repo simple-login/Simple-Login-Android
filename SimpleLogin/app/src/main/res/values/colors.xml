@@ -3,8 +3,10 @@
     <color name="colorPrimary">#EE307C</color>
     <color name="colorPrimaryDark">@color/colorLightGray</color>
     <color name="colorAccent">#BE1E2D</color>
+    <color name="colorNegative">#FF3B30</color>
     <color name="colorGoogle">#C13424</color>
     <color name="colorFacebook">#2D4374</color>
     <color name="colorLightGray">#F7F7F7</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorText">#000000</color>
 </resources>
