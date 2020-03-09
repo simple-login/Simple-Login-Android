@@ -8,6 +8,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/rootLinearLayout"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -45,7 +46,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"/>
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -93,22 +94,32 @@
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="Sign in with Google"
                 android:backgroundTint="@color/colorGoogle"
-                app:icon="@drawable/ic_social_google_32dp"
-                android:gravity="left|center_vertical"/>
+                android:gravity="left|center_vertical"
+                android:text="Sign in with Google"
+                app:icon="@drawable/ic_social_google_32dp" />
 
             <Button
                 android:id="@+id/facebookButton"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="Sign in with Facebook"
                 android:backgroundTint="@color/colorFacebook"
-                app:icon="@drawable/ic_social_facebook_32dp"
-                android:gravity="left|center_vertical"/>
+                android:gravity="left|center_vertical"
+                android:text="Sign in with Facebook"
+                app:icon="@drawable/ic_social_facebook_32dp" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

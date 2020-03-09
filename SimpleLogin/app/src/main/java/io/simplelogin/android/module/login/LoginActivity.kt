@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.facebook.CallbackManager
@@ -179,8 +180,10 @@ class LoginActivity : BaseAppCompatActivity() {
         val deviceName = Build.DEVICE
 
         if (email != "" && password != "") {
+            setLoading(true)
             SLApiService.login(email, password, deviceName) { userLogin, error ->
                 runOnUiThread {
+                    setLoading(false)
                     if (error != null) {
                         toastError(error)
                     } else if (userLogin != null) {
@@ -195,14 +198,29 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private fun socialLogin(service: SocialService, accessToken: String) {
         val deviceName = Build.DEVICE
-
+        setLoading(true)
         SLApiService.socialLogin(service, accessToken, deviceName) { userLogin, error ->
             runOnUiThread {
+                setLoading(false)
                 if (error != null) {
                     toastError(error)
                 } else if (userLogin != null) {
                     processUserLogin(userLogin)
                 }
+            }
+        }
+    }
+
+    private fun setLoading(loading: Boolean) {
+        when (loading) {
+            true -> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.rootLinearLayout.alpha = 0.3f
+            }
+
+            false -> {
+                binding.progressBar.visibility = View.GONE
+                binding.rootLinearLayout.alpha = 1f
             }
         }
     }
