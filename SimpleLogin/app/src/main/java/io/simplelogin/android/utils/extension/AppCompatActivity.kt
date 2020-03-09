@@ -16,3 +16,7 @@ fun AppCompatActivity.dismissKeyboard() {
 fun AppCompatActivity.toastError(error: SLError) {
     Toast.makeText(this, error.description, Toast.LENGTH_SHORT).show()
 }
+
+fun AppCompatActivity.toastApiKeyIsNull() {
+    Toast.makeText(this, "API key is null", Toast.LENGTH_SHORT).show()
+}

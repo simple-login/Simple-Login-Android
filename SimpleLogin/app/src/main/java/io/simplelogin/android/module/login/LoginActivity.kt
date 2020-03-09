@@ -1,5 +1,6 @@
 package io.simplelogin.android.module.login
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -26,11 +27,10 @@ import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
-        lateinit var binding: ActivityLoginBinding
-            private set
         private const val RC_SIGN_IN = 0 // Request code for Google Sign In
+        const val USER_LOGIN = "userLogin"
     }
-
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var facebookCallbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,11 +145,7 @@ class LoginActivity : BaseAppCompatActivity() {
                     if (error != null) {
                         toastError(error)
                     } else if (userLogin != null) {
-                        if (userLogin.mfaEnabled) {
-                            startVerificationActivity(userLogin)
-                        } else {
-                            startHomeActivity(userLogin)
-                        }
+                        finalizeLogin(userLogin)
                     }
                 }
             }
@@ -166,21 +162,16 @@ class LoginActivity : BaseAppCompatActivity() {
                 if (error != null) {
                     toastError(error)
                 } else if (userLogin != null) {
-                    if (userLogin.mfaEnabled) {
-                        startVerificationActivity(userLogin)
-                    } else {
-                        startHomeActivity(userLogin)
-                    }
+                    finalizeLogin(userLogin)
                 }
             }
         }
     }
 
-    private fun startVerificationActivity(userLogin: UserLogin) {
-
-    }
-
-    private fun startHomeActivity(userLogin: UserLogin) {
-
+    private fun finalizeLogin(userLogin: UserLogin) {
+        val returnIntent = Intent()
+        returnIntent.putExtra(USER_LOGIN, userLogin)
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 }

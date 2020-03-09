@@ -5,10 +5,7 @@ import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 
 class HomeActivity : BaseAppCompatActivity() {
-    companion object {
-        lateinit var binding: ActivityHomeBinding
-            private set
-    }
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
