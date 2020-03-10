@@ -2,6 +2,7 @@ package io.simplelogin.android.module.startup
 
 import android.content.Intent
 import android.os.Bundle
+import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityStartUpBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.module.login.LoginActivity
@@ -28,6 +29,7 @@ class StartupActivity : BaseAppCompatActivity()  {
         }
 
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 
     override fun onBackPressed() = Unit

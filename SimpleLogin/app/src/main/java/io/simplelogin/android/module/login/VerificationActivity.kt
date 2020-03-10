@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -40,6 +41,13 @@ class VerificationActivity : BaseAppCompatActivity() {
 
         reset()
         setUpClickListeners()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isFinishing) {
+            overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
+        }
     }
 
     private fun getVerificationMode() : VerificationMode {

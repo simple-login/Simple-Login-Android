@@ -33,6 +33,7 @@ class LoginActivity : BaseAppCompatActivity() {
     companion object {
         private const val RC_GOOGLE_SIGN_IN = 0 // Request code for Google Sign In
         private const val RC_VERIFICATION = 1
+        private const val RC_SIGN_UP = 2
     }
 
     private lateinit var binding: ActivityLoginBinding
@@ -70,6 +71,13 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.loginButton.isEnabled = false // disable login button by default
         binding.loginButton.setOnClickListener { login() }
 
+        // Sign up
+        binding.signUpButton.setOnClickListener {
+            val signUpIntent = Intent(this, SignUpActivity::class.java)
+            startActivityForResult(signUpIntent, RC_SIGN_UP)
+            overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
+        }
+
         // Social login
         binding.facebookButton.setOnClickListener { loginWithFacebook() }
         binding.googleButton.setOnClickListener { loginWithGoogle() }
@@ -91,6 +99,18 @@ class LoginActivity : BaseAppCompatActivity() {
                     Activity.RESULT_OK -> {
                         val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
                         apiKey?.let { finalizeLogin(it) }
+                    }
+
+                    else -> Unit
+                }
+            }
+
+            RC_SIGN_UP -> {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        val email = data?.getStringExtra(SignUpActivity.EMAIL)
+                        val password = data?.getStringExtra(SignUpActivity.PASSWORD)
+                        Toast.makeText(this, "email: $email\npassword: $password", Toast.LENGTH_SHORT).show()
                     }
 
                     else -> Unit
@@ -234,6 +254,7 @@ class LoginActivity : BaseAppCompatActivity() {
                     VerificationMode.Mfa(mfaKey)
                 )
                 startActivityForResult(verificationIntent, RC_VERIFICATION)
+                overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
             }
 
             false -> userLogin.apiKey?.let { finalizeLogin(it) }

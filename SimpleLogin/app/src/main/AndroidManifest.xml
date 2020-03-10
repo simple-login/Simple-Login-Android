@@ -21,6 +21,7 @@
         <activity android:name=".module.home.HomeActivity"/>
         <activity android:name=".module.login.LoginActivity"/>
         <activity android:name=".module.login.VerificationActivity"/>
+        <activity android:name=".module.login.SignUpActivity"/>
 
         <!--Facebook SDK-->
         <meta-data android:name="com.facebook.sdk.ApplicationId"
