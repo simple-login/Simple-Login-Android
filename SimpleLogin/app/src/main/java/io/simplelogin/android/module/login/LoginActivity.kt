@@ -32,8 +32,9 @@ import io.simplelogin.android.utils.model.UserLogin
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
         private const val RC_GOOGLE_SIGN_IN = 0 // Request code for Google Sign In
-        private const val RC_VERIFICATION = 1
-        private const val RC_SIGN_UP = 2
+        private const val RC_MFA_VERIFICATION = 1
+        private const val RC_EMAIL_VERIFICATION = 2
+        private const val RC_SIGN_UP = 3
     }
 
     private lateinit var binding: ActivityLoginBinding
@@ -94,23 +95,28 @@ class LoginActivity : BaseAppCompatActivity() {
                 handleGoogleSignInResult(task)
             }
 
-            RC_VERIFICATION -> {
-                when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
-                        apiKey?.let { finalizeLogin(it) }
-                    }
+            RC_MFA_VERIFICATION -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
+                    apiKey?.let { finalizeLogin(it) }
+                }
+            }
 
-                    else -> Unit
+            RC_EMAIL_VERIFICATION -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val verificationMode = data?.getParcelableExtra<VerificationMode.AccountActivation>(VerificationActivity.ACCOUNT)
+                    binding.emailTextField.editText?.setText(verificationMode?.email)
+                    binding.passwordTextField.editText?.setText(verificationMode?.password)
+                    login()
                 }
             }
 
             RC_SIGN_UP -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        val email = data?.getStringExtra(SignUpActivity.EMAIL)
-                        val password = data?.getStringExtra(SignUpActivity.PASSWORD)
-                        Toast.makeText(this, "email: $email\npassword: $password", Toast.LENGTH_SHORT).show()
+                        val email = data?.getStringExtra(SignUpActivity.EMAIL) ?: ""
+                        val password = data?.getStringExtra(SignUpActivity.PASSWORD) ?: ""
+                        signUp(email, password)
                     }
 
                     else -> Unit
@@ -248,13 +254,7 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun processUserLogin(userLogin: UserLogin) {
         when (userLogin.mfaEnabled) {
             true -> userLogin.mfaKey?.let { mfaKey ->
-                val verificationIntent = Intent(this, VerificationActivity::class.java)
-                verificationIntent.putExtra(
-                    VerificationActivity.MFA_MODE,
-                    VerificationMode.Mfa(mfaKey)
-                )
-                startActivityForResult(verificationIntent, RC_VERIFICATION)
-                overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
+                startVerificationActivity(VerificationMode.Mfa(mfaKey))
             }
 
             false -> userLogin.apiKey?.let { finalizeLogin(it) }
@@ -264,5 +264,46 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun finalizeLogin(apiKey: String) {
         SLSharedPreferences.setApiKey(this, apiKey)
         finish()
+    }
+
+    private fun signUp(email: String, password: String) {
+        setLoading(true)
+
+        SLApiService.signUp(email, password) { error ->
+            runOnUiThread {
+                setLoading(false)
+                if (error != null) {
+                    toastError(error)
+                } else {
+                    startVerificationActivity(VerificationMode.AccountActivation(email, password))
+                }
+            }
+        }
+    }
+
+    private fun startVerificationActivity(verificationMode: VerificationMode) {
+        val verificationIntent = Intent(this, VerificationActivity::class.java)
+
+        when (verificationMode) {
+            is VerificationMode.Mfa -> {
+                verificationIntent.putExtra(
+                    VerificationActivity.MFA_MODE,
+                    verificationMode
+                )
+
+                startActivityForResult(verificationIntent, RC_MFA_VERIFICATION)
+            }
+
+            is VerificationMode.AccountActivation -> {
+                verificationIntent.putExtra(
+                    VerificationActivity.ACCOUNT_ACTIVATION_MODE,
+                    verificationMode
+                )
+
+                startActivityForResult(verificationIntent, RC_EMAIL_VERIFICATION)
+            }
+        }
+
+        overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 }

@@ -10,13 +10,13 @@ import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.VerificationMode
-import io.simplelogin.android.utils.model.ApiKey
 
 class VerificationActivity : BaseAppCompatActivity() {
     companion object {
         const val MFA_MODE = "mfaMode"
         const val ACCOUNT_ACTIVATION_MODE = "accountActivationMode"
         const val API_KEY = "apiKey"
+        const val ACCOUNT = "account"
     }
     private lateinit var binding: ActivityVerificationBinding
     private lateinit var verificationMode: VerificationMode
@@ -171,22 +171,32 @@ class VerificationActivity : BaseAppCompatActivity() {
                             showError(true, error.description)
                             reset()
                         } else if (apiKey != null) {
-                            finalizeVerification(apiKey)
+                            val returnIntent = Intent()
+                            returnIntent.putExtra(API_KEY, apiKey.value)
+                            setResult(Activity.RESULT_OK, returnIntent)
+                            finish()
                         }
                     }
                 }
             }
 
             is VerificationMode.AccountActivation -> {
-
+                setLoading(true)
+                SLApiService.verifyEmail((verificationMode as VerificationMode.AccountActivation).email, code) { error ->
+                    runOnUiThread {
+                        setLoading(false)
+                        if (error != null) {
+                            showError(true, error.description)
+                            reset()
+                        } else {
+                            val returnIntent = Intent()
+                            returnIntent.putExtra(ACCOUNT, (verificationMode as VerificationMode.AccountActivation))
+                            setResult(Activity.RESULT_OK, returnIntent)
+                            finish()
+                        }
+                    }
+                }
             }
         }
-    }
-
-    private fun finalizeVerification(apiKey: ApiKey) {
-        val returnIntent = Intent()
-        returnIntent.putExtra(API_KEY, apiKey.value)
-        setResult(Activity.RESULT_OK, returnIntent)
-        finish()
     }
 }
