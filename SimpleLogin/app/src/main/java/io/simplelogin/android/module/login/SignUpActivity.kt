@@ -3,6 +3,8 @@ package io.simplelogin.android.module.login
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivitySignUpBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -21,7 +23,19 @@ class SignUpActivity : BaseAppCompatActivity() {
 
         binding.cancelButton.setOnClickListener { finish() }
 
+        binding.signUpButton.isEnabled = false
         binding.signUpButton.setOnClickListener { finishWithEmailAndPassword() }
+
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                verifyEnteredEmailAndPassword()
+            }
+        }
+
+        binding.emailTextField.editText?.addTextChangedListener(textWatcher)
+        binding.passwordTextField.editText?.addTextChangedListener(textWatcher)
     }
 
     override fun onPause() {
@@ -29,6 +43,37 @@ class SignUpActivity : BaseAppCompatActivity() {
         if (isFinishing) {
             overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
         }
+    }
+
+    private fun verifyEnteredEmailAndPassword() {
+        // Verify email
+        val email = binding.emailTextField.editText?.text.toString()
+        val emailRegex = Regex("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
+        val isValidEmail = when (email.count()) {
+            0 -> false
+            else -> emailRegex.matches(email)
+        }
+
+        if (isValidEmail) {
+            binding.emailTextField.error = null
+        } else {
+            binding.emailTextField.error = "Invalid email"
+        }
+
+        // Verify password
+        val password = binding.passwordTextField.editText?.text.toString()
+        val isValidPassword = when (password.count()) {
+            in 0..7 -> false
+            else -> true
+        }
+
+        if (isValidPassword) {
+            binding.passwordTextField.error = null
+        } else {
+            binding.passwordTextField.error = "Minimum 8 characters is required"
+        }
+
+        binding.signUpButton.isEnabled = isValidEmail && isValidPassword
     }
 
     private fun finishWithEmailAndPassword() {
