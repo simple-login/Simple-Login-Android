@@ -57,63 +57,63 @@
 
                 <TextView
                     android:id="@+id/firstNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
 
                 <TextView
                     android:id="@+id/secondNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
 
                 <TextView
                     android:id="@+id/thirdNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
 
                 <TextView
                     android:id="@+id/fourthNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
 
                 <TextView
                     android:id="@+id/fifthNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
 
                 <TextView
                     android:id="@+id/sixthNumberTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="_"
                     android:textSize="@dimen/verificationCodeTextSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="_" />
             </LinearLayout>
 
             <View
@@ -309,8 +309,8 @@
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:background="@drawable/shape_oval"
-                    android:src="@drawable/ic_cancel_24dp"
-                    android:padding="25dp"/>
+                    android:padding="25dp"
+                    android:src="@drawable/ic_cancel_24dp" />
 
             </LinearLayout>
 
