@@ -1,11 +1,15 @@
 package io.simplelogin.android.module.login
 
 import android.app.Activity
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
 import io.simplelogin.android.databinding.ActivityVerificationBinding
+import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.model.ApiKey
 
 class VerificationActivity : BaseAppCompatActivity() {
     companion object {
@@ -133,7 +137,48 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
     }
 
+    private fun setLoading(loading: Boolean) {
+        when (loading) {
+            true -> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.rootLinearLayout.alpha = 0.3f
+            }
+
+            false -> {
+                binding.progressBar.visibility = View.GONE
+                binding.rootLinearLayout.alpha = 1f
+            }
+        }
+    }
+
     private fun verify(code: String) {
-        Toast.makeText(this, "Verify $code", Toast.LENGTH_SHORT).show()
+        val deviceName = Build.DEVICE
+        when (verificationMode) {
+            is VerificationMode.Mfa -> {
+                setLoading(true)
+                SLApiService.verifyMfa((verificationMode as VerificationMode.Mfa).mfaKey, code, deviceName) { apiKey, error ->
+                    runOnUiThread {
+                        setLoading(false)
+                        if (error != null) {
+                            showError(true, error.description)
+                            reset()
+                        } else if (apiKey != null) {
+                            finalizeVerification(apiKey)
+                        }
+                    }
+                }
+            }
+
+            is VerificationMode.AccountActivation -> {
+
+            }
+        }
+    }
+
+    private fun finalizeVerification(apiKey: ApiKey) {
+        val returnIntent = Intent()
+        returnIntent.putExtra(API_KEY, apiKey.value)
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 }
