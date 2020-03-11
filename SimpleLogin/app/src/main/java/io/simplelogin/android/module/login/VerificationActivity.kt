@@ -5,11 +5,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.extension.toastError
 
 class VerificationActivity : BaseAppCompatActivity() {
     companion object {
@@ -18,6 +22,7 @@ class VerificationActivity : BaseAppCompatActivity() {
         const val API_KEY = "apiKey"
         const val ACCOUNT = "account"
     }
+
     private lateinit var binding: ActivityVerificationBinding
     private lateinit var verificationMode: VerificationMode
     private val dash = "-"
@@ -36,7 +41,8 @@ class VerificationActivity : BaseAppCompatActivity() {
 
         when (verificationMode) {
             is VerificationMode.Mfa -> binding.toolbarTitleText.text = "Enter OTP"
-            is VerificationMode.AccountActivation -> binding.toolbarTitleText.text = "Enter activation code"
+            is VerificationMode.AccountActivation -> binding.toolbarTitleText.text =
+                "Enter activation code"
         }
 
         reset()
@@ -50,13 +56,14 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun getVerificationMode() : VerificationMode {
+    private fun getVerificationMode(): VerificationMode {
         val mfa = intent.getParcelableExtra<VerificationMode.Mfa>(MFA_MODE)
 
         if (mfa != null) return mfa
 
         val accountActivation = intent.getParcelableExtra<VerificationMode.AccountActivation>(
-            ACCOUNT_ACTIVATION_MODE)
+            ACCOUNT_ACTIVATION_MODE
+        )
 
         if (accountActivation != null) return accountActivation
 
@@ -164,7 +171,11 @@ class VerificationActivity : BaseAppCompatActivity() {
         when (verificationMode) {
             is VerificationMode.Mfa -> {
                 setLoading(true)
-                SLApiService.verifyMfa((verificationMode as VerificationMode.Mfa).mfaKey, code, deviceName) { apiKey, error ->
+                SLApiService.verifyMfa(
+                    (verificationMode as VerificationMode.Mfa).mfaKey,
+                    code,
+                    deviceName
+                ) { apiKey, error ->
                     runOnUiThread {
                         setLoading(false)
                         if (error != null) {
@@ -182,19 +193,58 @@ class VerificationActivity : BaseAppCompatActivity() {
 
             is VerificationMode.AccountActivation -> {
                 setLoading(true)
-                SLApiService.verifyEmail((verificationMode as VerificationMode.AccountActivation).email, code) { error ->
+                SLApiService.verifyEmail(
+                    (verificationMode as VerificationMode.AccountActivation).email,
+                    code
+                ) { error ->
                     runOnUiThread {
                         setLoading(false)
                         if (error != null) {
-                            showError(true, error.description)
-                            reset()
+                            when (error) {
+                                is SLError.ReactivationNeeded -> showReactivationAlert((verificationMode as VerificationMode.AccountActivation).email)
+
+                                else -> {
+                                    showError(true, error.description)
+                                    reset()
+                                }
+                            }
+
                         } else {
                             val returnIntent = Intent()
-                            returnIntent.putExtra(ACCOUNT, (verificationMode as VerificationMode.AccountActivation))
+                            returnIntent.putExtra(
+                                ACCOUNT,
+                                (verificationMode as VerificationMode.AccountActivation)
+                            )
                             setResult(Activity.RESULT_OK, returnIntent)
                             finish()
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun showReactivationAlert(email: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Wrong code too many times")
+            .setMessage("Resend a new activation code for \"$email\"")
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Resend me new code") { _, _ ->
+                requestNewCode(email)
+                reset()
+            }
+            .show()
+    }
+
+    private fun requestNewCode(email: String) {
+        setLoading(true)
+        SLApiService.reactivate(email) {error ->
+            runOnUiThread {
+                setLoading(false)
+                if (error != null) {
+                    toastError(error)
+                } else {
+                    Toast.makeText(this, "Check your inbox for new activation code", Toast.LENGTH_SHORT).show()
                 }
             }
         }

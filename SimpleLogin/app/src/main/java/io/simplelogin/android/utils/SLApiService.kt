@@ -255,4 +255,32 @@ object SLApiService {
 
         })
     }
+
+    fun reactivate(email: String, completion: (error: SLError?) -> Unit) {
+        val body = """
+            {
+                "email": "$email"
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/auth/reactivate")
+            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(null)
+
+                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
 }
