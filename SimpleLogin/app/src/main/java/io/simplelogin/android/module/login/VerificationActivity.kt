@@ -1,6 +1,8 @@
 package io.simplelogin.android.module.login
 
 import android.app.Activity
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -54,6 +56,25 @@ class VerificationActivity : BaseAppCompatActivity() {
         if (isFinishing) {
             overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val clipboardManager = (getSystemService(Context.CLIPBOARD_SERVICE) ?: return) as ClipboardManager
+        val clip = clipboardManager.primaryClip ?: return
+        val item = clip.getItemAt(0) ?: return
+        val copiedCharacterSequence = item.text ?: return
+
+        if (copiedCharacterSequence.count() != 6) return
+
+        val copiedString = copiedCharacterSequence.toString()
+        copiedString.toIntOrNull() ?: return
+
+        copiedCharacterSequence.asIterable().forEach { char ->
+            addNumber(char.toString())
+        }
+
+        verify(copiedString)
     }
 
     private fun getVerificationMode(): VerificationMode {
