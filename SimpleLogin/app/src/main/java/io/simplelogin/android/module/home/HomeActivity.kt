@@ -1,15 +1,17 @@
 package io.simplelogin.android.module.home
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R.*
 import io.simplelogin.android.databinding.ActivityHomeBinding
+import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.model.UserInfo
 
@@ -45,6 +47,32 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            id.aliasMenuItem -> {
+                Log.d("item", "alias")
+            }
+
+            id.settingsMenuItem -> {
+                Log.d("item", "settings")
+            }
+
+            id.aboutMenuItem -> {
+                Log.d("item", "about")
+            }
+
+            id.signOutMenuItem -> {
+                // Sign Out
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Please confirm")
+                    .setMessage("You will be signed out")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Yes, sign me out") { _, _ ->
+                        SLSharedPreferences.removeApiKey(this)
+                        finish()
+                    }
+                    .show()
+            }
+        }
         return true
     }
 
