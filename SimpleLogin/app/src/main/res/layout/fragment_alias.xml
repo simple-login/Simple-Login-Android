@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_hamburger">
+            app:navigationIcon="@drawable/ic_hamburger"
+            app:menu="@menu/menu_alias_list">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
@@ -24,7 +25,37 @@
                 android:text="Alias"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold" />
+
+
         </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/allTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/activeTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Active"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/inactiveTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inactive"/>
+
+        </com.google.android.material.tabs.TabLayout>
 
         <View
             android:layout_width="match_parent"
@@ -32,7 +63,7 @@
             android:background="@drawable/shape_toolbar_drop_shadow"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
