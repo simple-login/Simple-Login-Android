@@ -3,12 +3,15 @@ package io.simplelogin.android.module.home
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import io.simplelogin.android.R
 import io.simplelogin.android.R.*
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.utils.SLSharedPreferences
@@ -19,8 +22,10 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     companion object {
         const val USER_INFO = "userInfo"
     }
+
     lateinit var binding: ActivityHomeBinding
         private set
+
     private lateinit var userInfo: UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,17 +52,28 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(id.navHostFragment)
+        val navInflater = navController.navInflater
+
         when (item.itemId) {
             id.aliasMenuItem -> {
-                Log.d("item", "alias")
+                val aliasNavGraph = navInflater.inflate(R.navigation.nav_graph_alias)
+                navController.graph = aliasNavGraph
+                binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
             id.settingsMenuItem -> {
-                Log.d("item", "settings")
+                val settingsNavGraph = navInflater.inflate(R.navigation.nav_graph_settings)
+                navController.graph = settingsNavGraph
+                binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
             id.aboutMenuItem -> {
-                Log.d("item", "about")
+                val aboutNavGraph = navInflater.inflate(R.navigation.nav_graph_about)
+//                graph.addArgument("Data", NavArgument.Builder().setDefaultValue(model).build())
+//                graph.addArgument()
+                navController.graph = aboutNavGraph
+                binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
             id.signOutMenuItem -> {
@@ -84,12 +100,15 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         appVersionMenuItem.isEnabled = false
 
         // Header info
-        val avatarImageView = binding.navigationView.getHeaderView(0).findViewById<ImageView>(id.avatarImageView)
+        val avatarImageView =
+            binding.navigationView.getHeaderView(0).findViewById<ImageView>(id.avatarImageView)
 
-        val usernameTextView = binding.navigationView.getHeaderView(0).findViewById<TextView>(id.usernameTextView)
+        val usernameTextView =
+            binding.navigationView.getHeaderView(0).findViewById<TextView>(id.usernameTextView)
         usernameTextView.text = userInfo.name
 
-        val statusTextView = binding.navigationView.getHeaderView(0).findViewById<TextView>(id.statusTextView)
+        val statusTextView =
+            binding.navigationView.getHeaderView(0).findViewById<TextView>(id.statusTextView)
         if (userInfo.isPremium) {
             statusTextView.text = "Premium"
             statusTextView.setTextColor(ContextCompat.getColor(this, color.colorPremium))
