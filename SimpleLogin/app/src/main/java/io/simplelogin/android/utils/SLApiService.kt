@@ -6,6 +6,7 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.SocialService
 import io.simplelogin.android.utils.model.ApiKey
 import io.simplelogin.android.utils.model.ErrorMessage
+import io.simplelogin.android.utils.model.UserInfo
 import io.simplelogin.android.utils.model.UserLogin
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -278,6 +279,43 @@ object SLApiService {
                     200 -> completion(null)
 
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
+
+    fun fetchUserInfo(apiKey: String, completion: (userInfo: UserInfo?, error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/user_info")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val userInfo = Gson().fromJson(jsonString, UserInfo::class.java)
+                            if (userInfo != null) {
+                                completion(userInfo, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("UserInfo"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    401 -> completion(null, SLError.InvalidApiKey)
+
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
 

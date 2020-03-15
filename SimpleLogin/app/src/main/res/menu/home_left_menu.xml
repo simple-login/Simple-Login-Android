@@ -33,4 +33,8 @@
             android:icon="@drawable/ic_logout_32dp"
             android:title="Sign Out" />
     </group>
+
+    <item
+        android:id="@+id/appVersionMenuItem"
+        android:title="SimpleLogin"/>
 </menu>

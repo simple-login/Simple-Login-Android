@@ -1,28 +1,38 @@
 package io.simplelogin.android.module.home
 
-import android.content.res.ColorStateList
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.iterator
 import com.google.android.material.navigation.NavigationView
-import io.simplelogin.android.R
+import io.simplelogin.android.R.*
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.model.UserInfo
 
 class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    companion object {
+        const val USER_INFO = "userInfo"
+    }
     lateinit var binding: ActivityHomeBinding
         private set
+    private lateinit var userInfo: UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Retrieve UserInfo from intent
+        userInfo = intent.getParcelableExtra<UserInfo>(USER_INFO)
+
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
         setContentView(binding.root)
 
         // Change status bar background color
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+        window.statusBarColor = ContextCompat.getColor(this, color.colorWhite)
     }
 
     override fun onBackPressed() = Unit
@@ -30,7 +40,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
+            overridePendingTransition(anim.stay_still, anim.slide_out_down)
         }
     }
 
@@ -39,6 +49,25 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun setUpDrawer() {
-        binding.navigationView.menu.iterator().forEach {  }
+        // App version name
+        val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+        val appVersionMenuItem = binding.navigationView.menu.findItem(id.appVersionMenuItem)
+        appVersionMenuItem?.title = "SimpleLogin v${packageInfo.versionName}"
+        appVersionMenuItem.isEnabled = false
+
+        // Header info
+        val avatarImageView = binding.navigationView.getHeaderView(0).findViewById<ImageView>(id.avatarImageView)
+
+        val usernameTextView = binding.navigationView.getHeaderView(0).findViewById<TextView>(id.usernameTextView)
+        usernameTextView.text = userInfo.name
+
+        val statusTextView = binding.navigationView.getHeaderView(0).findViewById<TextView>(id.statusTextView)
+        if (userInfo.isPremium) {
+            statusTextView.text = "Premium"
+            statusTextView.setTextColor(ContextCompat.getColor(this, color.colorPremium))
+        } else {
+            statusTextView.text = "Freemium"
+            statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+        }
     }
 }
