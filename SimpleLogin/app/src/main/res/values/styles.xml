@@ -11,4 +11,9 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+    <style name="SLSwitch" parent="Theme.MaterialComponents.Light">
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorSwitchThumbNormal">@color/colorDarkGray</item>
+    </style>
+
 </resources>
