@@ -14,15 +14,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_hamburger"
-            app:menu="@menu/menu_alias_list">
+            app:menu="@menu/menu_alias_list"
+            app:navigationIcon="@drawable/ic_hamburger">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Alias"
+                android:text="Your Aliases"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold" />
 
@@ -33,37 +33,55 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/allTabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All"/>
+                android:text="All" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/activeTabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Active"/>
+                android:text="Active" />
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/inactiveTabItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Inactive"/>
+                android:text="Inactive" />
 
         </com.google.android.material.tabs.TabLayout>
 
         <View
+            android:id="@+id/separatorView"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@drawable/shape_toolbar_drop_shadow"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/separatorView">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipToPadding="false" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

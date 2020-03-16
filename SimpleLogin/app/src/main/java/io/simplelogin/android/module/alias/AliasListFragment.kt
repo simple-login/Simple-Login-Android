@@ -11,12 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
-import io.simplelogin.android.databinding.FragmentAliasBinding
+import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.baseclass.BaseFragment
 
-class AliasFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout.OnTabSelectedListener {
-    private lateinit var binding: FragmentAliasBinding
+class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout.OnTabSelectedListener {
+    private lateinit var binding: FragmentAliasListBinding
     private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -24,7 +24,7 @@ class AliasFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAliasBinding.inflate(inflater)
+        binding = FragmentAliasListBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.tabLayout.addOnTabSelectedListener(this)

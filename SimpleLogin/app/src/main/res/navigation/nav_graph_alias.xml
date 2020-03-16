@@ -5,6 +5,6 @@
 
     <fragment
         android:id="@+id/aliasFragment"
-        android:name="io.simplelogin.android.module.alias.AliasFragment"
+        android:name="io.simplelogin.android.module.alias.AliasListFragment"
         android:label="AliasFragment" />
 </navigation>

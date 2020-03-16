@@ -35,8 +35,8 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun fetchAliases() {
-        if (!_moreAliasesToLoad) return
-
+        if (!_moreAliasesToLoad || _isFetchingAliases.value == true) return
+        _isFetchingAliases.value = true
         SLApiService.fetchAliases(apiKey, currentPage + 1) { aliases, error ->
             if (error != null) {
                 Toast.makeText(getApplication(), error.description, Toast.LENGTH_SHORT).show()
