@@ -3,4 +3,5 @@
     <dimen name="toolbarTitleSize">18sp</dimen>
     <dimen name="verificationCodeTextSize">30sp</dimen>
     <dimen name="numPadTextSize">35sp</dimen>
+    <dimen name="itemBorderRadius">2dp</dimen>
 </resources>

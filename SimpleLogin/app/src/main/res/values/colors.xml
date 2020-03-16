@@ -11,4 +11,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorPremium">#8DB600</color>
     <color name="colorText">#000000</color>
+    <color name="colorListBackground">#F3F2F8</color>
 </resources>
