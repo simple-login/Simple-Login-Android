@@ -9,15 +9,20 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.baseclass.BaseFragment
+import io.simplelogin.android.utils.extension.toastError
 
-class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout.OnTabSelectedListener {
+class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
+    TabLayout.OnTabSelectedListener {
     private lateinit var binding: FragmentAliasListBinding
     private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
+    private val adapter = AliasListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,10 +34,37 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLa
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.tabLayout.addOnTabSelectedListener(this)
 
+        // ViewModel
         homeSharedViewModel.fetchAliases()
+        homeSharedViewModel.eventUpdateAliases.observe(
+            viewLifecycleOwner,
+            Observer { updatedAliases ->
+                if (updatedAliases) {
+                    activity?.runOnUiThread { adapter.setAliases(homeSharedViewModel.aliases) }
+                    homeSharedViewModel.onEventUpdateAliasesComplete()
+                }
+            })
 
-        homeSharedViewModel.aliases.observe(viewLifecycleOwner, Observer { aliases ->
+        homeSharedViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            if (error != null) {
+                toastError(error)
+                homeSharedViewModel.onHandleErrorComplete()
+            }
+        })
 
+        // RecyclerView
+        binding.recyclerView.adapter = adapter
+        val linearLayoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = linearLayoutManager
+
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == homeSharedViewModel.aliases.size - 1)
+                    && homeSharedViewModel.moreAliasesToLoad
+                ) {
+                    homeSharedViewModel.fetchAliases()
+                }
+            }
         })
 
         return binding.root

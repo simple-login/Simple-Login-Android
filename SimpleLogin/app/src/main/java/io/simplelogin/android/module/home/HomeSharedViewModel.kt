@@ -1,18 +1,25 @@
 package io.simplelogin.android.module.home
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
+import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import java.lang.IllegalStateException
 
 class HomeSharedViewModel(application: Application) : AndroidViewModel(application) {
     private val apiKey: String by lazy {
         SLSharedPreferences.getApiKey(application) ?: throw IllegalStateException("API key is null")
+    }
+    private val _error = MutableLiveData<SLError>()
+    val error: LiveData<SLError>
+        get() = _error
+
+    fun onHandleErrorComplete() {
+        _error.value = null
     }
 
     // Aliases
@@ -21,33 +28,41 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     val moreAliasesToLoad: Boolean
         get() = _moreAliasesToLoad
 
-    private val _aliases = MutableLiveData<MutableList<Alias>>()
-    val aliases: LiveData<MutableList<Alias>>
-        get() = _aliases
+    var aliases = mutableListOf<Alias>()
+        private set
 
-    private val _isFetchingAliases = MutableLiveData<Boolean>()
-    val isFetchingAliases: LiveData<Boolean>
-        get() = _isFetchingAliases
+    private var _isFetchingAliases = false
+
+    private val _eventUpdateAliases = MutableLiveData<Boolean>()
+    val eventUpdateAliases: LiveData<Boolean>
+        get() = _eventUpdateAliases
 
     init {
-        _aliases.value = mutableListOf()
-        _isFetchingAliases.value = false
+        _error.value = null
+        _eventUpdateAliases.value = false
     }
 
     fun fetchAliases() {
-        if (!_moreAliasesToLoad || _isFetchingAliases.value == true) return
-        _isFetchingAliases.value = true
-        SLApiService.fetchAliases(apiKey, currentPage + 1) { aliases, error ->
+        if (!_moreAliasesToLoad || _isFetchingAliases) return
+        _isFetchingAliases = true
+        SLApiService.fetchAliases(apiKey, currentPage + 1) { newAliases, error ->
+            _isFetchingAliases = false
+
             if (error != null) {
-                Toast.makeText(getApplication(), error.description, Toast.LENGTH_SHORT).show()
-            } else if (aliases != null) {
-                if (aliases.isEmpty()) {
+                _error.postValue(error)
+            } else if (newAliases != null) {
+                if (newAliases.isEmpty()) {
                     _moreAliasesToLoad = false
                 } else {
                     currentPage += 1
-                    _aliases.value?.addAll(aliases)
+                    aliases.addAll(newAliases)
+                    _eventUpdateAliases.postValue(true)
                 }
             }
         }
+    }
+
+    fun onEventUpdateAliasesComplete() {
+        _eventUpdateAliases.value = false
     }
 }
