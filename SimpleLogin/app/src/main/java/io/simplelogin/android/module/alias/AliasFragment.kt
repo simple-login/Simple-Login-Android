@@ -7,13 +7,17 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasBinding
+import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.baseclass.BaseFragment
 
 class AliasFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout.OnTabSelectedListener {
-    lateinit var binding: FragmentAliasBinding
+    private lateinit var binding: FragmentAliasBinding
+    private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +28,13 @@ class AliasFragment : BaseFragment(), Toolbar.OnMenuItemClickListener, TabLayout
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.tabLayout.addOnTabSelectedListener(this)
+
+        homeSharedViewModel.fetchAliases()
+
+        homeSharedViewModel.aliases.observe(viewLifecycleOwner, Observer { aliases ->
+
+        })
+
         return binding.root
     }
 

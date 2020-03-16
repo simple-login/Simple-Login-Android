@@ -4,10 +4,7 @@ import com.google.gson.Gson
 import io.simplelogin.android.BuildConfig
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.SocialService
-import io.simplelogin.android.utils.model.ApiKey
-import io.simplelogin.android.utils.model.ErrorMessage
-import io.simplelogin.android.utils.model.UserInfo
-import io.simplelogin.android.utils.model.UserLogin
+import io.simplelogin.android.utils.model.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -315,6 +312,45 @@ object SLApiService {
 
                     401 -> completion(null, SLError.InvalidApiKey)
 
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
+
+    fun fetchAliases(apiKey: String, page: Int, completion: (aliases: List<Alias>?, error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases?page_id=$page")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            //val aliasListType = object : TypeToken<List<Alias>>() {}.type
+                            //val aliases = Gson().fromJson<List<Alias>>(jsonString, aliasListType)
+                            val aliasArray = Gson().fromJson(jsonString, AliasArray::class.java)
+                            if (aliasArray != null) {
+                                completion(aliasArray.aliases, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("Alias"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    400 -> completion(null, SLError.PageIdRequired)
+                    401 -> completion(null, SLError.InvalidApiKey)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
