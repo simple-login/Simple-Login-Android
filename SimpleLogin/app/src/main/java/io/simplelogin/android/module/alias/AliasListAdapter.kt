@@ -5,7 +5,15 @@ import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.viewholder.AliasViewHolder
 
-class AliasListAdapter : RecyclerView.Adapter<AliasViewHolder>() {
+class AliasListAdapter(private val clickListener: ClickListener) : RecyclerView.Adapter<AliasViewHolder>() {
+    interface ClickListener {
+        fun onClick(alias: Alias)
+        fun onSwitch(alias: Alias, isChecked: Boolean)
+        fun onCopy(alias: Alias)
+        fun onSendEmail(alias: Alias)
+        fun onDelete(alias: Alias, position: Int)
+    }
+
     private var _aliases = listOf<Alias>()
     fun setAliases(aliases: List<Alias>) {
         _aliases = aliases
@@ -18,5 +26,5 @@ class AliasListAdapter : RecyclerView.Adapter<AliasViewHolder>() {
         AliasViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: AliasViewHolder, position: Int) =
-        holder.bind(_aliases[position])
+        holder.bind(_aliases[position], clickListener)
 }

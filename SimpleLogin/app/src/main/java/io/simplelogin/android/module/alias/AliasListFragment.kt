@@ -17,12 +17,13 @@ import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.model.Alias
 
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener {
     private lateinit var binding: FragmentAliasListBinding
     private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
-    private val adapter = AliasListAdapter()
+    private lateinit var adapter: AliasListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +54,27 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         })
 
         // RecyclerView
+        adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
+            override fun onClick(alias: Alias) {
+
+            }
+
+            override fun onSwitch(alias: Alias, isChecked: Boolean) {
+
+            }
+
+            override fun onCopy(alias: Alias) {
+
+            }
+
+            override fun onSendEmail(alias: Alias) {
+
+            }
+
+            override fun onDelete(alias: Alias, position: Int) {
+
+            }
+        })
         binding.recyclerView.adapter = adapter
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
