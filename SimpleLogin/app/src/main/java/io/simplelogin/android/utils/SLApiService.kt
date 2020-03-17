@@ -362,4 +362,42 @@ object SLApiService {
 
         })
     }
+
+    fun toggleAlias(apiKey: String, id: Int, completion: (enabled: Boolean?, error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/$id/toggle")
+            .header("Authentication", apiKey)
+            .post("".toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val enabled = Gson().fromJson(jsonString, Enabled::class.java)
+                            if (enabled != null) {
+                                completion(enabled.value, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("Enabled"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
 }

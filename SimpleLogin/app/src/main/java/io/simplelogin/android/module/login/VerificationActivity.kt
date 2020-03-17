@@ -15,7 +15,9 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.extension.customSetEnabled
 import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.extension.toastShortly
 
 class VerificationActivity : BaseAppCompatActivity() {
     companion object {
@@ -174,17 +176,8 @@ class VerificationActivity : BaseAppCompatActivity() {
     }
 
     private fun setLoading(loading: Boolean) {
-        when (loading) {
-            true -> {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.rootLinearLayout.alpha = 0.3f
-            }
-
-            false -> {
-                binding.progressBar.visibility = View.GONE
-                binding.rootLinearLayout.alpha = 1f
-            }
-        }
+        binding.rootLinearLayout.isEnabled = !loading
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun verify(code: String) {
@@ -265,7 +258,7 @@ class VerificationActivity : BaseAppCompatActivity() {
                 if (error != null) {
                     toastError(error)
                 } else {
-                    Toast.makeText(this, "Check your inbox for new activation code", Toast.LENGTH_SHORT).show()
+                    toastShortly("Check your inbox for new activation code")
                 }
             }
         }

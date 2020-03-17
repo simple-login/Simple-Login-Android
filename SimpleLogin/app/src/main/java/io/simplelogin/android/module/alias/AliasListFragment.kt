@@ -15,10 +15,16 @@ import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeSharedViewModel
+import io.simplelogin.android.utils.SLApiService
+import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
+import io.simplelogin.android.utils.enums.SLError
+import io.simplelogin.android.utils.extension.copyToClipboard
 import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.extension.toastShortly
 import io.simplelogin.android.utils.model.Alias
+import java.lang.Exception
 
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener {
@@ -61,24 +67,41 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
-            override fun onClick(alias: Alias) {
+            val context = getContext() ?: throw Exception("Context is null")
+            val apiKey = SLSharedPreferences.getApiKey(context) ?: toastError(SLError.NoApiKey)
 
+            override fun onClick(alias: Alias) {
+                Log.d("onClick", "${alias.id}")
             }
 
-            override fun onSwitch(alias: Alias, isChecked: Boolean) {
+            override fun onSwitch(alias: Alias) {
+                Log.d("onSwitch", "${alias.id}")
+                setLoading(true)
+                SLApiService.toggleAlias(apiKey as String, alias.id) { enabled, error ->
+                    activity?.runOnUiThread {
+                        setLoading(false)
 
+                        if (error != null) {
+                            toastError(error)
+                        } else if (enabled != null) {
+                            homeSharedViewModel.refreshAliases()
+                        }
+                    }
+                }
             }
 
             override fun onCopy(alias: Alias) {
-
+                val email = alias.email
+                copyToClipboard(email, email)
+                toastShortly("Copied \"$email\"")
             }
 
             override fun onSendEmail(alias: Alias) {
-
+                Log.d("onSendEmail", "${alias.id}")
             }
 
             override fun onDelete(alias: Alias, position: Int) {
-
+                Log.d("onDelete", "${alias.id}")
             }
         })
         binding.recyclerView.adapter = adapter
@@ -96,8 +119,13 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         })
 
         binding.swipeRefreshLayout.setOnRefreshListener { homeSharedViewModel.refreshAliases() }
-
+        setLoading(false)
         return binding.root
+    }
+
+    private fun setLoading(loading: Boolean) {
+        binding.rootConstraintLayout.isEnabled = !loading
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     // Toolbar.OnMenuItemClickListener

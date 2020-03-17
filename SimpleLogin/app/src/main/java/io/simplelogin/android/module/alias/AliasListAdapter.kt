@@ -8,7 +8,7 @@ import io.simplelogin.android.viewholder.AliasViewHolder
 class AliasListAdapter(private val clickListener: ClickListener) : RecyclerView.Adapter<AliasViewHolder>() {
     interface ClickListener {
         fun onClick(alias: Alias)
-        fun onSwitch(alias: Alias, isChecked: Boolean)
+        fun onSwitch(alias: Alias)
         fun onCopy(alias: Alias)
         fun onSendEmail(alias: Alias)
         fun onDelete(alias: Alias, position: Int)

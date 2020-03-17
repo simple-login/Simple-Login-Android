@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -104,7 +105,10 @@ class LoginActivity : BaseAppCompatActivity() {
 
             RC_EMAIL_VERIFICATION -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val verificationMode = data?.getParcelableExtra<VerificationMode.AccountActivation>(VerificationActivity.ACCOUNT)
+                    val verificationMode =
+                        data?.getParcelableExtra<VerificationMode.AccountActivation>(
+                            VerificationActivity.ACCOUNT
+                        )
                     binding.emailTextField.editText?.setText(verificationMode?.email)
                     binding.passwordTextField.editText?.setText(verificationMode?.password)
                     login()
@@ -178,16 +182,16 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-
+            Log.d("google_auth", "idToken: ${account?.idToken}")
+            Log.d("google_auth", "serverAuthCode ${account?.serverAuthCode}")
             if (account?.serverAuthCode != null) {
                 socialLogin(SocialService.GOOGLE, account.serverAuthCode!!)
             } else {
-                Toast.makeText(this, "Google access token is null", Toast.LENGTH_SHORT).show()
+                toastShortly("Google access token is null")
             }
 
         } catch (e: ApiException) {
-            Toast.makeText(this, "Google sign in failed: ${e.localizedMessage}", Toast.LENGTH_SHORT)
-                .show()
+            toastShortly("Google sign in failed: ${e.localizedMessage}")
         }
     }
 
@@ -218,7 +222,7 @@ class LoginActivity : BaseAppCompatActivity() {
                 }
             }
         } else {
-            Toast.makeText(this, "Please enter both email and password", Toast.LENGTH_SHORT).show()
+            toastShortly("Please enter both email and password")
         }
     }
 
@@ -238,17 +242,8 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private fun setLoading(loading: Boolean) {
-        when (loading) {
-            true -> {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.rootLinearLayout.alpha = 0.3f
-            }
-
-            false -> {
-                binding.progressBar.visibility = View.GONE
-                binding.rootLinearLayout.alpha = 1f
-            }
-        }
+        binding.rootLinearLayout.customSetEnabled(!loading)
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun processUserLogin(userLogin: UserLogin) {

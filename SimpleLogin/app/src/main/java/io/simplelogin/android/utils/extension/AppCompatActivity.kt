@@ -1,5 +1,7 @@
 package io.simplelogin.android.utils.extension
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -14,9 +16,14 @@ fun AppCompatActivity.dismissKeyboard() {
 }
 
 fun AppCompatActivity.toastError(error: SLError) {
-    Toast.makeText(this, error.description, Toast.LENGTH_SHORT).show()
+    toastShortly(error.description)
 }
 
-fun AppCompatActivity.toastApiKeyIsNull() {
-    Toast.makeText(this, "API key is null", Toast.LENGTH_SHORT).show()
+fun AppCompatActivity.copyToClipboard(label: String, text: String) : Boolean {
+    val clipboardManager = (getSystemService(Context.CLIPBOARD_SERVICE) ?: false) as ClipboardManager
+    clipboardManager.primaryClip = ClipData.newPlainText(label, text)
+    return true
 }
+
+fun AppCompatActivity.toastShortly(text: String) =
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()

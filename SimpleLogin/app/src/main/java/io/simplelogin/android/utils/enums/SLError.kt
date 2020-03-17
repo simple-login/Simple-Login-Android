@@ -1,6 +1,7 @@
 package io.simplelogin.android.utils.enums
 
 sealed class SLError(val description: String) {
+    object NoApiKey : SLError("API key is null")
     object NoData : SLError("Server return no data")
     object IncorrectEmailOrPassword : SLError("Incorrect email or password")
     object InvalidApiKey : SLError("Invalid API key")
