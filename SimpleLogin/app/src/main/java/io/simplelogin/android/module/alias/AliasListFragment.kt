@@ -52,6 +52,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             if (error != null) {
                 toastError(error)
                 homeSharedViewModel.onHandleErrorComplete()
+                binding.swipeRefreshLayout.isRefreshing = false
             }
         })
 

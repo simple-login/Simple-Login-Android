@@ -2,7 +2,9 @@ package io.simplelogin.android.module.startup
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityStartUpBinding
 import io.simplelogin.android.module.home.HomeActivity
@@ -50,16 +52,31 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     private fun fetchUserInfoAndProceed(apiKey: String) {
+        binding.progressBar.visibility = View.VISIBLE
         SLApiService.fetchUserInfo(apiKey) { userInfo, error ->
-            if (error != null) {
-                toastError(error)
-                if (error == SLError.InvalidApiKey) {
-                    startLoginActivity()
-                }
+            runOnUiThread {
+                if (error != null) {
+                    showErrorSnackBar(error)
+                    if (error == SLError.InvalidApiKey) {
+                        startLoginActivity()
+                    }
 
-            } else if (userInfo != null) {
-                startHomeActivity(userInfo)
+                } else if (userInfo != null) {
+                    startHomeActivity(userInfo)
+                }
             }
         }
+    }
+
+    private fun showErrorSnackBar(error: SLError) {
+        binding.progressBar.visibility = View.INVISIBLE
+        Snackbar.make(binding.bottomCoordinatorLayout, error.description, Snackbar.LENGTH_INDEFINITE)
+            .setAction("Retry") {
+                SLSharedPreferences.getApiKey(this)?.let { apiKey ->
+
+                    fetchUserInfoAndProceed(apiKey)
+                }
+            }
+            .show()
     }
 }

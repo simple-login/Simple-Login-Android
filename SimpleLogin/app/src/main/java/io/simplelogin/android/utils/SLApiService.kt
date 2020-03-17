@@ -57,6 +57,7 @@ object SLApiService {
                     }
 
                     400 -> completion(null, SLError.IncorrectEmailOrPassword)
+                    500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -99,6 +100,7 @@ object SLApiService {
                     }
 
                     400 -> completion(null, SLError.BadRequest("wrong token format"))
+                    500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -157,6 +159,7 @@ object SLApiService {
                         }
                     }
 
+                    500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -201,6 +204,7 @@ object SLApiService {
                         }
                     }
 
+                    500 -> completion(SLError.InternalServerError)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -246,7 +250,7 @@ object SLApiService {
                     }
 
                     410 -> completion(SLError.ReactivationNeeded)
-
+                    500 -> completion(SLError.InternalServerError)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -274,7 +278,7 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> completion(null)
-
+                    500 -> completion(SLError.InternalServerError)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -311,7 +315,7 @@ object SLApiService {
                     }
 
                     401 -> completion(null, SLError.InvalidApiKey)
-
+                    500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -351,6 +355,7 @@ object SLApiService {
 
                     400 -> completion(null, SLError.PageIdRequired)
                     401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }

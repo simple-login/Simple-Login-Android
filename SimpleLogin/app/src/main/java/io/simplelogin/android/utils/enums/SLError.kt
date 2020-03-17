@@ -9,5 +9,6 @@ sealed class SLError(val description: String) {
     object ReactivationNeeded : SLError("Reactivation needed")
     class BadRequest(description: String) : SLError("Bad request: $description")
     class FailedToParseObject(objectName: String) : SLError("Failed to parse object $objectName")
+    object InternalServerError : SLError("Internal server error")
     class UnknownError(description: String) : SLError("Unknown error: $description")
 }
