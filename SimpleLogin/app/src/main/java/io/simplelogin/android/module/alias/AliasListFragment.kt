@@ -56,6 +56,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
         })
 
+        // Reset tab selection state on configuration changed
+        binding.tabLayout.getTabAt(homeSharedViewModel.aliasFilterMode.position)?.select()
+
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
             override fun onClick(alias: Alias) {

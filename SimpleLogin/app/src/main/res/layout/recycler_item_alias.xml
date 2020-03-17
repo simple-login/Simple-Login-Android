@@ -65,7 +65,7 @@
                             android:layout_gravity="center_vertical"
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
-                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textAppearance="?attr/textAppearanceCaption"
                             android:textColor="@color/colorDarkGray"
                             tools:text="Created 3 days ago" />
 
@@ -75,7 +75,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical|end"
                             android:gravity="end"
-                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textAppearance="?attr/textAppearanceCaption"
                             android:textColor="@color/colorDarkGray"
                             tools:text="0 forward, 0 block, 1 reply" />
                     </LinearLayout>

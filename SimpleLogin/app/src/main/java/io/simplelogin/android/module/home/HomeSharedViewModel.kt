@@ -75,7 +75,8 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     // Alias filter
-    private var aliasFilterMode = AliasFilterMode.ALL
+    var aliasFilterMode = AliasFilterMode.ALL
+        private set
 
     fun filterAliases(mode: AliasFilterMode) {
         aliasFilterMode = mode
