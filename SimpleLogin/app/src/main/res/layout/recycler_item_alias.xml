@@ -40,8 +40,7 @@
                         android:id="@+id/emailTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
                         tools:text="yautiden@gmail.com" />
 
                     <LinearLayout
@@ -55,7 +54,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_clock_16dp" />
+                            android:src="@drawable/ic_clock_16dp"
+                            android:tint="@color/colorDarkGray"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
                             android:id="@+id/creationDateTextView"
@@ -63,6 +64,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorDarkGray"
                             android:text="Created 3 days ago" />
 
                         <TextView
@@ -71,8 +75,18 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical|end"
                             android:gravity="end"
-                            android:text="0 forward, 0 block, 1 reply" />
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorDarkGray"
+                            tools:text="0 forward, 0 block, 1 reply" />
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/noteTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        tools:text="Alias note" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -84,7 +98,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
-                            android:theme="@style/SLSwitch"/>
+                            android:theme="@style/SLSwitch" />
 
                         <Button
                             android:id="@+id/copyButton"
@@ -93,7 +107,8 @@
                             android:layout_height="wrap_content"
                             android:text="Copy"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            app:icon="@drawable/ic_copy_24dp" />
+                            app:icon="@drawable/ic_copy_24dp"
+                            tools:ignore="HardcodedText" />
 
                         <Button
                             android:id="@+id/sendEmailButton"
@@ -103,7 +118,8 @@
                             android:padding="0dp"
                             android:text="Send Email"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            app:icon="@drawable/ic_send_24dp" />
+                            app:icon="@drawable/ic_send_24dp"
+                            tools:ignore="HardcodedText" />
 
                         <Button
                             android:id="@+id/deleteButton"
@@ -114,7 +130,8 @@
                             android:textAppearance="?attr/textAppearanceCaption"
                             android:textColor="@color/colorNegative"
                             app:icon="@drawable/ic_delete_24dp"
-                            app:iconTint="@color/colorNegative" />
+                            app:iconTint="@color/colorNegative"
+                            tools:ignore="HardcodedText" />
                     </LinearLayout>
                 </LinearLayout>
 

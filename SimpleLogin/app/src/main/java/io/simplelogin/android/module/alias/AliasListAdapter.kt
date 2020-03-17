@@ -13,8 +13,10 @@ class AliasListAdapter : RecyclerView.Adapter<AliasViewHolder>() {
     }
 
     override fun getItemCount(): Int = _aliases.count()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AliasViewHolder =
         AliasViewHolder.from(parent)
+
     override fun onBindViewHolder(holder: AliasViewHolder, position: Int) =
         holder.bind(_aliases[position])
 }
