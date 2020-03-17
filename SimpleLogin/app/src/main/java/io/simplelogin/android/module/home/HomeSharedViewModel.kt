@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
+import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import java.lang.IllegalStateException
@@ -24,11 +25,11 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
 
     // Aliases
     private var currentPage = -1
-    private var _moreAliasesToLoad: Boolean = true
-    val moreAliasesToLoad: Boolean
-        get() = _moreAliasesToLoad
+    var moreAliasesToLoad: Boolean = true
+        private set
 
-    var aliases = mutableListOf<Alias>()
+    private var _aliases = mutableListOf<Alias>()
+    var filteredAliases = listOf<Alias>()
         private set
 
     private var _isFetchingAliases = false
@@ -43,7 +44,7 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun fetchAliases() {
-        if (!_moreAliasesToLoad || _isFetchingAliases) return
+        if (!moreAliasesToLoad || _isFetchingAliases) return
         _isFetchingAliases = true
         SLApiService.fetchAliases(apiKey, currentPage + 1) { newAliases, error ->
             _isFetchingAliases = false
@@ -52,11 +53,11 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
                 _error.postValue(error)
             } else if (newAliases != null) {
                 if (newAliases.isEmpty()) {
-                    _moreAliasesToLoad = false
+                    moreAliasesToLoad = false
                 } else {
                     currentPage += 1
-                    aliases.addAll(newAliases)
-                    _eventUpdateAliases.postValue(true)
+                    _aliases.addAll(newAliases)
+                    filterAliases(aliasFilterMode)
                 }
             }
         }
@@ -65,4 +66,26 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     fun onEventUpdateAliasesComplete() {
         _eventUpdateAliases.value = false
     }
+
+    fun refreshAliases() {
+        currentPage = -1
+        moreAliasesToLoad = true
+        _aliases = mutableListOf()
+        fetchAliases()
+    }
+
+    // Alias filter
+    private var aliasFilterMode = AliasFilterMode.ALL
+
+    fun filterAliases(mode: AliasFilterMode) {
+        aliasFilterMode = mode
+        filteredAliases = when (aliasFilterMode) {
+            AliasFilterMode.ALL -> _aliases
+            AliasFilterMode.ACTIVE -> _aliases.filter { it.enabled }
+            AliasFilterMode.INACTIVE -> _aliases.filter { !it.enabled }
+        }
+
+        _eventUpdateAliases.postValue(true)
+    }
+
 }

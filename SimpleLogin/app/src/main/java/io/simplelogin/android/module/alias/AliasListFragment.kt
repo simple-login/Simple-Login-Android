@@ -16,6 +16,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.baseclass.BaseFragment
+import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.model.Alias
 
@@ -41,8 +42,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             viewLifecycleOwner,
             Observer { updatedAliases ->
                 if (updatedAliases) {
-                    activity?.runOnUiThread { adapter.setAliases(homeSharedViewModel.aliases) }
+                    activity?.runOnUiThread { adapter.setAliases(homeSharedViewModel.filteredAliases) }
                     homeSharedViewModel.onEventUpdateAliasesComplete()
+                    binding.swipeRefreshLayout.isRefreshing = false
                 }
             })
 
@@ -81,13 +83,15 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == homeSharedViewModel.aliases.size - 1)
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == homeSharedViewModel.filteredAliases.size - 1)
                     && homeSharedViewModel.moreAliasesToLoad
                 ) {
                     homeSharedViewModel.fetchAliases()
                 }
             }
         })
+
+        binding.swipeRefreshLayout.setOnRefreshListener { homeSharedViewModel.refreshAliases() }
 
         return binding.root
     }
@@ -116,20 +120,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab?.position) {
-            0 -> {
-                // All
-                Log.d("tab", "all")
-            }
-
-            1 -> {
-                // All
-                Log.d("tab", "active")
-            }
-
-            2 -> {
-                // All
-                Log.d("tab", "inactive")
-            }
+            0 -> homeSharedViewModel.filterAliases(AliasFilterMode.ALL)
+            1 -> homeSharedViewModel.filterAliases(AliasFilterMode.ACTIVE)
+            2 -> homeSharedViewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
     }
 }
