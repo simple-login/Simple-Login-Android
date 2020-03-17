@@ -67,7 +67,7 @@
                             android:paddingEnd="5dp"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             android:textColor="@color/colorDarkGray"
-                            android:text="Created 3 days ago" />
+                            tools:text="Created 3 days ago" />
 
                         <TextView
                             android:id="@+id/countsTextView"

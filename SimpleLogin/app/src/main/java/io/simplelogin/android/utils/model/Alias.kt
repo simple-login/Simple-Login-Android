@@ -2,13 +2,12 @@ package io.simplelogin.android.utils.model
 
 import android.content.Context
 import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.text.color
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.R
+import io.simplelogin.android.utils.SLDateTimeFormatter
 
 data class Alias(
     @SerializedName("id") val id: Int,
@@ -21,9 +20,9 @@ data class Alias(
     @SerializedName("nb_forward") val forwardCount: Int,
     @SerializedName("nb_reply") val replyCount: Int
 ) {
-    private var _creationSpannableString: Spannable? = null
-    fun getCreationSpannableString(context: Context): Spannable {
-        if (_creationSpannableString == null) {
+    private var _countSpannableString: Spannable? = null
+    fun getCountSpannableString(context: Context): Spannable {
+        if (_countSpannableString == null) {
             val darkGrayColor = ContextCompat.getColor(context, R.color.colorDarkGray)
             val blackColor = ContextCompat.getColor(context, android.R.color.black)
             val spannableString = SpannableStringBuilder()
@@ -34,10 +33,20 @@ data class Alias(
                 .color(blackColor) { append(" $replyCount ") }
                 .color(darkGrayColor) { append(if (replyCount > 1) "replies," else "reply") }
 
-            _creationSpannableString = spannableString
+            _countSpannableString = spannableString
         }
 
-        return _creationSpannableString!!
+        return _countSpannableString!!
+    }
+
+    private var _creationString: String? = null
+    fun getCreationString() : String {
+        if (_creationString == null) {
+            val distance = SLDateTimeFormatter.distanceFromNow(creationTimestamp)
+            _creationString = "Created ${distance.first} ${distance.second} ago"
+        }
+
+        return _creationString!!
     }
 }
 

@@ -24,7 +24,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
     fun bind(alias: Alias) {
         binding.emailTextView.text = alias.email
-        binding.countsTextView.setText(alias.getCreationSpannableString(context), TextView.BufferType.SPANNABLE)
+        binding.countsTextView.setText(alias.getCountSpannableString(context), TextView.BufferType.SPANNABLE)
 
         binding.enabledSwitch.isChecked = alias.enabled
         if (alias.enabled) {
@@ -32,6 +32,8 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         } else {
             binding.rootRelativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMediumGray))
         }
+
+        binding.creationDateTextView.text = alias.getCreationString()
 
         binding.noteTextView.text = alias.note
         binding.noteTextView.visibility = if (alias.note != null) View.VISIBLE else View.GONE
