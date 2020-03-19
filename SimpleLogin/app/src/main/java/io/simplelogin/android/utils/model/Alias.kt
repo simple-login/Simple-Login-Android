@@ -1,6 +1,7 @@
 package io.simplelogin.android.utils.model
 
 import android.content.Context
+import android.os.Parcelable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import androidx.core.content.ContextCompat
@@ -8,7 +9,9 @@ import androidx.core.text.color
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.R
 import io.simplelogin.android.utils.SLDateTimeFormatter
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Alias(
     @SerializedName("id") val id: Int,
     @SerializedName("email") val email: String,
@@ -19,7 +22,7 @@ data class Alias(
     @SerializedName("nb_block") val blockCount: Int,
     @SerializedName("nb_forward") val forwardCount: Int,
     @SerializedName("nb_reply") val replyCount: Int
-) {
+): Parcelable {
     val enabled: Boolean
         get() = _enabled
 

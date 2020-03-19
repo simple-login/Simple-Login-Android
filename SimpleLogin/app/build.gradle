@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.android.application'
 
 android {
@@ -59,8 +60,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     // Navigation
-    implementation 'android.arch.navigation:navigation-fragment-ktx:2.3.0-alpha03'
-    implementation 'android.arch.navigation:navigation-ui-ktx:2.3.0-alpha03'
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.2"

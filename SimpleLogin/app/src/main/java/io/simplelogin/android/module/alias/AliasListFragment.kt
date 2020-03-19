@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -103,7 +104,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
 
             override fun onSendEmail(alias: Alias) {
-                Log.d("onSendEmail", "${alias.id}")
+                findNavController().navigate(AliasListFragmentDirections.actionAliasFragmentToContactListFragment(alias))
             }
 
             override fun onDelete(alias: Alias, position: Int) {
