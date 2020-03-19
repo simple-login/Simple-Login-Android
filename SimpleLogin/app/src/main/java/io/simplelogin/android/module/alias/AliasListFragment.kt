@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
@@ -106,7 +107,26 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
 
             override fun onDelete(alias: Alias, position: Int) {
-                Log.d("onDelete", "${alias.id}")
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${alias.email}\"?")
+                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        SLApiService.deleteAlias(apiKey as String, alias.id) { error ->
+                            activity?.runOnUiThread {
+                                setLoading(false)
+
+                                if (error != null) {
+                                    toastError(error)
+                                } else {
+                                    // Calling deleteAlias will also trigger filter and refresh the alias list
+                                    homeSharedViewModel.deleteAlias(alias)
+                                }
+                            }
+                        }
+                    }
+                    .setPositiveButton("Cancel", null)
+                    .show()
             }
         })
         binding.recyclerView.adapter = adapter

@@ -92,4 +92,10 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         _eventUpdateAliases.postValue(true)
     }
 
+    // Alias delete
+    fun deleteAlias(alias: Alias) {
+        _aliases.removeAll { it.id == alias.id }
+        filterAliases()
+        _eventUpdateAliases.postValue(true)
+    }
 }

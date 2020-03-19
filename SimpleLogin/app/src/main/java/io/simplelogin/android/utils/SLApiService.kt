@@ -20,7 +20,12 @@ private val client = OkHttpClient()
 object SLApiService {
     private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
 
-    fun login(email: String, password: String, device: String, completion: (userLogin: UserLogin?, error: SLError?) -> Unit) {
+    fun login(
+        email: String,
+        password: String,
+        device: String,
+        completion: (userLogin: UserLogin?, error: SLError?) -> Unit
+    ) {
         var body = """
             {
                 "email": "$email",
@@ -65,7 +70,12 @@ object SLApiService {
         })
     }
 
-    fun socialLogin(socialService: SocialService, accessToken: String, device: String, completion: (userLogin: UserLogin?, error: SLError?) -> Unit) {
+    fun socialLogin(
+        socialService: SocialService,
+        accessToken: String,
+        device: String,
+        completion: (userLogin: UserLogin?, error: SLError?) -> Unit
+    ) {
         val body = """
             {
                 "${socialService.serviceName}_token": "$accessToken",
@@ -108,7 +118,12 @@ object SLApiService {
         })
     }
 
-    fun verifyMfa(mfaKey: String, mfaToken: String, device: String, completion: (apiKey: ApiKey?, error: SLError?) -> Unit) {
+    fun verifyMfa(
+        mfaKey: String,
+        mfaToken: String,
+        device: String,
+        completion: (apiKey: ApiKey?, error: SLError?) -> Unit
+    ) {
         val body = """
             {
                 "mfa_token": "$mfaToken",
@@ -323,7 +338,11 @@ object SLApiService {
         })
     }
 
-    fun fetchAliases(apiKey: String, page: Int, completion: (aliases: List<Alias>?, error: SLError?) -> Unit) {
+    fun fetchAliases(
+        apiKey: String,
+        page: Int,
+        completion: (aliases: List<Alias>?, error: SLError?) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases?page_id=$page")
             .header("Authentication", apiKey)
@@ -363,7 +382,11 @@ object SLApiService {
         })
     }
 
-    fun toggleAlias(apiKey: String, id: Int, completion: (enabled: Boolean?, error: SLError?) -> Unit) {
+    fun toggleAlias(
+        apiKey: String,
+        id: Int,
+        completion: (enabled: Boolean?, error: SLError?) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/$id/toggle")
             .header("Authentication", apiKey)
@@ -395,6 +418,30 @@ object SLApiService {
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
+
+    fun deleteAlias(apiKey: String, id: Int, completion: (error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/$id")
+            .header("Authentication", apiKey)
+            .delete()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(null)
+                    401 -> completion(SLError.InvalidApiKey)
+                    500 -> completion(SLError.InternalServerError)
+                    else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
 
