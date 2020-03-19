@@ -14,12 +14,19 @@ data class Alias(
     @SerializedName("email") val email: String,
     @SerializedName("creation_date") val creationDate: String,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
-    @SerializedName("enabled") val enabled: Boolean,
+    @SerializedName("enabled") private var _enabled: Boolean,
     @SerializedName("note") val note: String?,
     @SerializedName("nb_block") val blockCount: Int,
     @SerializedName("nb_forward") val forwardCount: Int,
     @SerializedName("nb_reply") val replyCount: Int
 ) {
+    val enabled: Boolean
+        get() = _enabled
+
+    fun setEnabled(enabled: Boolean) {
+        _enabled = enabled
+    }
+
     private var _countSpannableString: Spannable? = null
     fun getCountSpannableString(context: Context): Spannable {
         if (_countSpannableString == null) {
@@ -40,7 +47,7 @@ data class Alias(
     }
 
     private var _creationString: String? = null
-    fun getCreationString() : String {
+    fun getCreationString(): String {
         if (_creationString == null) {
             val distance = SLDateTimeFormatter.distanceFromNow(creationTimestamp)
             _creationString = "Created ${distance.first} ${distance.second} ago"

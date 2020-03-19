@@ -48,7 +48,12 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             viewLifecycleOwner,
             Observer { updatedAliases ->
                 if (updatedAliases) {
-                    activity?.runOnUiThread { adapter.setAliases(homeSharedViewModel.filteredAliases) }
+                    activity?.runOnUiThread {
+                        adapter.submitList(homeSharedViewModel.filteredAliases)
+                        // Better call adapter.notifyItemChanged(:position)
+                        // but it is complicated and not so important with a small list
+                        adapter.notifyDataSetChanged()
+                    }
                     homeSharedViewModel.onEventUpdateAliasesComplete()
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
@@ -75,7 +80,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
 
             override fun onSwitch(alias: Alias) {
-                Log.d("onSwitch", "${alias.id}")
                 setLoading(true)
                 SLApiService.toggleAlias(apiKey as String, alias.id) { enabled, error ->
                     activity?.runOnUiThread {
@@ -84,7 +88,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         if (error != null) {
                             toastError(error)
                         } else if (enabled != null) {
-                            homeSharedViewModel.refreshAliases()
+                            alias.setEnabled(enabled)
+                            homeSharedViewModel.filterAliases()
                         }
                     }
                 }

@@ -78,8 +78,11 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     var aliasFilterMode = AliasFilterMode.ALL
         private set
 
-    fun filterAliases(mode: AliasFilterMode) {
-        aliasFilterMode = mode
+    fun filterAliases(mode: AliasFilterMode? = null) {
+        mode?.let {
+            aliasFilterMode = it
+        }
+
         filteredAliases = when (aliasFilterMode) {
             AliasFilterMode.ALL -> _aliases
             AliasFilterMode.ACTIVE -> _aliases.filter { it.enabled }
