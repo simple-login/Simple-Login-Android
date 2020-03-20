@@ -81,6 +81,25 @@
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/icebergImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:layout_centerInParent="true"
+            android:padding="50dp"
+            android:src="@drawable/ic_iceberg" />
+
+        <TextView
+            android:id="@+id/instructionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icebergImageView"
+            android:layout_centerInParent="true"
+            android:text="Click + button to create a contact"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
+            android:textColor="@color/colorDarkGray"
+            tools:ignore="HardcodedText" />
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"

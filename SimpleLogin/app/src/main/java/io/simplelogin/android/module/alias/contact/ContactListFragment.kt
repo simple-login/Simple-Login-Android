@@ -13,6 +13,7 @@ import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.extension.toastShortly
 import io.simplelogin.android.utils.model.Alias
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -43,13 +44,18 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
         viewModel = tempViewModel
         viewModel.fetchContacts()
-        viewModel.eventUpdateContacts.observe(viewLifecycleOwner, Observer { updatedContacts ->
-            if (updatedContacts) {
-                activity?.runOnUiThread {
+        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
+            activity?.runOnUiThread {
+                if (haveNewContacts) {
                     adapter.submitList(viewModel.contacts)
-                    viewModel.onEventUpdateContactsComplete()
+                }
+
+                if (binding.swipeRefreshLayout.isRefreshing) {
+                    toastShortly("You are up to date")
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
+
+                updateUiBaseOnNumOfContacts()
             }
         })
 
@@ -83,6 +89,18 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun setLoading(loading: Boolean) {
         binding.rootConstraintLayout.isEnabled = !loading
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    private fun updateUiBaseOnNumOfContacts() {
+        if (viewModel.contacts.isEmpty()) {
+            binding.recyclerView.visibility = View.GONE
+            binding.icebergImageView.visibility = View.VISIBLE
+            binding.instructionTextView.visibility = View.VISIBLE
+        } else {
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.icebergImageView.visibility = View.GONE
+            binding.instructionTextView.visibility = View.GONE
+        }
     }
 
     // HomeActivity.OnBackPressed

@@ -27,13 +27,9 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         private set
     private var _isFetching: Boolean = false
 
-    private val _eventUpdateContacts = MutableLiveData<Boolean>()
-    val eventUpdateContacts: LiveData<Boolean>
-        get() = _eventUpdateContacts
-
-    fun onEventUpdateContactsComplete() {
-        _eventUpdateContacts.value = false
-    }
+    private val _eventHaveNewContacts = MutableLiveData<Boolean>()
+    val eventHaveNewContacts: LiveData<Boolean>
+        get() = _eventHaveNewContacts
 
     fun fetchContacts() {
         if (!moreToLoad || _isFetching) return
@@ -46,10 +42,11 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
             } else if (newContacts != null) {
                 if (newContacts.isEmpty()) {
                     moreToLoad = false
+                    _eventHaveNewContacts.postValue(false)
                 } else {
                     _currentPage += 1
                     _contacts.addAll(newContacts)
-                    _eventUpdateContacts.postValue(true)
+                    _eventHaveNewContacts.postValue(true)
                 }
             }
         }

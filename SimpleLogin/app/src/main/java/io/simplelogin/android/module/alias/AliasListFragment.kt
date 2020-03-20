@@ -152,7 +152,10 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
     override fun onResume() {
         super.onResume()
-        adapter.notifyDataSetChanged()
+        // On configuration change, trigger a recyclerView refresh by calling filter function
+        if (adapter.itemCount == 0) {
+            homeSharedViewModel.filterAliases()
+        }
     }
 
     private fun setLoading(loading: Boolean) {
