@@ -13,7 +13,7 @@ import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
-import io.simplelogin.android.utils.extension.toastShortly
+import io.simplelogin.android.utils.extension.toastUpToDate
 import io.simplelogin.android.utils.model.Alias
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -51,7 +51,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 }
 
                 if (binding.swipeRefreshLayout.isRefreshing) {
-                    toastShortly("You are up to date")
+                    context?.toastUpToDate()
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
 
@@ -61,7 +61,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
-                toastError(error)
+                context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
@@ -84,6 +84,15 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshContacts() }
         setLoading(false)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // On configuration change, force trigger refresh recyclerView
+        if (adapter.itemCount == 0 && viewModel.contacts.isNotEmpty()) {
+            adapter.submitList(viewModel.contacts)
+            updateUiBaseOnNumOfContacts()
+        }
     }
 
     private fun setLoading(loading: Boolean) {

@@ -26,6 +26,7 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.extension.copyToClipboard
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.extension.toastShortly
+import io.simplelogin.android.utils.extension.toastUpToDate
 import io.simplelogin.android.utils.model.Alias
 import java.lang.Exception
 
@@ -58,13 +59,17 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         adapter.notifyDataSetChanged()
                     }
                     homeSharedViewModel.onEventUpdateAliasesComplete()
-                    binding.swipeRefreshLayout.isRefreshing = false
+
+                    if (binding.swipeRefreshLayout.isRefreshing) {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        context?.toastUpToDate()
+                    }
                 }
             })
 
         homeSharedViewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
-                toastError(error)
+                context?.toastError(error)
                 homeSharedViewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
@@ -76,7 +81,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
             val context = getContext() ?: throw Exception("Context is null")
-            val apiKey = SLSharedPreferences.getApiKey(context) ?: toastError(SLError.NoApiKey)
+            val apiKey = SLSharedPreferences.getApiKey(context) ?: context.toastError(SLError.NoApiKey)
 
             override fun onClick(alias: Alias) {
                 Log.d("onClick", "${alias.id}")
@@ -89,7 +94,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         setLoading(false)
 
                         if (error != null) {
-                            toastError(error)
+                            context.toastError(error)
                         } else if (enabled != null) {
                             alias.setEnabled(enabled)
                             homeSharedViewModel.filterAliases()
@@ -101,7 +106,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             override fun onCopy(alias: Alias) {
                 val email = alias.email
                 copyToClipboard(email, email)
-                toastShortly("Copied \"$email\"")
+                context.toastShortly("Copied \"$email\"")
             }
 
             override fun onSendEmail(alias: Alias) {
@@ -119,7 +124,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                                 setLoading(false)
 
                                 if (error != null) {
-                                    toastError(error)
+                                    context.toastError(error)
                                 } else {
                                     // Calling deleteAlias will also trigger filter and refresh the alias list
                                     homeSharedViewModel.deleteAlias(alias)
