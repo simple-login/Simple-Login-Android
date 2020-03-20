@@ -29,7 +29,8 @@
                     android:layout_gravity="center"
                     android:text="Your Aliases"
                     android:textSize="@dimen/toolbarTitleSize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -46,19 +47,22 @@
                     android:id="@+id/allTabItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All" />
+                    android:text="All"
+                    tools:ignore="HardcodedText" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/activeTabItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Active" />
+                    android:text="Active"
+                    tools:ignore="HardcodedText" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/inactiveTabItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Inactive" />
+                    android:text="Inactive"
+                    tools:ignore="HardcodedText" />
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -84,7 +88,9 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:clipToPadding="false" />
+                    android:background="@color/colorListBackground"
+                    android:clipToPadding="false"
+                    android:paddingBottom="20dp" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
