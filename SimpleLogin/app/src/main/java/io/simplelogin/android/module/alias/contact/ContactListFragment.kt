@@ -10,11 +10,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.databinding.FragmentContactListBinding
+import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.model.Alias
 
-class ContactListFragment : BaseFragment() {
+class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentContactListBinding
     private lateinit var alias: Alias
     private lateinit var viewModel: ContactListViewModel
@@ -82,5 +83,10 @@ class ContactListFragment : BaseFragment() {
     private fun setLoading(loading: Boolean) {
         binding.rootConstraintLayout.isEnabled = !loading
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    // HomeActivity.OnBackPressed
+    override fun onBackPressed() {
+        findNavController().navigateUp()
     }
 }

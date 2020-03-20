@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
+import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
@@ -29,7 +30,7 @@ import io.simplelogin.android.utils.model.Alias
 import java.lang.Exception
 
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
-    TabLayout.OnTabSelectedListener {
+    TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasListBinding
     private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
     private lateinit var adapter: AliasListAdapter
@@ -149,6 +150,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyDataSetChanged()
+    }
+
     private fun setLoading(loading: Boolean) {
         binding.rootConstraintLayout.isEnabled = !loading
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
@@ -183,4 +189,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             2 -> homeSharedViewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
     }
+
+    // HomeActivity.OnBackPressed
+    override fun onBackPressed() = showLeftMenu()
 }

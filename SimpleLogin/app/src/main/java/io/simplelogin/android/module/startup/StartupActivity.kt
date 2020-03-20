@@ -2,8 +2,6 @@ package io.simplelogin.android.module.startup
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityStartUpBinding
@@ -13,7 +11,6 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SLError
-import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.model.UserInfo
 
 class StartupActivity : BaseAppCompatActivity()  {
@@ -52,7 +49,6 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     private fun fetchUserInfoAndProceed(apiKey: String) {
-        binding.progressBar.visibility = View.VISIBLE
         SLApiService.fetchUserInfo(apiKey) { userInfo, error ->
             runOnUiThread {
                 if (error != null) {
@@ -69,7 +65,6 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     private fun showErrorSnackBar(error: SLError) {
-        binding.progressBar.visibility = View.INVISIBLE
         Snackbar.make(binding.bottomCoordinatorLayout, error.description, Snackbar.LENGTH_INDEFINITE)
             .setAction("Retry") {
                 SLSharedPreferences.getApiKey(this)?.let { apiKey ->

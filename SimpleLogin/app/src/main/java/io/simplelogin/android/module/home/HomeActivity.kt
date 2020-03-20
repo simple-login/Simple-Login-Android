@@ -2,13 +2,13 @@ package io.simplelogin.android.module.home
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R
@@ -19,6 +19,10 @@ import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.model.UserInfo
 
 class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    interface OnBackPressed {
+        fun onBackPressed()
+    }
+
     companion object {
         const val USER_INFO = "userInfo"
     }
@@ -42,7 +46,16 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         window.statusBarColor = ContextCompat.getColor(this, color.colorWhite)
     }
 
-    override fun onBackPressed() = Unit
+    override fun onBackPressed() {
+        if (supportFragmentManager.fragments.size == 0) return
+        val navHostFragment = (supportFragmentManager.fragments[0] as? NavHostFragment) ?: return
+
+        for (fragment in navHostFragment.childFragmentManager.fragments) {
+            if (fragment is OnBackPressed) {
+                (fragment as OnBackPressed).onBackPressed()
+            }
+        }
+    }
 
     override fun onPause() {
         super.onPause()
