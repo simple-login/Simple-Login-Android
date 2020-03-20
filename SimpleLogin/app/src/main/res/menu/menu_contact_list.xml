@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/addMenuItem"
         android:icon="@drawable/ic_plus_24dp"
         android:title="Add"
         app:iconTint="@color/colorPrimary"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/searchMenuItem"
         android:title="💡How to"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        tools:ignore="HardcodedText" />
 </menu>

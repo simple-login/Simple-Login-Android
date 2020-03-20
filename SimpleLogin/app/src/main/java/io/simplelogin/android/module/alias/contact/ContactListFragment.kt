@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.utils.baseclass.BaseFragment
-import io.simplelogin.android.utils.extension.toastShortly
 import io.simplelogin.android.utils.model.Alias
 
 class ContactListFragment : BaseFragment() {
@@ -23,7 +22,9 @@ class ContactListFragment : BaseFragment() {
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         alias = ContactListFragmentArgs.fromBundle(requireArguments()).alias
-        toastShortly(alias.email)
+
+        binding.emailTextField.text = alias.email
+        binding.emailTextField.isSelected = true // to trigger marquee animation
 
         return binding.root
     }
