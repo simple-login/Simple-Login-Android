@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorListBackground">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/rootCardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="@dimen/itemBorderRadius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/arrowImageView"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/arrowImageView"
+                android:orientation="vertical"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:id="@+id/emailTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    tools:text="yautiden@gmail.com" />
+
+                <TextView
+                    android:id="@+id/creationDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_clock_16dp"
+                    android:drawablePadding="5dp"
+                    android:drawableTint="@color/colorDarkGray"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="@color/colorDarkGray"
+                    tools:text="Created on 6 Feb 2020 at 18:05 (1 month ago)" />
+
+                <TextView
+                    android:id="@+id/lastEmailSentTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableStart="@drawable/ic_send_16dp"
+                    android:drawablePadding="5dp"
+                    android:drawableTint="@color/colorDarkGray"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="@color/colorDarkGray"
+                    tools:text="Last sent on 6 Feb 2020 at 18:05 (1 month ago)" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/writeEmailButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="0dp"
+                        android:text="Write Email"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        app:icon="@drawable/ic_edit_24dp"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/deleteButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="40dp"
+                        android:paddingBottom="0dp"
+                        android:text="Delete"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorNegative"
+                        app:icon="@drawable/ic_delete_24dp"
+                        app:iconTint="@color/colorNegative"
+                        tools:ignore="HardcodedText,RtlSymmetry" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+    </FrameLayout>
+
+</layout>

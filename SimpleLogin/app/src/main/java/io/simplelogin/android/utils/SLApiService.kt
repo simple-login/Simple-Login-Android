@@ -20,6 +20,7 @@ private val client = OkHttpClient()
 object SLApiService {
     private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
 
+    //region Login
     fun login(
         email: String,
         password: String,
@@ -337,7 +338,9 @@ object SLApiService {
 
         })
     }
+    //endregion
 
+    //region Alias
     fun fetchAliases(
         apiKey: String,
         page: Int,
@@ -447,4 +450,45 @@ object SLApiService {
 
         })
     }
+    //endregion
+
+    //region Contact
+    fun fetchContacts(apiKey: String, aliasId: Int, page: Int, completion: (contacts: List<Contact>?, error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/$aliasId/contacts?page_id=$page")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val contactArray = Gson().fromJson(jsonString, ContactArray::class.java)
+                            if (contactArray != null) {
+                                completion(contactArray.contacts, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("ContactArray"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    400 -> completion(null, SLError.PageIdRequired)
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+
+        })
+    }
+    //endregion
 }

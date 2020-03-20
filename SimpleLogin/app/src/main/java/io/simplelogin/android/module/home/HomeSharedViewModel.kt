@@ -23,7 +23,7 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         _error.value = null
     }
 
-    // Aliases
+    //region Aliases
     private var currentPage = -1
     var moreAliasesToLoad: Boolean = true
         private set
@@ -38,8 +38,7 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
     val eventUpdateAliases: LiveData<Boolean>
         get() = _eventUpdateAliases
 
-    init {
-        _error.value = null
+    fun onEventUpdateAliasesComplete() {
         _eventUpdateAliases.value = false
     }
 
@@ -61,10 +60,6 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
                 }
             }
         }
-    }
-
-    fun onEventUpdateAliasesComplete() {
-        _eventUpdateAliases.value = false
     }
 
     fun refreshAliases() {
@@ -98,4 +93,6 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         filterAliases()
         _eventUpdateAliases.postValue(true)
     }
+
+    //endregion
 }
