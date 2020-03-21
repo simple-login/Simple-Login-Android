@@ -12,10 +12,10 @@
         <action
             android:id="@+id/action_aliasFragment_to_contactListFragment"
             app:destination="@id/contactListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/enter_anim_slide_in_from_right"
+            app:exitAnim="@anim/exit_anim_slide_out_to_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
     </fragment>
     <fragment
         android:id="@+id/contactListFragment"

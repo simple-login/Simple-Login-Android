@@ -27,7 +27,7 @@ object SLApiService {
         device: String,
         completion: (userLogin: UserLogin?, error: SLError?) -> Unit
     ) {
-        var body = """
+        val body = """
             {
                 "email": "$email",
                 "password": "$password",
@@ -64,6 +64,7 @@ object SLApiService {
 
                     400 -> completion(null, SLError.IncorrectEmailOrPassword)
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -112,6 +113,7 @@ object SLApiService {
 
                     400 -> completion(null, SLError.BadRequest("wrong token format"))
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -176,6 +178,7 @@ object SLApiService {
                     }
 
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -221,6 +224,7 @@ object SLApiService {
                     }
 
                     500 -> completion(SLError.InternalServerError)
+                    502 -> completion(SLError.BadGateway)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -267,6 +271,7 @@ object SLApiService {
 
                     410 -> completion(SLError.ReactivationNeeded)
                     500 -> completion(SLError.InternalServerError)
+                    502 -> completion(SLError.BadGateway)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -295,6 +300,7 @@ object SLApiService {
                 when (response.code) {
                     200 -> completion(null)
                     500 -> completion(SLError.InternalServerError)
+                    502 -> completion(SLError.BadGateway)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -332,6 +338,7 @@ object SLApiService {
 
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -378,6 +385,7 @@ object SLApiService {
                     400 -> completion(null, SLError.PageIdRequired)
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -420,6 +428,7 @@ object SLApiService {
 
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -444,6 +453,7 @@ object SLApiService {
                     200 -> completion(null)
                     401 -> completion(SLError.InvalidApiKey)
                     500 -> completion(SLError.InternalServerError)
+                    502 -> completion(SLError.BadGateway)
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
@@ -484,6 +494,7 @@ object SLApiService {
                     400 -> completion(null, SLError.PageIdRequired)
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }

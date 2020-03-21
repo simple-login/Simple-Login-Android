@@ -8,8 +8,9 @@ sealed class SLError(val description: String) {
     object PageIdRequired: SLError("page_id must be provided in request query")
     object DuplicatedAlias : SLError("Duplicated alias")
     object ReactivationNeeded : SLError("Reactivation needed")
+    object InternalServerError : SLError("Internal server error")
+    object BadGateway : SLError("Bad gateway error")
     class BadRequest(description: String) : SLError("Bad request: $description")
     class FailedToParseObject(objectName: String) : SLError("Failed to parse object $objectName")
-    object InternalServerError : SLError("Internal server error")
     class UnknownError(description: String) : SLError("Unknown error: $description")
 }
