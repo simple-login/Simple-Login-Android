@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivitySignUpBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.extension.isValidEmail
 
 class SignUpActivity : BaseAppCompatActivity() {
     companion object {
@@ -48,11 +49,7 @@ class SignUpActivity : BaseAppCompatActivity() {
     private fun verifyEnteredEmailAndPassword() {
         // Verify email
         val email = binding.emailTextField.editText?.text.toString()
-        val emailRegex = Regex("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
-        val isValidEmail = when (email.count()) {
-            0 -> false
-            else -> emailRegex.matches(email)
-        }
+        val isValidEmail = email.isValidEmail()
 
         if (isValidEmail) {
             binding.emailTextField.error = null

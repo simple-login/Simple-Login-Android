@@ -6,6 +6,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 
+fun Activity.showKeyboard() {
+    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.showSoftInput(this.currentFocus, InputMethodManager.SHOW_IMPLICIT)
+}
+
 fun Activity.dismissKeyboard() {
     val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     if (inputMethodManager.isAcceptingText) {

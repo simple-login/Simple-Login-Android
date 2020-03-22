@@ -1,6 +1,8 @@
 package io.simplelogin.android.module.alias.contact
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,7 +29,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private lateinit var adapter: ContactListAdapter
     private lateinit var howToBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var createContactBottomSheetBehavior: BottomSheetBehavior<View>
-    private lateinit var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback
     private var screenHeight: Int? = null
 
     override fun onCreateView(
@@ -45,26 +46,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.emailTextField.isSelected = true // to trigger marquee animation
 
         screenHeight = activity?.window?.decorView?.height
-
-        bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
-                    else -> {
-                        binding.dimView.visibility = View.VISIBLE
-                        binding.dimView.setOnTouchListener { _, _ ->
-                            // Must return true here to intercept touch event
-                            // if not the event is passed to next listener which cause the whole root is clickable
-                            true
-                        }
-                    }
-                }
-            }
-        }
 
         setUpHowToBottomSheet()
         setUpCreateContactBottomSheet()
@@ -110,7 +91,25 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.howToBottomSheet.closeButton.setOnClickListener {
             howToBottomSheetBehavior.hide()
         }
-        howToBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        howToBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
+                    else -> {
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun setUpCreateContactBottomSheet() {
@@ -124,7 +123,45 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.createContactBottomSheet.cancelButton.setOnClickListener {
             createContactBottomSheetBehavior.hide()
         }
-        createContactBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
+        createContactBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.dimView.visibility = View.GONE
+                        activity?.dismissKeyboard()
+                    }
+                    else -> {
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.createContactBottomSheet.emailTextField.editText?.requestFocus()
+                        activity?.showKeyboard()
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.createContactBottomSheet.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().isValidEmail()) {
+                    binding.createContactBottomSheet.createButton.isEnabled = true
+                    binding.createContactBottomSheet.emailTextField.error = null
+                } else {
+                    binding.createContactBottomSheet.createButton.isEnabled = false
+                    binding.createContactBottomSheet.emailTextField.error = "Invalid email address"
+                }
+            }
+        })
     }
 
     private fun setUpViewModel() {
@@ -188,7 +225,13 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.addMenuItem -> createContactBottomSheetBehavior.expand()
+            R.id.addMenuItem -> {
+                // Clear text and error state before showing the sheet
+                binding.createContactBottomSheet.emailTextField.editText?.text = null
+                binding.createContactBottomSheet.emailTextField.error = null
+                binding.createContactBottomSheet.createButton.isEnabled = false
+                createContactBottomSheetBehavior.expand()
+            }
             R.id.howToMenuItem -> howToBottomSheetBehavior.expand()
         }
 
