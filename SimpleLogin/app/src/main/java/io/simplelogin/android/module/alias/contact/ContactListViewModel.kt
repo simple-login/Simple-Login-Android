@@ -34,7 +34,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     fun fetchContacts() {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchContacts(apiKey, alias.id, _currentPage + 1) { newContacts, error ->
+        SLApiService.fetchContacts(apiKey, alias, _currentPage + 1) { newContacts, error ->
             _isFetching = false
 
             if (error != null) {
@@ -77,7 +77,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     }
 
     fun create(email: String) {
-        SLApiService.createContact(apiKey, alias.id, email) { error ->
+        SLApiService.createContact(apiKey, alias, email) { error ->
             _eventFinishCallingCreateContact.postValue(true)
 
             if (error != null) {

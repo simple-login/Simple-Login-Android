@@ -89,7 +89,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
             override fun onSwitch(alias: Alias) {
                 setLoading(true)
-                SLApiService.toggleAlias(apiKey as String, alias.id) { enabled, error ->
+                SLApiService.toggleAlias(apiKey as String, alias) { enabled, error ->
                     activity?.runOnUiThread {
                         setLoading(false)
 
@@ -119,7 +119,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        SLApiService.deleteAlias(apiKey as String, alias.id) { error ->
+                        SLApiService.deleteAlias(apiKey as String, alias) { error ->
                             activity?.runOnUiThread {
                                 setLoading(false)
 

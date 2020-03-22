@@ -395,11 +395,11 @@ object SLApiService {
 
     fun toggleAlias(
         apiKey: String,
-        id: Int,
+        alias: Alias,
         completion: (enabled: Boolean?, error: SLError?) -> Unit
     ) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases/$id/toggle")
+            .url("${BASE_URL}/api/aliases/${alias.id}/toggle")
             .header("Authentication", apiKey)
             .post("".toRequestBody(CONTENT_TYPE_JSON))
             .build()
@@ -436,9 +436,9 @@ object SLApiService {
         })
     }
 
-    fun deleteAlias(apiKey: String, id: Int, completion: (error: SLError?) -> Unit) {
+    fun deleteAlias(apiKey: String, alias: Alias, completion: (error: SLError?) -> Unit) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases/$id")
+            .url("${BASE_URL}/api/aliases/${alias.id}")
             .header("Authentication", apiKey)
             .delete()
             .build()
@@ -463,9 +463,14 @@ object SLApiService {
     //endregion
 
     //region Contact
-    fun fetchContacts(apiKey: String, aliasId: Int, page: Int, completion: (contacts: List<Contact>?, error: SLError?) -> Unit) {
+    fun fetchContacts(
+        apiKey: String,
+        alias: Alias,
+        page: Int,
+        completion: (contacts: List<Contact>?, error: SLError?) -> Unit
+    ) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases/$aliasId/contacts?page_id=$page")
+            .url("${BASE_URL}/api/aliases/${alias.id}/contacts?page_id=$page")
             .header("Authentication", apiKey)
             .build()
 
@@ -502,7 +507,12 @@ object SLApiService {
         })
     }
 
-    fun createContact(apiKey: String, aliasId: Int, email: String, completion: (error: SLError?) -> Unit) {
+    fun createContact(
+        apiKey: String,
+        alias: Alias,
+        email: String,
+        completion: (error: SLError?) -> Unit
+    ) {
         val body = """
             {
                 "contact": "$email"
@@ -510,7 +520,7 @@ object SLApiService {
         """.trimIndent()
 
         val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases/$aliasId/contacts")
+            .url("${BASE_URL}/api/aliases/${alias.id}/contacts")
             .header("Authentication", apiKey)
             .post(body.toRequestBody(CONTENT_TYPE_JSON))
             .build()
