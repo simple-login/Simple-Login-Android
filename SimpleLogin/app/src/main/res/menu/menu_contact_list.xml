@@ -12,7 +12,7 @@
         tools:ignore="HardcodedText" />
 
     <item
-        android:id="@+id/searchMenuItem"
+        android:id="@+id/howToMenuItem"
         android:title="💡How to"
         app:showAsAction="ifRoom"
         tools:ignore="HardcodedText" />
