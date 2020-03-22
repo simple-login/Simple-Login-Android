@@ -120,11 +120,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorDarkGray"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/createContactBottomSheet"
+            layout="@layout/bottom_sheet_create_contact" />
 
         <include
             android:id="@+id/howToBottomSheet"
-            layout="@layout/bottom_sheet_how_to_create_contact"/>
+            layout="@layout/bottom_sheet_how_to_create_contact" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

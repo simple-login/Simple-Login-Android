@@ -26,6 +26,8 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private lateinit var viewModel: ContactListViewModel
     private lateinit var adapter: ContactListAdapter
     private lateinit var howToBottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var createContactBottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback
     private var screenHeight: Int? = null
 
     override fun onCreateView(
@@ -44,7 +46,28 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
         screenHeight = activity?.window?.decorView?.height
 
+        bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
+                    else -> {
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        }
+
         setUpHowToBottomSheet()
+        setUpCreateContactBottomSheet()
         setUpViewModel()
         setUpRecyclerView()
         setLoading(false)
@@ -83,30 +106,25 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         }
 
         howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
-        howToBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        howToBottomSheetBehavior.hide()
         binding.howToBottomSheet.closeButton.setOnClickListener {
             howToBottomSheetBehavior.hide()
         }
-        howToBottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
-            }
+        howToBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+    }
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
-                    else -> {
-                        binding.dimView.visibility = View.VISIBLE
-                        binding.dimView.setOnTouchListener { _, _ ->
-                            // Must return true here to intercept touch event
-                            // if not the event is passed to next listener which cause the whole root is clickable
-                            true
-                        }
-                    }
-                }
-            }
-        })
+    private fun setUpCreateContactBottomSheet() {
+        screenHeight?.let {
+            binding.createContactBottomSheet.root.layoutParams.height = it * 90 / 100
+        }
+        binding.createContactBottomSheet.aliasTextView.text = alias.email
+
+        createContactBottomSheetBehavior = BottomSheetBehavior.from(binding.createContactBottomSheet.root)
+        createContactBottomSheetBehavior.hide()
+        binding.createContactBottomSheet.cancelButton.setOnClickListener {
+            createContactBottomSheetBehavior.hide()
+        }
+        createContactBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
     }
 
     private fun setUpViewModel() {
@@ -170,7 +188,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.addMenuItem -> Unit
+            R.id.addMenuItem -> createContactBottomSheetBehavior.expand()
             R.id.howToMenuItem -> howToBottomSheetBehavior.expand()
         }
 
