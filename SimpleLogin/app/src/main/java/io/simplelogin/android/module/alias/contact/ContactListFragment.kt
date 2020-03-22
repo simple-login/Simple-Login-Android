@@ -162,6 +162,16 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 }
             }
         })
+
+        binding.createContactBottomSheet.createButton.setOnClickListener {
+            val email = binding.createContactBottomSheet.emailTextField.editText?.text.toString()
+            if (!email.isValidEmail()) return@setOnClickListener
+
+            createContactBottomSheetBehavior.hide()
+            activity?.dismissKeyboard()
+            setLoading(true)
+            viewModel.create(email)
+        }
     }
 
     private fun setUpViewModel() {
@@ -192,6 +202,21 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+
+        viewModel.eventFinishCallingCreateContact.observe(viewLifecycleOwner, Observer { finishedCallingCreateContact ->
+            if (finishedCallingCreateContact) {
+                setLoading(false)
+                viewModel.onHandleFinishCallingCreateContactComplete()
+            }
+        })
+
+        viewModel.eventCreatedContact.observe(viewLifecycleOwner, Observer { createdContact ->
+            if (createdContact != null) {
+                context?.toastShortly("Created \"$createdContact\"")
+                viewModel.refreshContacts()
+                viewModel.onHandleCreatedContactComplete()
             }
         })
     }

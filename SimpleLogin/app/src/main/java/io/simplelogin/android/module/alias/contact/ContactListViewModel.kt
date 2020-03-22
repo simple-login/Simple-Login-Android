@@ -34,7 +34,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     fun fetchContacts() {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchContacts(apiKey, alias.id, _currentPage +1) { newContacts, error ->
+        SLApiService.fetchContacts(apiKey, alias.id, _currentPage + 1) { newContacts, error ->
             _isFetching = false
 
             if (error != null) {
@@ -57,5 +57,34 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         moreToLoad = true
         _contacts = mutableListOf()
         fetchContacts()
+    }
+
+    // Create
+    private var _eventFinishCallingCreateContact = MutableLiveData<Boolean>()
+    val eventFinishCallingCreateContact: LiveData<Boolean>
+        get() = _eventFinishCallingCreateContact
+
+    fun onHandleFinishCallingCreateContactComplete() {
+        _eventFinishCallingCreateContact.value = false
+    }
+
+    private var _eventCreatedContact = MutableLiveData<String>()
+    val eventCreatedContact: LiveData<String>
+        get() = _eventCreatedContact
+
+    fun onHandleCreatedContactComplete() {
+        _eventCreatedContact.value = null
+    }
+
+    fun create(email: String) {
+        SLApiService.createContact(apiKey, alias.id, email) { error ->
+            _eventFinishCallingCreateContact.postValue(true)
+
+            if (error != null) {
+                _error.postValue(error)
+            } else {
+                _eventCreatedContact.postValue(email)
+            }
+        }
     }
 }

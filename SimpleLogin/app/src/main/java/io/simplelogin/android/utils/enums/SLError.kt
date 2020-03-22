@@ -7,6 +7,7 @@ sealed class SLError(val description: String) {
     object InvalidApiKey : SLError("Invalid API key")
     object PageIdRequired: SLError("page_id must be provided in request query")
     object DuplicatedAlias : SLError("Duplicated alias")
+    object DuplicatedContact : SLError("Duplicated contact")
     object ReactivationNeeded : SLError("Reactivation needed")
     object InternalServerError : SLError("Internal server error")
     object BadGateway : SLError("Bad gateway error")
