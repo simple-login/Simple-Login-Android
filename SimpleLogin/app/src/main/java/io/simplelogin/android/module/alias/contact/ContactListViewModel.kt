@@ -87,4 +87,32 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
             }
         }
     }
+
+    // Delete
+    private var _eventFinishCallingDeleteContact = MutableLiveData<Boolean>()
+    val eventFinishCallingDeleteContact: LiveData<Boolean>
+        get() = _eventFinishCallingDeleteContact
+
+    fun onHandleFinishCallingDeleteContactComplete() {
+        _eventFinishCallingDeleteContact.value = false
+    }
+
+    private var _eventDeletedContact = MutableLiveData<String>()
+    val eventDeletedContact: LiveData<String>
+        get() = _eventDeletedContact
+
+    fun onHandleDeletedContactComplete() {
+        _eventDeletedContact.value = null
+    }
+
+    fun delete(contact: Contact) {
+        SLApiService.deleteContact(apiKey, contact) { error ->
+            _eventFinishCallingDeleteContact.postValue(true)
+            if (error != null) {
+                _error.postValue(error)
+            } else {
+                _eventDeletedContact.postValue(contact.email)
+            }
+        }
+    }
 }

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.databinding.RecyclerItemContactBinding
+import io.simplelogin.android.module.alias.contact.ContactListAdapter
 import io.simplelogin.android.utils.model.Contact
 
 class ContactViewHolder(private val binding: RecyclerItemContactBinding) :
@@ -17,7 +18,7 @@ class ContactViewHolder(private val binding: RecyclerItemContactBinding) :
         }
     }
 
-    fun bind(contact: Contact) {
+    fun bind(contact: Contact, clickListener: ContactListAdapter.ClickListener) {
         binding.emailTextView.text = contact.email
         binding.creationDateTextView.text = contact.getCreationString()
 
@@ -30,5 +31,7 @@ class ContactViewHolder(private val binding: RecyclerItemContactBinding) :
             binding.lastEmailSentTextView.visibility = View.GONE
         }
 
+        binding.writeEmailButton.setOnClickListener { clickListener.onWrite(contact) }
+        binding.deleteButton.setOnClickListener { clickListener.onDelete(contact) }
     }
 }

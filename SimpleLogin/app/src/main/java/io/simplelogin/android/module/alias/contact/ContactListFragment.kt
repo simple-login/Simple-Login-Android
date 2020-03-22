@@ -14,12 +14,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
+import io.simplelogin.android.utils.model.Contact
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
@@ -210,6 +212,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
+        // Create contact
         viewModel.eventFinishCallingCreateContact.observe(viewLifecycleOwner, Observer { finishedCallingCreateContact ->
             if (finishedCallingCreateContact) {
                 setLoading(false)
@@ -224,10 +227,42 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 viewModel.onHandleCreatedContactComplete()
             }
         })
+
+        // Delete contact
+        viewModel.eventFinishCallingDeleteContact.observe(viewLifecycleOwner, Observer { finishedCallingDeleteContact ->
+            if (finishedCallingDeleteContact) {
+                setLoading(false)
+                viewModel.onHandleFinishCallingDeleteContactComplete()
+            }
+        })
+
+        viewModel.eventDeletedContact.observe(viewLifecycleOwner, Observer { deletedContact ->
+            if (deletedContact != null) {
+                context?.toastShortly("Deleted \"$deletedContact\"")
+                viewModel.refreshContacts()
+                viewModel.onHandleDeletedContactComplete()
+            }
+        })
     }
 
     private fun setUpRecyclerView() {
-        adapter = ContactListAdapter()
+        adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
+            override fun onWrite(contact: Contact) {
+
+            }
+
+            override fun onDelete(contact: Contact) {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${contact.email}\"?")
+                    .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
+                    .setPositiveButton("Cancel", null)
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        viewModel.delete(contact)
+                    }
+                    .show()
+            }
+        })
         binding.recyclerView.adapter = adapter
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager

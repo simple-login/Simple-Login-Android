@@ -6,10 +6,15 @@ import io.simplelogin.android.utils.diffutil.ContactDiffCallback
 import io.simplelogin.android.utils.model.Contact
 import io.simplelogin.android.viewholder.ContactViewHolder
 
-class ContactListAdapter : ListAdapter<Contact, ContactViewHolder>(ContactDiffCallback()) {
+class ContactListAdapter(private val clickListener: ClickListener) : ListAdapter<Contact, ContactViewHolder>(ContactDiffCallback()) {
+    interface ClickListener {
+        fun onWrite(contact: Contact)
+        fun onDelete(contact: Contact)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder =
         ContactViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) =
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
 }
