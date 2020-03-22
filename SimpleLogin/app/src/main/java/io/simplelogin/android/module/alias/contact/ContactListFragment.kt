@@ -26,6 +26,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private lateinit var viewModel: ContactListViewModel
     private lateinit var adapter: ContactListAdapter
     private lateinit var howToBottomSheetBehavior: BottomSheetBehavior<View>
+    private var screenHeight: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +35,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     ): View? {
         // Binding
         binding = FragmentContactListBinding.inflate(layoutInflater)
-
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.toolbar.setOnMenuItemClickListener(this)
         alias = ContactListFragmentArgs.fromBundle(requireArguments()).alias
@@ -42,84 +42,11 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.emailTextField.text = alias.email
         binding.emailTextField.isSelected = true // to trigger marquee animation
 
-        // HowToBottomSheet
-        val screenHeight = activity?.window?.decorView?.height
-        screenHeight?.let {
-            binding.howToBottomSheet.root.layoutParams.height = screenHeight * 90 / 100
-        }
+        screenHeight = activity?.window?.decorView?.height
 
-        howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
-        howToBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.howToBottomSheet.closeButton.setOnClickListener {
-            howToBottomSheetBehavior.hide()
-        }
-        howToBottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
-                    else -> {
-                        binding.dimView.visibility = View.VISIBLE
-                        binding.dimView.setOnTouchListener { _, _ ->
-                            // Must return true here to intercept touch event
-                            // if not the event is passed to next listener which cause the whole root is clickable
-                            true
-                        }
-                    }
-                }
-            }
-        })
-
-        // ViewModel
-        val tempViewModel: ContactListViewModel by viewModels {
-            ContactListViewModelFactory(
-                context ?: throw IllegalStateException("Context is null"), alias
-            )
-        }
-        viewModel = tempViewModel
-        viewModel.fetchContacts()
-        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
-            activity?.runOnUiThread {
-                if (haveNewContacts) {
-                    adapter.submitList(viewModel.contacts)
-                }
-
-                if (binding.swipeRefreshLayout.isRefreshing) {
-                    context?.toastUpToDate()
-                    binding.swipeRefreshLayout.isRefreshing = false
-                }
-
-                updateUiBaseOnNumOfContacts()
-            }
-        })
-
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
-            if (error != null) {
-                context?.toastError(error)
-                viewModel.onHandleErrorComplete()
-                binding.swipeRefreshLayout.isRefreshing = false
-            }
-        })
-
-        // RecyclerView
-        adapter = ContactListAdapter()
-        binding.recyclerView.adapter = adapter
-        val linearLayoutManager = LinearLayoutManager(context)
-        binding.recyclerView.layoutManager = linearLayoutManager
-
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1) && viewModel.moreToLoad) {
-                    viewModel.fetchContacts()
-                }
-            }
-        })
-
-        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshContacts() }
+        setUpHowToBottomSheet()
+        setUpViewModel()
+        setUpRecyclerView()
         setLoading(false)
         return binding.root
     }
@@ -148,6 +75,87 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             binding.icebergImageView.visibility = View.GONE
             binding.instructionTextView.visibility = View.GONE
         }
+    }
+
+    private fun setUpHowToBottomSheet() {
+        screenHeight?.let {
+            binding.howToBottomSheet.root.layoutParams.height = it * 90 / 100
+        }
+
+        howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
+        howToBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        binding.howToBottomSheet.closeButton.setOnClickListener {
+            howToBottomSheetBehavior.hide()
+        }
+        howToBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
+                    else -> {
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun setUpViewModel() {
+        val tempViewModel: ContactListViewModel by viewModels {
+            context?.let {
+                ContactListViewModelFactory(it, alias)
+            } ?: throw IllegalStateException("Context is null")
+        }
+        viewModel = tempViewModel
+        viewModel.fetchContacts()
+        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
+            activity?.runOnUiThread {
+                if (haveNewContacts) {
+                    adapter.submitList(viewModel.contacts)
+                }
+
+                if (binding.swipeRefreshLayout.isRefreshing) {
+                    context?.toastUpToDate()
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+
+                updateUiBaseOnNumOfContacts()
+            }
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            if (error != null) {
+                context?.toastError(error)
+                viewModel.onHandleErrorComplete()
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+    }
+
+    private fun setUpRecyclerView() {
+        adapter = ContactListAdapter()
+        binding.recyclerView.adapter = adapter
+        val linearLayoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = linearLayoutManager
+
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1) && viewModel.moreToLoad) {
+                    viewModel.fetchContacts()
+                }
+            }
+        })
+
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshContacts() }
     }
 
     // HomeActivity.OnBackPressed
