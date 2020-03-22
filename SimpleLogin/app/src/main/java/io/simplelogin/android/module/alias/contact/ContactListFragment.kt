@@ -99,6 +99,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
+
                     else -> {
                         binding.dimView.visibility = View.VISIBLE
                         binding.dimView.setOnTouchListener { _, _ ->
@@ -135,10 +136,14 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                         binding.dimView.visibility = View.GONE
                         activity?.dismissKeyboard()
                     }
-                    else -> {
-                        binding.dimView.visibility = View.VISIBLE
+
+                    BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.createContactBottomSheet.emailTextField.editText?.requestFocus()
                         activity?.showKeyboard()
+                    }
+
+                    else -> {
+                        binding.dimView.visibility = View.VISIBLE
                         binding.dimView.setOnTouchListener { _, _ ->
                             // Must return true here to intercept touch event
                             // if not the event is passed to next listener which cause the whole root is clickable
@@ -242,6 +247,8 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     override fun onBackPressed() {
         if (howToBottomSheetBehavior.isExpanded()) {
             howToBottomSheetBehavior.hide()
+        } else if (createContactBottomSheetBehavior.isExpanded()) {
+            createContactBottomSheetBehavior.hide()
         } else {
             findNavController().navigateUp()
         }

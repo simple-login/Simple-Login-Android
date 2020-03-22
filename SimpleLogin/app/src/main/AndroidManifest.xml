@@ -18,7 +18,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".module.home.HomeActivity" />
+        <!--windowSoftInputMode="adjustPan" to prevent bottom sheet to move up when keyboard is appeared -->
+        <activity
+            android:name=".module.home.HomeActivity"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity android:name=".module.login.LoginActivity" />
         <activity android:name=".module.login.VerificationActivity" />
         <activity android:name=".module.login.SignUpActivity" />
