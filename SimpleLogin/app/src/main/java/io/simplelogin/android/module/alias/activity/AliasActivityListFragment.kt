@@ -6,17 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
 import io.simplelogin.android.module.alias.contact.ContactListFragmentArgs
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.makeSubviewsClippedToBound
+import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.extension.toastUpToDate
 import io.simplelogin.android.utils.model.Alias
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasActivityBinding
+    private lateinit var viewModel: AliasActivityListViewModel
+    private lateinit var adapter: AliasActivityListAdapter
     private lateinit var alias: Alias
 
     @SuppressLint("SetTextI18n")
@@ -43,6 +51,8 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
 
         setUpStats()
+        setUpViewModel()
+        setUpRecyclerView()
 
         return binding.root
     }
@@ -70,9 +80,56 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Block
         binding.blockedStat.root.makeSubviewsClippedToBound()
         binding.blockedStat.iconImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_block_48dp))
-        binding.blockedStat.rootLinearLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
+        binding.blockedStat.rootLinearLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorNegative))
         binding.blockedStat.numberTextView.text = "${alias.blockCount}"
         binding.blockedStat.typeTextView.text = "Email blocked"
+    }
+
+    private fun setUpViewModel() {
+        val tempViewModel: AliasActivityListViewModel by viewModels {
+            context?.let {
+                AliasActivityListViewModelFactory(it, alias)
+            } ?: throw IllegalStateException("Context is null")
+        }
+        viewModel = tempViewModel
+        viewModel.fetchActivities()
+        viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
+            activity?.runOnUiThread {
+                if (haveNewActivities) {
+                    adapter.submitList(viewModel.activities)
+                }
+
+                if (binding.swipeRefreshLayout.isRefreshing) {
+                    context?.toastUpToDate()
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            if (error != null) {
+                context?.toastError(error)
+                viewModel.onHandleErrorComplete()
+                binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+    }
+
+    private fun setUpRecyclerView() {
+        adapter = AliasActivityListAdapter()
+        binding.recyclerView.adapter = adapter
+        val linearLayoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = linearLayoutManager
+
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size - 1) && viewModel.moreToLoad) {
+                    viewModel.fetchActivities()
+                }
+            }
+        })
+
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshActivities() }
     }
 
     // HomeActivity.OnBackPressed

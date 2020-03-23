@@ -6,10 +6,14 @@ import java.util.concurrent.TimeUnit
 
 object SLDateTimeFormatter {
     private val preciseFormatter = SimpleDateFormat("d MMM yyyy 'at' HH:mm")
-    fun preciseCreationDateStringFrom(seconds: Long, prefix: String) : String {
+    fun preciseCreationDateStringFrom(seconds: Long, prefix: String? = null) : String {
         val preciseDateAndTimeString = preciseFormatter.format(Date(TimeUnit.SECONDS.toMillis(seconds)))
         val distance = distanceFromNow(seconds)
-        return "$prefix $preciseDateAndTimeString (${distance.first} ${distance.second} ago)"
+        return if (prefix != null) {
+            "$prefix $preciseDateAndTimeString (${distance.first} ${distance.second} ago)"
+        } else {
+            "$preciseDateAndTimeString (${distance.first} ${distance.second} ago)"
+        }
     }
 
     fun distanceFromNow(seconds: Long) : Pair<Int, String> {

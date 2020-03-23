@@ -68,7 +68,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -117,7 +116,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -182,7 +180,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -228,7 +225,6 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -275,7 +271,6 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -304,7 +299,6 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -342,7 +336,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
     //endregion
@@ -389,7 +382,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -432,7 +424,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -457,9 +448,53 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
+
+    fun fetchAliasActivities(
+        apiKey: String,
+        alias: Alias,
+        page: Int,
+        completion: (aliasActivities: List<AliasActivity>?, error: SLError?) -> Unit
+    ) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/${alias.id}/activities?page_id=$page")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val aliasActivityArray =
+                                Gson().fromJson(jsonString, AliasActivityArray::class.java)
+                            if (aliasActivityArray != null) {
+                                completion(aliasActivityArray.activities, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("AliasActivityArray"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    400 -> completion(null, SLError.PageIdRequired)
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
+
     //endregion
 
     //region Contact
@@ -503,7 +538,6 @@ object SLApiService {
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -540,7 +574,6 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
 
@@ -565,7 +598,6 @@ object SLApiService {
                     else -> completion(SLError.UnknownError("error code ${response.code}"))
                 }
             }
-
         })
     }
     //endregion
