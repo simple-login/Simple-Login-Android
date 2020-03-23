@@ -16,11 +16,26 @@
             app:exitAnim="@anim/exit_anim_slide_out_to_left"
             app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
             app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
+        <action
+            android:id="@+id/action_aliasListFragment_to_aliasActivityListFragment"
+            app:destination="@id/aliasActivityListFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_from_right"
+            app:exitAnim="@anim/exit_anim_slide_out_to_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
     </fragment>
     <fragment
         android:id="@+id/contactListFragment"
         android:name="io.simplelogin.android.module.alias.contact.ContactListFragment"
         android:label="ContactListFragment" >
+        <argument
+            android:name="alias"
+            app:argType="io.simplelogin.android.utils.model.Alias" />
+    </fragment>
+    <fragment
+        android:id="@+id/aliasActivityListFragment"
+        android:name="io.simplelogin.android.module.alias.activity.AliasActivityListFragment"
+        android:label="AliasActivityListFragment" >
         <argument
             android:name="alias"
             app:argType="io.simplelogin.android.utils.model.Alias" />

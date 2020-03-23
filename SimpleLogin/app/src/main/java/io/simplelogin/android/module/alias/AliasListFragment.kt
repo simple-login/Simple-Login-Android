@@ -84,7 +84,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             val apiKey = SLSharedPreferences.getApiKey(context) ?: context.toastError(SLError.NoApiKey)
 
             override fun onClick(alias: Alias) {
-                Log.d("onClick", "${alias.id}")
+                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasActivityListFragment(alias))
             }
 
             override fun onSwitch(alias: Alias) {

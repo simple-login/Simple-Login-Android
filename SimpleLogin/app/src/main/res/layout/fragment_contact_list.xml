@@ -47,6 +47,7 @@
                     android:ellipsize="marquee"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="10dp"
