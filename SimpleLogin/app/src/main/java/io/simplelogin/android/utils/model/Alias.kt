@@ -9,6 +9,7 @@ import androidx.core.text.color
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.R
 import io.simplelogin.android.utils.SLDateTimeFormatter
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -22,7 +23,7 @@ data class Alias(
     @SerializedName("nb_block") val blockCount: Int,
     @SerializedName("nb_forward") val forwardCount: Int,
     @SerializedName("nb_reply") val replyCount: Int
-): Parcelable {
+) : Parcelable {
     val enabled: Boolean
         get() = _enabled
 
@@ -30,6 +31,10 @@ data class Alias(
         _enabled = enabled
     }
 
+    val handleCount: Int
+        get() = blockCount + forwardCount + replyCount
+
+    @IgnoredOnParcel
     private var _countSpannableString: Spannable? = null
     fun getCountSpannableString(context: Context): Spannable {
         if (_countSpannableString == null) {
@@ -49,6 +54,7 @@ data class Alias(
         return _countSpannableString!!
     }
 
+    @IgnoredOnParcel
     private var _creationString: String? = null
     fun getCreationString(): String {
         if (_creationString == null) {
@@ -57,6 +63,16 @@ data class Alias(
         }
 
         return _creationString!!
+    }
+
+    @IgnoredOnParcel
+    private var _preciseCreationString: String? = null
+    fun getPreciseCreationString(): String {
+        if (_preciseCreationString == null) {
+            _preciseCreationString = SLDateTimeFormatter.preciseCreationDateStringFrom(creationTimestamp, "Created on")
+        }
+
+        return _preciseCreationString!!
     }
 }
 
