@@ -132,7 +132,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                             }
                         }
                     }
-                    .setPositiveButton("Cancel", null)
+                    .setNeutralButton("Cancel", null)
                     .show()
             }
         })

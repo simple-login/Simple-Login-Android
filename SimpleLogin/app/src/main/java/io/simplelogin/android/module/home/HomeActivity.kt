@@ -92,9 +92,9 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
             id.signOutMenuItem -> {
                 // Sign Out
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("Please confirm")
-                    .setMessage("You will be signed out")
-                    .setNegativeButton("Cancel", null)
+                    .setTitle("You will be signed out")
+                    .setMessage("Please confirm")
+                    .setNeutralButton("Cancel", null)
                     .setPositiveButton("Yes, sign me out") { _, _ ->
                         SLSharedPreferences.removeApiKey(this)
                         finish()
