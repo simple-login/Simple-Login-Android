@@ -4,4 +4,7 @@
     <string name="fb_login_protocol_scheme">fb388804475105146</string>
     <string name="google_web_client_id">1015607994815-spepahv667u0o9f17nie3f9vuddhgp1p.apps.googleusercontent.com</string>
     <string name="app_short_description">SimpleLogin is a open source solution to protect your online identity.\n\nSimpleLogin strives to offer a simple experience for both users and partners/developers</string>
+    <string name="step_a">Create quickly a random, secure email alias on any website.\n\nAll emails going to an alias will be forwarded to your personal inbox.</string>
+    <string name="step_b">Simply bock an alias if it\'s too spammy.</string>
+    <string name="step_c">Not only an alias can receive emails, it can send emails too.\n\nSimply hit \"Reply\" in your favorite email client and the reply will come from the alias.\n\nYour personal email address is never revealed.</string>
 </resources>
