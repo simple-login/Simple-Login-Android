@@ -1,6 +1,8 @@
 package io.simplelogin.android.module.about
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +32,12 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             )
         }
 
-        binding.contactTextView.setOnClickListener { }
+        binding.contactTextView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO)
+            intent.data = Uri.parse("mailto:")
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("hi@simplelogin.io"))
+            activity?.startActivity(intent)
+        }
 
         val base_url = "https://simplelogin.io"
         binding.faqTextView.setOnClickListener {
