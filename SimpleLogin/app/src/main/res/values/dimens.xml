@@ -4,4 +4,5 @@
     <dimen name="verificationCodeTextSize">30sp</dimen>
     <dimen name="numPadTextSize">35sp</dimen>
     <dimen name="itemBorderRadius">2dp</dimen>
+    <dimen name="card_view_padding">15dp</dimen>
 </resources>

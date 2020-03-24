@@ -16,6 +16,7 @@ import io.simplelogin.android.R.*
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.extension.getVersionName
 import io.simplelogin.android.utils.model.UserInfo
 
 class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -107,9 +108,8 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun setUpDrawer() {
         // App version name
-        val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
         val appVersionMenuItem = binding.navigationView.menu.findItem(id.appVersionMenuItem)
-        appVersionMenuItem?.title = "SimpleLogin v${packageInfo.versionName}"
+        appVersionMenuItem?.title = "SimpleLogin v${getVersionName()}"
         appVersionMenuItem.isEnabled = false
 
         // Header info

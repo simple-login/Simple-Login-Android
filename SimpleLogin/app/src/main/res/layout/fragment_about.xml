@@ -21,12 +21,271 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="About"
+                android:text="About SimpleLogin"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
 
         </androidx.appcompat.widget.Toolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorLightGray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
+
+                <!--Version-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/versionAndInfoCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/appVersionTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorDarkGray"
+                            tools:text="SimpleLogin vX.X" />
+
+                        <View
+                            android:id="@+id/firstSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/appVersionTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/descriptionTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/firstSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/app_short_description"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="350dp"
+                            android:layout_below="@id/descriptionTextView"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/sl_schema_light"
+                            tools:ignore="ContentDescription" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--How & FAQ-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/howAndFaqCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/howTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="How it works"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:id="@+id/secondSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/howTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/faqTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/secondSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Frequently asked questions"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--Team & Contact-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/teamAndContactCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/teamTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Our team"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:id="@+id/thirdSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/teamTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/contactTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/thirdSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Contact us"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--Pricing & Blog-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pricingAndBlogCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/pricingTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Pricing"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:id="@+id/fourthSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/pricingTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/blogTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/fourthSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Blog"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--Terms & Privacy-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/termsAndPrivacyCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/termsTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Terms &amp; conditions"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:id="@+id/fifthSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/termsTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/privacyTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/fifthSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Privacy policy"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <View
             android:layout_width="match_parent"
@@ -37,6 +296,5 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </layout>
