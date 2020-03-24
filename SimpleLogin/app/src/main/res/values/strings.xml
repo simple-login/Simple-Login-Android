@@ -7,4 +7,8 @@
     <string name="step_a">Create quickly a random, secure email alias on any website.\n\nAll emails going to an alias will be forwarded to your personal inbox.</string>
     <string name="step_b">Simply bock an alias if it\'s too spammy.</string>
     <string name="step_c">Not only an alias can receive emails, it can send emails too.\n\nSimply hit \"Reply\" in your favorite email client and the reply will come from the alias.\n\nYour personal email address is never revealed.</string>
+    <string name="faq_0">Email alias is similar to forward email address: all emails sent to an alias will be forwarded to your inbox.\n\nThanks to SimpleLogin technology, an alias can also send emails.\n\nFor your contact, the alias is therefore your email address.</string>
+    <string name="faq_1">Yes! An email alias is actually a normal email address that exists forever unless you remove it on your SimpleLogin dashboard.</string>
+    <string name="faq_2">SimpleLogin alias are permanent as opposed to the temporary emails created on services like temp-mail.org, 10minutesmail.net, etc.\n\nSimpleLogin also doesn\'t store the emails.\n\nWe are simply different products for different usecases.</string>
+    <string name="faq_3">SimpleLogin doesn\'t store the emails (we don\'t want to become another Gmail 💰).\n\nTechnically the emails DO arrive at SimpleLogin server and we modify email headers to implement the \"magic\" but the email content is never read.</string>
 </resources>

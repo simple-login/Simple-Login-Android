@@ -25,6 +25,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding.appVersionTextView.text = "SimpleLogin v${context?.getVersionName()}"
         binding.howTextView.setOnClickListener { findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToHowItWorksFragment()) }
+        binding.faqTextView.setOnClickListener { findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToFaqFragment()) }
         return binding.root
     }
 
