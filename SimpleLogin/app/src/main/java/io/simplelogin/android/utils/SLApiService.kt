@@ -496,9 +496,10 @@ object SLApiService {
     }
 
     fun updateAliasNote(apiKey: String, alias: Alias, note: String?, completion: (error: SLError?) -> Unit) {
+        val formattedNote = note?.replace("\n", "\\n")
         val body = """
             {
-                "note": "${note ?: ""}"
+                "note": "$formattedNote"
             }
         """.trimIndent()
 
