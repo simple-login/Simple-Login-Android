@@ -24,8 +24,50 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
 
         binding.appVersionTextView.text = "SimpleLogin v${context?.getVersionName()}"
-        binding.howTextView.setOnClickListener { findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToHowItWorksFragment()) }
-        binding.faqTextView.setOnClickListener { findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToFaqFragment()) }
+        binding.howTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToHowItWorksFragment()
+            )
+        }
+
+        binding.contactTextView.setOnClickListener { }
+
+        val base_url = "https://simplelogin.io"
+        binding.faqTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToFaqFragment()
+            )
+        }
+        binding.teamTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/about")
+            )
+        }
+
+        binding.pricingTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/pricing")
+            )
+        }
+
+        binding.blogTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/blog")
+            )
+        }
+
+        binding.termsTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/terms")
+            )
+        }
+
+        binding.privacyTextView.setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/privacy")
+            )
+        }
+
         return binding.root
     }
 
