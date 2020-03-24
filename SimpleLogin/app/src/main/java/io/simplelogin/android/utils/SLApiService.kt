@@ -495,6 +495,36 @@ object SLApiService {
         })
     }
 
+    fun updateAliasNote(apiKey: String, alias: Alias, note: String?, completion: (error: SLError?) -> Unit) {
+        val body = """
+            {
+                "note": "${note ?: ""}"
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/${alias.id}")
+            .header("Authentication", apiKey)
+            .put(body.toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(null)
+                    401 -> completion(SLError.InvalidApiKey)
+                    500 -> completion(SLError.InternalServerError)
+                    502 -> completion(SLError.BadGateway)
+                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
+
     //endregion
 
     //region Contact

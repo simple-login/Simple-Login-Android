@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="windowNoTitle">true</item>
         <item name="android:textColor">#000000</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -13,13 +13,13 @@
         <item name="materialAlertDialogTheme">@style/SLMaterialAlertDialog</item>
     </style>
 
-<!--Custom Switch color-->
+    <!--Custom Switch color-->
     <style name="SLSwitch" parent="Theme.MaterialComponents.Light">
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorSwitchThumbNormal">@color/colorDarkGray</item>
     </style>
 
-<!--Custom MaterialAlertDialogTheme-->
+    <!--Custom MaterialAlertDialogTheme-->
     <style name="SLMaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarNeutralButtonStyle">@style/SLMaterialAlertButtonNeutral</item>
         <item name="buttonBarNegativeButtonStyle">@style/SLMaterialAlertButtonNegative</item>

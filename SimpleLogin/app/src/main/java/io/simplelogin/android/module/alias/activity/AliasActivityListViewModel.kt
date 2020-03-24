@@ -9,7 +9,8 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasActivity
 
-class AliasActivityListViewModel(context: Context, private val alias: Alias) : BaseViewModel(context) {
+class AliasActivityListViewModel(context: Context, private var alias: Alias) :
+    BaseViewModel(context) {
     private val _error = MutableLiveData<SLError>()
     val error: LiveData<SLError>
         get() = _error
@@ -57,5 +58,30 @@ class AliasActivityListViewModel(context: Context, private val alias: Alias) : B
         moreToLoad = true
         _activities = mutableListOf()
         fetchActivities()
+    }
+
+    // Note
+    private val _eventNoteUpdate = MutableLiveData<Boolean>()
+    val eventNoteUpdate: LiveData<Boolean>
+        get() = _eventNoteUpdate
+
+    fun onHandleNoteUpdateComplete() {
+        _eventNoteUpdate.value = false
+    }
+
+    private var _isUpdatingNote: Boolean = false
+
+    fun updateNote(note: String?) {
+        if (_isUpdatingNote) return
+        _isUpdatingNote = true
+        SLApiService.updateAliasNote(apiKey, alias, note) { error ->
+            _isUpdatingNote = false
+            if (error != null) {
+                _error.postValue(error)
+            } else {
+                alias.setNote(note)
+                _eventNoteUpdate.postValue(true)
+            }
+        }
     }
 }

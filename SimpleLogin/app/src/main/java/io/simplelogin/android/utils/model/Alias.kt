@@ -19,16 +19,49 @@ data class Alias(
     @SerializedName("creation_date") val creationDate: String,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
     @SerializedName("enabled") private var _enabled: Boolean,
-    @SerializedName("note") val note: String?,
-    @SerializedName("nb_block") val blockCount: Int,
-    @SerializedName("nb_forward") val forwardCount: Int,
-    @SerializedName("nb_reply") val replyCount: Int
+    @SerializedName("note") private var _note: String?,
+    @SerializedName("nb_block") private var _blockCount: Int,
+    @SerializedName("nb_forward") private var _forwardCount: Int,
+    @SerializedName("nb_reply") private var _replyCount: Int
 ) : Parcelable {
+    // Expose enabled
     val enabled: Boolean
         get() = _enabled
 
     fun setEnabled(enabled: Boolean) {
         _enabled = enabled
+    }
+
+    // Expose note
+    val note: String?
+        get() = _note
+
+    fun setNote(note: String?) {
+        _note = note
+    }
+
+    // Expose blockCount
+    val blockCount: Int
+        get() = _blockCount
+
+    fun setBlockCount(count: Int) {
+        _blockCount = count
+    }
+
+    // Expose forwardCount
+    val forwardCount: Int
+    get() = _forwardCount
+
+    fun setForwardCount(count: Int) {
+        _forwardCount = count
+    }
+
+    // Expose replyCount
+    val replyCount: Int
+    get() = _replyCount
+
+    fun setReplyCount(count: Int) {
+        _replyCount = replyCount
     }
 
     val handleCount: Int
@@ -69,7 +102,8 @@ data class Alias(
     private var _preciseCreationString: String? = null
     fun getPreciseCreationString(): String {
         if (_preciseCreationString == null) {
-            _preciseCreationString = SLDateTimeFormatter.preciseCreationDateStringFrom(creationTimestamp, "Created on")
+            _preciseCreationString =
+                SLDateTimeFormatter.preciseCreationDateStringFrom(creationTimestamp, "Created on")
         }
 
         return _preciseCreationString!!
