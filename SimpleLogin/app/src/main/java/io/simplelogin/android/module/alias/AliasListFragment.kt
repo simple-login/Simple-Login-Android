@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,18 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
+import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.SLApiService
-import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
-import io.simplelogin.android.utils.enums.SLError
-import io.simplelogin.android.utils.extension.copyToClipboard
-import io.simplelogin.android.utils.extension.toastError
-import io.simplelogin.android.utils.extension.toastShortly
-import io.simplelogin.android.utils.extension.toastUpToDate
+import io.simplelogin.android.utils.enums.RandomMode
+import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 import java.lang.Exception
 
@@ -35,6 +33,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     private lateinit var binding: FragmentAliasListBinding
     private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
     private lateinit var adapter: AliasListAdapter
+    private lateinit var linearLayoutManager: LinearLayoutManager
+
+    private var lastToast: Toast? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,18 +52,21 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         homeSharedViewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
             Observer { updatedAliases ->
-                if (updatedAliases) {
-                    activity?.runOnUiThread {
+                activity?.runOnUiThread {
+                    if (updatedAliases) {
+                        setLoading(false)
+                        lastToast?.cancel()
+
                         adapter.submitList(homeSharedViewModel.filteredAliases)
                         // Better call adapter.notifyItemChanged(:position)
                         // but it is complicated and not so important with a small list
                         adapter.notifyDataSetChanged()
-                    }
-                    homeSharedViewModel.onEventUpdateAliasesComplete()
+                        homeSharedViewModel.onEventUpdateAliasesComplete()
 
-                    if (binding.swipeRefreshLayout.isRefreshing) {
-                        binding.swipeRefreshLayout.isRefreshing = false
-                        context?.toastUpToDate()
+                        if (binding.swipeRefreshLayout.isRefreshing) {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            context?.toastUpToDate()
+                        }
                     }
                 }
             })
@@ -81,15 +85,18 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
             val context = getContext() ?: throw Exception("Context is null")
-            val apiKey = SLSharedPreferences.getApiKey(context) ?: context.toastError(SLError.NoApiKey)
 
             override fun onClick(alias: Alias) {
-                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasActivityListFragment(alias))
+                findNavController().navigate(
+                    AliasListFragmentDirections.actionAliasListFragmentToAliasActivityListFragment(
+                        alias
+                    )
+                )
             }
 
             override fun onSwitch(alias: Alias) {
                 setLoading(true)
-                SLApiService.toggleAlias(apiKey as String, alias) { enabled, error ->
+                SLApiService.toggleAlias(homeSharedViewModel.apiKey, alias) { enabled, error ->
                     activity?.runOnUiThread {
                         setLoading(false)
 
@@ -110,7 +117,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
 
             override fun onSendEmail(alias: Alias) {
-                findNavController().navigate(AliasListFragmentDirections.actionAliasFragmentToContactListFragment(alias))
+                findNavController().navigate(
+                    AliasListFragmentDirections.actionAliasFragmentToContactListFragment(
+                        alias
+                    )
+                )
             }
 
             override fun onDelete(alias: Alias, position: Int) {
@@ -119,15 +130,16 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        SLApiService.deleteAlias(apiKey as String, alias) { error ->
+                        SLApiService.deleteAlias(homeSharedViewModel.apiKey, alias) { error ->
                             activity?.runOnUiThread {
                                 setLoading(false)
 
                                 if (error != null) {
                                     context.toastError(error)
                                 } else {
+                                    context.toastShortly("Deleted \"${alias.email}\"")
                                     // Calling deleteAlias will also trigger filter and refresh the alias list
-                                    homeSharedViewModel.deleteAlias(alias)
+                                    homeSharedViewModel.refreshAliases()
                                 }
                             }
                         }
@@ -137,7 +149,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
         })
         binding.recyclerView.adapter = adapter
-        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -145,6 +157,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == homeSharedViewModel.filteredAliases.size - 1)
                     && homeSharedViewModel.moreAliasesToLoad
                 ) {
+                    setLoading(true)
+                    lastToast = context?.toastShortly("Loading more...")
                     homeSharedViewModel.fetchAliases()
                 }
             }
@@ -168,6 +182,51 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
+    private fun showSelectRandomModeAlert() {
+        MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+            .setTitle("Randomly create an alias")
+            .setItems(
+                arrayOf("By random words", "By UUID")
+            ) { _, itemIndex ->
+                val randomMode = when (itemIndex) {
+                    0 -> RandomMode.WORD
+                    else -> RandomMode.UUID
+                }
+                showAddNoteAlert(randomMode)
+            }
+            .show()
+    }
+
+    private fun showAddNoteAlert(randomMode: RandomMode) {
+        val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Add some note for this alias")
+            .setMessage("This is optional and can be modified ar anytime later")
+            .setView(dialogTextViewBinding.root)
+            .setNeutralButton("Cancel", null)
+            .setPositiveButton("Create") { _, _ ->
+                setLoading(true)
+                SLApiService.randomAlias(
+                    homeSharedViewModel.apiKey,
+                    randomMode,
+                    dialogTextViewBinding.editText.text.toString()
+                ) { newAlias, error ->
+                    activity?.runOnUiThread {
+                        setLoading(false)
+                        if (error != null) {
+                            context?.toastError(error)
+                        } else if (newAlias != null) {
+                            homeSharedViewModel.refreshAliases()
+                            context?.toastShortly("Created \"${newAlias.email}\"")
+                        }
+                    }
+                }
+            }
+            .show()
+
+        dialogTextViewBinding.editText.requestFocus()
+    }
+
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -175,9 +234,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 Log.d("menu", "search")
             }
 
-            R.id.randomMenuItem -> {
-                Log.d("menu", "shuffle")
-            }
+            R.id.randomMenuItem -> showSelectRandomModeAlert()
 
             R.id.addMenuItem -> {
                 Log.d("menu", "add")

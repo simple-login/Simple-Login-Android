@@ -2,6 +2,7 @@ package io.simplelogin.android.utils
 
 import com.google.gson.Gson
 import io.simplelogin.android.BuildConfig
+import io.simplelogin.android.utils.enums.RandomMode
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.SocialService
 import io.simplelogin.android.utils.model.*
@@ -364,6 +365,49 @@ object SLApiService {
     //endregion
 
     //region Alias
+    fun randomAlias(apiKey: String, randomMode: RandomMode, note: String?, completion: (newAlias: NewAlias?, error: SLError?) -> Unit) {
+        val body = """
+            {
+                "note": "$note"
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}")
+            .header("Authentication", apiKey)
+            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    201 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val newAlias = Gson().fromJson(jsonString, NewAlias::class.java)
+                            if (newAlias != null) {
+                                completion(newAlias, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("NewAlias"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
+
     fun fetchAliases(
         apiKey: String,
         page: Int,

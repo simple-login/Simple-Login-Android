@@ -5,11 +5,18 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import io.simplelogin.android.utils.enums.SLError
 
-fun Context.toastShortly(text: String) =
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+fun Context.toastShortly(text: String) : Toast {
+    val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
+    toast.show()
+    return toast
+}
 
-fun Context.toastLongly(text: String) =
-    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+fun Context.toastLongly(text: String) : Toast {
+    val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
+    toast.show()
+    return toast
+}
 
 fun Context.toastError(error: SLError) =
     toastShortly(error.description)

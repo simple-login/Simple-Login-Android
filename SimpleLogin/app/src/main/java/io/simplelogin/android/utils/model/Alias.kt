@@ -34,7 +34,10 @@ data class Alias(
 
     // Expose note
     val note: String?
-        get() = _note
+        get() {
+            if (_note == "") return null
+            return _note
+        }
 
     fun setNote(note: String?) {
         _note = note
@@ -50,7 +53,7 @@ data class Alias(
 
     // Expose forwardCount
     val forwardCount: Int
-    get() = _forwardCount
+        get() = _forwardCount
 
     fun setForwardCount(count: Int) {
         _forwardCount = count
@@ -58,7 +61,7 @@ data class Alias(
 
     // Expose replyCount
     val replyCount: Int
-    get() = _replyCount
+        get() = _replyCount
 
     fun setReplyCount(count: Int) {
         _replyCount = replyCount
@@ -112,4 +115,8 @@ data class Alias(
 
 data class AliasArray(
     @SerializedName("aliases") val aliases: List<Alias>
+)
+
+data class NewAlias(
+    @SerializedName("alias") val email: String
 )

@@ -12,7 +12,7 @@ import io.simplelogin.android.utils.model.Alias
 import java.lang.IllegalStateException
 
 class HomeSharedViewModel(application: Application) : AndroidViewModel(application) {
-    private val apiKey: String by lazy {
+    val apiKey: String by lazy {
         SLSharedPreferences.getApiKey(application) ?: throw IllegalStateException("API key is null")
     }
     private val _error = MutableLiveData<SLError>()
@@ -23,7 +23,6 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         _error.value = null
     }
 
-    //region Aliases
     private var currentPage = -1
     var moreAliasesToLoad: Boolean = true
         private set
@@ -53,6 +52,7 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
             } else if (newAliases != null) {
                 if (newAliases.isEmpty()) {
                     moreAliasesToLoad = false
+                    _eventUpdateAliases.postValue(true)
                 } else {
                     currentPage += 1
                     _aliases.addAll(newAliases)
@@ -69,7 +69,7 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         fetchAliases()
     }
 
-    // Alias filter
+    // Filter
     var aliasFilterMode = AliasFilterMode.ALL
         private set
 
@@ -87,12 +87,9 @@ class HomeSharedViewModel(application: Application) : AndroidViewModel(applicati
         _eventUpdateAliases.postValue(true)
     }
 
-    // Alias delete
+    // Delete
     fun deleteAlias(alias: Alias) {
         _aliases.removeAll { it.id == alias.id }
         filterAliases()
-        _eventUpdateAliases.postValue(true)
     }
-
-    //endregion
 }
