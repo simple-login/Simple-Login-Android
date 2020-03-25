@@ -1,18 +1,18 @@
 package io.simplelogin.android.module.home
 
-import android.content.pm.PackageManager
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavArgument
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R
-import io.simplelogin.android.R.*
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -44,7 +44,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         setContentView(binding.root)
 
         // Change status bar background color
-        window.statusBarColor = ContextCompat.getColor(this, color.colorWhite)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
     }
 
     override fun onBackPressed() {
@@ -61,36 +61,36 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            overridePendingTransition(anim.stay_still, anim.slide_out_down)
+            overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
         }
     }
 
+    @SuppressLint("RtlHardcoded")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val navController = findNavController(id.navHostFragment)
+        val navController = findNavController(R.id.navHostFragment)
         val navInflater = navController.navInflater
 
         when (item.itemId) {
-            id.aliasMenuItem -> {
+            R.id.aliasMenuItem -> {
                 val aliasNavGraph = navInflater.inflate(R.navigation.nav_graph_alias)
                 navController.graph = aliasNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
-            id.settingsMenuItem -> {
+            R.id.settingsMenuItem -> {
                 val settingsNavGraph = navInflater.inflate(R.navigation.nav_graph_settings)
+                settingsNavGraph.addArgument(USER_INFO, NavArgument.Builder().setDefaultValue(userInfo).build())
                 navController.graph = settingsNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
-            id.aboutMenuItem -> {
+            R.id.aboutMenuItem -> {
                 val aboutNavGraph = navInflater.inflate(R.navigation.nav_graph_about)
-//                graph.addArgument("Data", NavArgument.Builder().setDefaultValue(model).build())
-//                graph.addArgument()
                 navController.graph = aboutNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
-            id.signOutMenuItem -> {
+            R.id.signOutMenuItem -> {
                 // Sign Out
                 MaterialAlertDialogBuilder(this)
                     .setTitle("You will be signed out")
@@ -106,25 +106,26 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         return true
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setUpDrawer() {
         // App version name
-        val appVersionMenuItem = binding.navigationView.menu.findItem(id.appVersionMenuItem)
+        val appVersionMenuItem = binding.navigationView.menu.findItem(R.id.appVersionMenuItem)
         appVersionMenuItem?.title = "SimpleLogin v${getVersionName()}"
         appVersionMenuItem.isEnabled = false
 
         // Header info
         val avatarImageView =
-            binding.navigationView.getHeaderView(0).findViewById<ImageView>(id.avatarImageView)
+            binding.navigationView.getHeaderView(0).findViewById<ImageView>(R.id.avatarImageView)
 
         val usernameTextView =
-            binding.navigationView.getHeaderView(0).findViewById<TextView>(id.usernameTextView)
+            binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.usernameTextView)
         usernameTextView.text = userInfo.name
 
         val statusTextView =
-            binding.navigationView.getHeaderView(0).findViewById<TextView>(id.statusTextView)
+            binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.statusTextView)
         if (userInfo.isPremium) {
             statusTextView.text = "Premium"
-            statusTextView.setTextColor(ContextCompat.getColor(this, color.colorPremium))
+            statusTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
         } else {
             statusTextView.text = "Freemium"
             statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.black))
