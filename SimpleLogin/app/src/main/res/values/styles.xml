@@ -9,6 +9,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColor">#000000</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:textColorPrimary">@color/colorPrimary</item>
         <item name="materialAlertDialogTheme">@style/SLMaterialAlertDialog</item>
     </style>

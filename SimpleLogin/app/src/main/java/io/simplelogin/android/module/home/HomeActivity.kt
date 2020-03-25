@@ -114,21 +114,25 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         appVersionMenuItem.isEnabled = false
 
         // Header info
-        val avatarImageView =
-            binding.navigationView.getHeaderView(0).findViewById<ImageView>(R.id.avatarImageView)
+        val headerView = binding.navigationView.getHeaderView(0)
+//        val avatarImageView = headerView.findViewById<ImageView>(R.id.avatarImageView)
 
-        val usernameTextView =
-            binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.usernameTextView)
+        val usernameTextView = headerView.findViewById<TextView>(R.id.usernameTextView)
         usernameTextView.text = userInfo.name
 
-        val statusTextView =
-            binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.statusTextView)
-        if (userInfo.isPremium) {
-            statusTextView.text = "Premium"
-            statusTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
+        val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
+        emailTextView.text = userInfo.email
+
+        val membershipTextView = headerView.findViewById<TextView>(R.id.membershipTextView)
+        if (userInfo.inTrial) {
+            membershipTextView.text = "Premium trial"
+            membershipTextView.setTextColor(getColor(android.R.color.holo_blue_light))
+        } else if (userInfo.isPremium) {
+            membershipTextView.text = "Premium"
+            membershipTextView.setTextColor(getColor(R.color.colorPremium))
         } else {
-            statusTextView.text = "Freemium"
-            statusTextView.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            membershipTextView.text = "Free plan"
+            membershipTextView.setTextColor(getColor(R.color.colorDarkGray))
         }
     }
 }

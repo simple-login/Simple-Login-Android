@@ -1,63 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="150dp">
 
     <ImageView
+        android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/violet_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:orientation="horizontal"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <ImageView
             android:id="@+id/avatarImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_oval_bordered"
-            android:src="@drawable/ic_user_80dp"
-            android:tint="@color/colorPrimary" />
+            android:padding="10dp"
+            android:src="@drawable/ic_user_48dp"
+            android:tint="@color/colorPrimary"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingStart="10dp">
+            android:paddingStart="10dp"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:id="@+id/usernameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:lines="2"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="John Wick" />
+                android:maxLines="2"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/colorWhite"
+                tools:text="John Doe" />
 
             <TextView
-                android:id="@+id/statusTextView"
+                android:id="@+id/emailTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/colorWhite"
+                tools:text="email@example.com" />
+
+            <TextView
+                android:id="@+id/membershipTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textSize="17sp"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
                 tools:text="Premium" />
         </LinearLayout>
 
@@ -66,9 +69,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@drawable/shape_toolbar_drop_shadow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/shape_toolbar_drop_shadow" />
+</RelativeLayout>
