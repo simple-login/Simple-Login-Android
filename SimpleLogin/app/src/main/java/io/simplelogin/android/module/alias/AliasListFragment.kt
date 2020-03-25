@@ -19,7 +19,6 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
-import io.simplelogin.android.module.home.HomeSharedViewModel
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
@@ -31,7 +30,7 @@ import java.lang.Exception
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasListBinding
-    private val homeSharedViewModel: HomeSharedViewModel by activityViewModels()
+    private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var adapter: AliasListAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -48,8 +47,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.tabLayout.addOnTabSelectedListener(this)
 
         // ViewModel
-        homeSharedViewModel.fetchAliases()
-        homeSharedViewModel.eventUpdateAliases.observe(
+        aliasListViewModel.fetchAliases()
+        aliasListViewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
             Observer { updatedAliases ->
                 activity?.runOnUiThread {
@@ -57,11 +56,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         setLoading(false)
                         lastToast?.cancel()
 
-                        adapter.submitList(homeSharedViewModel.filteredAliases)
+                        adapter.submitList(aliasListViewModel.filteredAliases)
                         // Better call adapter.notifyItemChanged(:position)
                         // but it is complicated and not so important with a small list
                         adapter.notifyDataSetChanged()
-                        homeSharedViewModel.onEventUpdateAliasesComplete()
+                        aliasListViewModel.onEventUpdateAliasesComplete()
 
                         if (binding.swipeRefreshLayout.isRefreshing) {
                             binding.swipeRefreshLayout.isRefreshing = false
@@ -71,16 +70,16 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 }
             })
 
-        homeSharedViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        aliasListViewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
                 context?.toastError(error)
-                homeSharedViewModel.onHandleErrorComplete()
+                aliasListViewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         })
 
         // Reset tab selection state on configuration changed
-        binding.tabLayout.getTabAt(homeSharedViewModel.aliasFilterMode.position)?.select()
+        binding.tabLayout.getTabAt(aliasListViewModel.aliasFilterMode.position)?.select()
 
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
@@ -96,7 +95,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
             override fun onSwitch(alias: Alias) {
                 setLoading(true)
-                SLApiService.toggleAlias(homeSharedViewModel.apiKey, alias) { enabled, error ->
+                SLApiService.toggleAlias(aliasListViewModel.apiKey, alias) { enabled, error ->
                     activity?.runOnUiThread {
                         setLoading(false)
 
@@ -104,7 +103,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                             context.toastError(error)
                         } else if (enabled != null) {
                             alias.setEnabled(enabled)
-                            homeSharedViewModel.filterAliases()
+                            aliasListViewModel.filterAliases()
                         }
                     }
                 }
@@ -130,7 +129,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        SLApiService.deleteAlias(homeSharedViewModel.apiKey, alias) { error ->
+                        SLApiService.deleteAlias(aliasListViewModel.apiKey, alias) { error ->
                             activity?.runOnUiThread {
                                 setLoading(false)
 
@@ -139,7 +138,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                                 } else {
                                     context.toastShortly("Deleted \"${alias.email}\"")
                                     // Calling deleteAlias will also trigger filter and refresh the alias list
-                                    homeSharedViewModel.refreshAliases()
+                                    aliasListViewModel.refreshAliases()
                                 }
                             }
                         }
@@ -154,17 +153,17 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == homeSharedViewModel.filteredAliases.size - 1)
-                    && homeSharedViewModel.moreAliasesToLoad
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == aliasListViewModel.filteredAliases.size - 1)
+                    && aliasListViewModel.moreAliasesToLoad
                 ) {
                     setLoading(true)
                     lastToast = context?.toastShortly("Loading more...")
-                    homeSharedViewModel.fetchAliases()
+                    aliasListViewModel.fetchAliases()
                 }
             }
         })
 
-        binding.swipeRefreshLayout.setOnRefreshListener { homeSharedViewModel.refreshAliases() }
+        binding.swipeRefreshLayout.setOnRefreshListener { aliasListViewModel.refreshAliases() }
         setLoading(false)
         return binding.root
     }
@@ -173,7 +172,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         super.onResume()
         // On configuration change, trigger a recyclerView refresh by calling filter function
         if (adapter.itemCount == 0) {
-            homeSharedViewModel.filterAliases()
+            aliasListViewModel.filterAliases()
         }
     }
 
@@ -207,7 +206,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             .setPositiveButton("Create") { _, _ ->
                 setLoading(true)
                 SLApiService.randomAlias(
-                    homeSharedViewModel.apiKey,
+                    aliasListViewModel.apiKey,
                     randomMode,
                     dialogTextViewBinding.editText.text.toString()
                 ) { newAlias, error ->
@@ -216,7 +215,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         if (error != null) {
                             context?.toastError(error)
                         } else if (newAlias != null) {
-                            homeSharedViewModel.refreshAliases()
+                            aliasListViewModel.refreshAliases()
                             context?.toastShortly("Created \"${newAlias.email}\"")
                         }
                     }
@@ -249,9 +248,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab?.position) {
-            0 -> homeSharedViewModel.filterAliases(AliasFilterMode.ALL)
-            1 -> homeSharedViewModel.filterAliases(AliasFilterMode.ACTIVE)
-            2 -> homeSharedViewModel.filterAliases(AliasFilterMode.INACTIVE)
+            0 -> aliasListViewModel.filterAliases(AliasFilterMode.ALL)
+            1 -> aliasListViewModel.filterAliases(AliasFilterMode.ACTIVE)
+            2 -> aliasListViewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
     }
 

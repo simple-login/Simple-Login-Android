@@ -366,9 +366,10 @@ object SLApiService {
 
     //region Alias
     fun randomAlias(apiKey: String, randomMode: RandomMode, note: String?, completion: (newAlias: NewAlias?, error: SLError?) -> Unit) {
+        val formattedNote = note?.replace("\n", "\\n")
         val body = """
             {
-                "note": "$note"
+                "note": "$formattedNote"
             }
         """.trimIndent()
 

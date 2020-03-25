@@ -1,4 +1,4 @@
-package io.simplelogin.android.module.home
+package io.simplelogin.android.module.alias
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -11,7 +11,7 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import java.lang.IllegalStateException
 
-class HomeSharedViewModel(application: Application) : AndroidViewModel(application) {
+class AliasListViewModel(application: Application) : AndroidViewModel(application) {
     val apiKey: String by lazy {
         SLSharedPreferences.getApiKey(application) ?: throw IllegalStateException("API key is null")
     }
