@@ -229,10 +229,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.searchMenuItem -> {
-                Log.d("menu", "search")
-            }
-
+            R.id.searchMenuItem -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
             R.id.randomMenuItem -> showSelectRandomModeAlert()
 
             R.id.addMenuItem -> {
