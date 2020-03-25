@@ -21,7 +21,8 @@
         <!--windowSoftInputMode="adjustPan" to prevent bottom sheet to move up when keyboard is appeared -->
         <activity
             android:name=".module.home.HomeActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/HomeActivityTheme"/>
 
         <activity android:name=".module.login.LoginActivity" />
         <activity android:name=".module.login.VerificationActivity" />
