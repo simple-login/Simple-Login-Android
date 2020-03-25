@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
@@ -40,6 +41,9 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var facebookCallbackManager: CallbackManager
+
+    // Forgot password
+    private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,9 +87,78 @@ class LoginActivity : BaseAppCompatActivity() {
         // Social login
         binding.facebookButton.setOnClickListener { loginWithFacebook() }
         binding.googleButton.setOnClickListener { loginWithGoogle() }
+
+        // Forgot password
+        binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }
+        setUpForgotPasswordBottomSheet()
     }
 
     override fun onBackPressed() = Unit
+
+    private fun setUpForgotPasswordBottomSheet() {
+        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenMetrics().heightPixels
+
+        forgotPasswordBottomSheetBehavior = BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)
+        forgotPasswordBottomSheetBehavior.hide()
+        binding.forgotPasswordBottomSheet.cancelButton.setOnClickListener { forgotPasswordBottomSheetBehavior.hide() }
+
+        forgotPasswordBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.dimView.visibility = View.GONE
+                        dismissKeyboard()
+                    }
+
+                    else -> {
+                        binding.forgotPasswordBottomSheet.emailTextField.editText?.text = null
+                        binding.forgotPasswordBottomSheet.emailTextField.error = null
+                        binding.forgotPasswordBottomSheet.emailTextField.requestFocus()
+                        showKeyboard()
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.forgotPasswordBottomSheet.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().isValidEmail()) {
+                    binding.forgotPasswordBottomSheet.resetButton.isEnabled = true
+                    binding.forgotPasswordBottomSheet.emailTextField.error = null
+                } else {
+                    binding.forgotPasswordBottomSheet.resetButton.isEnabled = false
+                    binding.forgotPasswordBottomSheet.emailTextField.error = "Invalid email address"
+                }
+            }
+        })
+
+        binding.forgotPasswordBottomSheet.resetButton.setOnClickListener {
+            val email = binding.forgotPasswordBottomSheet.emailTextField.editText?.text.toString()
+            if (!email.isValidEmail()) return@setOnClickListener
+
+            forgotPasswordBottomSheetBehavior.hide()
+            dismissKeyboard()
+            setLoading(true)
+            SLApiService.forgotPassword(email) {
+                runOnUiThread {
+                    setLoading(false)
+                    toastLongly("We've sent reset password email to \"$email\"")
+                }
+            }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

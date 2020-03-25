@@ -302,6 +302,29 @@ object SLApiService {
         })
     }
 
+    fun forgotPassword(email: String, completion: () -> Unit) {
+        val body = """
+            {
+                "email": "$email"
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/auth/forgot_password")
+            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                completion()
+            }
+        })
+    }
+
     fun fetchUserInfo(apiKey: String, completion: (userInfo: UserInfo?, error: SLError?) -> Unit) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/user_info")

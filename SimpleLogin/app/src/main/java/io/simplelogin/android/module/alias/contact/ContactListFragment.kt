@@ -1,6 +1,5 @@
 package io.simplelogin.android.module.alias.contact
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -32,7 +31,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private lateinit var adapter: ContactListAdapter
     private lateinit var howToBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var createContactBottomSheetBehavior: BottomSheetBehavior<View>
-    private var screenHeight: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,8 +45,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
         binding.emailTextField.text = alias.email
         binding.emailTextField.isSelected = true // to trigger marquee animation
-
-        screenHeight = activity?.window?.decorView?.height
 
         setUpHowToBottomSheet()
         setUpCreateContactBottomSheet()
@@ -92,9 +88,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     }
 
     private fun setUpHowToBottomSheet() {
-        screenHeight?.let {
-            binding.howToBottomSheet.root.layoutParams.height = it * 90 / 100
-        }
+        binding.howToBottomSheet.root.layoutParams.height = requireActivity().getScreenMetrics().heightPixels
 
         howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
         howToBottomSheetBehavior.hide()
@@ -124,9 +118,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     }
 
     private fun setUpCreateContactBottomSheet() {
-        screenHeight?.let {
-            binding.createContactBottomSheet.root.layoutParams.height = it * 90 / 100
-        }
+        binding.createContactBottomSheet.root.layoutParams.height = requireActivity().getScreenMetrics().heightPixels
         binding.createContactBottomSheet.aliasTextView.text = alias.email
 
         createContactBottomSheetBehavior = BottomSheetBehavior.from(binding.createContactBottomSheet.root)

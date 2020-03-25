@@ -11,4 +11,5 @@
     <string name="faq_1">Yes! An email alias is actually a normal email address that exists forever unless you remove it on your SimpleLogin dashboard.</string>
     <string name="faq_2">SimpleLogin alias are permanent as opposed to the temporary emails created on services like temp-mail.org, 10minutesmail.net, etc.\n\nSimpleLogin also doesn\'t store the emails.\n\nWe are simply different products for different usecases.</string>
     <string name="faq_3">SimpleLogin doesn\'t store the emails (we don\'t want to become another Gmail 💰).\n\nTechnically the emails DO arrive at SimpleLogin server and we modify email headers to implement the \"magic\" but the email content is never read.</string>
+    <string name="forgot_password_message">For security reason and to avoid database leak, all \"forgot password\" requests are taken into account silently without you being informed if a request is successful or not.\n\nSo make sure that you enter the correct email address.</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 
 fun Activity.showKeyboard() {
@@ -31,4 +32,10 @@ fun Activity.startSendEmailIntent(emailAddress: String) {
     intent.data = Uri.parse("mailto:")
     intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
     startActivity(intent)
+}
+
+fun Activity.getScreenMetrics() : DisplayMetrics {
+    val metrics = DisplayMetrics()
+    windowManager.defaultDisplay.getMetrics(metrics)
+    return metrics
 }

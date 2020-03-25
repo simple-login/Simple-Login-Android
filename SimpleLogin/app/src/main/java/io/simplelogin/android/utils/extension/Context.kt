@@ -8,6 +8,9 @@ import io.simplelogin.android.utils.enums.SLError
 fun Context.toastShortly(text: String) =
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 
+fun Context.toastLongly(text: String) =
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
 fun Context.toastError(error: SLError) =
     toastShortly(error.description)
 
