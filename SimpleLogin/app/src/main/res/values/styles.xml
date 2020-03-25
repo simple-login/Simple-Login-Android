@@ -25,6 +25,7 @@
         <item name="buttonBarNeutralButtonStyle">@style/SLMaterialAlertButtonNeutral</item>
         <item name="buttonBarNegativeButtonStyle">@style/SLMaterialAlertButtonNegative</item>
         <item name="buttonBarPositiveButtonStyle">@style/SLMaterialAlertButtonPositive</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/SLMaterialDialogTitleTextStyle</item>
         <item name="materialAlertDialogBodyTextStyle">@style/SLMaterialDialogBodyTextStyle</item>
     </style>
 
@@ -41,7 +42,18 @@
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="SLMaterialDialogTitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
     <style name="SLMaterialDialogBodyTextStyle" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
         <item name="android:textColor">@color/colorDarkGray</item>
+    </style>
+    <!--End of: Custom MaterialAlertDialogTheme-->
+
+    <style name="SlAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="textAppearanceListItemSmall">?attr/textAppearanceSubtitle2</item>
+        <item name="textColorAlertDialogListItem">@color/colorPrimary</item>
     </style>
 </resources>

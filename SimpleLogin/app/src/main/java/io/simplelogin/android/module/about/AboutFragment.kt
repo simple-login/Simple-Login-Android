@@ -12,6 +12,7 @@ import io.simplelogin.android.databinding.FragmentAboutBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.getVersionName
+import io.simplelogin.android.utils.extension.startSendEmailIntent
 
 class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAboutBinding
@@ -33,10 +34,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
 
         binding.contactTextView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("hi@simplelogin.io"))
-            activity?.startActivity(intent)
+            activity?.startSendEmailIntent("hi@simplelogin.io")
         }
 
         val base_url = "https://simplelogin.io"

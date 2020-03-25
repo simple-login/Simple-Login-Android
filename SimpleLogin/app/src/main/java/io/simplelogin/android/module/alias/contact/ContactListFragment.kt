@@ -1,5 +1,6 @@
 package io.simplelogin.android.module.alias.contact
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -53,7 +54,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         setUpCreateContactBottomSheet()
         setUpViewModel()
         setUpRecyclerView()
-        setLoading(false)
         return binding.root
     }
 
@@ -68,7 +68,15 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setLoading(loading: Boolean) {
         binding.rootConstraintLayout.isEnabled = !loading
-        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+        if (loading) {
+            binding.icebergImageView.visibility = View.GONE
+            binding.instructionTextView.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.icebergImageView.visibility = View.VISIBLE
+            binding.instructionTextView.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun updateUiBaseOnNumOfContacts() {
@@ -189,8 +197,10 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         }
         viewModel = tempViewModel
         viewModel.fetchContacts()
+        setLoading(true)
         viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
             activity?.runOnUiThread {
+                setLoading(false)
                 if (haveNewContacts) {
                     adapter.submitList(viewModel.contacts)
                 }
@@ -206,6 +216,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
+                setLoading(false)
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -248,14 +259,27 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onWrite(contact: Contact) {
+                MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+                    .setTitle("Send mail to \"${contact.email}\"")
+                    .setItems(arrayOf("Copy reverse-alias", "Begin composing with default email")
+                    ) { _, itemIndex ->
+                        when (itemIndex) {
+                            0 -> {
+                                activity?.copyToClipboard(contact.reverseAlias, contact.reverseAlias)
+                                context?.toastShortly("Copied \"${contact.reverseAlias}\"")
+                            }
 
+                            1 -> activity?.startSendEmailIntent(contact.reverseAlias)
+                        }
+                    }
+                    .show()
             }
 
             override fun onDelete(contact: Contact) {
                 MaterialAlertDialogBuilder(context)
                     .setTitle("Delete \"${contact.email}\"?")
                     .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
-                    .setPositiveButton("Cancel", null)
+                    .setNeutralButton("Cancel", null)
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
                         viewModel.delete(contact)
