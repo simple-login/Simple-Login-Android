@@ -77,6 +77,35 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         }
     }
 
+    // Toggle
+    private var _toggledAliasIds = mutableListOf<Int>()
+    val toggledAliasIds: List<Int>
+        get() = _toggledAliasIds
+
+    private var _toggledAliasIndex = MutableLiveData<Int>()
+    val toggledAliasIndex: LiveData<Int>
+        get() = _toggledAliasIndex
+
+    fun onHandleToggleAliasComplete() {
+        _toggledAliasIndex.value = null
+    }
+
+    fun toggleAlias(alias: Alias, index: Int) {
+        SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
+            if (error != null) {
+                _error.postValue(error)
+            } else if (enabled != null) {
+                _aliases.find { it.id == alias.id }?.setEnabled(enabled)
+
+                if (!_toggledAliasIds.contains(alias.id)) {
+                    _toggledAliasIds.add(alias.id)
+                }
+
+                _toggledAliasIndex.postValue(index)
+            }
+        }
+    }
+
     override fun onCleared() {
         _error.value = null
         _aliases.clear()

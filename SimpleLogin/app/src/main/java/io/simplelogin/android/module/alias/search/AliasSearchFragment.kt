@@ -121,6 +121,16 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 }
             }
         })
+
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, Observer { toggledAliasIndex ->
+            if (toggledAliasIndex != null) {
+                activity?.runOnUiThread {
+                    setLoading(false)
+                    adapter.notifyItemChanged(toggledAliasIndex)
+                    viewModel.onHandleToggleAliasComplete()
+                }
+            }
+        })
     }
 
     private fun setUpRecyclerView() {
@@ -134,7 +144,8 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
-
+                setLoading(true)
+                viewModel.toggleAlias(alias, position)
             }
 
             override fun onCopy(alias: Alias) {
@@ -152,7 +163,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
 
             override fun onDelete(alias: Alias, position: Int) {
-
+                
             }
         })
 
