@@ -28,6 +28,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         private set
 
     private var _aliases = mutableListOf<Alias>()
+    private var _deletedAliasIds = mutableListOf<Int>()
     var filteredAliases = listOf<Alias>()
         private set
 
@@ -55,8 +56,8 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
                     _eventUpdateAliases.postValue(true)
                 } else {
                     currentPage += 1
-                    _aliases.addAll(newAliases)
-                    filterAliases(aliasFilterMode)
+                    _aliases.addAll(newAliases.filter { !_deletedAliasIds.contains(it.id) })
+                    filterAliases()
                 }
             }
         }
@@ -66,6 +67,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         currentPage = -1
         moreAliasesToLoad = true
         _aliases = mutableListOf()
+        _deletedAliasIds = mutableListOf()
         fetchAliases()
     }
 
@@ -89,7 +91,35 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
 
     // Delete
     fun deleteAlias(alias: Alias) {
-        _aliases.removeAll { it.id == alias.id }
-        filterAliases()
+        SLApiService.deleteAlias(apiKey, alias) { error ->
+            if (error != null) {
+                _error.postValue(error)
+            } else {
+                _deletedAliasIds.add(alias.id)
+                _aliases.removeAll { it.id == alias.id }
+                filterAliases()
+            }
+        }
+    }
+
+    // Toggle
+    private var _toggledAliasIndex = MutableLiveData<Int>()
+    val toggledAliasIndex: LiveData<Int>
+        get() = _toggledAliasIndex
+
+    fun onHandleToggleAliasComplete() {
+        _toggledAliasIndex.value = null
+    }
+
+    fun toggleAlias(alias: Alias, index: Int) {
+        SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
+            if (error != null) {
+                _error.postValue(error)
+            } else if (enabled != null) {
+                _aliases.find { it.id == alias.id }?.setEnabled(enabled)
+                _eventUpdateAliases.postValue(true)
+                _toggledAliasIndex.postValue(index)
+            }
+        }
     }
 }

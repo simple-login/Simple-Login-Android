@@ -41,7 +41,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
         // Add click events
         binding.rootRelativeLayout.setOnClickListener { clickListener.onClick(alias) }
-        binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias)  }
+        binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, adapterPosition)  }
         binding.copyButton.setOnClickListener { clickListener.onCopy(alias) }
         binding.sendEmailButton.setOnClickListener { clickListener.onSendEmail(alias) }
         binding.deleteButton.setOnClickListener { clickListener.onDelete(alias, adapterPosition) }

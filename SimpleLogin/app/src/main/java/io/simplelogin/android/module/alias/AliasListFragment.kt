@@ -30,7 +30,7 @@ import java.lang.Exception
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasListBinding
-    private val aliasListViewModel: AliasListViewModel by activityViewModels()
+    private val viewModel: AliasListViewModel by activityViewModels()
     private lateinit var adapter: AliasListAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -47,20 +47,19 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.tabLayout.addOnTabSelectedListener(this)
 
         // ViewModel
-        aliasListViewModel.fetchAliases()
-        aliasListViewModel.eventUpdateAliases.observe(
+        viewModel.fetchAliases()
+        viewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
             Observer { updatedAliases ->
                 activity?.runOnUiThread {
                     if (updatedAliases) {
                         setLoading(false)
                         lastToast?.cancel()
+                        // filteredAliases.toMutableList() to make the recyclerView updates itself
+                        // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
+                        adapter.submitList(viewModel.filteredAliases.toMutableList())
 
-                        adapter.submitList(aliasListViewModel.filteredAliases)
-                        // Better call adapter.notifyItemChanged(:position)
-                        // but it is complicated and not so important with a small list
-                        adapter.notifyDataSetChanged()
-                        aliasListViewModel.onEventUpdateAliasesComplete()
+                        viewModel.onEventUpdateAliasesComplete()
 
                         if (binding.swipeRefreshLayout.isRefreshing) {
                             binding.swipeRefreshLayout.isRefreshing = false
@@ -70,16 +69,26 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 }
             })
 
-        aliasListViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, Observer { toggledAliasIndex ->
+            if (toggledAliasIndex != null) {
+                activity?.runOnUiThread {
+                    setLoading(false)
+                    adapter.notifyItemChanged(toggledAliasIndex)
+                    viewModel.onHandleToggleAliasComplete()
+                }
+            }
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
                 context?.toastError(error)
-                aliasListViewModel.onHandleErrorComplete()
+                viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         })
 
         // Reset tab selection state on configuration changed
-        binding.tabLayout.getTabAt(aliasListViewModel.aliasFilterMode.position)?.select()
+        binding.tabLayout.getTabAt(viewModel.aliasFilterMode.position)?.select()
 
         // RecyclerView
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
@@ -93,20 +102,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 )
             }
 
-            override fun onSwitch(alias: Alias) {
+            override fun onSwitch(alias: Alias, position: Int) {
                 setLoading(true)
-                SLApiService.toggleAlias(aliasListViewModel.apiKey, alias) { enabled, error ->
-                    activity?.runOnUiThread {
-                        setLoading(false)
-
-                        if (error != null) {
-                            context.toastError(error)
-                        } else if (enabled != null) {
-                            alias.setEnabled(enabled)
-                            aliasListViewModel.filterAliases()
-                        }
-                    }
-                }
+                viewModel.toggleAlias(alias, position)
             }
 
             override fun onCopy(alias: Alias) {
@@ -129,19 +127,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        SLApiService.deleteAlias(aliasListViewModel.apiKey, alias) { error ->
-                            activity?.runOnUiThread {
-                                setLoading(false)
-
-                                if (error != null) {
-                                    context.toastError(error)
-                                } else {
-                                    context.toastShortly("Deleted \"${alias.email}\"")
-                                    // Calling deleteAlias will also trigger filter and refresh the alias list
-                                    aliasListViewModel.refreshAliases()
-                                }
-                            }
-                        }
+                        viewModel.deleteAlias(alias)
                     }
                     .setNeutralButton("Cancel", null)
                     .show()
@@ -153,17 +139,17 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == aliasListViewModel.filteredAliases.size - 1)
-                    && aliasListViewModel.moreAliasesToLoad
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1)
+                    && viewModel.moreAliasesToLoad
                 ) {
                     setLoading(true)
                     lastToast = context?.toastShortly("Loading more...")
-                    aliasListViewModel.fetchAliases()
+                    viewModel.fetchAliases()
                 }
             }
         })
 
-        binding.swipeRefreshLayout.setOnRefreshListener { aliasListViewModel.refreshAliases() }
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshAliases() }
         setLoading(false)
         return binding.root
     }
@@ -172,7 +158,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         super.onResume()
         // On configuration change, trigger a recyclerView refresh by calling filter function
         if (adapter.itemCount == 0) {
-            aliasListViewModel.filterAliases()
+            viewModel.filterAliases()
         }
     }
 
@@ -206,7 +192,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             .setPositiveButton("Create") { _, _ ->
                 setLoading(true)
                 SLApiService.randomAlias(
-                    aliasListViewModel.apiKey,
+                    viewModel.apiKey,
                     randomMode,
                     dialogTextViewBinding.editText.text.toString()
                 ) { newAlias, error ->
@@ -215,7 +201,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         if (error != null) {
                             context?.toastError(error)
                         } else if (newAlias != null) {
-                            aliasListViewModel.refreshAliases()
+                            viewModel.refreshAliases()
                             context?.toastShortly("Created \"${newAlias.email}\"")
                         }
                     }
@@ -245,9 +231,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab?.position) {
-            0 -> aliasListViewModel.filterAliases(AliasFilterMode.ALL)
-            1 -> aliasListViewModel.filterAliases(AliasFilterMode.ACTIVE)
-            2 -> aliasListViewModel.filterAliases(AliasFilterMode.INACTIVE)
+            0 -> viewModel.filterAliases(AliasFilterMode.ALL)
+            1 -> viewModel.filterAliases(AliasFilterMode.ACTIVE)
+            2 -> viewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
     }
 

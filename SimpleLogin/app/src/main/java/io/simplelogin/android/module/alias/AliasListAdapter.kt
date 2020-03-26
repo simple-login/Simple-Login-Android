@@ -9,7 +9,7 @@ import io.simplelogin.android.viewholder.AliasViewHolder
 class AliasListAdapter(private val clickListener: ClickListener) : ListAdapter<Alias, AliasViewHolder>(AliasDiffCallback()) {
     interface ClickListener {
         fun onClick(alias: Alias)
-        fun onSwitch(alias: Alias)
+        fun onSwitch(alias: Alias, position: Int)
         fun onCopy(alias: Alias)
         fun onSendEmail(alias: Alias)
         fun onDelete(alias: Alias, position: Int)
