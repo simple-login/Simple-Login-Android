@@ -47,13 +47,24 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     override fun onResume() {
+        // Animate slide search bar
         super.onResume()
         val slideInFromLeftAnimator =
             AnimatorInflater.loadAnimator(context, R.animator.slide_in_from_left)
         slideInFromLeftAnimator.setTarget(binding.toolbarRootRelativeLayout)
         slideInFromLeftAnimator.start()
-        binding.searchTextInputLayout.editText?.requestFocus()
-        activity?.showKeyboard()
+
+        // On configuration change
+        if (viewModel.aliases.isEmpty()) {
+            // Show keyboard
+            binding.searchTextInputLayout.editText?.requestFocus()
+            activity?.showKeyboard()
+        } else {
+            // Bind last search term back into editText
+            binding.searchTextInputLayout.editText?.setText(viewModel.term)
+            // Reload recyclerView
+            viewModel.forceUpdateResults()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -115,7 +126,11 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun setUpRecyclerView() {
         adapter = AliasSearchAdapter(object : AliasListAdapter.ClickListener {
             override fun onClick(alias: Alias) {
-
+                findNavController().navigate(
+                    AliasSearchFragmentDirections.actionAliasSearchFragmentToAliasActivityListFragment(
+                        alias
+                    )
+                )
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
@@ -123,11 +138,17 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
 
             override fun onCopy(alias: Alias) {
-
+                val email = alias.email
+                copyToClipboard(email, email)
+                context?.toastShortly("Copied \"$email\"")
             }
 
             override fun onSendEmail(alias: Alias) {
-
+                findNavController().navigate(
+                    AliasSearchFragmentDirections.actionAliasSearchFragmentToContactListFragment(
+                        alias
+                    )
+                )
             }
 
             override fun onDelete(alias: Alias, position: Int) {

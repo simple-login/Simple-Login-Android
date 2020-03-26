@@ -1,7 +1,6 @@
 package io.simplelogin.android.module.alias.search
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.simplelogin.android.utils.SLApiService
@@ -35,7 +34,13 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         _eventUpdateResults.value = false
     }
 
+    fun forceUpdateResults() {
+        _eventUpdateResults.value = true
+    }
+
     private var _term: String? = null
+    val term: String?
+        get() = _term
 
     fun search(searchTerm: String? = null) {
         searchTerm?.let {
@@ -54,7 +59,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
 
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchAliases(apiKey,  _currentPage + 1, _term) { newAliases, error ->
+        SLApiService.fetchAliases(apiKey, _currentPage + 1, _term) { newAliases, error ->
             _isFetching = false
 
             if (error != null) {
@@ -70,5 +75,15 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        _error.value = null
+        _aliases.clear()
+        _isFetching = false
+        _currentPage = -1
+        moreToLoad = true
+        _eventUpdateResults.value = false
+        _term = null
     }
 }
