@@ -412,12 +412,29 @@ object SLApiService {
     fun fetchAliases(
         apiKey: String,
         page: Int,
+        searchTerm: String? = null,
         completion: (aliases: List<Alias>?, error: SLError?) -> Unit
     ) {
-        val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases?page_id=$page")
-            .header("Authentication", apiKey)
-            .build()
+
+        val request = when (searchTerm) {
+            null -> Request.Builder()
+                .url("${BASE_URL}/api/aliases?page_id=$page")
+                .header("Authentication", apiKey)
+                .build()
+
+            else -> {
+                val body = """
+                    {
+                        "query": "$searchTerm"
+                    }
+                """.trimIndent()
+                Request.Builder()
+                    .url("${BASE_URL}/api/aliases?page_id=$page")
+                    .header("Authentication", apiKey)
+                    .post(body.toRequestBody(CONTENT_TYPE_JSON))
+                    .build()
+            }
+        }
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
