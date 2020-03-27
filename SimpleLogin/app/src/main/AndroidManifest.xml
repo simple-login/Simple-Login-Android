@@ -21,19 +21,20 @@
         <!--windowSoftInputMode="adjustPan" to prevent bottom sheet to move up when keyboard is appeared -->
         <activity
             android:name=".module.home.HomeActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/HomeActivityTheme"/>
+            android:theme="@style/HomeActivityTheme"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity android:name=".module.login.LoginActivity" />
         <activity android:name=".module.login.VerificationActivity" />
         <activity android:name=".module.login.SignUpActivity" />
+        <activity android:name=".module.login.AboutActivity" />
 
         <!--ShareActivity-->
         <activity android:name=".module.share.ShareActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/*"/>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
 

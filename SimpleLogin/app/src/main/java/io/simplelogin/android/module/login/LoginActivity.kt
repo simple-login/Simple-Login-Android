@@ -95,6 +95,11 @@ class LoginActivity : BaseAppCompatActivity() {
 
         // App version & About us
         binding.appVersionTextView.text = "SimpleLogin v${getVersionName()}"
+        binding.aboutUsTextView.setOnClickListener {
+            val aboutActivityIntent = Intent(this, AboutActivity::class.java)
+            startActivity(aboutActivityIntent)
+            overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
+        }
     }
 
     override fun onBackPressed() = Unit

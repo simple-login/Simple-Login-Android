@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityHomeBinding
+import io.simplelogin.android.module.about.AboutFragment
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.getVersionName
@@ -78,13 +79,20 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
             R.id.settingsMenuItem -> {
                 val settingsNavGraph = navInflater.inflate(R.navigation.nav_graph_settings)
-                settingsNavGraph.addArgument(USER_INFO, NavArgument.Builder().setDefaultValue(userInfo).build())
+                settingsNavGraph.addArgument(
+                    USER_INFO,
+                    NavArgument.Builder().setDefaultValue(userInfo).build()
+                )
                 navController.graph = settingsNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
             R.id.aboutMenuItem -> {
                 val aboutNavGraph = navInflater.inflate(R.navigation.nav_graph_about)
+                aboutNavGraph.addArgument(
+                    AboutFragment.OPEN_FROM_LOGIN_ACTIVITY,
+                    NavArgument.Builder().setDefaultValue(false).build()
+                )
                 navController.graph = aboutNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
