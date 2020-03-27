@@ -362,6 +362,43 @@ object SLApiService {
             }
         })
     }
+
+    fun fetchUserOptions(apiKey: String, completion: (userOptions: UserOptions?, error: SLError?) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/v2/alias/options")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val userOptions = Gson().fromJson(jsonString, UserOptions::class.java)
+                            if (userOptions != null) {
+                                completion(userOptions, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("UserOptions"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
     //endregion
 
     //region Alias

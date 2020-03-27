@@ -12,4 +12,6 @@
     <string name="faq_2">SimpleLogin alias are permanent as opposed to the temporary emails created on services like temp-mail.org, 10minutesmail.net, etc.\n\nSimpleLogin also doesn\'t store the emails.\n\nWe are simply different products for different usecases.</string>
     <string name="faq_3">SimpleLogin doesn\'t store the emails (we don\'t want to become another Gmail 💰).\n\nTechnically the emails DO arrive at SimpleLogin server and we modify email headers to implement the \"magic\" but the email content is never read.</string>
     <string name="forgot_password_message">For security reason and to avoid database leak, all \"forgot password\" requests are taken into account silently without you being informed if a request is successful or not.\n\nSo make sure that you enter the correct email address.</string>
+    <string name="create_alias_hint">💡Hint: To make it easy to remember for later use, it is a good practice to use the name of the website/service that you plan to register with alias.</string>
+    <string name="create_alias_warning">⚠️ Only letters, numbers, dash (-) &amp; underscore (_) are allowed.</string>
 </resources>
