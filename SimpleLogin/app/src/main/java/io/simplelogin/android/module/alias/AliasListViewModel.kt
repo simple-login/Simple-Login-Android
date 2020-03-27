@@ -134,4 +134,9 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
             _aliases.find { it.id == alias.id }?.setEnabled(alias.enabled)
         }
     }
+
+    // Add
+    fun addAliasWithoutUpdate(alias: Alias) {
+        _aliases.add(0, alias)
+    }
 }

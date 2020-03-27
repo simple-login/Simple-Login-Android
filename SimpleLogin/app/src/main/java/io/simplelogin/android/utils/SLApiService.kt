@@ -363,7 +363,10 @@ object SLApiService {
         })
     }
 
-    fun fetchUserOptions(apiKey: String, completion: (userOptions: UserOptions?, error: SLError?) -> Unit) {
+    fun fetchUserOptions(
+        apiKey: String,
+        completion: (userOptions: UserOptions?, error: SLError?) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/v2/alias/options")
             .header("Authentication", apiKey)
@@ -402,7 +405,65 @@ object SLApiService {
     //endregion
 
     //region Alias
-    fun randomAlias(apiKey: String, randomMode: RandomMode, note: String?, completion: (newAlias: NewAlias?, error: SLError?) -> Unit) {
+    fun createAlias(
+        apiKey: String,
+        prefix: String,
+        suffix: String,
+        note: String?,
+        completion: (alias: Alias?, error: SLError?) -> Unit
+    ) {
+        val formattedNote = note?.replace("\n", "\\n")
+        val body = """
+            {
+                "alias_prefix": "$prefix",
+                "alias_suffix": "$suffix",
+                "note": "$formattedNote"
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/alias/custom/new")
+            .header("Authentication", apiKey)
+            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    201 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val alias = Gson().fromJson(jsonString, Alias::class.java)
+                            if (alias != null) {
+                                completion(alias, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("Alias"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    409 -> completion(null, SLError.DuplicatedAlias)
+                    500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
+
+    fun randomAlias(
+        apiKey: String,
+        randomMode: RandomMode,
+        note: String?,
+        completion: (newAlias: NewAlias?, error: SLError?) -> Unit
+    ) {
         val formattedNote = note?.replace("\n", "\\n")
         val body = """
             {
@@ -617,7 +678,12 @@ object SLApiService {
         })
     }
 
-    fun updateAliasNote(apiKey: String, alias: Alias, note: String?, completion: (error: SLError?) -> Unit) {
+    fun updateAliasNote(
+        apiKey: String,
+        alias: Alias,
+        note: String?,
+        completion: (error: SLError?) -> Unit
+    ) {
         val formattedNote = note?.replace("\n", "\\n")
         val body = """
             {

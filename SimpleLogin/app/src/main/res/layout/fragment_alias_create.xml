@@ -65,11 +65,13 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/createButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp"
+                android:enabled="false"
                 android:text="Create"
                 tools:ignore="HardcodedText" />
 
