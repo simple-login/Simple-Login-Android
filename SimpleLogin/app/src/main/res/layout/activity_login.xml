@@ -146,6 +146,38 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/appVersionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/colorDarkGray"
+                tools:text="SimpleLogin vX.X" />
+
+            <TextView
+                android:id="@+id/aboutUsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_info_outline_black_24dp"
+                android:drawablePadding="5dp"
+                android:drawableTint="@color/colorPrimary"
+                android:text="About Us"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
         <View
             android:id="@+id/dimView"
             android:layout_width="match_parent"
@@ -155,7 +187,8 @@
 
         <include
             android:id="@+id/forgotPasswordBottomSheet"
-            layout="@layout/bottom_sheet_forgot_password" />
+            layout="@layout/bottom_sheet_forgot_password"
+            tools:visibility="gone" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

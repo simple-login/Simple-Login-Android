@@ -1,12 +1,12 @@
 package io.simplelogin.android.module.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -45,6 +45,7 @@ class LoginActivity : BaseAppCompatActivity() {
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -91,6 +92,9 @@ class LoginActivity : BaseAppCompatActivity() {
         // Forgot password
         binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }
         setUpForgotPasswordBottomSheet()
+
+        // App version & About us
+        binding.appVersionTextView.text = "SimpleLogin v${getVersionName()}"
     }
 
     override fun onBackPressed() = Unit
@@ -98,11 +102,13 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun setUpForgotPasswordBottomSheet() {
         binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenMetrics().heightPixels
 
-        forgotPasswordBottomSheetBehavior = BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)
+        forgotPasswordBottomSheetBehavior =
+            BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)
         forgotPasswordBottomSheetBehavior.hide()
         binding.forgotPasswordBottomSheet.cancelButton.setOnClickListener { forgotPasswordBottomSheetBehavior.hide() }
 
-        forgotPasswordBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        forgotPasswordBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.dimView.alpha = slideOffset * 60 / 100
             }
@@ -130,9 +136,12 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         })
 
-        binding.forgotPasswordBottomSheet.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
+        binding.forgotPasswordBottomSheet.emailTextField.editText?.addTextChangedListener(object :
+            TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isValidEmail()) {
                     binding.forgotPasswordBottomSheet.resetButton.isEnabled = true
@@ -255,8 +264,8 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            Log.d("google_auth", "idToken: ${account?.idToken}")
-            Log.d("google_auth", "serverAuthCode ${account?.serverAuthCode}")
+//            Log.d("google_auth", "idToken: ${account?.idToken}")
+//            Log.d("google_auth", "serverAuthCode ${account?.serverAuthCode}")
             if (account?.serverAuthCode != null) {
                 socialLogin(SocialService.GOOGLE, account.serverAuthCode!!)
             } else {
