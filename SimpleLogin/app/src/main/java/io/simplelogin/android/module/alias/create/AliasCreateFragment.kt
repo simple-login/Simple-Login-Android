@@ -3,7 +3,6 @@ package io.simplelogin.android.module.alias.create
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,10 +45,6 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d(
-                    "isValidEmailPrefix",
-                    "${s?.toString()} - ${s?.toString()?.isValidEmailPrefix()}"
-                )
                 binding.createButton.isEnabled = s?.toString()?.isValidEmailPrefix() ?: false
             }
         })
@@ -92,7 +87,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun updateAliasListViewModelAndNavigateUp(alias: Alias) {
-        aliasListViewModel.addAliasWithoutUpdate(alias)
+        aliasListViewModel.addAlias(alias)
         dismissKeyboardAndNavigateUp()
     }
 

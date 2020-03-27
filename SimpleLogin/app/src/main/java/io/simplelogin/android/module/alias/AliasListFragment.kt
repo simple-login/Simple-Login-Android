@@ -1,7 +1,6 @@
 package io.simplelogin.android.module.alias
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -195,14 +194,16 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     viewModel.apiKey,
                     randomMode,
                     dialogTextViewBinding.editText.text.toString()
-                ) { newAlias, error ->
+                ) { alias, error ->
                     activity?.runOnUiThread {
                         setLoading(false)
                         if (error != null) {
                             context?.toastError(error)
-                        } else if (newAlias != null) {
-                            viewModel.refreshAliases()
-                            context?.toastShortly("Created \"${newAlias.email}\"")
+                        } else if (alias != null) {
+                            viewModel.addAlias(alias)
+                            viewModel.filterAliases()
+                            binding.recyclerView.smoothScrollToPosition(0)
+                            context?.toastShortly("Created \"${alias.email}\"")
                         }
                     }
                 }

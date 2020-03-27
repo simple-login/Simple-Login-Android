@@ -67,6 +67,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         currentPage = -1
         moreAliasesToLoad = true
         _aliases = mutableListOf()
+        filteredAliases = listOf()
         _deletedAliasIds = mutableListOf()
         fetchAliases()
     }
@@ -136,7 +137,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Add
-    fun addAliasWithoutUpdate(alias: Alias) {
+    fun addAlias(alias: Alias) {
         _aliases.add(0, alias)
     }
 }

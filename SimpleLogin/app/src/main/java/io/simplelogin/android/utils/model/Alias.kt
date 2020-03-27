@@ -116,7 +116,3 @@ data class Alias(
 data class AliasArray(
     @SerializedName("aliases") val aliases: List<Alias>
 )
-
-data class NewAlias(
-    @SerializedName("alias") val email: String
-)

@@ -462,7 +462,7 @@ object SLApiService {
         apiKey: String,
         randomMode: RandomMode,
         note: String?,
-        completion: (newAlias: NewAlias?, error: SLError?) -> Unit
+        completion: (alias: Alias?, error: SLError?) -> Unit
     ) {
         val formattedNote = note?.replace("\n", "\\n")
         val body = """
@@ -488,11 +488,11 @@ object SLApiService {
                         val jsonString = response.body?.string()
 
                         if (jsonString != null) {
-                            val newAlias = Gson().fromJson(jsonString, NewAlias::class.java)
-                            if (newAlias != null) {
-                                completion(newAlias, null)
+                            val alias = Gson().fromJson(jsonString, Alias::class.java)
+                            if (alias != null) {
+                                completion(alias, null)
                             } else {
-                                completion(null, SLError.FailedToParseObject("NewAlias"))
+                                completion(null, SLError.FailedToParseObject("Alias"))
                             }
                         } else {
                             completion(null, SLError.NoData)
