@@ -122,4 +122,16 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
     }
+
+    // Update toggled and deleted aliases
+    fun updateToggledAndDeletedAliases(toggledAliases: List<Alias>, deletedIds: List<Int>) {
+        _deletedAliasIds.addAll(deletedIds)
+        deletedIds.forEach { deletedId ->
+            _aliases.removeAll { it.id == deletedId }
+        }
+
+        toggledAliases.forEach { alias ->
+            _aliases.find { it.id == alias.id }?.setEnabled(alias.enabled)
+        }
+    }
 }

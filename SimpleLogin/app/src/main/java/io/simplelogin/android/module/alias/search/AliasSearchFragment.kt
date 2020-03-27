@@ -7,14 +7,17 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasSearchBinding
 import io.simplelogin.android.module.alias.AliasListAdapter
+import io.simplelogin.android.module.alias.AliasListViewModel
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
@@ -22,6 +25,7 @@ import io.simplelogin.android.utils.model.Alias
 
 class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasSearchBinding
+    private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var viewModel: AliasSearchViewModel
     private lateinit var adapter: AliasSearchAdapter
 
@@ -33,7 +37,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding = FragmentAliasSearchBinding.inflate(inflater)
         binding.backImageView.setOnClickListener {
             activity?.dismissKeyboard()
-            findNavController().navigateUp()
+            updateAliasListViewModelAndNavigateUp()
         }
 
         setLoading(false)
@@ -107,7 +111,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         binding.messageTextView.visibility = View.GONE
                     }
 
-                    adapter.submitList(viewModel.aliases)
+                    adapter.submitList(viewModel.aliases.toMutableList())
                     viewModel.onHandleUpdateResultsComplete()
                 }
             }
@@ -162,8 +166,16 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 )
             }
 
-            override fun onDelete(alias: Alias, position: Int) {
-                
+            override fun onDelete(alias: Alias) {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${alias.email}\"?")
+                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        viewModel.deleteAlias(alias)
+                    }
+                    .setNeutralButton("Cancel", null)
+                    .show()
             }
         })
 
@@ -189,9 +201,13 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
     }
 
+    private fun updateAliasListViewModelAndNavigateUp() {
+        aliasListViewModel.updateToggledAndDeletedAliases(viewModel.toggledAliases, viewModel.deletedAliasIds)
+        findNavController().navigateUp()
+    }
+
     // HomeActivity.OnBackPressed
     override fun onBackPressed() {
-        activity?.dismissKeyboard()
-        findNavController().navigateUp()
+        updateAliasListViewModelAndNavigateUp()
     }
 }

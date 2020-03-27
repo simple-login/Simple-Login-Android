@@ -44,6 +44,6 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, adapterPosition)  }
         binding.copyButton.setOnClickListener { clickListener.onCopy(alias) }
         binding.sendEmailButton.setOnClickListener { clickListener.onSendEmail(alias) }
-        binding.deleteButton.setOnClickListener { clickListener.onDelete(alias, adapterPosition) }
+        binding.deleteButton.setOnClickListener { clickListener.onDelete(alias) }
     }
 }

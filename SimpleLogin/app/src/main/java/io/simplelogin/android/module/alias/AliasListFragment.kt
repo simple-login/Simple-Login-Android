@@ -121,7 +121,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 )
             }
 
-            override fun onDelete(alias: Alias, position: Int) {
+            override fun onDelete(alias: Alias) {
                 MaterialAlertDialogBuilder(context)
                     .setTitle("Delete \"${alias.email}\"?")
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")

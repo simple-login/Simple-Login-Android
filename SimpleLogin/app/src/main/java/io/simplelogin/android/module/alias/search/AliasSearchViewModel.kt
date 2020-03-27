@@ -77,10 +77,27 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         }
     }
 
+    // Delete
+    private var _deletedAliasIds = mutableListOf<Int>()
+    val deletedAliasIds: List<Int>
+        get() = _deletedAliasIds
+
+    fun deleteAlias(alias: Alias) {
+        SLApiService.deleteAlias(apiKey, alias) { error ->
+            if (error != null) {
+                _error.postValue(error)
+            } else {
+                _deletedAliasIds.add(alias.id)
+                _aliases.removeAll { it.id == alias.id }
+                _eventUpdateResults.postValue(true)
+            }
+        }
+    }
+
     // Toggle
-    private var _toggledAliasIds = mutableListOf<Int>()
-    val toggledAliasIds: List<Int>
-        get() = _toggledAliasIds
+    private var _toggledAliases = mutableListOf<Alias>()
+    val toggledAliases: List<Alias>
+        get() = _toggledAliases
 
     private var _toggledAliasIndex = MutableLiveData<Int>()
     val toggledAliasIndex: LiveData<Int>
@@ -95,24 +112,15 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
             if (error != null) {
                 _error.postValue(error)
             } else if (enabled != null) {
-                _aliases.find { it.id == alias.id }?.setEnabled(enabled)
-
-                if (!_toggledAliasIds.contains(alias.id)) {
-                    _toggledAliasIds.add(alias.id)
+                _aliases.find { it.id == alias.id }?.let { toggledAlias ->
+                    toggledAlias.setEnabled(enabled)
+                    if (!_toggledAliases.contains(toggledAlias)) {
+                        _toggledAliases.add(toggledAlias)
+                    }
                 }
 
                 _toggledAliasIndex.postValue(index)
             }
         }
-    }
-
-    override fun onCleared() {
-        _error.value = null
-        _aliases.clear()
-        _isFetching = false
-        _currentPage = -1
-        moreToLoad = true
-        _eventUpdateResults.value = false
-        _term = null
     }
 }
