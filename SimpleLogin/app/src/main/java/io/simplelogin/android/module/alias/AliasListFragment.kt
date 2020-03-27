@@ -217,10 +217,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         when (item?.itemId) {
             R.id.searchMenuItem -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
             R.id.randomMenuItem -> showSelectRandomModeAlert()
-
-            R.id.addMenuItem -> {
-                Log.d("menu", "add")
-            }
+            R.id.addMenuItem -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment())
         }
 
         return true
