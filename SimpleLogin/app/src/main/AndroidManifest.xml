@@ -28,6 +28,15 @@
         <activity android:name=".module.login.VerificationActivity" />
         <activity android:name=".module.login.SignUpActivity" />
 
+        <!--ShareActivity-->
+        <activity android:name=".module.share.ShareActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/*"/>
+            </intent-filter>
+        </activity>
+
         <!--Facebook SDK-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

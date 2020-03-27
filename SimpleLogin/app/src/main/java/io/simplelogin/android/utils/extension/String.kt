@@ -15,3 +15,28 @@ fun String.isValidEmailPrefix() : Boolean {
     val prefixRegex = Regex("""([0-9|A-Z|a-z|\-|_]*)""")
     return prefixRegex.matches(this)
 }
+
+fun String.extractWebsiteName() : String {
+    var websiteName = ""
+    var reachedFirstDot = false
+    for (char in reversed()) {
+        if (!reachedFirstDot && char != '.') continue
+
+        if (char == '.') {
+            if (!reachedFirstDot) {
+                reachedFirstDot = true
+                continue
+            }
+            break
+        }
+        if (char == '/') break
+        websiteName += char
+    }
+
+    return websiteName.reversed()
+}
+
+fun String.extractFirstWord() : String {
+    val index = indexOf(' ')
+    return substring(0, index)
+}

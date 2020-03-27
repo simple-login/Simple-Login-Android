@@ -73,7 +73,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp"
                 android:enabled="false"
-                android:text="Create"
+                android:text="Create &amp; Copy"
                 tools:ignore="HardcodedText" />
 
             <TextView
