@@ -129,7 +129,7 @@
 
         <include
             android:id="@+id/howToBottomSheet"
-            layout="@layout/bottom_sheet_how_to_create_contact" />
+            layout="@layout/bottom_sheet_how_send_mail" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

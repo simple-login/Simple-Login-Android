@@ -58,28 +58,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="1. Create a contact by entering an email address that you want to send to."
+                android:text="1. Create a contact by clicking + button and entering an email address that you want to send to."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="2. Send email as you always do to the reverse-alias of this contact from your personal email address (the one that you use to register with SimpleLogin)."
+                android:text="2. Click on the contact to copy the reverse-alias or open a mail composer with that reverse-alias pre-filled."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="And that's all!\nWe will take care of the rest to make magic happen."
+                android:text="Send email as you normally do to that reverse-alias and that's all!\nWe will take care of the rest to make magic happen."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Note that the reverse-alias can only be used by you."
+                android:text="Note that the reverse-alias can only be used by you which means you have to send email to the reverse-alias ONLY from the email that you register with SimpleLogin."
                 android:textColor="@color/colorNegative"
                 tools:ignore="HardcodedText" />
         </LinearLayout>

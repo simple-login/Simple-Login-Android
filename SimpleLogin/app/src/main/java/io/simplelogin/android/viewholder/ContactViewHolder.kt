@@ -31,7 +31,6 @@ class ContactViewHolder(private val binding: RecyclerItemContactBinding) :
             binding.lastEmailSentTextView.visibility = View.GONE
         }
 
-        binding.writeEmailButton.setOnClickListener { clickListener.onWrite(contact) }
-        binding.deleteButton.setOnClickListener { clickListener.onDelete(contact) }
+        binding.rootCardView.setOnClickListener { clickListener.onClick(contact) }
     }
 }

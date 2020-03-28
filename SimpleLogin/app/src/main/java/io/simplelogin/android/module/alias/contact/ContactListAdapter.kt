@@ -8,8 +8,7 @@ import io.simplelogin.android.viewholder.ContactViewHolder
 
 class ContactListAdapter(private val clickListener: ClickListener) : ListAdapter<Contact, ContactViewHolder>(ContactDiffCallback()) {
     interface ClickListener {
-        fun onWrite(contact: Contact)
-        fun onDelete(contact: Contact)
+        fun onClick(contact: Contact)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder =

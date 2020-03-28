@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -18,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.SwipeToDeleteCallback
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
@@ -88,14 +90,16 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     }
 
     private fun setUpHowToBottomSheet() {
-        binding.howToBottomSheet.root.layoutParams.height = requireActivity().getScreenMetrics().heightPixels
+        binding.howToBottomSheet.root.layoutParams.height =
+            requireActivity().getScreenMetrics().heightPixels
 
         howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
         howToBottomSheetBehavior.hide()
         binding.howToBottomSheet.closeButton.setOnClickListener {
             howToBottomSheetBehavior.hide()
         }
-        howToBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        howToBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.dimView.alpha = slideOffset * 60 / 100
             }
@@ -118,16 +122,19 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     }
 
     private fun setUpCreateContactBottomSheet() {
-        binding.createContactBottomSheet.root.layoutParams.height = requireActivity().getScreenMetrics().heightPixels
+        binding.createContactBottomSheet.root.layoutParams.height =
+            requireActivity().getScreenMetrics().heightPixels
         binding.createContactBottomSheet.aliasTextView.text = alias.email
 
-        createContactBottomSheetBehavior = BottomSheetBehavior.from(binding.createContactBottomSheet.root)
+        createContactBottomSheetBehavior =
+            BottomSheetBehavior.from(binding.createContactBottomSheet.root)
         createContactBottomSheetBehavior.hide()
         binding.createContactBottomSheet.cancelButton.setOnClickListener {
             createContactBottomSheetBehavior.hide()
         }
 
-        createContactBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        createContactBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.dimView.alpha = slideOffset * 60 / 100
             }
@@ -156,9 +163,12 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
-        binding.createContactBottomSheet.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
+        binding.createContactBottomSheet.emailTextField.editText?.addTextChangedListener(object :
+            TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isValidEmail()) {
                     binding.createContactBottomSheet.createButton.isEnabled = true
@@ -216,12 +226,14 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         })
 
         // Create contact
-        viewModel.eventFinishCallingCreateContact.observe(viewLifecycleOwner, Observer { finishedCallingCreateContact ->
-            if (finishedCallingCreateContact) {
-                setLoading(false)
-                viewModel.onHandleFinishCallingCreateContactComplete()
-            }
-        })
+        viewModel.eventFinishCallingCreateContact.observe(
+            viewLifecycleOwner,
+            Observer { finishedCallingCreateContact ->
+                if (finishedCallingCreateContact) {
+                    setLoading(false)
+                    viewModel.onHandleFinishCallingCreateContactComplete()
+                }
+            })
 
         viewModel.eventCreatedContact.observe(viewLifecycleOwner, Observer { createdContact ->
             if (createdContact != null) {
@@ -232,12 +244,14 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         })
 
         // Delete contact
-        viewModel.eventFinishCallingDeleteContact.observe(viewLifecycleOwner, Observer { finishedCallingDeleteContact ->
-            if (finishedCallingDeleteContact) {
-                setLoading(false)
-                viewModel.onHandleFinishCallingDeleteContactComplete()
-            }
-        })
+        viewModel.eventFinishCallingDeleteContact.observe(
+            viewLifecycleOwner,
+            Observer { finishedCallingDeleteContact ->
+                if (finishedCallingDeleteContact) {
+                    setLoading(false)
+                    viewModel.onHandleFinishCallingDeleteContactComplete()
+                }
+            })
 
         viewModel.eventDeletedContact.observe(viewLifecycleOwner, Observer { deletedContact ->
             if (deletedContact != null) {
@@ -250,31 +264,23 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
-            override fun onWrite(contact: Contact) {
+            override fun onClick(contact: Contact) {
                 MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
                     .setTitle("Send mail to \"${contact.email}\"")
-                    .setItems(arrayOf("Copy reverse-alias", "Begin composing with default email")
+                    .setItems(
+                        arrayOf("Copy reverse-alias", "Begin composing with default email")
                     ) { _, itemIndex ->
                         when (itemIndex) {
                             0 -> {
-                                activity?.copyToClipboard(contact.reverseAlias, contact.reverseAlias)
+                                activity?.copyToClipboard(
+                                    contact.reverseAlias,
+                                    contact.reverseAlias
+                                )
                                 context?.toastShortly("Copied \"${contact.reverseAlias}\"")
                             }
 
                             1 -> activity?.startSendEmailIntent(contact.reverseAlias)
                         }
-                    }
-                    .show()
-            }
-
-            override fun onDelete(contact: Contact) {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle("Delete \"${contact.email}\"?")
-                    .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
-                    .setNeutralButton("Cancel", null)
-                    .setNegativeButton("Delete") { _, _ ->
-                        setLoading(true)
-                        viewModel.delete(contact)
                     }
                     .show()
             }
@@ -290,6 +296,26 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 }
             }
         })
+
+        // Add swipe recognizer to recyclerView
+        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val contact = viewModel.contacts[viewHolder.adapterPosition]
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${contact.email}\"?")
+                    .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
+                    .setNeutralButton("Cancel", null)
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        viewModel.delete(contact)
+                    }.setOnDismissListener {
+                        adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    }
+                    .show()
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshContacts() }
     }
