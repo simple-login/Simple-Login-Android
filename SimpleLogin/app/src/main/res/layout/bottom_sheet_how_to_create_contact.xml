@@ -57,25 +57,30 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1. Create a contact by entering an email address that you want to send to"
+                android:layout_marginTop="10dp"
+                android:text="1. Create a contact by entering an email address that you want to send to."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2. Send email as you always do to the reverse-alias of this contact from your personal email address (the one that you use to register with SimpleLogin"
+                android:layout_marginTop="10dp"
+                android:text="2. Send email as you always do to the reverse-alias of this contact from your personal email address (the one that you use to register with SimpleLogin)."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="And that's all\nWe will take care of the rest to make magic happen"
+                android:layout_marginTop="10dp"
+                android:text="And that's all!\nWe will take care of the rest to make magic happen."
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Note that the reverse-alias can only be used by you"
+                android:layout_marginTop="10dp"
+                android:text="Note that the reverse-alias can only be used by you."
+                android:textColor="@color/colorNegative"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
