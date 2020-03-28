@@ -40,6 +40,8 @@ class SignUpActivity : BaseAppCompatActivity() {
         binding.passwordTextField.editText?.addTextChangedListener(textWatcher)
 
         binding.root.setOnClickListener { dismissKeyboard() }
+
+        firebaseAnalytics.logEvent("start_sign_up_activity", null)
     }
 
     override fun onPause() {

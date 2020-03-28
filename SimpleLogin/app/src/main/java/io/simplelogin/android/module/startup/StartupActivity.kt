@@ -57,6 +57,8 @@ class StartupActivity : BaseAppCompatActivity()  {
                         startLoginActivity()
                     }
 
+                    firebaseAnalytics.logEvent("start_up_error", error.toBundle())
+
                 } else if (userInfo != null) {
                     startHomeActivity(userInfo)
                 }

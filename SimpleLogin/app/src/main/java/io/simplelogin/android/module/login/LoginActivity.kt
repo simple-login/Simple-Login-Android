@@ -102,6 +102,8 @@ class LoginActivity : BaseAppCompatActivity() {
         }
 
         binding.root.setOnClickListener { dismissKeyboard() }
+
+        firebaseAnalytics.logEvent("start_login_activity", null)
     }
 
     override fun onBackPressed() = Unit
@@ -125,7 +127,13 @@ class LoginActivity : BaseAppCompatActivity() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.dimView.visibility = View.GONE
                         dismissKeyboard()
+                        firebaseAnalytics.logEvent("hide_forgot_password_bottom_sheet", null)
                     }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> firebaseAnalytics.logEvent(
+                        "expand_forgot_password_bottom_sheet",
+                        null
+                    )
 
                     else -> {
                         binding.forgotPasswordBottomSheet.emailTextField.editText?.text = null
@@ -305,8 +313,13 @@ class LoginActivity : BaseAppCompatActivity() {
                     setLoading(false)
                     if (error != null) {
                         toastError(error)
+                        firebaseAnalytics.logEvent(
+                            "log_in_with_email_password_error",
+                            error.toBundle()
+                        )
                     } else if (userLogin != null) {
                         processUserLogin(userLogin)
+                        firebaseAnalytics.logEvent("log_in_with_email_password_success", null)
                     }
                 }
             }
@@ -323,8 +336,30 @@ class LoginActivity : BaseAppCompatActivity() {
                 setLoading(false)
                 if (error != null) {
                     toastError(error)
+
+                    when (service) {
+                        SocialService.GOOGLE -> firebaseAnalytics.logEvent(
+                            "log_in_with_google_error",
+                            error.toBundle()
+                        )
+                        SocialService.FACEBOOK -> firebaseAnalytics.logEvent(
+                            "log_in_with_facebook_error",
+                            error.toBundle()
+                        )
+                    }
+
                 } else if (userLogin != null) {
                     processUserLogin(userLogin)
+                    when (service) {
+                        SocialService.GOOGLE -> firebaseAnalytics.logEvent(
+                            "log_in_with_google_success",
+                            null
+                        )
+                        SocialService.FACEBOOK -> firebaseAnalytics.logEvent(
+                            "log_in_with_facebook_success",
+                            null
+                        )
+                    }
                 }
             }
         }
@@ -358,8 +393,10 @@ class LoginActivity : BaseAppCompatActivity() {
                 setLoading(false)
                 if (error != null) {
                     toastError(error)
+                    firebaseAnalytics.logEvent("sign_up_error", error.toBundle())
                 } else {
                     startVerificationActivity(VerificationMode.AccountActivation(email, password))
+                    firebaseAnalytics.logEvent("sign_up_success", null)
                 }
             }
         }

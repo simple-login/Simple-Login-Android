@@ -1,5 +1,6 @@
 package io.simplelogin.android.module.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
@@ -7,7 +8,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityVerificationBinding
@@ -15,7 +15,6 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
-import io.simplelogin.android.utils.extension.customSetEnabled
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.extension.toastShortly
 
@@ -31,6 +30,7 @@ class VerificationActivity : BaseAppCompatActivity() {
     private lateinit var verificationMode: VerificationMode
     private val dash = "-"
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVerificationBinding.inflate(layoutInflater)
@@ -44,9 +44,15 @@ class VerificationActivity : BaseAppCompatActivity() {
         verificationMode = getVerificationMode()
 
         when (verificationMode) {
-            is VerificationMode.Mfa -> binding.toolbarTitleText.text = "Enter OTP"
-            is VerificationMode.AccountActivation -> binding.toolbarTitleText.text =
-                "Enter activation code"
+            is VerificationMode.Mfa -> {
+                binding.toolbarTitleText.text = "Enter OTP"
+                firebaseAnalytics.logEvent("start_verification_activity_mfa", null)
+            }
+            is VerificationMode.AccountActivation -> {
+                binding.toolbarTitleText.text =
+                    "Enter activation code"
+                firebaseAnalytics.logEvent("start_verification_activity_activation", null)
+            }
         }
 
         reset()
@@ -62,7 +68,8 @@ class VerificationActivity : BaseAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val clipboardManager = (getSystemService(Context.CLIPBOARD_SERVICE) ?: return) as ClipboardManager
+        val clipboardManager =
+            (getSystemService(Context.CLIPBOARD_SERVICE) ?: return) as ClipboardManager
         val clip = clipboardManager.primaryClip ?: return
         val item = clip.getItemAt(0) ?: return
         val copiedCharacterSequence = item.text ?: return
@@ -77,6 +84,7 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
 
         verify(copiedString)
+        firebaseAnalytics.logEvent("mfa_from_clipboard", null)
     }
 
     private fun getVerificationMode(): VerificationMode {
@@ -90,7 +98,7 @@ class VerificationActivity : BaseAppCompatActivity() {
 
         if (accountActivation != null) return accountActivation
 
-        throw IllegalStateException("VerificatioMode not found in intent")
+        throw IllegalStateException("VerificationMode not found in intent")
     }
 
     private fun setUpClickListeners() {
@@ -195,10 +203,12 @@ class VerificationActivity : BaseAppCompatActivity() {
                         if (error != null) {
                             showError(true, error.description)
                             reset()
+                            firebaseAnalytics.logEvent("mfa_error", error.toBundle())
                         } else if (apiKey != null) {
                             val returnIntent = Intent()
                             returnIntent.putExtra(API_KEY, apiKey.value)
                             setResult(Activity.RESULT_OK, returnIntent)
+                            firebaseAnalytics.logEvent("mfa_success", null)
                             finish()
                         }
                     }
@@ -241,9 +251,9 @@ class VerificationActivity : BaseAppCompatActivity() {
     private fun showReactivationAlert(email: String) {
         MaterialAlertDialogBuilder(this)
             .setTitle("Wrong code too many times")
-            .setMessage("Resend a new activation code for \"$email\"")
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Resend me new code") { _, _ ->
+            .setMessage("We will send you a new activation code to \"$email\"")
+            .setNeutralButton("Close", null)
+            .setOnDismissListener {
                 requestNewCode(email)
                 reset()
             }
@@ -252,13 +262,15 @@ class VerificationActivity : BaseAppCompatActivity() {
 
     private fun requestNewCode(email: String) {
         setLoading(true)
-        SLApiService.reactivate(email) {error ->
+        SLApiService.reactivate(email) { error ->
             runOnUiThread {
                 setLoading(false)
                 if (error != null) {
                     toastError(error)
+                    firebaseAnalytics.logEvent("request_new_code_error", error.toBundle())
                 } else {
                     toastShortly("Check your inbox for new activation code")
+                    firebaseAnalytics.logEvent("request_new_code_success", null)
                 }
             }
         }

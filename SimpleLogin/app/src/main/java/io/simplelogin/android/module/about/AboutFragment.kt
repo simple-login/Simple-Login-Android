@@ -33,8 +33,13 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding = FragmentAboutBinding.inflate(inflater)
 
-        if (openFromLoginActivity) {
-            binding.toolbar.setNavigationIcon(R.drawable.ic_close_36dp)
+        when (openFromLoginActivity) {
+            true -> {
+                binding.toolbar.setNavigationIcon(R.drawable.ic_close_36dp)
+                firebaseAnalytics.logEvent("open_about_fragment_from_login", null)
+            }
+
+            false -> firebaseAnalytics.logEvent("open_about_fragment_from_home", null)
         }
 
         binding.toolbar.setNavigationOnClickListener { finishOrNavigateUp() }
