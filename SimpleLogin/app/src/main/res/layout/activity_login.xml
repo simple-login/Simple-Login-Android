@@ -43,7 +43,9 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@android:color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -57,7 +59,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textPassword" />
+                            android:inputType="textPassword"
+                            android:textColor="@android:color/black" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <View
@@ -169,11 +172,11 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_info_outline_black_24dp"
                 android:drawablePadding="5dp"
-                android:drawableTint="@color/colorPrimary"
                 android:text="About Us"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
+                app:drawableTint="@color/colorPrimary"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>

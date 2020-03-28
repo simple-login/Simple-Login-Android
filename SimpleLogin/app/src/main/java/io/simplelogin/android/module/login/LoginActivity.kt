@@ -100,12 +100,14 @@ class LoginActivity : BaseAppCompatActivity() {
             startActivity(aboutActivityIntent)
             overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
         }
+
+        binding.root.setOnClickListener { dismissKeyboard() }
     }
 
     override fun onBackPressed() = Unit
 
     private fun setUpForgotPasswordBottomSheet() {
-        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenMetrics().heightPixels
+        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenMetrics().heightPixels * 90 / 100
 
         forgotPasswordBottomSheetBehavior =
             BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)

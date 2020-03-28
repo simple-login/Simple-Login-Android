@@ -133,13 +133,13 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         val membershipTextView = headerView.findViewById<TextView>(R.id.membershipTextView)
         if (userInfo.inTrial) {
             membershipTextView.text = "Premium trial"
-            membershipTextView.setTextColor(getColor(android.R.color.holo_blue_light))
+            membershipTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_light))
         } else if (userInfo.isPremium) {
             membershipTextView.text = "Premium"
-            membershipTextView.setTextColor(getColor(R.color.colorPremium))
+            membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
         } else {
             membershipTextView.text = "Free plan"
-            membershipTextView.setTextColor(getColor(R.color.colorDarkGray))
+            membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDarkGray))
         }
     }
 }

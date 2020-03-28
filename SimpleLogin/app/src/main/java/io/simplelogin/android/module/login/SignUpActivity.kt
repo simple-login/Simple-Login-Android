@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivitySignUpBinding
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.extension.dismissKeyboard
 import io.simplelogin.android.utils.extension.isValidEmail
 
 class SignUpActivity : BaseAppCompatActivity() {
@@ -37,6 +38,8 @@ class SignUpActivity : BaseAppCompatActivity() {
 
         binding.emailTextField.editText?.addTextChangedListener(textWatcher)
         binding.passwordTextField.editText?.addTextChangedListener(textWatcher)
+
+        binding.root.setOnClickListener { dismissKeyboard() }
     }
 
     override fun onPause() {
