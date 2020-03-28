@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:lines="2"
+                        android:maxLines="2"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceBody2"
                         tools:text="Alias note" />
