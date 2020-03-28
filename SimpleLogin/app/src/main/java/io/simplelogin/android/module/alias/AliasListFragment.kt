@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,6 +20,7 @@ import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
+import io.simplelogin.android.utils.SwipeToDeleteCallback
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.RandomMode
@@ -45,8 +47,30 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.toolbar.setOnMenuItemClickListener(this)
         binding.tabLayout.addOnTabSelectedListener(this)
 
-        // ViewModel
+        setUpViewModel()
+        // Reset tab selection state on configuration changed
+        binding.tabLayout.getTabAt(viewModel.aliasFilterMode.position)?.select()
+
+        setUpRecyclerView()
+        setLoading(false)
         viewModel.fetchAliases()
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // On configuration change, trigger a recyclerView refresh by calling filter function
+        if (adapter.itemCount == 0) {
+            viewModel.filterAliases()
+        }
+    }
+
+    private fun setLoading(loading: Boolean) {
+        binding.rootConstraintLayout.isEnabled = !loading
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
             Observer { updatedAliases ->
@@ -85,11 +109,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         })
+    }
 
-        // Reset tab selection state on configuration changed
-        binding.tabLayout.getTabAt(viewModel.aliasFilterMode.position)?.select()
-
-        // RecyclerView
+    private fun setUpRecyclerView() {
         adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
             val context = getContext() ?: throw Exception("Context is null")
 
@@ -119,18 +141,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     )
                 )
             }
-
-            override fun onDelete(alias: Alias) {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle("Delete \"${alias.email}\"?")
-                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
-                    .setNegativeButton("Delete") { _, _ ->
-                        setLoading(true)
-                        viewModel.deleteAlias(alias)
-                    }
-                    .setNeutralButton("Cancel", null)
-                    .show()
-            }
         })
         binding.recyclerView.adapter = adapter
         linearLayoutManager = LinearLayoutManager(context)
@@ -148,22 +158,29 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
         })
 
+        // Add swipe recognizer to recyclerView
+        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val alias = viewModel.filteredAliases[viewHolder.adapterPosition]
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${alias.email}\"?")
+                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        viewModel.deleteAlias(alias)
+                    }
+                    .setNeutralButton("Cancel", null)
+                    .setOnDismissListener {
+                        adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    }
+                    .show()
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+
+        // Refresh capacity
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshAliases() }
-        setLoading(false)
-        return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // On configuration change, trigger a recyclerView refresh by calling filter function
-        if (adapter.itemCount == 0) {
-            viewModel.filterAliases()
-        }
-    }
-
-    private fun setLoading(loading: Boolean) {
-        binding.rootConstraintLayout.isEnabled = !loading
-        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun showSelectRandomModeAlert() {

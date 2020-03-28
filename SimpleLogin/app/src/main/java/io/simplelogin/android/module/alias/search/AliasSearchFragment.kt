@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,6 +20,7 @@ import io.simplelogin.android.databinding.FragmentAliasSearchBinding
 import io.simplelogin.android.module.alias.AliasListAdapter
 import io.simplelogin.android.module.alias.AliasListViewModel
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.SwipeToDeleteCallback
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
@@ -165,18 +167,6 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     )
                 )
             }
-
-            override fun onDelete(alias: Alias) {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle("Delete \"${alias.email}\"?")
-                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
-                    .setNegativeButton("Delete") { _, _ ->
-                        setLoading(true)
-                        viewModel.deleteAlias(alias)
-                    }
-                    .setNeutralButton("Cancel", null)
-                    .show()
-            }
         })
 
         binding.recyclerView.adapter = adapter
@@ -191,6 +181,27 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 }
             }
         })
+
+        // Add swipe recognizer to recyclerView
+        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val alias = viewModel.aliases[viewHolder.adapterPosition]
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete \"${alias.email}\"?")
+                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                    .setNegativeButton("Delete") { _, _ ->
+                        setLoading(true)
+                        viewModel.deleteAlias(alias)
+                    }
+                    .setNeutralButton("Cancel", null)
+                    .setOnDismissListener {
+                        adapter.notifyItemChanged(viewHolder.adapterPosition)
+                    }
+                    .show()
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setLoading(loading: Boolean) {
