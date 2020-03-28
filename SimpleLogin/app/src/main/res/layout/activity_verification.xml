@@ -125,8 +125,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textColor="@color/colorNegative"
-                android:textSize="15sp"
                 tools:text="Error message" />
 
             <View

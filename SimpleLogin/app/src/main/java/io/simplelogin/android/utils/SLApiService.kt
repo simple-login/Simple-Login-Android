@@ -161,21 +161,7 @@ object SLApiService {
                         }
                     }
 
-                    400 -> {
-                        val jsonString = response.body?.string()
-
-                        if (jsonString != null) {
-                            val errorMessage = Gson().fromJson(jsonString, ErrorMessage::class.java)
-                            if (errorMessage != null) {
-                                completion(null, SLError.BadRequest(errorMessage.value))
-                            } else {
-                                completion(null, SLError.FailedToParseObject("ErrorMessage"))
-                            }
-                        } else {
-                            completion(null, SLError.NoData)
-                        }
-                    }
-
+                    400 -> completion(null, SLError.WrongTotpToken)
                     500 -> completion(null, SLError.InternalServerError)
                     502 -> completion(null, SLError.BadGateway)
                     else -> completion(null, SLError.UnknownError("error code ${response.code}"))
@@ -250,22 +236,7 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> completion(null)
-
-                    400 -> {
-                        val jsonString = response.body?.string()
-
-                        if (jsonString != null) {
-                            val errorMessage = Gson().fromJson(jsonString, ErrorMessage::class.java)
-                            if (errorMessage != null) {
-                                completion(SLError.BadRequest(errorMessage.value))
-                            } else {
-                                completion(SLError.FailedToParseObject("ErrorMessage"))
-                            }
-                        } else {
-                            completion(SLError.NoData)
-                        }
-                    }
-
+                    400 -> completion(SLError.WrongVerificationCode)
                     410 -> completion(SLError.ReactivationNeeded)
                     500 -> completion(SLError.InternalServerError)
                     502 -> completion(SLError.BadGateway)

@@ -15,6 +15,8 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.extension.fadeOut
+import io.simplelogin.android.utils.extension.shake
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.extension.toastShortly
 
@@ -117,44 +119,38 @@ class VerificationActivity : BaseAppCompatActivity() {
     }
 
     private fun addNumber(number: String) {
-        if (binding.firstNumberTextView.text == dash) {
-            binding.firstNumberTextView.text = number
-            showError(false)
-        } else if (binding.secondNumberTextView.text == dash) {
-            binding.secondNumberTextView.text = number
-        } else if (binding.thirdNumberTextView.text == dash) {
-            binding.thirdNumberTextView.text = number
-        } else if (binding.fourthNumberTextView.text == dash) {
-            binding.fourthNumberTextView.text = number
-        } else if (binding.fifthNumberTextView.text == dash) {
-            binding.fifthNumberTextView.text = number
-        } else if (binding.sixthNumberTextView.text == dash) {
-            binding.sixthNumberTextView.text = number
-            var code = ""
-            code += binding.firstNumberTextView.text
-            code += binding.secondNumberTextView.text
-            code += binding.thirdNumberTextView.text
-            code += binding.fourthNumberTextView.text
-            code += binding.fifthNumberTextView.text
-            code += binding.sixthNumberTextView.text
+        when {
+            binding.firstNumberTextView.text == dash -> {
+                binding.firstNumberTextView.text = number
+                showError(false)
+            }
+            binding.secondNumberTextView.text == dash -> binding.secondNumberTextView.text = number
+            binding.thirdNumberTextView.text == dash -> binding.thirdNumberTextView.text = number
+            binding.fourthNumberTextView.text == dash -> binding.fourthNumberTextView.text = number
+            binding.fifthNumberTextView.text == dash -> binding.fifthNumberTextView.text = number
+            binding.sixthNumberTextView.text == dash -> {
+                binding.sixthNumberTextView.text = number
+                var code = ""
+                code += binding.firstNumberTextView.text
+                code += binding.secondNumberTextView.text
+                code += binding.thirdNumberTextView.text
+                code += binding.fourthNumberTextView.text
+                code += binding.fifthNumberTextView.text
+                code += binding.sixthNumberTextView.text
 
-            verify(code)
+                verify(code)
+            }
         }
     }
 
     private fun deleteLastNumber() {
-        if (binding.sixthNumberTextView.text != dash) {
-            binding.sixthNumberTextView.text = dash
-        } else if (binding.fifthNumberTextView.text != dash) {
-            binding.fifthNumberTextView.text = dash
-        } else if (binding.fourthNumberTextView.text != dash) {
-            binding.fourthNumberTextView.text = dash
-        } else if (binding.thirdNumberTextView.text != dash) {
-            binding.thirdNumberTextView.text = dash
-        } else if (binding.secondNumberTextView.text != dash) {
-            binding.secondNumberTextView.text = dash
-        } else if (binding.firstNumberTextView.text != dash) {
-            binding.firstNumberTextView.text = dash
+        when {
+            binding.sixthNumberTextView.text != dash -> binding.sixthNumberTextView.text = dash
+            binding.fifthNumberTextView.text != dash -> binding.fifthNumberTextView.text = dash
+            binding.fourthNumberTextView.text != dash -> binding.fourthNumberTextView.text = dash
+            binding.thirdNumberTextView.text != dash -> binding.thirdNumberTextView.text = dash
+            binding.secondNumberTextView.text != dash -> binding.secondNumberTextView.text = dash
+            binding.firstNumberTextView.text != dash -> binding.firstNumberTextView.text = dash
         }
     }
 
@@ -173,13 +169,9 @@ class VerificationActivity : BaseAppCompatActivity() {
             true -> {
                 errorTextView.text = errorMessage
                 errorTextView.alpha = 1f
-                //shake()
+                errorTextView.shake()
             }
-
-            false -> {
-                errorTextView.alpha = 0f
-                //animate alpha
-            }
+            false -> errorTextView.fadeOut()
         }
     }
 
@@ -252,7 +244,7 @@ class VerificationActivity : BaseAppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Wrong code too many times")
             .setMessage("We will send you a new activation code to \"$email\"")
-            .setNeutralButton("Close", null)
+            .setPositiveButton("Close", null)
             .setOnDismissListener {
                 requestNewCode(email)
                 reset()
