@@ -37,6 +37,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_aliasListFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_from_right"
+            app:exitAnim="@anim/exit_anim_slide_out_to_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
     </fragment>
     <fragment
         android:id="@+id/contactListFragment"
@@ -77,4 +84,12 @@
         android:id="@+id/aliasCreateFragment"
         android:name="io.simplelogin.android.module.alias.create.AliasCreateFragment"
         android:label="AliasCreateFragment" />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="io.simplelogin.android.module.about.WebViewFragment"
+        android:label="WebViewFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
 </navigation>

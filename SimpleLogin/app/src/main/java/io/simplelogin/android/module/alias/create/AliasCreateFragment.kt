@@ -71,8 +71,15 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     if (userOptions.canCreate) {
                         setUpSuffixesSpinner(userOptions.suffixes)
                     } else {
-                        context?.toastLongly("You can not create more alias. Please upgrade to premium.")
-                        findNavController().navigateUp()
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle("Can not create more alias")
+                            .setMessage("Go premium for unlimited aliases and more.")
+                            .setPositiveButton("See pricing", null)
+                            .setOnDismissListener {
+                                aliasListViewModel.setNeedsSeePricing()
+                                findNavController().navigateUp()
+                            }
+                            .show()
                     }
                 }
             }

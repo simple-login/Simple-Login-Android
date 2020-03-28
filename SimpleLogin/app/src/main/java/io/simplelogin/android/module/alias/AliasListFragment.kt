@@ -1,6 +1,7 @@
 package io.simplelogin.android.module.alias
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -62,6 +63,19 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         // On configuration change, trigger a recyclerView refresh by calling filter function
         if (adapter.itemCount == 0) {
             viewModel.filterAliases()
+        }
+
+        if (viewModel.needsShowPricing) {
+            // Delay here waiting for AliasCreateFragment finish navigateUp()
+            Handler().postDelayed({
+                findNavController().navigate(
+                    AliasListFragmentDirections.actionAliasListFragmentToWebViewFragment(
+                        "https://simplelogin.io/pricing"
+                    )
+                )
+            }, 100)
+
+            viewModel.onHandleShowPricingComplete()
         }
     }
 

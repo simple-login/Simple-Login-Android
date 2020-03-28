@@ -146,4 +146,16 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         val index = _aliases.indexOfFirst { it.id == alias.id }
         _aliases[index] = alias
     }
+
+    // Show pricing
+    var needsShowPricing = false
+        private set
+
+    fun onHandleShowPricingComplete() {
+        needsShowPricing = false
+    }
+
+    fun setNeedsSeePricing() {
+        needsShowPricing = true
+    }
 }
