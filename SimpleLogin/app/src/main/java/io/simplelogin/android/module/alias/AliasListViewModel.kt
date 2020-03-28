@@ -140,4 +140,10 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     fun addAlias(alias: Alias) {
         _aliases.add(0, alias)
     }
+
+    // Update
+    fun updateAlias(alias: Alias) {
+        val index = _aliases.indexOfFirst { it.id == alias.id }
+        _aliases[index] = alias
+    }
 }

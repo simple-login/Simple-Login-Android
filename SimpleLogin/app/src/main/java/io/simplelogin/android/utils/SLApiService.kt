@@ -507,6 +507,47 @@ object SLApiService {
         })
     }
 
+    fun getAlias(
+        apiKey: String,
+        aliasId: Int,
+        completion: (alias: Alias?, error: SLError?) -> Unit
+    ) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/$aliasId")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(null, SLError.UnknownError(e.localizedMessage))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val alias = Gson().fromJson(jsonString, Alias::class.java)
+                            if (alias != null) {
+                                completion(alias, null)
+                            } else {
+                                completion(null, SLError.FailedToParseObject("Alias"))
+                            }
+                        } else {
+                            completion(null, SLError.NoData)
+                        }
+                    }
+
+                    401 -> completion(null, SLError.InvalidApiKey)
+                    500 -> completion(null, SLError.InternalServerError)
+                    502 -> completion(null, SLError.BadGateway)
+                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                }
+            }
+        })
+    }
+
     fun fetchAliases(
         apiKey: String,
         page: Int,

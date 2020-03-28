@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -15,14 +16,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
+import io.simplelogin.android.module.alias.AliasListViewModel
 import io.simplelogin.android.module.alias.contact.ContactListFragmentArgs
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasActivityBinding
+    private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var viewModel: AliasActivityListViewModel
     private lateinit var adapter: AliasActivityListAdapter
     private lateinit var alias: Alias
@@ -39,7 +43,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     ): View? {
         binding = FragmentAliasActivityBinding.inflate(inflater)
 
-        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.toolbar.setNavigationOnClickListener { updateAliasListViewModelAndNavigateUp() }
         alias = ContactListFragmentArgs.fromBundle(requireArguments()).alias
         binding.toolbarTitleText.text = alias.email
         binding.toolbarTitleText.isSelected = true // to trigger marquee animation
@@ -185,11 +189,32 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshActivities() }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshAlias()
+            viewModel.refreshActivities()
+        }
+    }
+
+    private fun refreshAlias() {
+        SLApiService.getAlias(viewModel.apiKey, alias.id) { alias, error ->
+            activity?.runOnUiThread {
+                if (error != null) {
+                    context?.toastError(error)
+                } else if (alias != null) {
+                    this.alias = alias
+                    setUpStats()
+                }
+            }
+        }
+    }
+
+    private fun updateAliasListViewModelAndNavigateUp() {
+        aliasListViewModel.updateAlias(alias)
+        findNavController().navigateUp()
     }
 
     // HomeActivity.OnBackPressed
     override fun onBackPressed() {
-        findNavController().navigateUp()
+        updateAliasListViewModelAndNavigateUp()
     }
 }
