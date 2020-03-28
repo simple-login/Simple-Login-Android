@@ -91,7 +91,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpHowToBottomSheet() {
         binding.howToBottomSheet.root.layoutParams.height =
-            requireActivity().getScreenMetrics().heightPixels * 90 / 100
+            requireActivity().getScreenHeight() * 90 / 100
 
         howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
         howToBottomSheetBehavior.hide()
@@ -123,7 +123,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpCreateContactBottomSheet() {
         binding.createContactBottomSheet.root.layoutParams.height =
-            requireActivity().getScreenMetrics().heightPixels * 90 / 100
+            requireActivity().getScreenHeight() * 90 / 100
         binding.createContactBottomSheet.aliasTextView.text = alias.email
 
         createContactBottomSheetBehavior =

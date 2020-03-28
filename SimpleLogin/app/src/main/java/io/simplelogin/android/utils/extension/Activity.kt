@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.net.Uri
 import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
@@ -34,8 +35,9 @@ fun Activity.startSendEmailIntent(emailAddress: String) {
     startActivity(intent)
 }
 
-fun Activity.getScreenMetrics() : DisplayMetrics {
-    val metrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(metrics)
-    return metrics
+fun Activity.getScreenHeight() : Int {
+    val size = Point()
+    windowManager.defaultDisplay.getRealSize(size)
+    // y is height, x is width
+    return size.y
 }

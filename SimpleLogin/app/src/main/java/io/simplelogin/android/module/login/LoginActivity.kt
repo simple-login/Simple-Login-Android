@@ -107,7 +107,7 @@ class LoginActivity : BaseAppCompatActivity() {
     override fun onBackPressed() = Unit
 
     private fun setUpForgotPasswordBottomSheet() {
-        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenMetrics().heightPixels * 90 / 100
+        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
 
         forgotPasswordBottomSheetBehavior =
             BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)
