@@ -14,4 +14,5 @@
     <string name="forgot_password_message">For security reason and to avoid database leak, all \"forgot password\" requests are taken into account silently without you being informed if a request is successful or not.\n\nSo make sure that you enter the correct email address.</string>
     <string name="create_alias_hint">💡Hint: To make it easy to remember for later use, it is a good practice to use the name of the website/service that you plan to register with alias.</string>
     <string name="create_alias_warning">⚠️ Only letters, numbers, dash (-) &amp; underscore (_) are allowed.</string>
+    <string name="api_key_explanation">To get your API key, you must sign in SimpleLogin by using a browser, then navigate to \"API Key\" tab, create one if not already then copy and paste the key here.</string>
 </resources>

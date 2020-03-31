@@ -45,6 +45,9 @@ class LoginActivity : BaseAppCompatActivity() {
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
 
+    // API key
+    private lateinit var apiKeyBottomSheetBehavior: BottomSheetBehavior<View>
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +96,10 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }
         setUpForgotPasswordBottomSheet()
 
+        // API key
+        binding.apiKeyButton.setOnClickListener { apiKeyBottomSheetBehavior.expand() }
+        setUpApiKeyBottomSheet()
+
         // App version & About us
         binding.appVersionTextView.text = "SimpleLogin v${getVersionName()}"
         binding.aboutUsTextView.setOnClickListener {
@@ -106,7 +113,10 @@ class LoginActivity : BaseAppCompatActivity() {
         firebaseAnalytics.logEvent("start_login_activity", null)
     }
 
-    override fun onBackPressed() = Unit
+    override fun onBackPressed() {
+        forgotPasswordBottomSheetBehavior.hide()
+        apiKeyBottomSheetBehavior.hide()
+    }
 
     private fun setUpForgotPasswordBottomSheet() {
         binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
@@ -179,6 +189,67 @@ class LoginActivity : BaseAppCompatActivity() {
                 runOnUiThread {
                     setLoading(false)
                     toastLongly("We've sent reset password email to \"$email\"")
+                }
+            }
+        }
+    }
+
+    private fun setUpApiKeyBottomSheet() {
+        binding.apiKeyBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
+
+        apiKeyBottomSheetBehavior = BottomSheetBehavior.from(binding.apiKeyBottomSheet.root)
+        apiKeyBottomSheetBehavior.hide()
+        binding.apiKeyBottomSheet.cancelButton.setOnClickListener {
+            apiKeyBottomSheetBehavior.hide()
+        }
+        apiKeyBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.dimView.visibility = View.GONE
+                        dismissKeyboard()
+                        firebaseAnalytics.logEvent("hide_api_key_bottom_sheet", null)
+                    }
+
+                    BottomSheetBehavior.STATE_EXPANDED -> firebaseAnalytics.logEvent(
+                        "expand_api_key_bottom_sheet",
+                        null
+                    )
+
+                    else -> {
+                        binding.apiKeyBottomSheet.apiKeyEditText.text = null
+                        binding.apiKeyBottomSheet.apiKeyEditText.requestFocus()
+                        showKeyboard()
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.apiKeyBottomSheet.setButton.setOnClickListener {
+            val enteredApiKey = binding.apiKeyBottomSheet.apiKeyEditText.text.toString()
+            setLoading(true)
+            apiKeyBottomSheetBehavior.hide()
+            SLApiService.fetchUserInfo(enteredApiKey) { userInfo, error ->
+                runOnUiThread {
+                    setLoading(false)
+                    if (error != null) {
+                        toastError(error)
+                        firebaseAnalytics.logEvent("log_in_with_api_key_error", error.toBundle())
+                    } else if (userInfo != null) {
+                        finalizeLogin(enteredApiKey)
+                        firebaseAnalytics.logEvent("log_in_with_api_key_success", null)
+                    }
                 }
             }
         }

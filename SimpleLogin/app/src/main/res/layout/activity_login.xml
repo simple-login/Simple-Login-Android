@@ -72,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Log in"
+                        android:text="Sign in"
                         tools:ignore="HardcodedText" />
 
                     <LinearLayout
@@ -88,6 +88,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Forgot password"
+                            android:textAppearance="?attr/textAppearanceBody2"
                             tools:ignore="HardcodedText" />
 
                         <Button
@@ -97,25 +98,35 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Sign up"
+                            android:textAppearance="?attr/textAppearanceBody2"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp" />
+                        android:layout_height="1dp"
+                        android:background="@color/colorMediumGray" />
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <Button
+                        android:id="@+id/apiKeyButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Or with social login"
+                        android:layout_gravity="center"
+                        android:text="Sign in with API Key"
                         tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="@color/colorMediumGray" />
 
                     <Button
                         android:id="@+id/googleButton"
                         style="@style/Widget.MaterialComponents.Button.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:layout_marginTop="20dp"
                         android:backgroundTint="@color/colorGoogle"
                         android:gravity="start|center_vertical"
                         android:text="Sign in with Google"
@@ -191,6 +202,11 @@
         <include
             android:id="@+id/forgotPasswordBottomSheet"
             layout="@layout/bottom_sheet_forgot_password"
+            tools:visibility="gone" />
+
+        <include
+            android:id="@+id/apiKeyBottomSheet"
+            layout="@layout/bottom_sheet_enter_api_key"
             tools:visibility="gone" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
