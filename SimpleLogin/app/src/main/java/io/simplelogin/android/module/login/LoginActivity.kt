@@ -395,8 +395,9 @@ class LoginActivity : BaseAppCompatActivity() {
                     toastError(error)
                     firebaseAnalytics.logEvent("sign_up_error", error.toBundle())
                 } else {
-                    startVerificationActivity(VerificationMode.AccountActivation(email, password))
+                    toastLongly("Check your inbox for verification code")
                     firebaseAnalytics.logEvent("sign_up_success", null)
+                    startVerificationActivity(VerificationMode.AccountActivation(email, password))
                 }
             }
         }
