@@ -45,52 +45,54 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbar.setNavigationOnClickListener { finishOrNavigateUp() }
 
         binding.appVersionTextView.text = "SimpleLogin v${context?.getVersionName()}"
-        binding.howTextView.setOnClickListener {
+
+        binding.root.findViewById<View>(R.id.howTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToHowItWorksFragment()
             )
         }
 
-        binding.contactTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.contactTextView).setOnClickListener {
             activity?.startSendEmailIntent("hi@simplelogin.io")
             firebaseAnalytics.logEvent("about_compose_email", null)
         }
 
         val base_url = "https://simplelogin.io"
-        binding.faqTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.faqTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToFaqFragment()
             )
         }
-        binding.teamTextView.setOnClickListener {
+
+        binding.root.findViewById<View>(R.id.teamTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/about")
             )
             firebaseAnalytics.logEvent("about_view_team", null)
         }
 
-        binding.pricingTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.pricingTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/pricing")
             )
             firebaseAnalytics.logEvent("about_view_pricing", null)
         }
 
-        binding.blogTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.blogTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/blog")
             )
             firebaseAnalytics.logEvent("about_view_blog", null)
         }
 
-        binding.termsTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.termsTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/terms")
             )
             firebaseAnalytics.logEvent("about_view_terms", null)
         }
 
-        binding.privacyTextView.setOnClickListener {
+        binding.root.findViewById<View>(R.id.privacyTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/privacy")
             )
