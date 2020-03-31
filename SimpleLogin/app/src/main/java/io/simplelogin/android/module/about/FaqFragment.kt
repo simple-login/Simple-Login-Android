@@ -18,6 +18,7 @@ class FaqFragment : BaseFragment(), HomeActivity.OnBackPressed {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFaqBinding.inflate(inflater)
+        firebaseAnalytics.logEvent("open_faq_fragment", null)
         return binding.root
     }
 

@@ -53,6 +53,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding.contactTextView.setOnClickListener {
             activity?.startSendEmailIntent("hi@simplelogin.io")
+            firebaseAnalytics.logEvent("about_compose_email", null)
         }
 
         val base_url = "https://simplelogin.io"
@@ -65,32 +66,38 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/about")
             )
+            firebaseAnalytics.logEvent("about_view_team", null)
         }
 
         binding.pricingTextView.setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/pricing")
             )
+            firebaseAnalytics.logEvent("about_view_pricing", null)
         }
 
         binding.blogTextView.setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/blog")
             )
+            firebaseAnalytics.logEvent("about_view_blog", null)
         }
 
         binding.termsTextView.setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/terms")
             )
+            firebaseAnalytics.logEvent("about_view_terms", null)
         }
 
         binding.privacyTextView.setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$base_url/privacy")
             )
+            firebaseAnalytics.logEvent("about_view_privacy", null)
         }
 
+        firebaseAnalytics.logEvent("open_about_fragment", null)
         return binding.root
     }
 

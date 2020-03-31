@@ -107,6 +107,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                     .setNeutralButton("Cancel", null)
                     .setPositiveButton("Yes, sign me out") { _, _ ->
                         SLSharedPreferences.removeApiKey(this)
+                        firebaseAnalytics.logEvent("sign_out", null)
                         finish()
                     }
                     .show()

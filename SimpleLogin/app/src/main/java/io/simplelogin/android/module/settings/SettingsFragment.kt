@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentSettingsBinding
@@ -32,15 +33,16 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         if (userInfo.inTrial) {
             binding.membershipTextView.text = "Premium trial membership"
-            binding.membershipTextView.setTextColor(requireContext().getColor(android.R.color.holo_blue_light))
+            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_blue_light))
         } else if (userInfo.isPremium) {
             binding.membershipTextView.text = "Premium membership"
-            binding.membershipTextView.setTextColor(requireContext().getColor(R.color.colorPremium))
+            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPremium))
         } else {
             binding.membershipTextView.text = "Free membership"
-            binding.membershipTextView.setTextColor(requireContext().getColor(R.color.colorDarkGray))
+            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorDarkGray))
         }
 
+        firebaseAnalytics.logEvent("open_settings_fragment", null)
         return binding.root
     }
 

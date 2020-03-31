@@ -6,22 +6,24 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.databinding.ActivityShareBinding
 import io.simplelogin.android.module.alias.create.AliasCreateSpinnerAdapter
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
+import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.*
 import java.net.URI
 import java.net.URISyntaxException
 
-class ShareActivity : AppCompatActivity() {
+class ShareActivity : BaseAppCompatActivity() {
     lateinit var binding: ActivityShareBinding
     private var selectedSuffix: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        firebaseAnalytics.logEvent("start_share_activity", null)
 
         binding = ActivityShareBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { finish() }
@@ -63,10 +65,12 @@ class ShareActivity : AppCompatActivity() {
                     setLoading(false)
                     if (error != null) {
                         toastError(error)
+                        firebaseAnalytics.logEvent("share_activity_create_error", error.toBundle())
                     } else if (alias != null) {
                         val email = alias.email
                         toastLongly("Created & copied \"$email\"")
                         copyToClipboard(email, email)
+                        firebaseAnalytics.logEvent("share_activity_create_success", null)
                         finish()
                     }
                 }
@@ -79,6 +83,7 @@ class ShareActivity : AppCompatActivity() {
                 setLoading(false)
                 if (error != null) {
                     toastError(error)
+                    firebaseAnalytics.logEvent("share_activity_fetch_options_error", error.toBundle())
                     finish()
                 } else if (userOptions != null) {
                     if (userOptions.canCreate) {
@@ -88,6 +93,7 @@ class ShareActivity : AppCompatActivity() {
                         prefillPrefix()
                     } else {
                         toastLongly("You can not create more alias. Please upgrade to premium.")
+                        firebaseAnalytics.logEvent("share_activity_can_not_create", null)
                         finish()
                     }
                 }
@@ -116,9 +122,11 @@ class ShareActivity : AppCompatActivity() {
         try {
             val uri = URI(text)
             binding.prefixEditText.setText(uri.host.extractWebsiteName())
+            firebaseAnalytics.logEvent("share_activity_get_hostname_success", null)
         } catch (e: URISyntaxException) {
             // Can not detect domain from text, take the first word from text
             binding.prefixEditText.setText(text.extractFirstWord())
+            firebaseAnalytics.logEvent("share_activity_get_hostname_error", null)
         }
         // Move cursor to the last character
         binding.prefixEditText.setSelection(binding.prefixEditText.text.count())
@@ -149,5 +157,6 @@ class ShareActivity : AppCompatActivity() {
             }
             .setOnDismissListener { finish() }
             .show()
+        firebaseAnalytics.logEvent("share_activity_not_signed_in", null)
     }
 }
