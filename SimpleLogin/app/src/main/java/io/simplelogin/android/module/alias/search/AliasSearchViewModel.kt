@@ -3,6 +3,7 @@ package io.simplelogin.android.module.alias.search
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
@@ -42,7 +43,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
     val term: String?
         get() = _term
 
-    fun search(searchTerm: String? = null) {
+    fun search(searchTerm: String? = null, firebaseAnalytics: FirebaseAnalytics) {
         searchTerm?.let {
             // When searchTerm is not null -> a new search with different term
             _term = it
@@ -64,6 +65,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
 
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_search_error", error.toBundle())
             } else if (newAliases != null) {
                 if (newAliases.isEmpty()) {
                     moreToLoad = false
@@ -73,6 +75,8 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
                     _aliases.addAll(newAliases)
                     _eventUpdateResults.postValue(true)
                 }
+
+                firebaseAnalytics.logEvent("alias_search_success", null)
             }
         }
     }
@@ -82,14 +86,16 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
     val deletedAliasIds: List<Int>
         get() = _deletedAliasIds
 
-    fun deleteAlias(alias: Alias) {
+    fun deleteAlias(alias: Alias, firebaseAnalytics: FirebaseAnalytics) {
         SLApiService.deleteAlias(apiKey, alias) { error ->
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_search_delete_error", error.toBundle())
             } else {
                 _deletedAliasIds.add(alias.id)
                 _aliases.removeAll { it.id == alias.id }
                 _eventUpdateResults.postValue(true)
+                firebaseAnalytics.logEvent("alias_search_delete_success", null)
             }
         }
     }
@@ -107,10 +113,12 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         _toggledAliasIndex.value = null
     }
 
-    fun toggleAlias(alias: Alias, index: Int) {
+    fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
         SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_search_toggle_error", error.toBundle())
+
             } else if (enabled != null) {
                 _aliases.find { it.id == alias.id }?.let { toggledAlias ->
                     toggledAlias.setEnabled(enabled)
@@ -120,6 +128,11 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
                 }
 
                 _toggledAliasIndex.postValue(index)
+
+                when (enabled) {
+                    true -> firebaseAnalytics.logEvent("alias_search_enabled_an_alias", null)
+                    false -> firebaseAnalytics.logEvent("alias_search_disabled_an_alias", null)
+                }
             }
         }
     }

@@ -55,6 +55,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         setUpRecyclerView()
         setLoading(false)
         viewModel.fetchAliases()
+
+        firebaseAnalytics.logEvent("open_alias_list_fragment", null)
         return binding.root
     }
 
@@ -121,6 +123,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
+                firebaseAnalytics.logEvent("alias_list_error", error.toBundle())
             }
         })
     }
@@ -135,17 +138,20 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         alias
                     )
                 )
+                firebaseAnalytics.logEvent("alias_list_view_activities", null)
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
                 setLoading(true)
-                viewModel.toggleAlias(alias, position)
+                viewModel.toggleAlias(alias, position, firebaseAnalytics)
             }
 
             override fun onCopy(alias: Alias) {
                 val email = alias.email
                 copyToClipboard(email, email)
                 context.toastShortly("Copied \"$email\"")
+
+                firebaseAnalytics.logEvent("alias_list_copy", null)
             }
 
             override fun onSendEmail(alias: Alias) {
@@ -154,6 +160,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         alias
                     )
                 )
+                firebaseAnalytics.logEvent("alias_list_view_contacts", null)
             }
         })
         binding.recyclerView.adapter = adapter
@@ -168,6 +175,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     setLoading(true)
                     lastToast = context?.toastShortly("Loading more...")
                     viewModel.fetchAliases()
+                    firebaseAnalytics.logEvent("alias_list_fetch_more", null)
                 }
             }
         })
@@ -181,7 +189,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        viewModel.deleteAlias(alias)
+                        viewModel.deleteAlias(alias, firebaseAnalytics)
                     }
                     .setNeutralButton("Cancel", null)
                     .setOnDismissListener {
@@ -194,7 +202,10 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         // Refresh capacity
-        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshAliases() }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            firebaseAnalytics.logEvent("alias_list_refresh", null)
+            viewModel.refreshAliases()
+        }
     }
 
     private fun showSelectRandomModeAlert() {
@@ -230,11 +241,22 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         setLoading(false)
                         if (error != null) {
                             context?.toastError(error)
+
+                            when (randomMode) {
+                                RandomMode.UUID -> firebaseAnalytics.logEvent("alias_random_by_uuid_error", error.toBundle())
+                                RandomMode.WORD -> firebaseAnalytics.logEvent("alias_random_by_word_error", error.toBundle())
+                            }
+
                         } else if (alias != null) {
                             viewModel.addAlias(alias)
                             viewModel.filterAliases()
                             binding.recyclerView.smoothScrollToPosition(0)
                             context?.toastShortly("Created \"${alias.email}\"")
+
+                            when (randomMode) {
+                                RandomMode.UUID -> firebaseAnalytics.logEvent("alias_random_by_uuid_success", null)
+                                RandomMode.WORD -> firebaseAnalytics.logEvent("alias_random_by_word_success", null)
+                            }
                         }
                     }
                 }
@@ -264,6 +286,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             1 -> viewModel.filterAliases(AliasFilterMode.ACTIVE)
             2 -> viewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
+
+        firebaseAnalytics.logEvent("alias_list_change_filter_mode", null)
     }
 
     // HomeActivity.OnBackPressed

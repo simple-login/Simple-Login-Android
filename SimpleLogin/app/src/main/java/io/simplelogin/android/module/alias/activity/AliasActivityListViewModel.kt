@@ -3,6 +3,7 @@ package io.simplelogin.android.module.alias.activity
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
@@ -32,7 +33,7 @@ class AliasActivityListViewModel(context: Context, private var alias: Alias) :
     val eventHaveNewActivities: LiveData<Boolean>
         get() = _eventHaveNewActivities
 
-    fun fetchActivities() {
+    fun fetchActivities(firebaseAnalytics: FirebaseAnalytics) {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
         SLApiService.fetchAliasActivities(apiKey, alias, _currentPage + 1) { newActivities, error ->
@@ -40,6 +41,7 @@ class AliasActivityListViewModel(context: Context, private var alias: Alias) :
 
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_activity_fetch_error", error.toBundle())
             } else if (newActivities != null) {
                 if (newActivities.isEmpty()) {
                     moreToLoad = false
@@ -49,15 +51,16 @@ class AliasActivityListViewModel(context: Context, private var alias: Alias) :
                     _activities.addAll(newActivities)
                     _eventHaveNewActivities.postValue(true)
                 }
+                firebaseAnalytics.logEvent("alias_activity_fetch_success", null)
             }
         }
     }
 
-    fun refreshActivities() {
+    fun refreshActivities(firebaseAnalytics: FirebaseAnalytics) {
         _currentPage = -1
         moreToLoad = true
         _activities = mutableListOf()
-        fetchActivities()
+        fetchActivities(firebaseAnalytics)
     }
 
     // Note
@@ -71,16 +74,18 @@ class AliasActivityListViewModel(context: Context, private var alias: Alias) :
 
     private var _isUpdatingNote: Boolean = false
 
-    fun updateNote(note: String?) {
+    fun updateNote(note: String?, firebaseAnalytics: FirebaseAnalytics) {
         if (_isUpdatingNote) return
         _isUpdatingNote = true
         SLApiService.updateAliasNote(apiKey, alias, note) { error ->
             _isUpdatingNote = false
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_activity_edit_note_error", error.toBundle())
             } else {
                 alias.setNote(note)
                 _eventNoteUpdate.postValue(true)
+                firebaseAnalytics.logEvent("alias_activity_edit_note_success", null)
             }
         }
     }

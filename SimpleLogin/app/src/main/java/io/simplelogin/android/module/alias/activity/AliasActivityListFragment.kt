@@ -61,7 +61,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 .setView(dialogTextViewBinding.root)
                 .setNeutralButton("Cancel", null)
                 .setPositiveButton("Update") { _, _ ->
-                    viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
+                    viewModel.updateNote(dialogTextViewBinding.editText.text.toString(), firebaseAnalytics)
                 }
                 .show()
 
@@ -72,6 +72,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setUpViewModel()
         setUpRecyclerView()
 
+        firebaseAnalytics.logEvent("open_alias_activity_list_fragment", null)
         return binding.root
     }
 
@@ -145,7 +146,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             } ?: throw IllegalStateException("Context is null")
         }
         viewModel = tempViewModel
-        viewModel.fetchActivities()
+        viewModel.fetchActivities(firebaseAnalytics)
         viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
             activity?.runOnUiThread {
                 if (haveNewActivities) {
@@ -184,14 +185,16 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size - 1) && viewModel.moreToLoad) {
-                    viewModel.fetchActivities()
+                    viewModel.fetchActivities(firebaseAnalytics)
+                    firebaseAnalytics.logEvent("alias_activity_fetch_more", null)
                 }
             }
         })
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             refreshAlias()
-            viewModel.refreshActivities()
+            viewModel.refreshActivities(firebaseAnalytics)
+            firebaseAnalytics.logEvent("alias_activity_refresh", null)
         }
     }
 

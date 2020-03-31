@@ -85,6 +85,8 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         }
 
+        firebaseAnalytics.logEvent("open_alias_create_fragment", null)
+
         return binding.root
     }
 
@@ -110,6 +112,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     id: Long
                 ) {
                     selectedSuffix = suffixes[position]
+                    firebaseAnalytics.logEvent("alias_create_select_suffix", null)
                 }
             }
     }
@@ -143,9 +146,11 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         setLoading(false)
                         if (error != null) {
                             context?.toastError(error)
+                            firebaseAnalytics.logEvent("create_alias_error", error.toBundle())
                         } else if (alias != null) {
                             updateAliasListViewModelAndNavigateUp(alias)
                             context?.toastShortly("Created \"${alias.email}\"")
+                            firebaseAnalytics.logEvent("create_alias_success", null)
                         }
                     }
                 }

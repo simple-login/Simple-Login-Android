@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.enums.AliasFilterMode
@@ -91,14 +92,16 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Delete
-    fun deleteAlias(alias: Alias) {
+    fun deleteAlias(alias: Alias, firebaseAnalytics: FirebaseAnalytics) {
         SLApiService.deleteAlias(apiKey, alias) { error ->
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_list_delete_error", error.toBundle())
             } else {
                 _deletedAliasIds.add(alias.id)
                 _aliases.removeAll { it.id == alias.id }
                 filterAliases()
+                firebaseAnalytics.logEvent("alias_list_delete_success", null)
             }
         }
     }
@@ -112,14 +115,20 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         _toggledAliasIndex.value = null
     }
 
-    fun toggleAlias(alias: Alias, index: Int) {
+    fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
         SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
             if (error != null) {
                 _error.postValue(error)
+                firebaseAnalytics.logEvent("alias_list_toggle_error", error.toBundle())
             } else if (enabled != null) {
                 _aliases.find { it.id == alias.id }?.setEnabled(enabled)
                 _eventUpdateAliases.postValue(true)
                 _toggledAliasIndex.postValue(index)
+
+                when (enabled) {
+                    true -> firebaseAnalytics.logEvent("alias_list_enabled_an_alias", null)
+                    false -> firebaseAnalytics.logEvent("alias_list_disabled_an_alias", null)
+                }
             }
         }
     }

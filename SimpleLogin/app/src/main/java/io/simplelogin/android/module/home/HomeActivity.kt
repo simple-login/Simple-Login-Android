@@ -45,6 +45,8 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
         // Change status bar background color
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+
+        firebaseAnalytics.logEvent("start_home_activity", null)
     }
 
     override fun onBackPressed() {
