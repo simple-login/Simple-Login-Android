@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.RecyclerItemAliasActivityBinding
+import io.simplelogin.android.module.alias.activity.AliasActivityListAdapter
 import io.simplelogin.android.utils.extension.setTint
 import io.simplelogin.android.utils.model.Action
 
@@ -21,7 +22,8 @@ class AliasActivityViewHolder(private val binding: RecyclerItemAliasActivityBind
 
     private val context = binding.root.context
 
-    fun bind(activity: AliasActivity) {
+    fun bind(activity: AliasActivity, clickListener: AliasActivityListAdapter.ClickListener) {
+        binding.root.setOnClickListener { clickListener.onClick(activity) }
         binding.timeTextView.text = activity.getTimestampString()
 
         when (activity.action) {

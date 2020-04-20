@@ -267,7 +267,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
                 MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
-                    .setTitle("Send mail to \"${contact.email}\"")
+                    .setTitle("Email to \"${contact.email}\"")
                     .setItems(
                         arrayOf("Copy reverse-alias", "Begin composing with default email")
                     ) { _, itemIndex ->
@@ -331,12 +331,10 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     // HomeActivity.OnBackPressed
     override fun onBackPressed() {
-        if (howToBottomSheetBehavior.isExpanded()) {
-            howToBottomSheetBehavior.hide()
-        } else if (createContactBottomSheetBehavior.isExpanded()) {
-            createContactBottomSheetBehavior.hide()
-        } else {
-            findNavController().navigateUp()
+        when {
+            howToBottomSheetBehavior.isExpanded() -> howToBottomSheetBehavior.hide()
+            createContactBottomSheetBehavior.isExpanded() -> createContactBottomSheetBehavior.hide()
+            else -> findNavController().navigateUp()
         }
     }
 

@@ -60,11 +60,17 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         return binding.root
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.setLastScrollingPosition(linearLayoutManager.findFirstVisibleItemPosition())
+    }
+
     override fun onResume() {
         super.onResume()
         // On configuration change, trigger a recyclerView refresh by calling filter function
         if (adapter.itemCount == 0) {
-            viewModel.filterAliases()
+            adapter.submitList(viewModel.filteredAliases.toMutableList())
+            binding.recyclerView.scrollToPosition(viewModel.getLastScrollingPosition())
         }
 
         if (viewModel.needsShowPricing) {

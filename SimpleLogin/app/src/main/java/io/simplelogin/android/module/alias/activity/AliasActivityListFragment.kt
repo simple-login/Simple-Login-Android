@@ -22,7 +22,9 @@ import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
+import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.Alias
+import io.simplelogin.android.utils.model.AliasActivity
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasActivityBinding
@@ -177,7 +179,37 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpRecyclerView() {
-        adapter = AliasActivityListAdapter()
+        adapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
+            override fun onClick(aliasActivity: AliasActivity) {
+                val toEmail = when (aliasActivity.action) {
+                    Action.REPLY -> aliasActivity.to
+                    else -> aliasActivity.from
+                }
+
+                MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+                    .setTitle("Email to \"$toEmail\"")
+                    .setItems(
+                        arrayOf("Copy reverse-alias", "Begin composing with default email")
+                    ) { _, itemIndex ->
+                        when (itemIndex) {
+                            0 -> {
+                                activity?.copyToClipboard(
+                                    aliasActivity.reverseAlias,
+                                    aliasActivity.reverseAlias
+                                )
+                                context?.toastShortly("Copied \"${aliasActivity.reverseAlias}\"")
+                                firebaseAnalytics.logEvent("activity_copy_reverse_alias", null)
+                            }
+
+                            1 -> {
+                                activity?.startSendEmailIntent(aliasActivity.reverseAlias)
+                                firebaseAnalytics.logEvent("activity_compose_email", null)
+                            }
+                        }
+                    }
+                    .show()
+            }
+        })
         binding.recyclerView.adapter = adapter
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager

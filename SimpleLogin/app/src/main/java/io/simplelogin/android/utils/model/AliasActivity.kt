@@ -8,7 +8,8 @@ data class AliasActivity(
     @SerializedName("action") val action: Action,
     @SerializedName("from") val from: String,
     @SerializedName("to") val to: String,
-    @SerializedName("timestamp") val timestamp: Long
+    @SerializedName("timestamp") val timestamp: Long,
+    @SerializedName("reverse_alias") val reverseAlias: String
 ) {
     @IgnoredOnParcel
     private var _timestampString: String? = null

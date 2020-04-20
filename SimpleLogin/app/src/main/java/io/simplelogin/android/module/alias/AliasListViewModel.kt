@@ -167,4 +167,11 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     fun setNeedsSeePricing() {
         needsShowPricing = true
     }
+
+    // Save scrolling position
+    private var _lastScrollingPosition: Int = 0
+    fun getLastScrollingPosition() = _lastScrollingPosition
+    fun setLastScrollingPosition(position: Int) {
+        _lastScrollingPosition = position
+    }
 }
