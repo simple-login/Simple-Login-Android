@@ -22,7 +22,8 @@ data class Alias(
     @SerializedName("note") private var _note: String?,
     @SerializedName("nb_block") private var _blockCount: Int,
     @SerializedName("nb_forward") private var _forwardCount: Int,
-    @SerializedName("nb_reply") private var _replyCount: Int
+    @SerializedName("nb_reply") private var _replyCount: Int,
+    @SerializedName("latest_activity") val latestActivity: LatestActivity?
 ) : Parcelable {
     // Expose enabled
     val enabled: Boolean
@@ -110,6 +111,22 @@ data class Alias(
         }
 
         return _preciseCreationString!!
+    }
+
+    @IgnoredOnParcel
+    private var _latestActivityString: String? = null
+    fun getLatestActivityString(): String? {
+        return when (latestActivity) {
+            null -> null
+            else -> {
+                if (_latestActivityString == null) {
+                    val distance = SLDateTimeFormatter.distanceFromNow(latestActivity.timestamp)
+                    _latestActivityString = "${latestActivity.contact.email} • ${distance.first} ${distance.second} ago"
+                }
+
+                _latestActivityString!!
+            }
+        }
     }
 }
 

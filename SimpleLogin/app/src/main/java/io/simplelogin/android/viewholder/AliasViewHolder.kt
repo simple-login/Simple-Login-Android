@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.RecyclerItemAliasBinding
 import io.simplelogin.android.module.alias.AliasListAdapter
+import io.simplelogin.android.utils.extension.setDrawableStart
+import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.Alias
 
 class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -34,7 +36,25 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
             binding.rootRelativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMediumGray))
         }
 
-        binding.creationDateTextView.text = alias.getCreationString()
+        when (val latestActivityString = alias.getLatestActivityString()) {
+            null -> {
+                binding.creationDateTextView.setDrawableStart(R.drawable.ic_clock_16dp)
+                binding.creationDateTextView.text = alias.getCreationString()
+            }
+
+            else -> {
+                binding.creationDateTextView.text = latestActivityString
+
+                val drawableRes = when (alias.latestActivity?.action) {
+                    Action.REPLY -> R.drawable.ic_reply_16dp
+                    Action.FORWARD -> R.drawable.ic_send_16dp
+                    Action.BLOCK, Action.BOUNCED -> R.drawable.ic_block_16dp
+                    else -> 0
+                }
+
+                binding.creationDateTextView.setDrawableStart(drawableRes)
+            }
+        }
 
         binding.noteTextView.text = alias.note
         binding.noteTextView.visibility = if (alias.note != null) View.VISIBLE else View.GONE

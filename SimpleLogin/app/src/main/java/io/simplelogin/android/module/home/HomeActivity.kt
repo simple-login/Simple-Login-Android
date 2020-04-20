@@ -134,15 +134,22 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         emailTextView.text = userInfo.email
 
         val membershipTextView = headerView.findViewById<TextView>(R.id.membershipTextView)
-        if (userInfo.inTrial) {
-            membershipTextView.text = "Premium trial"
-            membershipTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_light))
-        } else if (userInfo.isPremium) {
-            membershipTextView.text = "Premium"
-            membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
-        } else {
-            membershipTextView.text = "Free plan"
-            membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDarkGray))
+
+        when {
+            userInfo.inTrial -> {
+                membershipTextView.text = "Premium trial"
+                membershipTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_light))
+            }
+
+            userInfo.isPremium -> {
+                membershipTextView.text = "Premium"
+                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
+            }
+
+            else -> {
+                membershipTextView.text = "Free plan"
+                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+            }
         }
     }
 }

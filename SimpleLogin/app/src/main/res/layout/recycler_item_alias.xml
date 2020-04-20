@@ -45,39 +45,36 @@
                         android:textAppearance="?attr/textAppearanceSubtitle2"
                         tools:text="yautiden@gmail.com" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/creationDateTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_clock_16dp"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:paddingTop="5dp"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorDarkGray"
+                        app:drawableTint="@color/colorDarkGray"
+                        tools:text="Created 3 days ago" />
+
+                    <TextView
+                        android:id="@+id/countsTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/creationDateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_clock_16dp"
-                            android:drawablePadding="5dp"
-                            android:gravity="center_vertical"
-                            android:textAppearance="?attr/textAppearanceCaption"
-                            android:textColor="@color/colorDarkGray"
-                            app:drawableTint="@color/colorDarkGray"
-                            tools:text="Created 3 days ago" />
-
-                        <TextView
-                            android:id="@+id/countsTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end|center_vertical"
-                            android:maxLines="1"
-                            android:textAppearance="?attr/textAppearanceCaption"
-                            android:textColor="@color/colorDarkGray"
-                            app:autoSizeMinTextSize="9sp"
-                            app:autoSizeStepGranularity="2sp"
-                            app:autoSizeTextType="uniform"
-                            tools:text="0 forward, 0 block, 1 reply" />
-                    </LinearLayout>
+                        android:layout_gravity="end"
+                        android:drawableStart="@drawable/ic_wave_16dp"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:paddingTop="5dp"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorDarkGray"
+                        app:autoSizeMinTextSize="9sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform"
+                        app:drawableTint="@color/colorDarkGray"
+                        tools:text="0 forward, 0 block, 1 reply" />
 
                     <TextView
                         android:id="@+id/noteTextView"

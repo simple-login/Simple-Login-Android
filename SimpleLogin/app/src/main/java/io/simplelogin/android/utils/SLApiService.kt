@@ -528,7 +528,7 @@ object SLApiService {
 
         val request = when (searchTerm) {
             null -> Request.Builder()
-                .url("${BASE_URL}/api/aliases?page_id=$page")
+                .url("${BASE_URL}/api/v2/aliases?page_id=$page")
                 .header("Authentication", apiKey)
                 .build()
 
@@ -539,7 +539,7 @@ object SLApiService {
                     }
                 """.trimIndent()
                 Request.Builder()
-                    .url("${BASE_URL}/api/aliases?page_id=$page")
+                    .url("${BASE_URL}/api/v2/aliases?page_id=$page")
                     .header("Authentication", apiKey)
                     .post(body.toRequestBody(CONTENT_TYPE_JSON))
                     .build()
