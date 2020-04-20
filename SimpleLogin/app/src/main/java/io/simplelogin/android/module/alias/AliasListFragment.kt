@@ -224,52 +224,49 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     0 -> RandomMode.WORD
                     else -> RandomMode.UUID
                 }
-                showAddNoteAlert(randomMode)
+                randomAlias(randomMode)
             }
             .show()
     }
 
-    private fun showAddNoteAlert(randomMode: RandomMode) {
-        val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Add some note for this alias")
-            .setMessage("This is optional and can be modified ar anytime later")
-            .setView(dialogTextViewBinding.root)
-            .setNeutralButton("Cancel", null)
-            .setPositiveButton("Create") { _, _ ->
-                setLoading(true)
-                SLApiService.randomAlias(
-                    viewModel.apiKey,
-                    randomMode,
-                    dialogTextViewBinding.editText.text.toString()
-                ) { alias, error ->
-                    activity?.runOnUiThread {
-                        setLoading(false)
-                        if (error != null) {
-                            context?.toastError(error)
+    private fun randomAlias(randomMode: RandomMode) {
+        setLoading(true)
+        SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { alias, error ->
+            activity?.runOnUiThread {
+                setLoading(false)
+                if (error != null) {
+                    context?.toastError(error)
 
-                            when (randomMode) {
-                                RandomMode.UUID -> firebaseAnalytics.logEvent("alias_random_by_uuid_error", error.toBundle())
-                                RandomMode.WORD -> firebaseAnalytics.logEvent("alias_random_by_word_error", error.toBundle())
-                            }
+                    when (randomMode) {
+                        RandomMode.UUID -> firebaseAnalytics.logEvent(
+                            "alias_random_by_uuid_error",
+                            error.toBundle()
+                        )
+                        RandomMode.WORD -> firebaseAnalytics.logEvent(
+                            "alias_random_by_word_error",
+                            error.toBundle()
+                        )
+                    }
 
-                        } else if (alias != null) {
-                            viewModel.addAlias(alias)
-                            viewModel.filterAliases()
-                            binding.recyclerView.smoothScrollToPosition(0)
-                            context?.toastShortly("Created \"${alias.email}\"")
+                } else if (alias != null) {
+                    viewModel.addAlias(alias)
+                    viewModel.filterAliases()
+                    binding.recyclerView.smoothScrollToPosition(0)
+                    context?.toastShortly("Created \"${alias.email}\"")
 
-                            when (randomMode) {
-                                RandomMode.UUID -> firebaseAnalytics.logEvent("alias_random_by_uuid_success", null)
-                                RandomMode.WORD -> firebaseAnalytics.logEvent("alias_random_by_word_success", null)
-                            }
-                        }
+                    when (randomMode) {
+                        RandomMode.UUID -> firebaseAnalytics.logEvent(
+                            "alias_random_by_uuid_success",
+                            null
+                        )
+                        RandomMode.WORD -> firebaseAnalytics.logEvent(
+                            "alias_random_by_word_success",
+                            null
+                        )
                     }
                 }
             }
-            .show()
-
-        dialogTextViewBinding.editText.requestFocus()
+        }
     }
 
     // Toolbar.OnMenuItemClickListener

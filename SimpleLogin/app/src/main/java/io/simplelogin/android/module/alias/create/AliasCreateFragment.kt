@@ -10,7 +10,6 @@ import android.widget.AdapterView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasCreateBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
 import io.simplelogin.android.module.home.HomeActivity
@@ -56,7 +55,8 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
 
             val prefix = binding.prefixEditText.text.toString()
-            showAddNoteAlert(apiKey, prefix, selectedSuffix!!)
+            val note = binding.noteTextField.editText?.text.toString()
+            createAlias(apiKey, prefix, selectedSuffix!!, note)
         }
 
         // Fetch UserOptions
@@ -127,37 +127,21 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
     }
 
-    private fun showAddNoteAlert(apiKey: String, prefix: String, suffix: String) {
-        val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Add some note for this alias")
-            .setMessage("This is optional and can be modified ar anytime later")
-            .setView(dialogTextViewBinding.root)
-            .setNeutralButton("Cancel", null)
-            .setPositiveButton("Create") { _, _ ->
-                setLoading(true)
-                SLApiService.createAlias(
-                    apiKey,
-                    prefix,
-                    suffix,
-                    dialogTextViewBinding.editText.text.toString()
-                ) { alias, error ->
-                    activity?.runOnUiThread {
-                        setLoading(false)
-                        if (error != null) {
-                            context?.toastError(error)
-                            firebaseAnalytics.logEvent("create_alias_error", error.toBundle())
-                        } else if (alias != null) {
-                            updateAliasListViewModelAndNavigateUp(alias)
-                            context?.toastShortly("Created \"${alias.email}\"")
-                            firebaseAnalytics.logEvent("create_alias_success", null)
-                        }
-                    }
+    private fun createAlias(apiKey: String, prefix: String, suffix: String, note: String?) {
+        setLoading(true)
+        SLApiService.createAlias(apiKey, prefix, suffix, note) { alias, error ->
+            activity?.runOnUiThread {
+                setLoading(false)
+                if (error != null) {
+                    context?.toastError(error)
+                    firebaseAnalytics.logEvent("create_alias_error", error.toBundle())
+                } else if (alias != null) {
+                    updateAliasListViewModelAndNavigateUp(alias)
+                    context?.toastShortly("Created \"${alias.email}\"")
+                    firebaseAnalytics.logEvent("create_alias_success", null)
                 }
             }
-            .show()
-
-        dialogTextViewBinding.editText.requestFocus()
+        }
     }
 
     // HomeActivity.OnBackPressed

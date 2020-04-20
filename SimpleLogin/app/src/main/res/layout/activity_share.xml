@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:paddingTop="100dp"
+            android:paddingTop="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,6 +64,23 @@
                     android:backgroundTint="@color/colorPrimary"
                     android:spinnerMode="dropdown" />
             </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/noteTextField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Alias note (optional)"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                tools:ignore="HardcodedText">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions"
+                    android:textColor="@android:color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/createButton"
