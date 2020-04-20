@@ -339,7 +339,7 @@ object SLApiService {
         completion: (userOptions: UserOptions?, error: SLError?) -> Unit
     ) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/v2/alias/options")
+            .url("${BASE_URL}/api/v3/alias/options")
             .header("Authentication", apiKey)
             .build()
 
