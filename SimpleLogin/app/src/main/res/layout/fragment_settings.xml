@@ -109,14 +109,31 @@
                             android:layout_below="@id/profileRootLinearLayout"
                             android:background="@color/colorMediumGray" />
 
-                        <TextView
-                            android:id="@+id/membershipTextView"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/firstSeparatorView"
-                            android:padding="@dimen/card_view_padding"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            tools:text="Premium membership" />
+                            android:orientation="horizontal"
+                            android:padding="@dimen/card_view_padding">
+
+                            <TextView
+                                android:id="@+id/membershipTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                tools:text="Premium membership" />
+
+                            <TextView
+                                android:id="@+id/upgradeTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:text="UPGRADE"
+                                android:textAppearance="?attr/textAppearanceSubtitle2"
+                                android:textColor="@android:color/holo_blue_dark"
+                                tools:ignore="HardcodedText" />
+                        </LinearLayout>
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>

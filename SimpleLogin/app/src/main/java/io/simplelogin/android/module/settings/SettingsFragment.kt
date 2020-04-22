@@ -31,15 +31,45 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.usernameTextView.text = userInfo.name
         binding.emailTextView.text = userInfo.email
 
-        if (userInfo.inTrial) {
-            binding.membershipTextView.text = "Premium trial membership"
-            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.holo_blue_light))
-        } else if (userInfo.isPremium) {
-            binding.membershipTextView.text = "Premium membership"
-            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPremium))
-        } else {
-            binding.membershipTextView.text = "Free membership"
-            binding.membershipTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorDarkGray))
+        binding.upgradeTextView.setOnClickListener {
+            findNavController().navigate(
+                SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
+            )
+        }
+
+        when {
+            userInfo.inTrial -> {
+                binding.membershipTextView.text = "Premium trial membership"
+                binding.membershipTextView.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        android.R.color.holo_blue_light
+                    )
+                )
+                binding.upgradeTextView.visibility = View.VISIBLE
+            }
+
+            userInfo.isPremium -> {
+                binding.membershipTextView.text = "Premium membership"
+                binding.membershipTextView.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.colorPremium
+                    )
+                )
+                binding.upgradeTextView.visibility = View.GONE
+            }
+
+            else -> {
+                binding.membershipTextView.text = "Free membership"
+                binding.membershipTextView.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.colorDarkGray
+                    )
+                )
+                binding.upgradeTextView.visibility = View.VISIBLE
+            }
         }
 
         firebaseAnalytics.logEvent("open_settings_fragment", null)
