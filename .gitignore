@@ -27,3 +27,5 @@ sl-upload-keystore
 google-services.json
 
 .DS_Store
+app-release.apk
+output.json
