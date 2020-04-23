@@ -45,6 +45,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbar.setNavigationOnClickListener { finishOrNavigateUp() }
 
         binding.appVersionTextView.text = "SimpleLogin v${context?.getVersionName()}"
+        val baseUrl = "https://simplelogin.io"
 
         binding.root.findViewById<View>(R.id.howTextView).setOnClickListener {
             findNavController().navigate(
@@ -52,12 +53,18 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             )
         }
 
+        binding.root.findViewById<View>(R.id.securityTextView).setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/security")
+            )
+            firebaseAnalytics.logEvent("about_view_security", null)
+        }
+
         binding.root.findViewById<View>(R.id.contactTextView).setOnClickListener {
             activity?.startSendEmailIntent("hi@simplelogin.io")
             firebaseAnalytics.logEvent("about_compose_email", null)
         }
 
-        val baseUrl = "https://simplelogin.io"
         binding.root.findViewById<View>(R.id.faqTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToFaqFragment()
