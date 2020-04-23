@@ -44,41 +44,6 @@
                 android:orientation="vertical"
                 android:paddingBottom="20dp">
 
-                <!--FAQ 0-->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="What is an email alias?"
-                            android:textAppearance="?attr/textAppearanceSubtitle2"
-                            tools:ignore="HardcodedText" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/faq_0"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
                 <!--FAQ 1-->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -99,15 +64,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="Is email alias permanent?"
+                            android:text="@string/faq_1_question"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             tools:ignore="HardcodedText" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/faq_1"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_1_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 
@@ -134,15 +101,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="How SimpleLogin is different than temporary email services?"
+                            android:text="@string/faq_2_question"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             tools:ignore="HardcodedText" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/faq_2"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_2_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 
@@ -169,15 +138,424 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="Do you read forwarded emails?"
+                            android:text="@string/faq_3_question"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
                             tools:ignore="HardcodedText" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_3_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 4-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="@string/faq_3"
+                            android:text="@string/faq_4_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_4_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 5-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_5_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_5_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 6-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_6_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_6_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 7-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_7_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_7_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 8-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_8_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_8_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 9-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_9_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_9_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 10-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_10_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_10_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 11-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_11_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_11_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 12-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_12_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_12_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 13-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_13_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_13_answer"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="@color/colorDarkGray" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--FAQ 14-->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/faq_14_question"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/card_view_padding"
+                            android:paddingEnd="@dimen/card_view_padding"
+                            android:paddingBottom="@dimen/card_view_padding"
+                            android:text="@string/faq_14_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 
