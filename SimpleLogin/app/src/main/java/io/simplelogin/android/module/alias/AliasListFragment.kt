@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
-import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
@@ -25,6 +24,7 @@ import io.simplelogin.android.utils.SwipeToDeleteCallback
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.RandomMode
+import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 import java.lang.Exception
@@ -76,11 +76,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         if (viewModel.needsShowPricing) {
             // Delay here waiting for AliasCreateFragment finish navigateUp()
             Handler().postDelayed({
-                findNavController().navigate(
-                    AliasListFragmentDirections.actionAliasListFragmentToWebViewFragment(
-                        "https://simplelogin.io/pricing"
-                    )
-                )
+                navigateToPricingPage()
             }, 100)
 
             viewModel.onHandleShowPricingComplete()
@@ -235,6 +231,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             activity?.runOnUiThread {
                 setLoading(false)
                 if (error != null) {
+                    if (error == SLError.CanNotCreateMoreAlias) {
+                        alertCanNotCreateMoreAlias()
+                        return@runOnUiThread
+                    }
+
                     context?.toastError(error)
 
                     when (randomMode) {
@@ -267,6 +268,25 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 }
             }
         }
+    }
+
+    private fun alertCanNotCreateMoreAlias() {
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Can not create more alias")
+            .setMessage("Go premium for unlimited aliases and more.")
+            .setPositiveButton("See pricing", null)
+            .setOnDismissListener {
+                navigateToPricingPage()
+            }
+            .show()
+    }
+
+    private fun navigateToPricingPage() {
+        findNavController().navigate(
+            AliasListFragmentDirections.actionAliasListFragmentToWebViewFragment(
+                "https://simplelogin.io/pricing"
+            )
+        )
     }
 
     // Toolbar.OnMenuItemClickListener

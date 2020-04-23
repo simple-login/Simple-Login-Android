@@ -122,8 +122,8 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
                 firebaseAnalytics.logEvent("alias_list_toggle_error", error.toBundle())
             } else if (enabled != null) {
                 _aliases.find { it.id == alias.id }?.setEnabled(enabled)
-                _eventUpdateAliases.postValue(true)
                 _toggledAliasIndex.postValue(index)
+                filterAliases()
 
                 when (enabled) {
                     true -> firebaseAnalytics.logEvent("alias_list_enabled_an_alias", null)

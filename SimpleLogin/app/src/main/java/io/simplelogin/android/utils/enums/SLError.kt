@@ -15,6 +15,7 @@ sealed class SLError(val description: String) {
     object BadGateway : SLError("Bad gateway error")
     object SearchTermNull : SLError("Search term is null")
     object WrongTotpToken : SLError("Wrong TOTP token")
+    object CanNotCreateMoreAlias : SLError("Can not create more alias")
     object WrongVerificationCode : SLError("Wrong verification code")
     class BadRequest(description: String) : SLError("Bad request: $description")
     class FailedToParseObject(objectName: String) : SLError("Failed to parse object $objectName")

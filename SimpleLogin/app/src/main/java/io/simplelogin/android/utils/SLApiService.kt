@@ -469,6 +469,7 @@ object SLApiService {
                             completion(null, SLError.NoData)
                         }
                     }
+                    400 -> completion(null, SLError.CanNotCreateMoreAlias)
                     401 -> completion(null, SLError.InvalidApiKey)
                     500 -> completion(null, SLError.InternalServerError)
                     502 -> completion(null, SLError.BadGateway)

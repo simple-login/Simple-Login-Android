@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import io.simplelogin.android.databinding.FragmentPremiumBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
+import io.simplelogin.android.utils.extension.openUrlInBrowser
 import io.simplelogin.android.utils.extension.startSendEmailIntent
 
 class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -22,11 +23,7 @@ class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
         binding.upgradeButton.setOnClickListener {
-            findNavController().navigate(
-                PremiumFragmentDirections.actionPremiumFragmentToWebViewFragment2(
-                    "https://app.simplelogin.io/dashboard/pricing"
-                )
-            )
+            activity?.openUrlInBrowser("https://app.simplelogin.io/dashboard/pricing")
             firebaseAnalytics.logEvent("premium_upgrade", null)
         }
 
