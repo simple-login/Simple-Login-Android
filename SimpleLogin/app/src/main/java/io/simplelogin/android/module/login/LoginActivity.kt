@@ -89,8 +89,8 @@ class LoginActivity : BaseAppCompatActivity() {
         }
 
         // Social login
-        binding.facebookButton.setOnClickListener { loginWithFacebook() }
-        binding.googleButton.setOnClickListener { loginWithGoogle() }
+//        binding.facebookButton.setOnClickListener { loginWithFacebook() }
+//        binding.googleButton.setOnClickListener { loginWithGoogle() }
 
         // Forgot password
         binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }

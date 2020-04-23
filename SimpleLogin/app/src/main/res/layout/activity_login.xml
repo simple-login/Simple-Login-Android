@@ -116,33 +116,33 @@
                         android:text="Sign in with API Key"
                         tools:ignore="HardcodedText" />
 
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp"
-                        android:background="@color/colorMediumGray" />
+<!--                    <View-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:background="@color/colorMediumGray" />-->
 
-                    <Button
-                        android:id="@+id/googleButton"
-                        style="@style/Widget.MaterialComponents.Button.Icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:backgroundTint="@color/colorGoogle"
-                        android:gravity="start|center_vertical"
-                        android:text="Sign in with Google"
-                        app:icon="@drawable/ic_social_google_32dp"
-                        tools:ignore="HardcodedText" />
+<!--                    <Button-->
+<!--                        android:id="@+id/googleButton"-->
+<!--                        style="@style/Widget.MaterialComponents.Button.Icon"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="50dp"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:backgroundTint="@color/colorGoogle"-->
+<!--                        android:gravity="start|center_vertical"-->
+<!--                        android:text="Sign in with Google"-->
+<!--                        app:icon="@drawable/ic_social_google_32dp"-->
+<!--                        tools:ignore="HardcodedText" />-->
 
-                    <Button
-                        android:id="@+id/facebookButton"
-                        style="@style/Widget.MaterialComponents.Button.Icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:backgroundTint="@color/colorFacebook"
-                        android:gravity="start|center_vertical"
-                        android:text="Sign in with Facebook"
-                        app:icon="@drawable/ic_social_facebook_32dp"
-                        tools:ignore="HardcodedText" />
+<!--                    <Button-->
+<!--                        android:id="@+id/facebookButton"-->
+<!--                        style="@style/Widget.MaterialComponents.Button.Icon"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="50dp"-->
+<!--                        android:backgroundTint="@color/colorFacebook"-->
+<!--                        android:gravity="start|center_vertical"-->
+<!--                        android:text="Sign in with Facebook"-->
+<!--                        app:icon="@drawable/ic_social_facebook_32dp"-->
+<!--                        tools:ignore="HardcodedText" />-->
 
                 </LinearLayout>
 
