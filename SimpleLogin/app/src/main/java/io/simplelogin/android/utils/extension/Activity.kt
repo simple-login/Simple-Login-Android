@@ -41,3 +41,8 @@ fun Activity.getScreenHeight() : Int {
     // y is height, x is width
     return size.y
 }
+
+fun Activity.openUrlInBrowser(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    startActivity(intent)
+}

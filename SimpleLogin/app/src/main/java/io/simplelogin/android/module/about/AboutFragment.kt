@@ -11,6 +11,7 @@ import io.simplelogin.android.databinding.FragmentAboutBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.getVersionName
+import io.simplelogin.android.utils.extension.openUrlInBrowser
 import io.simplelogin.android.utils.extension.startSendEmailIntent
 
 class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -90,6 +91,18 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/blog")
             )
             firebaseAnalytics.logEvent("about_view_blog", null)
+        }
+
+        binding.root.findViewById<View>(R.id.helpTextView).setOnClickListener {
+            findNavController().navigate(
+                AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/help")
+            )
+            firebaseAnalytics.logEvent("about_view_help", null)
+        }
+
+        binding.root.findViewById<View>(R.id.roadmapTextView).setOnClickListener {
+            activity?.openUrlInBrowser("https://trello.com/b/4d6A69I4/open-roadmap")
+            firebaseAnalytics.logEvent("about_view_roadmap", null)
         }
 
         binding.root.findViewById<View>(R.id.termsTextView).setOnClickListener {

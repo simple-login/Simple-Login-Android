@@ -282,6 +282,52 @@
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!--Help & Roadmap-->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/helpAndRoadmapCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/helpTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Help"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:id="@+id/seventhSeparatorView"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/helpTextView"
+                            android:background="@color/colorMediumGray" />
+
+                        <TextView
+                            android:id="@+id/roadmapTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/seventhSeparatorView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="Roadmap"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
                 <!--Terms & Privacy-->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/termsAndPrivacyCardView"
@@ -309,7 +355,7 @@
                             tools:ignore="HardcodedText" />
 
                         <View
-                            android:id="@+id/seventhSeparatorView"
+                            android:id="@+id/eighthSeparatorView"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/termsTextView"
@@ -319,7 +365,7 @@
                             android:id="@+id/privacyTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/seventhSeparatorView"
+                            android:layout_below="@id/eighthSeparatorView"
                             android:padding="@dimen/card_view_padding"
                             android:text="Privacy policy"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
