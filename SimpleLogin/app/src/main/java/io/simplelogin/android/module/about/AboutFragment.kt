@@ -66,6 +66,10 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             firebaseAnalytics.logEvent("about_compose_email", null)
         }
 
+        binding.root.findViewById<View>(R.id.whatTextView).setOnClickListener {
+            findNavController().navigate(AboutFragmentDirections.actionAboutFragmentToWhatYouCanDoFragment())
+        }
+
         binding.root.findViewById<View>(R.id.faqTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToFaqFragment()

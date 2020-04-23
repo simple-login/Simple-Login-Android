@@ -5,21 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import io.simplelogin.android.databinding.FragmentFaqBinding
+import io.simplelogin.android.databinding.FragmentWhatYouCanDoBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
 
-class FaqFragment : BaseFragment(), HomeActivity.OnBackPressed {
-    private lateinit var binding: FragmentFaqBinding
+class WhatYouCanDoFragment : BaseFragment(), HomeActivity.OnBackPressed {
+    private lateinit var binding: FragmentWhatYouCanDoBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFaqBinding.inflate(inflater)
+        binding = FragmentWhatYouCanDoBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        firebaseAnalytics.logEvent("open_faq_fragment", null)
+        firebaseAnalytics.logEvent("open_what_you_can_do_fragment", null)
         return binding.root
     }
 

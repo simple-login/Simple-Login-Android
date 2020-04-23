@@ -21,10 +21,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="The journey to a sane inbox"
+                android:text="What you can do with aliases"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
+
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -43,7 +44,7 @@
                 android:orientation="vertical"
                 android:paddingBottom="20dp">
 
-                <!--Step A-->
+                <!--What A-->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -60,29 +61,35 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/step1TextView"
+                            android:id="@+id/stepATextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="1. Sign up and start creating aliases"
+                            android:text="A. Replace email by alias everywhere"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+
+                        <ImageView
+                            android:id="@+id/stepAImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stepATextView"
+                            android:src="@mipmap/what_a"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/step1TextView"
-                            android:paddingStart="@dimen/card_view_padding"
-                            android:paddingEnd="@dimen/card_view_padding"
-                            android:paddingBottom="@dimen/card_view_padding"
-                            android:text="@string/step_1"
+                            android:layout_below="@id/stepAImageView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/what_a"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!--Step B-->
+                <!--What B-->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -99,29 +106,33 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/step2TextView"
+                            android:id="@+id/stepBTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="2. Receive emails safely"
+                            android:text="B. Send emails from alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+                        <ImageView
+                            android:id="@+id/stepBImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stepBTextView"
+                            android:src="@mipmap/what_b" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/step2TextView"
-                            android:paddingStart="@dimen/card_view_padding"
-                            android:paddingEnd="@dimen/card_view_padding"
-                            android:paddingBottom="@dimen/card_view_padding"
-                            android:text="@string/step_2"
+                            android:layout_below="@id/stepBImageView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/what_b"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!--Step C-->
+                <!--What C-->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -138,22 +149,26 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/step3TextView"
+                            android:id="@+id/stepCTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
-                            android:text="3. Create aliases without leaving the browser"
+                            android:text="C. Run your business with alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+                        <ImageView
+                            android:id="@+id/stepCImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/stepCTextView"
+                            android:src="@mipmap/what_c" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/step3TextView"
-                            android:paddingStart="@dimen/card_view_padding"
-                            android:paddingEnd="@dimen/card_view_padding"
-                            android:paddingBottom="@dimen/card_view_padding"
-                            android:text="@string/step_3"
+                            android:layout_below="@id/stepCImageView"
+                            android:padding="@dimen/card_view_padding"
+                            android:text="@string/what_c"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="@color/colorDarkGray" />
 

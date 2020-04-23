@@ -28,6 +28,13 @@
             app:exitAnim="@anim/exit_anim_slide_out_to_left"
             app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
             app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
+        <action
+            android:id="@+id/action_aboutFragment_to_whatYouCanDoFragment"
+            app:destination="@id/whatYouCanDoFragment"
+            app:enterAnim="@anim/enter_anim_slide_in_from_right"
+            app:exitAnim="@anim/exit_anim_slide_out_to_left"
+            app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
+            app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
     </fragment>
     <fragment
         android:id="@+id/howItWorksFragment"
@@ -45,4 +52,8 @@
             android:name="url"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/whatYouCanDoFragment"
+        android:name="io.simplelogin.android.module.about.WhatYouCanDoFragment"
+        android:label="WhatYouCanDoFragment" />
 </navigation>

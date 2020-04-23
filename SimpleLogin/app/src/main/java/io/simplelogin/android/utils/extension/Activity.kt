@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Point
 import android.net.Uri
-import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 
 fun Activity.showKeyboard() {
