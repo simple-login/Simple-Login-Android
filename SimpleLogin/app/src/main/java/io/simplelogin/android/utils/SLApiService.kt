@@ -9,18 +9,29 @@ import io.simplelogin.android.utils.model.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
+
+private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
 
 private val BASE_URL = when (BuildConfig.BUILD_TYPE == "debug") {
     true -> "https://app.sldev.ovh"
     false -> "https://app.simplelogin.io"
 }
 
+private fun Map<String, Any>.toRequestBody() : RequestBody {
+    val jsonObject = JSONObject()
+
+    for ((key, value) in this) {
+        jsonObject.put(key, value)
+    }
+
+    return jsonObject.toString().toRequestBody(CONTENT_TYPE_JSON)
+}
+
 private val client = OkHttpClient()
 
 object SLApiService {
-    private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
-
     //region Login
     fun login(
         email: String,
@@ -28,17 +39,16 @@ object SLApiService {
         device: String,
         completion: (userLogin: UserLogin?, error: SLError?) -> Unit
     ) {
-        val body = """
-            {
-                "email": "$email",
-                "password": "$password",
-                "device": "$device"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "email" to email,
+            "password" to password,
+            "device" to device
+        )
+            .toRequestBody()
 
         val request = Request.Builder()
             .url("$BASE_URL/api/auth/login")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
