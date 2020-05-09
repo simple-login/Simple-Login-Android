@@ -1,6 +1,9 @@
 package io.simplelogin.android.module.home
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
@@ -97,6 +100,19 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 )
                 navController.graph = aboutNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
+            }
+
+            R.id.rateUsMenuItem -> {
+                val uri = Uri.parse("market://details?id=$packageName")
+                val goToMarketIntent = Intent(Intent.ACTION_VIEW, uri)
+
+                goToMarketIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+
+                try {
+                    startActivity(goToMarketIntent)
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=$packageName")))
+                }
             }
 
             R.id.signOutMenuItem -> {

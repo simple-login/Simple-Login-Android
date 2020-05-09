@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/firstGroup">
         <item
             android:id="@+id/aliasMenuItem"
             android:icon="@drawable/ic_home_32dp"
-            android:title="Alias" />
+            android:title="Alias"
+            tools:ignore="HardcodedText" />
         <!--        <item-->
         <!--            android:id="@+id/directoryMenuItem"-->
         <!--            android:icon="@drawable/ic_social_facebook_32dp"-->
@@ -20,21 +22,30 @@
         <item
             android:id="@+id/settingsMenuItem"
             android:icon="@drawable/ic_settings_32dp"
-            android:title="Settings" />
+            android:title="Settings"
+            tools:ignore="HardcodedText"/>
         <item
             android:id="@+id/aboutMenuItem"
             android:icon="@drawable/ic_info_32dp"
-            android:title="About" />
+            android:title="About"
+            tools:ignore="HardcodedText" />
     </group>
 
     <group android:id="@+id/thirdGroup">
         <item
+            android:id="@+id/rateUsMenuItem"
+            android:icon="@drawable/ic_star_32dp"
+            android:title="Rate Us"
+            tools:ignore="HardcodedText" />
+        <item
             android:id="@+id/signOutMenuItem"
             android:icon="@drawable/ic_logout_32dp"
-            android:title="Sign Out" />
+            android:title="Sign Out"
+            tools:ignore="HardcodedText"/>
     </group>
 
     <item
         android:id="@+id/appVersionMenuItem"
-        android:title="SimpleLogin"/>
+        android:title="SimpleLogin"
+        tools:ignore="HardcodedText" />
 </menu>
