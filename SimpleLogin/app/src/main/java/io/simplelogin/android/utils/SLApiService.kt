@@ -19,7 +19,7 @@ private val BASE_URL = when (BuildConfig.BUILD_TYPE == "debug") {
     false -> "https://app.simplelogin.io"
 }
 
-private fun Map<String, Any>.toRequestBody() : RequestBody {
+private fun Map<String, Any?>.toRequestBody(): RequestBody {
     val jsonObject = JSONObject()
 
     for ((key, value) in this) {
@@ -88,15 +88,15 @@ object SLApiService {
         device: String,
         completion: (userLogin: UserLogin?, error: SLError?) -> Unit
     ) {
-        val body = """
-            {
-                "${socialService.serviceName}_token": "$accessToken",
-                "device": "$device"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "${socialService.serviceName}_token" to accessToken,
+            "device" to device
+        )
+            .toRequestBody()
+
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/${socialService.serviceName}")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -136,17 +136,16 @@ object SLApiService {
         device: String,
         completion: (apiKey: ApiKey?, error: SLError?) -> Unit
     ) {
-        val body = """
-            {
-                "mfa_token": "$mfaToken",
-                "mfa_key": "$mfaKey",
-                "device": "$device"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "mfa_token" to mfaToken,
+            "mfa_key" to mfaKey,
+            "device" to device
+        )
+            .toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/mfa")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -181,16 +180,15 @@ object SLApiService {
     }
 
     fun signUp(email: String, password: String, completion: (error: SLError?) -> Unit) {
-        val body = """
-            {
-                "email": "$email",
-                "password": "$password"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "email" to email,
+            "password" to password
+        )
+            .toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/register")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -226,16 +224,15 @@ object SLApiService {
     }
 
     fun verifyEmail(email: String, code: String, completion: (error: SLError?) -> Unit) {
-        val body = """
-            {
-                "email": "$email",
-                "code": "$code"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "email" to email,
+            "code" to code
+        )
+            .toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/activate")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -257,15 +254,11 @@ object SLApiService {
     }
 
     fun reactivate(email: String, completion: (error: SLError?) -> Unit) {
-        val body = """
-            {
-                "email": "$email"
-            }
-        """.trimIndent()
+        val requestBody = mapOf("email" to email).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/reactivate")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -285,15 +278,11 @@ object SLApiService {
     }
 
     fun forgotPassword(email: String, completion: () -> Unit) {
-        val body = """
-            {
-                "email": "$email"
-            }
-        """.trimIndent()
+        val requestBody = mapOf("email" to email).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/forgot_password")
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -393,19 +382,17 @@ object SLApiService {
         note: String?,
         completion: (alias: Alias?, error: SLError?) -> Unit
     ) {
-        val formattedNote = note?.replace("\n", "\\n")
-        val body = """
-            {
-                "alias_prefix": "$prefix",
-                "alias_suffix": "$suffix",
-                "note": "$formattedNote"
-            }
-        """.trimIndent()
+        val requestBody = mapOf(
+            "alias_prefix" to prefix,
+            "alias_suffix" to suffix,
+            "note" to note?.replace("\n", "\\n")
+        )
+            .toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/alias/custom/new")
             .header("Authentication", apiKey)
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -445,17 +432,12 @@ object SLApiService {
         note: String?,
         completion: (alias: Alias?, error: SLError?) -> Unit
     ) {
-        val formattedNote = note?.replace("\n", "\\n")
-        val body = """
-            {
-                "note": "$formattedNote"
-            }
-        """.trimIndent()
+        val requestBody = mapOf("note" to note?.replace("\n", "\\n")).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}")
             .header("Authentication", apiKey)
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -707,17 +689,12 @@ object SLApiService {
         note: String?,
         completion: (error: SLError?) -> Unit
     ) {
-        val formattedNote = note?.replace("\n", "\\n")
-        val body = """
-            {
-                "note": "$formattedNote"
-            }
-        """.trimIndent()
+        val requestBody = mapOf("note" to note?.replace("\n", "\\n")).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/${alias.id}")
             .header("Authentication", apiKey)
-            .put(body.toRequestBody(CONTENT_TYPE_JSON))
+            .put(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -789,16 +766,12 @@ object SLApiService {
         email: String,
         completion: (error: SLError?) -> Unit
     ) {
-        val body = """
-            {
-                "contact": "$email"
-            }
-        """.trimIndent()
+        val requestBody = mapOf("contact" to email).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/${alias.id}/contacts")
             .header("Authentication", apiKey)
-            .post(body.toRequestBody(CONTENT_TYPE_JSON))
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
