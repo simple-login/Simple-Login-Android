@@ -379,19 +379,11 @@ class LoginActivity : BaseAppCompatActivity() {
 
         if (email != "" && password != "") {
             setLoading(true)
-            SLApiService.login(email, password, deviceName) { userLogin, error ->
+            SLApiService.login(email, password, deviceName) { result ->
                 runOnUiThread {
                     setLoading(false)
-                    if (error != null) {
-                        toastError(error)
-                        firebaseAnalytics.logEvent(
-                            "log_in_with_email_password_error",
-                            error.toBundle()
-                        )
-                    } else if (userLogin != null) {
-                        processUserLogin(userLogin)
-                        firebaseAnalytics.logEvent("log_in_with_email_password_success", null)
-                    }
+                    result.onSuccess(::processUserLogin)
+                    result.onFailure(::toastThrowable)
                 }
             }
         } else {

@@ -6,26 +6,27 @@ import android.util.DisplayMetrics
 import android.widget.Toast
 import io.simplelogin.android.utils.enums.SLError
 
-fun Context.toastShortly(text: String) : Toast {
+fun Context.toastShortly(text: String): Toast {
     val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
     toast.show()
     return toast
 }
 
-
-fun Context.toastLongly(text: String) : Toast {
+fun Context.toastLongly(text: String): Toast {
     val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
     toast.show()
     return toast
 }
 
-fun Context.toastError(error: SLError) =
-    toastShortly(error.description)
+fun Context.toastThrowable(throwable: Throwable) {
+    toastShortly(throwable.localizedMessage)
+}
 
-fun Context.toastUpToDate() =
-    toastShortly("You are up to date")
+fun Context.toastError(error: SLError) = toastShortly(error.description)
 
-fun Context.getVersionName() : String {
+fun Context.toastUpToDate() = toastShortly("You are up to date")
+
+fun Context.getVersionName(): String {
     val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
     return packageInfo.versionName
 }
