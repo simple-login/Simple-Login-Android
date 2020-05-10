@@ -78,14 +78,11 @@ class ShareActivity : BaseAppCompatActivity() {
         }
 
         setLoading(true)
-        SLApiService.fetchUserOptions(apiKey) { userOptions, error ->
+        SLApiService.fetchUserOptions(apiKey) { result ->
             runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    toastError(error)
-                    firebaseAnalytics.logEvent("share_activity_fetch_options_error", error.toBundle())
-                    finish()
-                } else if (userOptions != null) {
+
+                result.onSuccess { userOptions ->
                     if (userOptions.canCreate) {
                         setUpSuffixesSpinner(userOptions.suffixes)
                         binding.prefixEditText.requestFocus()
@@ -93,9 +90,13 @@ class ShareActivity : BaseAppCompatActivity() {
                         prefillPrefix()
                     } else {
                         toastLongly("You can not create more alias. Please upgrade to premium.")
-                        firebaseAnalytics.logEvent("share_activity_can_not_create", null)
                         finish()
                     }
+                }
+
+                result.onFailure {
+                    toastThrowable(it)
+                    finish()
                 }
             }
         }

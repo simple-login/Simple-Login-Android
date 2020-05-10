@@ -61,13 +61,11 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         // Fetch UserOptions
         setLoading(true)
-        SLApiService.fetchUserOptions(apiKey) { userOptions, error ->
+        SLApiService.fetchUserOptions(apiKey) { result ->
             activity?.runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    context?.toastError(error)
-                    findNavController().navigateUp()
-                } else if (userOptions != null) {
+
+                result.onSuccess { userOptions ->
                     if (userOptions.canCreate) {
                         setUpSuffixesSpinner(userOptions.suffixes)
                     } else {
@@ -82,10 +80,13 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                             .show()
                     }
                 }
+
+                result.onFailure {
+                    context?.toastThrowable(it)
+                    findNavController().navigateUp()
+                }
             }
         }
-
-        firebaseAnalytics.logEvent("open_alias_create_fragment", null)
 
         return binding.root
     }
