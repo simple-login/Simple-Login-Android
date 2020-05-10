@@ -116,20 +116,14 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
-        SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_list_toggle_error", error.toBundle())
-            } else if (enabled != null) {
-                _aliases.find { it.id == alias.id }?.setEnabled(enabled)
+        SLApiService.toggleAlias(apiKey, alias) { result ->
+            result.onSuccess { enabled ->
+                _aliases.find { it.id == alias.id }?.setEnabled(enabled.value)
                 _toggledAliasIndex.postValue(index)
                 filterAliases()
-
-                when (enabled) {
-                    true -> firebaseAnalytics.logEvent("alias_list_enabled_an_alias", null)
-                    false -> firebaseAnalytics.logEvent("alias_list_disabled_an_alias", null)
-                }
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 

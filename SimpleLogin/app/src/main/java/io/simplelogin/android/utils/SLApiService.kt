@@ -570,7 +570,7 @@ object SLApiService {
     fun toggleAlias(
         apiKey: String,
         alias: Alias,
-        completion: (enabled: Boolean?, error: SLError?) -> Unit
+        completion: (Result<Enabled>) -> Unit
     ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/${alias.id}/toggle")
@@ -580,7 +580,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -591,19 +591,19 @@ object SLApiService {
                         if (jsonString != null) {
                             val enabled = Gson().fromJson(jsonString, Enabled::class.java)
                             if (enabled != null) {
-                                completion(enabled.value, null)
+                                completion(Result.success(enabled))
                             } else {
-                                completion(null, SLError.FailedToParseObject("Enabled"))
+                                completion(Result.failure(SLError.FailedToParse(Enabled::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    401 -> completion(null, SLError.InvalidApiKey)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })

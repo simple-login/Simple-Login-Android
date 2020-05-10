@@ -111,26 +111,19 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
     }
 
     fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
-        SLApiService.toggleAlias(apiKey, alias) { enabled, error ->
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_search_toggle_error", error.toBundle())
-
-            } else if (enabled != null) {
+        SLApiService.toggleAlias(apiKey, alias) { result ->
+            result.onSuccess { enabled ->
                 _aliases.find { it.id == alias.id }?.let { toggledAlias ->
-                    toggledAlias.setEnabled(enabled)
+                    toggledAlias.setEnabled(enabled.value)
                     if (!_toggledAliases.contains(toggledAlias)) {
                         _toggledAliases.add(toggledAlias)
                     }
                 }
 
                 _toggledAliasIndex.postValue(index)
-
-                when (enabled) {
-                    true -> firebaseAnalytics.logEvent("alias_search_enabled_an_alias", null)
-                    false -> firebaseAnalytics.logEvent("alias_search_disabled_an_alias", null)
-                }
             }
+
+            result.onFailure {  _error.postValue(it as SLError) }
         }
     }
 }
