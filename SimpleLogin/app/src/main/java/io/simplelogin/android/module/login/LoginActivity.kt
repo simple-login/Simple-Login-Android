@@ -28,6 +28,9 @@ import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SocialService
 import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.enums.Email
+import io.simplelogin.android.utils.enums.Password
+import io.simplelogin.android.utils.enums.MfaKey
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.UserLogin
 
@@ -277,8 +280,8 @@ class LoginActivity : BaseAppCompatActivity() {
                         data?.getParcelableExtra<VerificationMode.AccountActivation>(
                             VerificationActivity.ACCOUNT
                         )
-                    binding.emailTextField.editText?.setText(verificationMode?.email)
-                    binding.passwordTextField.editText?.setText(verificationMode?.password)
+                    binding.emailTextField.editText?.setText(verificationMode?.email?.value)
+                    binding.passwordTextField.editText?.setText(verificationMode?.password?.value)
                     login()
                 }
             }
@@ -394,36 +397,11 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun socialLogin(service: SocialService, accessToken: String) {
         val deviceName = Build.DEVICE
         setLoading(true)
-        SLApiService.socialLogin(service, accessToken, deviceName) { userLogin, error ->
+        SLApiService.socialLogin(service, accessToken, deviceName) { result ->
             runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    toastError(error)
-
-                    when (service) {
-                        SocialService.GOOGLE -> firebaseAnalytics.logEvent(
-                            "log_in_with_google_error",
-                            error.toBundle()
-                        )
-                        SocialService.FACEBOOK -> firebaseAnalytics.logEvent(
-                            "log_in_with_facebook_error",
-                            error.toBundle()
-                        )
-                    }
-
-                } else if (userLogin != null) {
-                    processUserLogin(userLogin)
-                    when (service) {
-                        SocialService.GOOGLE -> firebaseAnalytics.logEvent(
-                            "log_in_with_google_success",
-                            null
-                        )
-                        SocialService.FACEBOOK -> firebaseAnalytics.logEvent(
-                            "log_in_with_facebook_success",
-                            null
-                        )
-                    }
-                }
+                result.onSuccess(::processUserLogin)
+                result.onFailure(::toastThrowable)
             }
         }
     }
@@ -435,8 +413,8 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private fun processUserLogin(userLogin: UserLogin) {
         when (userLogin.mfaEnabled) {
-            true -> userLogin.mfaKey?.let { mfaKey ->
-                startVerificationActivity(VerificationMode.Mfa(mfaKey))
+            true -> userLogin.mfaKey?.let {
+                startVerificationActivity(VerificationMode.Mfa(MfaKey(it)))
             }
 
             false -> userLogin.apiKey?.let { finalizeLogin(it) }
@@ -460,7 +438,7 @@ class LoginActivity : BaseAppCompatActivity() {
                 } else {
                     toastLongly("Check your inbox for verification code")
                     firebaseAnalytics.logEvent("sign_up_success", null)
-                    startVerificationActivity(VerificationMode.AccountActivation(email, password))
+                    startVerificationActivity(VerificationMode.AccountActivation(Email(email), Password(password)))
                 }
             }
         }

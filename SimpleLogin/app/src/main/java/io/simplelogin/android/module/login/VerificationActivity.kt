@@ -13,12 +13,11 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
+import io.simplelogin.android.utils.enums.Email
+import io.simplelogin.android.utils.enums.MfaKey
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
-import io.simplelogin.android.utils.extension.fadeOut
-import io.simplelogin.android.utils.extension.shake
-import io.simplelogin.android.utils.extension.toastError
-import io.simplelogin.android.utils.extension.toastShortly
+import io.simplelogin.android.utils.extension.*
 
 class VerificationActivity : BaseAppCompatActivity() {
     companion object {
@@ -181,58 +180,61 @@ class VerificationActivity : BaseAppCompatActivity() {
     }
 
     private fun verify(code: String) {
-        val deviceName = Build.DEVICE
         when (verificationMode) {
             is VerificationMode.Mfa -> {
-                setLoading(true)
-                SLApiService.verifyMfa(
-                    (verificationMode as VerificationMode.Mfa).mfaKey,
-                    code,
-                    deviceName
-                ) { apiKey, error ->
-                    runOnUiThread {
-                        setLoading(false)
-                        if (error != null) {
-                            showError(true, error.description)
-                            reset()
-                            firebaseAnalytics.logEvent("mfa_error", error.toBundle())
-                        } else if (apiKey != null) {
-                            val returnIntent = Intent()
-                            returnIntent.putExtra(API_KEY, apiKey.value)
-                            setResult(Activity.RESULT_OK, returnIntent)
-                            firebaseAnalytics.logEvent("mfa_success", null)
-                            finish()
-                        }
-                    }
-                }
+                val mfaKey = (verificationMode as VerificationMode.Mfa).mfaKey
+                verify(mfaKey, code)
             }
 
             is VerificationMode.AccountActivation -> {
-                setLoading(true)
-                SLApiService.verifyEmail(
-                    (verificationMode as VerificationMode.AccountActivation).email,
-                    code
-                ) { error ->
-                    runOnUiThread {
-                        setLoading(false)
-                        if (error != null) {
-                            when (error) {
-                                is SLError.ReactivationNeeded -> showReactivationAlert((verificationMode as VerificationMode.AccountActivation).email)
+                val email = (verificationMode as VerificationMode.AccountActivation).email
+                verify(email, code)
+            }
+        }
+    }
 
-                                else -> {
-                                    showError(true, error.description)
-                                    reset()
-                                }
-                            }
+    private fun verify(mfaKey: MfaKey, code: String) {
+        setLoading(true)
+        SLApiService.verifyMfa(mfaKey, code, Build.DEVICE) { result ->
+            runOnUiThread {
+                setLoading(false)
+                result.onSuccess { apiKey ->
+                    val returnIntent = Intent()
+                    returnIntent.putExtra(API_KEY, apiKey.value)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
 
-                        } else {
-                            val returnIntent = Intent()
-                            returnIntent.putExtra(
-                                ACCOUNT,
-                                (verificationMode as VerificationMode.AccountActivation)
-                            )
-                            setResult(Activity.RESULT_OK, returnIntent)
-                            finish()
+                result.onFailure { error ->
+                    showError(true, error.localizedMessage)
+                    reset()
+                }
+            }
+        }
+    }
+
+    private fun verify(email: Email, code: String) {
+        setLoading(true)
+        SLApiService.verifyEmail(email, code) { result ->
+            runOnUiThread {
+                setLoading(false)
+                result.onSuccess {
+                    val returnIntent = Intent()
+                    returnIntent.putExtra(
+                        ACCOUNT,
+                        (verificationMode as VerificationMode.AccountActivation)
+                    )
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
+
+                result.onFailure { error ->
+                    when (error) {
+                        is SLError.ReactivationNeeded -> showReactivationAlert(email)
+
+                        else -> {
+                            showError(true, error.localizedMessage)
+                            reset()
                         }
                     }
                 }
@@ -240,10 +242,10 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun showReactivationAlert(email: String) {
+    private fun showReactivationAlert(email: Email) {
         MaterialAlertDialogBuilder(this)
             .setTitle("Wrong code too many times")
-            .setMessage("We will send you a new activation code to \"$email\"")
+            .setMessage("We will send you a new activation code to \"${email.value}\"")
             .setPositiveButton("Close", null)
             .setOnDismissListener {
                 requestNewCode(email)
@@ -252,18 +254,13 @@ class VerificationActivity : BaseAppCompatActivity() {
             .show()
     }
 
-    private fun requestNewCode(email: String) {
+    private fun requestNewCode(email: Email) {
         setLoading(true)
-        SLApiService.reactivate(email) { error ->
+        SLApiService.reactivate(email) { result ->
             runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    toastError(error)
-                    firebaseAnalytics.logEvent("request_new_code_error", error.toBundle())
-                } else {
-                    toastShortly("Check your inbox for new activation code")
-                    firebaseAnalytics.logEvent("request_new_code_success", null)
-                }
+                result.onSuccess { toastShortly("Check your inbox for new activation code") }
+                result.onFailure(::toastThrowable)
             }
         }
     }

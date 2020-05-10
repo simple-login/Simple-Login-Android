@@ -2,9 +2,7 @@ package io.simplelogin.android.utils
 
 import com.google.gson.Gson
 import io.simplelogin.android.BuildConfig
-import io.simplelogin.android.utils.enums.RandomMode
-import io.simplelogin.android.utils.enums.SLError
-import io.simplelogin.android.utils.enums.SocialService
+import io.simplelogin.android.utils.enums.*
 import io.simplelogin.android.utils.model.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -86,7 +84,7 @@ object SLApiService {
         socialService: SocialService,
         accessToken: String,
         device: String,
-        completion: (userLogin: UserLogin?, error: SLError?) -> Unit
+        completion: (Result<UserLogin>) -> Unit
     ) {
         val requestBody = mapOf(
             "${socialService.serviceName}_token" to accessToken,
@@ -101,7 +99,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -112,33 +110,33 @@ object SLApiService {
                         if (jsonString != null) {
                             val userLogin = Gson().fromJson(jsonString, UserLogin::class.java)
                             if (userLogin != null) {
-                                completion(userLogin, null)
+                                completion(Result.success(userLogin))
                             } else {
-                                completion(null, SLError.FailedToParseObject("UserLogin"))
+                                completion(Result.failure(SLError.FailedToParse(UserLogin::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    400 -> completion(null, SLError.BadRequest("wrong token format"))
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    400 -> completion(Result.failure(SLError.BadRequest("Wrong token format")))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.RequestError(response.code)))
                 }
             }
         })
     }
 
     fun verifyMfa(
-        mfaKey: String,
+        mfaKey: MfaKey,
         mfaToken: String,
         device: String,
-        completion: (apiKey: ApiKey?, error: SLError?) -> Unit
+        completion: (Result<ApiKey>) -> Unit
     ) {
         val requestBody = mapOf(
             "mfa_token" to mfaToken,
-            "mfa_key" to mfaKey,
+            "mfa_key" to mfaKey.value,
             "device" to device
         )
             .toRequestBody()
@@ -150,7 +148,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -161,19 +159,19 @@ object SLApiService {
                         if (jsonString != null) {
                             val apiKey = Gson().fromJson(jsonString, ApiKey::class.java)
                             if (apiKey != null) {
-                                completion(apiKey, null)
+                                completion(Result.success(apiKey))
                             } else {
-                                completion(null, SLError.FailedToParseObject("ApiKey"))
+                                completion(Result.failure(SLError.FailedToParse(ApiKey::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    400 -> completion(null, SLError.WrongTotpToken)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    400 -> completion(Result.failure(SLError.WrongTotpToken))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.RequestError(response.code)))
                 }
             }
         })
@@ -223,9 +221,9 @@ object SLApiService {
         })
     }
 
-    fun verifyEmail(email: String, code: String, completion: (error: SLError?) -> Unit) {
+    fun verifyEmail(email: Email, code: String, completion: (Result<Unit>) -> Unit) {
         val requestBody = mapOf(
-            "email" to email,
+            "email" to email.value,
             "code" to code
         )
             .toRequestBody()
@@ -237,24 +235,24 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> completion(null)
-                    400 -> completion(SLError.WrongVerificationCode)
-                    410 -> completion(SLError.ReactivationNeeded)
-                    500 -> completion(SLError.InternalServerError)
-                    502 -> completion(SLError.BadGateway)
-                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                    200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.WrongVerificationCode))
+                    410 -> completion(Result.failure(SLError.ReactivationNeeded))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.RequestError(response.code)))
                 }
             }
         })
     }
 
-    fun reactivate(email: String, completion: (error: SLError?) -> Unit) {
-        val requestBody = mapOf("email" to email).toRequestBody()
+    fun reactivate(email: Email, completion: (Result<Unit>) -> Unit) {
+        val requestBody = mapOf("email" to email.value).toRequestBody()
 
         val request = Request.Builder()
             .url("${BASE_URL}/api/auth/reactivate")
@@ -263,15 +261,15 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> completion(null)
-                    500 -> completion(SLError.InternalServerError)
-                    502 -> completion(SLError.BadGateway)
-                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                    200 -> completion(Result.success(Unit))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.RequestError(response.code)))
                 }
             }
         })

@@ -5,8 +5,18 @@ import kotlinx.android.parcel.Parcelize
 
 sealed class VerificationMode {
     @Parcelize
-    class Mfa(val mfaKey: String) : VerificationMode(), Parcelable
+    class Mfa(val mfaKey: MfaKey) : VerificationMode(), Parcelable
 
     @Parcelize
-    class AccountActivation(val email: String, val password: String) : VerificationMode(), Parcelable
+    class AccountActivation(val email: Email, val password: Password) : VerificationMode(), Parcelable
 }
+
+// TODO: Should be inline class
+@Parcelize
+class MfaKey(val value: String): Parcelable
+
+@Parcelize
+class Email(val value: String): Parcelable
+
+@Parcelize
+class Password(val value: String): Parcelable
