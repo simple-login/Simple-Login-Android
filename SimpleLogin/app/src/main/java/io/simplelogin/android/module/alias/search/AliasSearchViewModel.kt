@@ -84,16 +84,14 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         get() = _deletedAliasIds
 
     fun deleteAlias(alias: Alias, firebaseAnalytics: FirebaseAnalytics) {
-        SLApiService.deleteAlias(apiKey, alias) { error ->
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_search_delete_error", error.toBundle())
-            } else {
+        SLApiService.deleteAlias(apiKey, alias) { result ->
+            result.onSuccess {
                 _deletedAliasIds.add(alias.id)
                 _aliases.removeAll { it.id == alias.id }
                 _eventUpdateResults.postValue(true)
-                firebaseAnalytics.logEvent("alias_search_delete_success", null)
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 
