@@ -227,43 +227,21 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
     private fun randomAlias(randomMode: RandomMode) {
         setLoading(true)
-        SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { alias, error ->
+        SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { result ->
             activity?.runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    if (error == SLError.CanNotCreateMoreAlias) {
-                        alertCanNotCreateMoreAlias()
-                        return@runOnUiThread
-                    }
 
-                    context?.toastError(error)
-
-                    when (randomMode) {
-                        RandomMode.UUID -> firebaseAnalytics.logEvent(
-                            "alias_random_by_uuid_error",
-                            error.toBundle()
-                        )
-                        RandomMode.WORD -> firebaseAnalytics.logEvent(
-                            "alias_random_by_word_error",
-                            error.toBundle()
-                        )
-                    }
-
-                } else if (alias != null) {
+                result.onSuccess { alias ->
                     viewModel.addAlias(alias)
                     viewModel.filterAliases()
                     binding.recyclerView.smoothScrollToPosition(0)
                     context?.toastShortly("Created \"${alias.email}\"")
+                }
 
-                    when (randomMode) {
-                        RandomMode.UUID -> firebaseAnalytics.logEvent(
-                            "alias_random_by_uuid_success",
-                            null
-                        )
-                        RandomMode.WORD -> firebaseAnalytics.logEvent(
-                            "alias_random_by_word_success",
-                            null
-                        )
+                result.onFailure { error ->
+                    when (error) {
+                        is SLError.CanNotCreateMoreAlias -> alertCanNotCreateMoreAlias()
+                        else -> context?.toastThrowable(error)
                     }
                 }
             }

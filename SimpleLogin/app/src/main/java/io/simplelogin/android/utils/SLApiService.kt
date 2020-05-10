@@ -428,7 +428,7 @@ object SLApiService {
         apiKey: String,
         randomMode: RandomMode,
         note: String?,
-        completion: (alias: Alias?, error: SLError?) -> Unit
+        completion: (Result<Alias>) -> Unit
     ) {
         val requestBody = mapOf("note" to note?.replace("\n", "\\n")).toRequestBody()
 
@@ -440,7 +440,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -451,19 +451,19 @@ object SLApiService {
                         if (jsonString != null) {
                             val alias = Gson().fromJson(jsonString, Alias::class.java)
                             if (alias != null) {
-                                completion(alias, null)
+                                completion(Result.success(alias))
                             } else {
-                                completion(null, SLError.FailedToParseObject("Alias"))
+                                completion(Result.failure(SLError.FailedToParse(Alias::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
-                    400 -> completion(null, SLError.CanNotCreateMoreAlias)
-                    401 -> completion(null, SLError.InvalidApiKey)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    400 -> completion(Result.failure(SLError.CanNotCreateMoreAlias))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
