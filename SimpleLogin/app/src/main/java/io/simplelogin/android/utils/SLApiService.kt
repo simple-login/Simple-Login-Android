@@ -514,7 +514,7 @@ object SLApiService {
         apiKey: String,
         page: Int,
         searchTerm: String? = null,
-        completion: (aliases: List<Alias>?, error: SLError?) -> Unit
+        completion: (Result<List<Alias>>) -> Unit
     ) {
 
         val request = when (searchTerm) {
@@ -524,22 +524,18 @@ object SLApiService {
                 .build()
 
             else -> {
-                val body = """
-                    {
-                        "query": "$searchTerm"
-                    }
-                """.trimIndent()
+                val requestBody = mapOf("query" to searchTerm).toRequestBody()
                 Request.Builder()
                     .url("${BASE_URL}/api/v2/aliases?page_id=$page")
                     .header("Authentication", apiKey)
-                    .post(body.toRequestBody(CONTENT_TYPE_JSON))
+                    .post(requestBody)
                     .build()
             }
         }
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -552,20 +548,20 @@ object SLApiService {
                             //val aliases = Gson().fromJson<List<Alias>>(jsonString, aliasListType)
                             val aliasArray = Gson().fromJson(jsonString, AliasArray::class.java)
                             if (aliasArray != null) {
-                                completion(aliasArray.aliases, null)
+                                completion(Result.success(aliasArray.aliases))
                             } else {
-                                completion(null, SLError.FailedToParseObject("Alias"))
+                                completion(Result.failure(SLError.FailedToParse(AliasArray::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    400 -> completion(null, SLError.PageIdRequired)
-                    401 -> completion(null, SLError.InvalidApiKey)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    400 -> completion(Result.failure(SLError.PageIdRequired))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })

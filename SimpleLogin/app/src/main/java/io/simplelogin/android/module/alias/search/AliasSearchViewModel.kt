@@ -60,13 +60,10 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
 
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchAliases(apiKey, _currentPage + 1, _term) { newAliases, error ->
+        SLApiService.fetchAliases(apiKey, _currentPage + 1, _term) { result ->
             _isFetching = false
 
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_search_error", error.toBundle())
-            } else if (newAliases != null) {
+            result.onSuccess { newAliases ->
                 if (newAliases.isEmpty()) {
                     moreToLoad = false
                     _eventUpdateResults.postValue(true)
@@ -75,9 +72,9 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
                     _aliases.addAll(newAliases)
                     _eventUpdateResults.postValue(true)
                 }
-
-                firebaseAnalytics.logEvent("alias_search_success", null)
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 

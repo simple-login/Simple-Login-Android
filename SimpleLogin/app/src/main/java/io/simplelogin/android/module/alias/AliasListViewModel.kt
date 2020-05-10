@@ -46,12 +46,10 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     fun fetchAliases() {
         if (!moreAliasesToLoad || _isFetchingAliases) return
         _isFetchingAliases = true
-        SLApiService.fetchAliases(apiKey, currentPage + 1) { newAliases, error ->
+        SLApiService.fetchAliases(apiKey, currentPage + 1) { result ->
             _isFetchingAliases = false
 
-            if (error != null) {
-                _error.postValue(error)
-            } else if (newAliases != null) {
+            result.onSuccess { newAliases ->
                 if (newAliases.isEmpty()) {
                     moreAliasesToLoad = false
                     _eventUpdateAliases.postValue(true)
@@ -61,6 +59,8 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
                     filterAliases()
                 }
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 
