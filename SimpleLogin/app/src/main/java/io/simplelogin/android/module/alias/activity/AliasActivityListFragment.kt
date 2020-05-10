@@ -231,14 +231,15 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun refreshAlias() {
-        SLApiService.getAlias(viewModel.apiKey, alias.id) { alias, error ->
+        SLApiService.getAlias(viewModel.apiKey, alias.id) { result ->
             activity?.runOnUiThread {
-                if (error != null) {
-                    context?.toastError(error)
-                } else if (alias != null) {
+
+                result.onSuccess { alias ->
                     this.alias = alias
                     setUpStats()
                 }
+
+                result.onFailure(requireContext()::toastThrowable)
             }
         }
     }
