@@ -35,13 +35,10 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
     fun fetchActivities(firebaseAnalytics: FirebaseAnalytics) {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchAliasActivities(apiKey, alias, _currentPage + 1) { newActivities, error ->
+        SLApiService.fetchAliasActivities(apiKey, alias, _currentPage + 1) { result ->
             _isFetching = false
 
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_activity_fetch_error", error.toBundle())
-            } else if (newActivities != null) {
+            result.onSuccess { newActivities ->
                 if (newActivities.isEmpty()) {
                     moreToLoad = false
                     _eventHaveNewActivities.postValue(false)
@@ -50,8 +47,9 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
                     _activities.addAll(newActivities)
                     _eventHaveNewActivities.postValue(true)
                 }
-                firebaseAnalytics.logEvent("alias_activity_fetch_success", null)
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 

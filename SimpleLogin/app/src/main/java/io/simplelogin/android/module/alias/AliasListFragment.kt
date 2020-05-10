@@ -145,7 +145,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
             override fun onSwitch(alias: Alias, position: Int) {
                 setLoading(true)
-                viewModel.toggleAlias(alias, position, firebaseAnalytics)
+                viewModel.toggleAlias(alias, position)
             }
 
             override fun onCopy(alias: Alias) {
@@ -191,7 +191,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        viewModel.deleteAlias(alias, firebaseAnalytics)
+                        viewModel.deleteAlias(alias)
                     }
                     .setNeutralButton("Cancel", null)
                     .setOnDismissListener {

@@ -92,7 +92,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Delete
-    fun deleteAlias(alias: Alias, firebaseAnalytics: FirebaseAnalytics) {
+    fun deleteAlias(alias: Alias) {
         SLApiService.deleteAlias(apiKey, alias) { result ->
             result.onSuccess {
                 _deletedAliasIds.add(alias.id)
@@ -113,7 +113,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         _toggledAliasIndex.value = null
     }
 
-    fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
+    fun toggleAlias(alias: Alias, index: Int) {
         SLApiService.toggleAlias(apiKey, alias) { result ->
             result.onSuccess { enabled ->
                 _aliases.find { it.id == alias.id }?.setEnabled(enabled.value)

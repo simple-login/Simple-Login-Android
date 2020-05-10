@@ -633,7 +633,7 @@ object SLApiService {
         apiKey: String,
         alias: Alias,
         page: Int,
-        completion: (aliasActivities: List<AliasActivity>?, error: SLError?) -> Unit
+        completion: (Result<List<AliasActivity>>) -> Unit
     ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/${alias.id}/activities?page_id=$page")
@@ -642,7 +642,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -654,20 +654,20 @@ object SLApiService {
                             val aliasActivityArray =
                                 Gson().fromJson(jsonString, AliasActivityArray::class.java)
                             if (aliasActivityArray != null) {
-                                completion(aliasActivityArray.activities, null)
+                                completion(Result.success(aliasActivityArray.activities))
                             } else {
-                                completion(null, SLError.FailedToParseObject("AliasActivityArray"))
+                                completion(Result.failure(SLError.FailedToParse(AliasActivityArray::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    400 -> completion(null, SLError.PageIdRequired)
-                    401 -> completion(null, SLError.InvalidApiKey)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    400 -> completion(Result.failure(SLError.PageIdRequired))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
