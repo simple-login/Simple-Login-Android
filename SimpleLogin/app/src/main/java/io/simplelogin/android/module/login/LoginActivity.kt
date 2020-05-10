@@ -429,17 +429,16 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun signUp(email: String, password: String) {
         setLoading(true)
 
-        SLApiService.signUp(email, password) { error ->
+        SLApiService.signUp(email, password) { result ->
             runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    toastError(error)
-                    firebaseAnalytics.logEvent("sign_up_error", error.toBundle())
-                } else {
+
+                result.onSuccess {
                     toastLongly("Check your inbox for verification code")
-                    firebaseAnalytics.logEvent("sign_up_success", null)
                     startVerificationActivity(VerificationMode.AccountActivation(Email(email), Password(password)))
                 }
+
+                result.onFailure(::toastThrowable)
             }
         }
     }

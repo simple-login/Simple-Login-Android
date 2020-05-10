@@ -177,7 +177,7 @@ object SLApiService {
         })
     }
 
-    fun signUp(email: String, password: String, completion: (error: SLError?) -> Unit) {
+    fun signUp(email: String, password: String, completion: (Result<Unit>) -> Unit) {
         val requestBody = mapOf(
             "email" to email,
             "password" to password
@@ -191,12 +191,12 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> completion(null)
+                    200 -> completion(Result.success(Unit))
 
                     400 -> {
                         val jsonString = response.body?.string()
@@ -204,18 +204,18 @@ object SLApiService {
                         if (jsonString != null) {
                             val errorMessage = Gson().fromJson(jsonString, ErrorMessage::class.java)
                             if (errorMessage != null) {
-                                completion(SLError.BadRequest(errorMessage.value))
+                                completion(Result.failure(SLError.BadRequest(errorMessage.value)))
                             } else {
-                                completion(SLError.FailedToParseObject("ErrorMessage"))
+                                completion(Result.failure(SLError.FailedToParse(ErrorMessage::class.java)))
                             }
                         } else {
-                            completion(SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
 
-                    500 -> completion(SLError.InternalServerError)
-                    502 -> completion(SLError.BadGateway)
-                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.RequestError(response.code)))
                 }
             }
         })
