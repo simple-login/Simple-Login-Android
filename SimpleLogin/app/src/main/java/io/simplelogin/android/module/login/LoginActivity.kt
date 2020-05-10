@@ -243,16 +243,11 @@ class LoginActivity : BaseAppCompatActivity() {
             val enteredApiKey = binding.apiKeyBottomSheet.apiKeyEditText.text.toString()
             setLoading(true)
             apiKeyBottomSheetBehavior.hide()
-            SLApiService.fetchUserInfo(enteredApiKey) { userInfo, error ->
+            SLApiService.fetchUserInfo(enteredApiKey) { result ->
                 runOnUiThread {
                     setLoading(false)
-                    if (error != null) {
-                        toastError(error)
-                        firebaseAnalytics.logEvent("log_in_with_api_key_error", error.toBundle())
-                    } else if (userInfo != null) {
-                        finalizeLogin(enteredApiKey)
-                        firebaseAnalytics.logEvent("log_in_with_api_key_success", null)
-                    }
+                    result.onSuccess { finalizeLogin(enteredApiKey) }
+                    result.onFailure(::toastThrowable)
                 }
             }
         }

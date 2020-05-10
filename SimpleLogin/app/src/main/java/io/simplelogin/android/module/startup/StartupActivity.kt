@@ -49,18 +49,16 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     private fun fetchUserInfoAndProceed(apiKey: String) {
-        SLApiService.fetchUserInfo(apiKey) { userInfo, error ->
+        SLApiService.fetchUserInfo(apiKey) { result ->
             runOnUiThread {
-                if (error != null) {
+                result.onSuccess(::startHomeActivity)
+
+                result.onFailure {
+                    val error = it as SLError
                     showErrorSnackBar(error)
                     if (error == SLError.InvalidApiKey) {
                         startLoginActivity()
                     }
-
-                    firebaseAnalytics.logEvent("start_up_error", error.toBundle())
-
-                } else if (userInfo != null) {
-                    startHomeActivity(userInfo)
                 }
             }
         }
