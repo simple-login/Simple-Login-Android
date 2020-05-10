@@ -130,17 +130,16 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
     private fun createAlias(apiKey: String, prefix: String, suffix: String, note: String?) {
         setLoading(true)
-        SLApiService.createAlias(apiKey, prefix, suffix, note) { alias, error ->
+        SLApiService.createAlias(apiKey, prefix, suffix, note) { result ->
             activity?.runOnUiThread {
                 setLoading(false)
-                if (error != null) {
-                    context?.toastError(error)
-                    firebaseAnalytics.logEvent("create_alias_error", error.toBundle())
-                } else if (alias != null) {
+
+                result.onSuccess { alias ->
                     updateAliasListViewModelAndNavigateUp(alias)
                     context?.toastShortly("Created \"${alias.email}\"")
-                    firebaseAnalytics.logEvent("create_alias_success", null)
                 }
+
+                result.onFailure { context?.toastThrowable(it) }
             }
         }
     }

@@ -60,19 +60,18 @@ class ShareActivity : BaseAppCompatActivity() {
             val prefix = binding.prefixEditText.text.toString()
             val note = binding.noteTextField.editText?.text.toString()
             setLoading(true)
-            SLApiService.createAlias(apiKey, prefix, selectedSuffix!!, note) { alias, error ->
+            SLApiService.createAlias(apiKey, prefix, selectedSuffix!!, note) { result ->
                 runOnUiThread {
                     setLoading(false)
-                    if (error != null) {
-                        toastError(error)
-                        firebaseAnalytics.logEvent("share_activity_create_error", error.toBundle())
-                    } else if (alias != null) {
+
+                    result.onSuccess { alias ->
                         val email = alias.email
                         toastLongly("Created & copied \"$email\"")
                         copyToClipboard(email, email)
-                        firebaseAnalytics.logEvent("share_activity_create_success", null)
                         finish()
                     }
+
+                    result.onFailure(::toastThrowable)
                 }
             }
         }

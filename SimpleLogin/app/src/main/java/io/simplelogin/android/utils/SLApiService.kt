@@ -74,7 +74,7 @@ object SLApiService {
                     400 -> completion(Result.failure(SLError.IncorrectEmailOrPassword))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -122,7 +122,7 @@ object SLApiService {
                     400 -> completion(Result.failure(SLError.BadRequest("Wrong token format")))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -171,7 +171,7 @@ object SLApiService {
                     400 -> completion(Result.failure(SLError.WrongTotpToken))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -215,7 +215,7 @@ object SLApiService {
 
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -245,7 +245,7 @@ object SLApiService {
                     410 -> completion(Result.failure(SLError.ReactivationNeeded))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -269,7 +269,7 @@ object SLApiService {
                     200 -> completion(Result.success(Unit))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -325,7 +325,7 @@ object SLApiService {
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -365,7 +365,7 @@ object SLApiService {
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.RequestError(response.code)))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
@@ -378,7 +378,7 @@ object SLApiService {
         prefix: String,
         suffix: String,
         note: String?,
-        completion: (alias: Alias?, error: SLError?) -> Unit
+        completion: (Result<Alias>) -> Unit
     ) {
         val requestBody = mapOf(
             "alias_prefix" to prefix,
@@ -395,7 +395,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(null, SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -406,19 +406,19 @@ object SLApiService {
                         if (jsonString != null) {
                             val alias = Gson().fromJson(jsonString, Alias::class.java)
                             if (alias != null) {
-                                completion(alias, null)
+                                completion(Result.success(alias))
                             } else {
-                                completion(null, SLError.FailedToParseObject("Alias"))
+                                completion(Result.failure(SLError.FailedToParse(Alias::class.java)))
                             }
                         } else {
-                            completion(null, SLError.NoData)
+                            completion(Result.failure(SLError.NoData))
                         }
                     }
-                    401 -> completion(null, SLError.InvalidApiKey)
-                    409 -> completion(null, SLError.DuplicatedAlias)
-                    500 -> completion(null, SLError.InternalServerError)
-                    502 -> completion(null, SLError.BadGateway)
-                    else -> completion(null, SLError.UnknownError("error code ${response.code}"))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    409 -> completion(Result.failure(SLError.DuplicatedAlias))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })

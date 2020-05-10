@@ -20,7 +20,7 @@ sealed class SLError(val description: String) : Throwable(description) {
     class BadRequest(description: String) : SLError("Bad request: $description")
     class FailedToParseObject(objectName: String) : SLError("Failed to parse object $objectName")
     class FailedToParse(any: Any) : SLError("Failed to parse ${any.javaClass.kotlin}")
-    class RequestError(code: Int) : SLError("Request error code $code")
+    class ResponseError(code: Int) : SLError("Response error code $code")
     class UnknownError(description: String) : SLError("Unknown error: $description")
 
     fun toBundle(): Bundle {
