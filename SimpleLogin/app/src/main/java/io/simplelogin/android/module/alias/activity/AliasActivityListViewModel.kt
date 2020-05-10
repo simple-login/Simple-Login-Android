@@ -10,8 +10,7 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasActivity
 
-class AliasActivityListViewModel(context: Context, private var alias: Alias) :
-    BaseViewModel(context) {
+class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewModel(context) {
     private val _error = MutableLiveData<SLError>()
     val error: LiveData<SLError>
         get() = _error

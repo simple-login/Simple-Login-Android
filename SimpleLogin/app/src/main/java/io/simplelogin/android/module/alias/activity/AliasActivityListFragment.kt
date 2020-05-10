@@ -17,13 +17,11 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
-import io.simplelogin.android.module.alias.contact.ContactListFragmentArgs
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Action
-import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasActivity
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -31,10 +29,9 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var viewModel: AliasActivityListViewModel
     private lateinit var adapter: AliasActivityListAdapter
-    private lateinit var alias: Alias
     private val addOrEditString: String
         get() {
-            return if (alias.note != null && alias.note != "") "Edit note" else "Add note"
+            return if (viewModel.alias.note != null && viewModel.alias.note != "") "Edit note" else "Add note"
         }
 
     @SuppressLint("SetTextI18n")
@@ -45,21 +42,22 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     ): View? {
         binding = FragmentAliasActivityBinding.inflate(inflater)
 
+        setUpViewModel()
+
         binding.toolbar.setNavigationOnClickListener { updateAliasListViewModelAndNavigateUp() }
-        alias = ContactListFragmentArgs.fromBundle(requireArguments()).alias
-        binding.toolbarTitleText.text = alias.email
+        binding.toolbarTitleText.text = viewModel.alias.email
         binding.toolbarTitleText.isSelected = true // to trigger marquee animation
 
         // Bind create date
-        binding.creationDateTextView.text = alias.getPreciseCreationString()
+        binding.creationDateTextView.text = viewModel.alias.getPreciseCreationString()
         updateNote()
 
         binding.editNoteButton.setOnClickListener {
             val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-            dialogTextViewBinding.editText.setText(alias.note)
+            dialogTextViewBinding.editText.setText(viewModel.alias.note)
             MaterialAlertDialogBuilder(context)
                 .setTitle(addOrEditString)
-                .setMessage(alias.email)
+                .setMessage(viewModel.alias.email)
                 .setView(dialogTextViewBinding.root)
                 .setNeutralButton("Cancel", null)
                 .setPositiveButton("Update") { _, _ ->
@@ -71,7 +69,6 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
 
         setUpStats()
-        setUpViewModel()
         setUpRecyclerView()
 
         firebaseAnalytics.logEvent("open_alias_activity_list_fragment", null)
@@ -88,7 +85,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 R.drawable.ic_at_48dp
             )
         )
-        binding.handledStat.numberTextView.text = "${alias.handleCount}"
+        binding.handledStat.numberTextView.text = "${viewModel.alias.handleCount}"
         binding.handledStat.typeTextView.text = "Email handled"
 
         // Forwarded
@@ -99,7 +96,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 R.drawable.ic_send_48dp
             )
         )
-        binding.forwardedStat.numberTextView.text = "${alias.forwardCount}"
+        binding.forwardedStat.numberTextView.text = "${viewModel.alias.forwardCount}"
         binding.forwardedStat.typeTextView.text = "Email forwarded"
 
         // Reply
@@ -110,7 +107,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 R.drawable.ic_reply_48dp
             )
         )
-        binding.repliedStat.numberTextView.text = "${alias.replyCount}"
+        binding.repliedStat.numberTextView.text = "${viewModel.alias.replyCount}"
         binding.repliedStat.typeTextView.text = "Email replied"
 
         // Block
@@ -127,14 +124,14 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 R.color.colorNegative
             )
         )
-        binding.blockedStat.numberTextView.text = "${alias.blockCount}"
+        binding.blockedStat.numberTextView.text = "${viewModel.alias.blockCount}"
         binding.blockedStat.typeTextView.text = "Email blocked"
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateNote() {
-        if (alias.note != null) {
-            binding.noteTextView.text = alias.note
+        if (viewModel.alias.note != null) {
+            binding.noteTextView.text = viewModel.alias.note
         } else {
             binding.noteTextView.text = "Add some note for this alias"
         }
@@ -142,6 +139,8 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpViewModel() {
+        val alias = AliasActivityListFragmentArgs.fromBundle(requireArguments()).alias
+
         val tempViewModel: AliasActivityListViewModel by viewModels {
             context?.let {
                 AliasActivityListViewModelFactory(it, alias)
@@ -231,11 +230,11 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun refreshAlias() {
-        SLApiService.getAlias(viewModel.apiKey, alias.id) { result ->
+        SLApiService.getAlias(viewModel.apiKey, viewModel.alias.id) { result ->
             activity?.runOnUiThread {
 
                 result.onSuccess { alias ->
-                    this.alias = alias
+                    viewModel.alias = alias
                     setUpStats()
                 }
 
@@ -245,7 +244,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun updateAliasListViewModelAndNavigateUp() {
-        aliasListViewModel.updateAlias(alias)
+        aliasListViewModel.updateAlias(viewModel.alias)
         findNavController().navigateUp()
     }
 
