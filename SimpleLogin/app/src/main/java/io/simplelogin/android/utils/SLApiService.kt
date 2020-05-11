@@ -1,7 +1,7 @@
 package io.simplelogin.android.utils
 
+import android.content.Context
 import com.google.gson.Gson
-import io.simplelogin.android.BuildConfig
 import io.simplelogin.android.utils.enums.*
 import io.simplelogin.android.utils.model.*
 import okhttp3.*
@@ -11,11 +11,6 @@ import org.json.JSONObject
 import java.io.IOException
 
 private val CONTENT_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
-
-private val BASE_URL = when (BuildConfig.BUILD_TYPE == "debug") {
-    true -> "https://app.sldev.ovh"
-    false -> "https://app.simplelogin.io"
-}
 
 private fun Map<String, Any?>.toRequestBody(): RequestBody {
     val jsonObject = JSONObject()
@@ -30,6 +25,12 @@ private fun Map<String, Any?>.toRequestBody(): RequestBody {
 private val client = OkHttpClient()
 
 object SLApiService {
+    private lateinit var BASE_URL: String
+
+    fun setUpBaseUrl(context: Context) {
+        BASE_URL = SLSharedPreferences.getApiUrl(context)
+    }
+
     //region Login
     fun login(
         email: String,

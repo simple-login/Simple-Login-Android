@@ -20,6 +20,7 @@ class StartupActivity : BaseAppCompatActivity()  {
         super.onCreate(savedInstanceState)
         binding = ActivityStartUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        SLApiService.setUpBaseUrl(this)
     }
 
     override fun onResume() {

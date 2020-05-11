@@ -51,6 +51,9 @@ class LoginActivity : BaseAppCompatActivity() {
     // API key
     private lateinit var apiKeyBottomSheetBehavior: BottomSheetBehavior<View>
 
+    // Change API URL
+    private lateinit var changeApiUrlBottomSheetBehavior: BottomSheetBehavior<View>
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +106,10 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.apiKeyButton.setOnClickListener { apiKeyBottomSheetBehavior.expand() }
         setUpApiKeyBottomSheet()
 
+        // Change API URL
+        binding.changeApiUrlButton.setOnClickListener { changeApiUrlBottomSheetBehavior.expand() }
+        setUpChangeApiUrlBottomSheet()
+
         // App version & About us
         binding.appVersionTextView.text = "SimpleLogin v${getVersionName()}"
         binding.aboutUsTextView.setOnClickListener {
@@ -119,6 +126,7 @@ class LoginActivity : BaseAppCompatActivity() {
     override fun onBackPressed() {
         forgotPasswordBottomSheetBehavior.hide()
         apiKeyBottomSheetBehavior.hide()
+        changeApiUrlBottomSheetBehavior.hide()
     }
 
     private fun setUpForgotPasswordBottomSheet() {
@@ -250,6 +258,59 @@ class LoginActivity : BaseAppCompatActivity() {
                     result.onFailure(::toastThrowable)
                 }
             }
+        }
+    }
+
+    private fun setUpChangeApiUrlBottomSheet() {
+        binding.changeApiUrlBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
+
+        changeApiUrlBottomSheetBehavior = BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
+        changeApiUrlBottomSheetBehavior.hide()
+        binding.changeApiUrlBottomSheet.cancelButton.setOnClickListener {
+            changeApiUrlBottomSheetBehavior.hide()
+        }
+        changeApiUrlBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.dimView.alpha = slideOffset * 60 / 100
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.dimView.visibility = View.GONE
+                        dismissKeyboard()
+                    }
+
+                    else -> {
+                        binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.setText(SLSharedPreferences.getApiUrl(this@LoginActivity))
+                        binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.placeCursorToEnd()
+                        binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.requestFocus()
+                        showKeyboard()
+                        binding.dimView.visibility = View.VISIBLE
+                        binding.dimView.setOnTouchListener { _, _ ->
+                            // Must return true here to intercept touch event
+                            // if not the event is passed to next listener which cause the whole root is clickable
+                            true
+                        }
+                    }
+                }
+            }
+        })
+
+        binding.changeApiUrlBottomSheet.setButton.setOnClickListener {
+            val enteredApiUrl = binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.text.toString()
+            SLSharedPreferences.setApiUrl(this, enteredApiUrl)
+            changeApiUrlBottomSheetBehavior.hide()
+            toastShortly("Changed API URL to: $enteredApiUrl")
+            SLApiService.setUpBaseUrl(this)
+        }
+
+        binding.changeApiUrlBottomSheet.resetButton.setOnClickListener {
+            SLSharedPreferences.resetApiUrl(this)
+            changeApiUrlBottomSheetBehavior.hide()
+            toastShortly("Reset API URL to: ${SLSharedPreferences.getApiUrl(this)}")
+            SLApiService.setUpBaseUrl(this)
         }
     }
 
