@@ -94,7 +94,7 @@
                             android:layout_below="@id/descriptionTextView"
                             android:paddingBottom="@dimen/card_view_padding"
                             android:scaleType="centerInside"
-                            android:src="@mipmap/sl_schema_light"
+                            android:src="@mipmap/sl_schema"
                             tools:ignore="ContentDescription" />
 
                     </RelativeLayout>

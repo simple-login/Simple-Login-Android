@@ -3,7 +3,7 @@
     <string name="facebook_app_id">388804475105146</string>
     <string name="fb_login_protocol_scheme">fb388804475105146</string>
     <string name="google_web_client_id">1015607994815-spepahv667u0o9f17nie3f9vuddhgp1p.apps.googleusercontent.com</string>
-    <string name="app_short_description">SimpleLogin is a open source solution to protect your online identity.\n\nSimpleLogin strives to offer a simple experience for both users and partners/developers</string>
+    <string name="app_short_description">SimpleLogin is a open source solution to protect your online identity.\n\nSimpleLogin strives to offer a simple experience for both users and partners/developers.</string>
     <string name="step_1">The next time a website asks for your email address, just create a new alias instead of using your real email.</string>
     <string name="step_2">All emails sent to an alias are forwarded to your \"real\" email address without the sender knowing anything.</string>
     <string name="step_3">On your desktop, you can install our browser extension to manage and quickly create aliases on the fly.\n\nOn your smartphone with SimpleLogin installed, whenever you need to register to a website, simply \"share\" the website you are visiting with SimpleLogin to quickly create an alias.</string>
