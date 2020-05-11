@@ -49,8 +49,6 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setUpViewModel()
         setUpRecyclerView()
 
-        firebaseAnalytics.logEvent("open_alias_search_fragment", null)
-
         return binding.root
     }
 
@@ -88,9 +86,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     binding.messageTextView.text = "No result for \"$term\""
                     setLoading(true)
                     activity?.dismissKeyboard()
-                    viewModel.search(term, firebaseAnalytics)
-
-                    firebaseAnalytics.logEvent("alias_search_perform_search", null)
+                    viewModel.search(term)
                 }
             }
             // False means the listener doesn't consume the event
@@ -151,19 +147,17 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         alias
                     )
                 )
-                firebaseAnalytics.logEvent("alias_search_view_activities", null)
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
                 setLoading(true)
-                viewModel.toggleAlias(alias, position, firebaseAnalytics)
+                viewModel.toggleAlias(alias, position)
             }
 
             override fun onCopy(alias: Alias) {
                 val email = alias.email
                 copyToClipboard(email, email)
                 context?.toastShortly("Copied \"$email\"")
-                firebaseAnalytics.logEvent("alias_search_copy", null)
             }
 
             override fun onSendEmail(alias: Alias) {
@@ -172,7 +166,6 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         alias
                     )
                 )
-                firebaseAnalytics.logEvent("alias_search_view_contacts", null)
             }
         })
 
@@ -184,7 +177,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 activity?.dismissKeyboard()
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.aliases.size - 1) && viewModel.moreToLoad) {
-                    viewModel.search(null, firebaseAnalytics)
+                    viewModel.search(null)
                 }
             }
         })
@@ -198,7 +191,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        viewModel.deleteAlias(alias, firebaseAnalytics)
+                        viewModel.deleteAlias(alias)
                     }
                     .setNeutralButton("Cancel", null)
                     .setOnDismissListener {

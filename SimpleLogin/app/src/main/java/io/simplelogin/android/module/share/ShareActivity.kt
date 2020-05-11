@@ -23,8 +23,6 @@ class ShareActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        firebaseAnalytics.logEvent("start_share_activity", null)
-
         binding = ActivityShareBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { finish() }
         setContentView(binding.root)
@@ -122,11 +120,9 @@ class ShareActivity : BaseAppCompatActivity() {
         try {
             val uri = URI(text)
             binding.prefixEditText.setText(uri.host.extractWebsiteName())
-            firebaseAnalytics.logEvent("share_activity_get_hostname_success", null)
         } catch (e: URISyntaxException) {
             // Can not detect domain from text, take the first word from text
             binding.prefixEditText.setText(text.extractFirstWord())
-            firebaseAnalytics.logEvent("share_activity_get_hostname_error", null)
         }
         // Move cursor to the last character
         binding.prefixEditText.setSelection(binding.prefixEditText.text.count())
@@ -157,6 +153,5 @@ class ShareActivity : BaseAppCompatActivity() {
             }
             .setOnDismissListener { finish() }
             .show()
-        firebaseAnalytics.logEvent("share_activity_not_signed_in", null)
     }
 }

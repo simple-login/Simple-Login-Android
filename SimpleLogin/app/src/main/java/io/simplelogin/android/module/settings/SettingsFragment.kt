@@ -72,7 +72,6 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         }
 
-        firebaseAnalytics.logEvent("open_settings_fragment", null)
         return binding.root
     }
 

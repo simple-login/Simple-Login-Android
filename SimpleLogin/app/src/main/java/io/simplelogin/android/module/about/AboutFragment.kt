@@ -34,13 +34,8 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding = FragmentAboutBinding.inflate(inflater)
 
-        when (openFromLoginActivity) {
-            true -> {
-                binding.toolbar.setNavigationIcon(R.drawable.ic_close_36dp)
-                firebaseAnalytics.logEvent("open_about_fragment_from_login", null)
-            }
-
-            false -> firebaseAnalytics.logEvent("open_about_fragment_from_home", null)
+        if (openFromLoginActivity) {
+            binding.toolbar.setNavigationIcon(R.drawable.ic_close_36dp)
         }
 
         binding.toolbar.setNavigationOnClickListener { finishOrNavigateUp() }
@@ -58,12 +53,10 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/security")
             )
-            firebaseAnalytics.logEvent("about_view_security", null)
         }
 
         binding.root.findViewById<View>(R.id.contactTextView).setOnClickListener {
             activity?.startSendEmailIntent("hi@simplelogin.io")
-            firebaseAnalytics.logEvent("about_compose_email", null)
         }
 
         binding.root.findViewById<View>(R.id.whatTextView).setOnClickListener {
@@ -80,50 +73,42 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/about")
             )
-            firebaseAnalytics.logEvent("about_view_team", null)
         }
 
         binding.root.findViewById<View>(R.id.pricingTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/pricing")
             )
-            firebaseAnalytics.logEvent("about_view_pricing", null)
         }
 
         binding.root.findViewById<View>(R.id.blogTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/blog")
             )
-            firebaseAnalytics.logEvent("about_view_blog", null)
         }
 
         binding.root.findViewById<View>(R.id.helpTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/help")
             )
-            firebaseAnalytics.logEvent("about_view_help", null)
         }
 
         binding.root.findViewById<View>(R.id.roadmapTextView).setOnClickListener {
             activity?.openUrlInBrowser("https://trello.com/b/4d6A69I4/open-roadmap")
-            firebaseAnalytics.logEvent("about_view_roadmap", null)
         }
 
         binding.root.findViewById<View>(R.id.termsTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/terms")
             )
-            firebaseAnalytics.logEvent("about_view_terms", null)
         }
 
         binding.root.findViewById<View>(R.id.privacyTextView).setOnClickListener {
             findNavController().navigate(
                 AboutFragmentDirections.actionAboutFragmentToWebViewFragment("$baseUrl/privacy")
             )
-            firebaseAnalytics.logEvent("about_view_privacy", null)
         }
 
-        firebaseAnalytics.logEvent("open_about_fragment", null)
         return binding.root
     }
 

@@ -1,9 +1,6 @@
 package io.simplelogin.android.utils.enums
 
-import android.os.Bundle
-
 sealed class SLError(val description: String) : Throwable(description) {
-    object NoApiKey : SLError("API key is null")
     object NoData : SLError("Server return no data")
     object IncorrectEmailOrPassword : SLError("Incorrect email or password")
     object InvalidApiKey : SLError("Invalid API key")
@@ -18,14 +15,7 @@ sealed class SLError(val description: String) : Throwable(description) {
     object CanNotCreateMoreAlias : SLError("Can not create more alias")
     object WrongVerificationCode : SLError("Wrong verification code")
     class BadRequest(description: String) : SLError("Bad request: $description")
-    class FailedToParseObject(objectName: String) : SLError("Failed to parse object $objectName")
     class FailedToParse(any: Any) : SLError("Failed to parse ${any.javaClass.kotlin}")
     class ResponseError(code: Int) : SLError("Response error code $code")
     class UnknownError(description: String) : SLError("Unknown error: $description")
-
-    fun toBundle(): Bundle {
-        val bundle = Bundle()
-        bundle.putString("error", description)
-        return bundle
-    }
 }

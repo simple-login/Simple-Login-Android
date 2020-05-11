@@ -119,8 +119,6 @@ class LoginActivity : BaseAppCompatActivity() {
         }
 
         binding.root.setOnClickListener { dismissKeyboard() }
-
-        firebaseAnalytics.logEvent("start_login_activity", null)
     }
 
     override fun onBackPressed() {
@@ -148,13 +146,7 @@ class LoginActivity : BaseAppCompatActivity() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.dimView.visibility = View.GONE
                         dismissKeyboard()
-                        firebaseAnalytics.logEvent("hide_forgot_password_bottom_sheet", null)
                     }
-
-                    BottomSheetBehavior.STATE_EXPANDED -> firebaseAnalytics.logEvent(
-                        "expand_forgot_password_bottom_sheet",
-                        null
-                    )
 
                     else -> {
                         binding.forgotPasswordBottomSheet.emailTextField.editText?.text = null
@@ -224,13 +216,7 @@ class LoginActivity : BaseAppCompatActivity() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.dimView.visibility = View.GONE
                         dismissKeyboard()
-                        firebaseAnalytics.logEvent("hide_api_key_bottom_sheet", null)
                     }
-
-                    BottomSheetBehavior.STATE_EXPANDED -> firebaseAnalytics.logEvent(
-                        "expand_api_key_bottom_sheet",
-                        null
-                    )
 
                     else -> {
                         binding.apiKeyBottomSheet.apiKeyEditText.text = null

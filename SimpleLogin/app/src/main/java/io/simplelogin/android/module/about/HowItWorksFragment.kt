@@ -20,7 +20,6 @@ class HowItWorksFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding = FragmentHowItWorksBinding.inflate(inflater)
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        firebaseAnalytics.logEvent("open_how_it_works_fragment", null)
         return binding.root
     }
 

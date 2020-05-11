@@ -3,7 +3,6 @@ package io.simplelogin.android.module.alias.search
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
@@ -43,7 +42,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
     val term: String?
         get() = _term
 
-    fun search(searchTerm: String? = null, firebaseAnalytics: FirebaseAnalytics) {
+    fun search(searchTerm: String? = null) {
         searchTerm?.let {
             // When searchTerm is not null -> a new search with different term
             _term = it
@@ -83,7 +82,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
     val deletedAliasIds: List<Int>
         get() = _deletedAliasIds
 
-    fun deleteAlias(alias: Alias, firebaseAnalytics: FirebaseAnalytics) {
+    fun deleteAlias(alias: Alias) {
         SLApiService.deleteAlias(apiKey, alias) { result ->
             result.onSuccess {
                 _deletedAliasIds.add(alias.id)
@@ -108,7 +107,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
         _toggledAliasIndex.value = null
     }
 
-    fun toggleAlias(alias: Alias, index: Int, firebaseAnalytics: FirebaseAnalytics) {
+    fun toggleAlias(alias: Alias, index: Int) {
         SLApiService.toggleAlias(apiKey, alias) { result ->
             result.onSuccess { enabled ->
                 _aliases.find { it.id == alias.id }?.let { toggledAlias ->

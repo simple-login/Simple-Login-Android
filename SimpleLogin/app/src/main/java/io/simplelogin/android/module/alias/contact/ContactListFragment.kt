@@ -52,7 +52,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         setUpCreateContactBottomSheet()
         setUpViewModel()
         setUpRecyclerView()
-        firebaseAnalytics.logEvent("open_contact_list_fragment", null)
         return binding.root
     }
 
@@ -234,7 +233,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel.eventCreatedContact.observe(viewLifecycleOwner, Observer { createdContact ->
             if (createdContact != null) {
                 context?.toastShortly("Created \"$createdContact\"")
-                viewModel.refreshContacts(firebaseAnalytics)
+                viewModel.refreshContacts()
                 viewModel.onHandleCreatedContactComplete()
             }
         })
@@ -252,7 +251,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel.eventDeletedContact.observe(viewLifecycleOwner, Observer { deletedContact ->
             if (deletedContact != null) {
                 context?.toastShortly("Deleted \"$deletedContact\"")
-                viewModel.refreshContacts(firebaseAnalytics)
+                viewModel.refreshContacts()
                 viewModel.onHandleDeletedContactComplete()
             }
         })
@@ -273,12 +272,10 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                                     contact.reverseAlias
                                 )
                                 context?.toastShortly("Copied \"${contact.reverseAlias}\"")
-                                firebaseAnalytics.logEvent("contact_copy", null)
                             }
 
                             1 -> {
                                 activity?.startSendEmailIntent(contact.reverseAlias)
-                                firebaseAnalytics.logEvent("contact_compose_email", null)
                             }
                         }
                     }
@@ -293,7 +290,6 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1) && viewModel.moreToLoad) {
                     viewModel.fetchContacts()
-                    firebaseAnalytics.logEvent("contact_fetch_more", null)
                 }
             }
         })
@@ -308,7 +304,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     .setNeutralButton("Cancel", null)
                     .setNegativeButton("Delete") { _, _ ->
                         setLoading(true)
-                        viewModel.delete(contact, firebaseAnalytics)
+                        viewModel.delete(contact)
                     }.setOnDismissListener {
                         adapter.notifyItemChanged(viewHolder.adapterPosition)
                     }
@@ -319,8 +315,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshContacts(firebaseAnalytics)
-            firebaseAnalytics.logEvent("contact_refresh", null)
+            viewModel.refreshContacts()
         }
     }
 
@@ -342,12 +337,9 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 binding.createContactBottomSheet.emailTextField.error = null
                 binding.createContactBottomSheet.createButton.isEnabled = false
                 createContactBottomSheetBehavior.expand()
-                firebaseAnalytics.logEvent("contact_expand_add_bottom_sheet", null)
             }
-            R.id.howToMenuItem -> {
-                howToBottomSheetBehavior.expand()
-                firebaseAnalytics.logEvent("contact_expand_how_to_bottom_sheet", null)
-            }
+
+            R.id.howToMenuItem -> howToBottomSheetBehavior.expand()
         }
 
         return true

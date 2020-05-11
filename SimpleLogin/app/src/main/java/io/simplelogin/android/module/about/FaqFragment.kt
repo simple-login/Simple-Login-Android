@@ -19,7 +19,6 @@ class FaqFragment : BaseFragment(), HomeActivity.OnBackPressed {
     ): View? {
         binding = FragmentFaqBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        firebaseAnalytics.logEvent("open_faq_fragment", null)
         return binding.root
     }
 

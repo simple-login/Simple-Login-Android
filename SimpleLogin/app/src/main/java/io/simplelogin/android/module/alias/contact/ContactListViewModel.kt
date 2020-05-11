@@ -3,7 +3,6 @@ package io.simplelogin.android.module.alias.contact
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
@@ -53,12 +52,11 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         }
     }
 
-    fun refreshContacts(firebaseAnalytics: FirebaseAnalytics) {
+    fun refreshContacts() {
         _currentPage = -1
         moreToLoad = true
         _contacts = mutableListOf()
         fetchContacts()
-        firebaseAnalytics.logEvent("contact_fetch_more", null)
     }
 
     // Create
@@ -103,7 +101,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         _eventDeletedContact.value = null
     }
 
-    fun delete(contact: Contact, firebaseAnalytics: FirebaseAnalytics) {
+    fun delete(contact: Contact) {
         SLApiService.deleteContact(apiKey, contact) { result ->
             _eventFinishCallingDeleteContact.postValue(true)
             result.onSuccess { _eventDeletedContact.postValue(contact.email) }

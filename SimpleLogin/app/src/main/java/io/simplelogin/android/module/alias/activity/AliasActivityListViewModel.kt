@@ -3,7 +3,6 @@ package io.simplelogin.android.module.alias.activity
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.analytics.FirebaseAnalytics
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
@@ -32,7 +31,7 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
     val eventHaveNewActivities: LiveData<Boolean>
         get() = _eventHaveNewActivities
 
-    fun fetchActivities(firebaseAnalytics: FirebaseAnalytics) {
+    fun fetchActivities() {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
         SLApiService.fetchAliasActivities(apiKey, alias, _currentPage + 1) { result ->
@@ -53,11 +52,11 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
         }
     }
 
-    fun refreshActivities(firebaseAnalytics: FirebaseAnalytics) {
+    fun refreshActivities() {
         _currentPage = -1
         moreToLoad = true
         _activities = mutableListOf()
-        fetchActivities(firebaseAnalytics)
+        fetchActivities()
     }
 
     // Note
@@ -71,7 +70,7 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
 
     private var _isUpdatingNote: Boolean = false
 
-    fun updateNote(note: String?, firebaseAnalytics: FirebaseAnalytics) {
+    fun updateNote(note: String?) {
         if (_isUpdatingNote) return
         _isUpdatingNote = true
         SLApiService.updateAliasNote(apiKey, alias, note) { result ->

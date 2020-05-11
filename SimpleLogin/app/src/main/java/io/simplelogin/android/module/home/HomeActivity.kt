@@ -48,8 +48,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
         // Change status bar background color
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
-
-        firebaseAnalytics.logEvent("start_home_activity", null)
     }
 
     override fun onBackPressed() {
@@ -123,7 +121,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                     .setNeutralButton("Cancel", null)
                     .setPositiveButton("Yes, sign me out") { _, _ ->
                         SLSharedPreferences.removeApiKey(this)
-                        firebaseAnalytics.logEvent("sign_out", null)
                         finish()
                     }
                     .show()

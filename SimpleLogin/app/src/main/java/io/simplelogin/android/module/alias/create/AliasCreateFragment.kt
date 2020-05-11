@@ -113,7 +113,6 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     id: Long
                 ) {
                     selectedSuffix = suffixes[position]
-                    firebaseAnalytics.logEvent("alias_create_select_suffix", null)
                 }
             }
     }

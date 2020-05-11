@@ -24,7 +24,6 @@ class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding.upgradeButton.setOnClickListener {
             activity?.openUrlInBrowser("https://app.simplelogin.io/dashboard/pricing")
-            firebaseAnalytics.logEvent("premium_upgrade", null)
         }
 
         binding.termsTextView.setOnClickListener {
@@ -33,7 +32,6 @@ class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     "https://simplelogin.io/terms/"
                 )
             )
-            firebaseAnalytics.logEvent("premium_view_terms", null)
         }
 
         binding.privacyTextView.setOnClickListener {
@@ -42,12 +40,10 @@ class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     "https://simplelogin.io/privacy/"
                 )
             )
-            firebaseAnalytics.logEvent("premium_view_privacy", null)
         }
 
         binding.contactButton.setOnClickListener {
             activity?.startSendEmailIntent("hi@simplelogin.io")
-            firebaseAnalytics.logEvent("premium_compose_email", null)
         }
 
         return binding.root

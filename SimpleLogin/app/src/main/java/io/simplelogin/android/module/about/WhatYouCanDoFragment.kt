@@ -19,7 +19,6 @@ class WhatYouCanDoFragment : BaseFragment(), HomeActivity.OnBackPressed {
     ): View? {
         binding = FragmentWhatYouCanDoBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        firebaseAnalytics.logEvent("open_what_you_can_do_fragment", null)
         return binding.root
     }
 

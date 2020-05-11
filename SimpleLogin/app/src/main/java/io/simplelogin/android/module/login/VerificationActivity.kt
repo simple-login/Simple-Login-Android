@@ -45,15 +45,11 @@ class VerificationActivity : BaseAppCompatActivity() {
         verificationMode = getVerificationMode()
 
         when (verificationMode) {
-            is VerificationMode.Mfa -> {
+            is VerificationMode.Mfa ->
                 binding.toolbarTitleText.text = "Enter OTP"
-                firebaseAnalytics.logEvent("start_verification_activity_mfa", null)
-            }
-            is VerificationMode.AccountActivation -> {
-                binding.toolbarTitleText.text =
-                    "Enter activation code"
-                firebaseAnalytics.logEvent("start_verification_activity_activation", null)
-            }
+
+            is VerificationMode.AccountActivation ->
+                binding.toolbarTitleText.text = "Enter activation code"
         }
 
         reset()
@@ -85,7 +81,6 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
 
         verify(copiedString)
-        firebaseAnalytics.logEvent("mfa_from_clipboard", null)
     }
 
     private fun getVerificationMode(): VerificationMode {

@@ -61,7 +61,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 .setView(dialogTextViewBinding.root)
                 .setNeutralButton("Cancel", null)
                 .setPositiveButton("Update") { _, _ ->
-                    viewModel.updateNote(dialogTextViewBinding.editText.text.toString(), firebaseAnalytics)
+                    viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
                 }
                 .show()
 
@@ -71,7 +71,6 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setUpStats()
         setUpRecyclerView()
 
-        firebaseAnalytics.logEvent("open_alias_activity_list_fragment", null)
         return binding.root
     }
 
@@ -147,7 +146,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             } ?: throw IllegalStateException("Context is null")
         }
         viewModel = tempViewModel
-        viewModel.fetchActivities(firebaseAnalytics)
+        viewModel.fetchActivities()
         viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
             activity?.runOnUiThread {
                 if (haveNewActivities) {
@@ -197,12 +196,10 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                                     aliasActivity.reverseAlias
                                 )
                                 context?.toastShortly("Copied \"${aliasActivity.reverseAlias}\"")
-                                firebaseAnalytics.logEvent("activity_copy_reverse_alias", null)
                             }
 
                             1 -> {
                                 activity?.startSendEmailIntent(aliasActivity.reverseAlias)
-                                firebaseAnalytics.logEvent("activity_compose_email", null)
                             }
                         }
                     }
@@ -216,16 +213,14 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size - 1) && viewModel.moreToLoad) {
-                    viewModel.fetchActivities(firebaseAnalytics)
-                    firebaseAnalytics.logEvent("alias_activity_fetch_more", null)
+                    viewModel.fetchActivities()
                 }
             }
         })
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             refreshAlias()
-            viewModel.refreshActivities(firebaseAnalytics)
-            firebaseAnalytics.logEvent("alias_activity_refresh", null)
+            viewModel.refreshActivities()
         }
     }
 

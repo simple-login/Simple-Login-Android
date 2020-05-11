@@ -56,7 +56,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         setLoading(false)
         viewModel.fetchAliases()
 
-        firebaseAnalytics.logEvent("open_alias_list_fragment", null)
         return binding.root
     }
 
@@ -125,7 +124,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
-                firebaseAnalytics.logEvent("alias_list_error", error.toBundle())
             }
         })
     }
@@ -140,7 +138,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         alias
                     )
                 )
-                firebaseAnalytics.logEvent("alias_list_view_activities", null)
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
@@ -152,8 +149,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 val email = alias.email
                 copyToClipboard(email, email)
                 context.toastShortly("Copied \"$email\"")
-
-                firebaseAnalytics.logEvent("alias_list_copy", null)
             }
 
             override fun onSendEmail(alias: Alias) {
@@ -162,7 +157,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         alias
                     )
                 )
-                firebaseAnalytics.logEvent("alias_list_view_contacts", null)
             }
         })
         binding.recyclerView.adapter = adapter
@@ -177,7 +171,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     setLoading(true)
                     lastToast = context?.toastShortly("Loading more...")
                     viewModel.fetchAliases()
-                    firebaseAnalytics.logEvent("alias_list_fetch_more", null)
                 }
             }
         })
@@ -204,10 +197,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         // Refresh capacity
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            firebaseAnalytics.logEvent("alias_list_refresh", null)
-            viewModel.refreshAliases()
-        }
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshAliases() }
     }
 
     private fun showSelectRandomModeAlert() {
@@ -287,8 +277,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             1 -> viewModel.filterAliases(AliasFilterMode.ACTIVE)
             2 -> viewModel.filterAliases(AliasFilterMode.INACTIVE)
         }
-
-        firebaseAnalytics.logEvent("alias_list_change_filter_mode", null)
     }
 
     // HomeActivity.OnBackPressed
