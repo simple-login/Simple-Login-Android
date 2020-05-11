@@ -74,16 +74,15 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
     fun updateNote(note: String?, firebaseAnalytics: FirebaseAnalytics) {
         if (_isUpdatingNote) return
         _isUpdatingNote = true
-        SLApiService.updateAliasNote(apiKey, alias, note) { error ->
+        SLApiService.updateAliasNote(apiKey, alias, note) { result ->
             _isUpdatingNote = false
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("alias_activity_edit_note_error", error.toBundle())
-            } else {
+
+            result.onSuccess {
                 alias.setNote(note)
                 _eventNoteUpdate.postValue(true)
-                firebaseAnalytics.logEvent("alias_activity_edit_note_success", null)
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 }
