@@ -35,13 +35,10 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     fun fetchContacts(firebaseAnalytics: FirebaseAnalytics) {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
-        SLApiService.fetchContacts(apiKey, alias, _currentPage + 1) { newContacts, error ->
+        SLApiService.fetchContacts(apiKey, alias, _currentPage + 1) { result ->
             _isFetching = false
 
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("contact_fetch_error", error.toBundle())
-            } else if (newContacts != null) {
+            result.onSuccess { newContacts ->
                 if (newContacts.isEmpty()) {
                     moreToLoad = false
                     _eventHaveNewContacts.postValue(false)
@@ -50,8 +47,9 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
                     _contacts.addAll(newContacts)
                     _eventHaveNewContacts.postValue(true)
                 }
-                firebaseAnalytics.logEvent("contact_fetch_success", null)
             }
+
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 
