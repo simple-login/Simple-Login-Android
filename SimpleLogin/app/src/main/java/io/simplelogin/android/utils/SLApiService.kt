@@ -754,7 +754,7 @@ object SLApiService {
         apiKey: String,
         alias: Alias,
         email: String,
-        completion: (error: SLError?) -> Unit
+        completion: (Result<Unit>) -> Unit
     ) {
         val requestBody = mapOf("contact" to email).toRequestBody()
 
@@ -766,17 +766,17 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    201 -> completion(null)
-                    401 -> completion(SLError.InvalidApiKey)
-                    409 -> completion(SLError.DuplicatedContact)
-                    500 -> completion(SLError.InternalServerError)
-                    502 -> completion(SLError.BadGateway)
-                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                    201 -> completion(Result.success(Unit))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    409 -> completion(Result.failure(SLError.DuplicatedContact))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })

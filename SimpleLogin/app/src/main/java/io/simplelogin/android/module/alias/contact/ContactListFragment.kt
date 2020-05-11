@@ -67,15 +67,10 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setLoading(loading: Boolean) {
         binding.rootConstraintLayout.isEnabled = !loading
-        if (loading) {
-            binding.icebergImageView.visibility = View.GONE
-            binding.instructionTextView.visibility = View.GONE
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.icebergImageView.visibility = View.VISIBLE
-            binding.instructionTextView.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+        binding.icebergImageView.visibility =
+            if (loading) View.GONE else if (viewModel.contacts.isEmpty()) View.VISIBLE else View.GONE
+        binding.instructionTextView.visibility = binding.icebergImageView.visibility
     }
 
     private fun updateUiBaseOnNumOfContacts() {
@@ -188,7 +183,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             createContactBottomSheetBehavior.hide()
             activity?.dismissKeyboard()
             setLoading(true)
-            viewModel.create(email, firebaseAnalytics)
+            viewModel.create(email)
         }
     }
 

@@ -78,17 +78,11 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         _eventCreatedContact.value = null
     }
 
-    fun create(email: String, firebaseAnalytics: FirebaseAnalytics) {
-        SLApiService.createContact(apiKey, alias, email) { error ->
+    fun create(email: String) {
+        SLApiService.createContact(apiKey, alias, email) { result ->
             _eventFinishCallingCreateContact.postValue(true)
-
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("contact_create_error", error.toBundle())
-            } else {
-                _eventCreatedContact.postValue(email)
-                firebaseAnalytics.logEvent("contact_create_success", null)
-            }
+            result.onSuccess { _eventCreatedContact.postValue(email) }
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 
