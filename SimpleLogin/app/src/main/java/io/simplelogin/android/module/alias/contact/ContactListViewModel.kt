@@ -104,15 +104,10 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     }
 
     fun delete(contact: Contact, firebaseAnalytics: FirebaseAnalytics) {
-        SLApiService.deleteContact(apiKey, contact) { error ->
+        SLApiService.deleteContact(apiKey, contact) { result ->
             _eventFinishCallingDeleteContact.postValue(true)
-            if (error != null) {
-                _error.postValue(error)
-                firebaseAnalytics.logEvent("contact_delete_error", error.toBundle())
-            } else {
-                _eventDeletedContact.postValue(contact.email)
-                firebaseAnalytics.logEvent("contact_delete_success", null)
-            }
+            result.onSuccess { _eventDeletedContact.postValue(contact.email) }
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 }

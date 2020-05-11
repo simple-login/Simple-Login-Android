@@ -782,7 +782,7 @@ object SLApiService {
         })
     }
 
-    fun deleteContact(apiKey: String, contact: Contact, completion: (error: SLError?) -> Unit) {
+    fun deleteContact(apiKey: String, contact: Contact, completion: (Result<Unit>) -> Unit) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/contacts/${contact.id}")
             .header("Authentication", apiKey)
@@ -791,16 +791,16 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(SLError.UnknownError(e.localizedMessage))
+                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    200 -> completion(null)
-                    401 -> completion(SLError.InvalidApiKey)
-                    500 -> completion(SLError.InternalServerError)
-                    502 -> completion(SLError.BadGateway)
-                    else -> completion(SLError.UnknownError("error code ${response.code}"))
+                    200 -> completion(Result.success(Unit))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
                 }
             }
         })
