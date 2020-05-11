@@ -179,7 +179,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val alias = viewModel.filteredAliases[viewHolder.adapterPosition]
-                MaterialAlertDialogBuilder(context)
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Delete \"${alias.email}\"?")
                     .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
                     .setNegativeButton("Delete") { _, _ ->
@@ -201,7 +201,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     }
 
     private fun showSelectRandomModeAlert() {
-        MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
             .setTitle("Randomly create an alias")
             .setItems(
                 arrayOf("By random words", "By UUID")
@@ -239,7 +239,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     }
 
     private fun alertCanNotCreateMoreAlias() {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle("Can not create more alias")
             .setMessage("Go premium for unlimited aliases and more.")
             .setPositiveButton("See pricing", null)

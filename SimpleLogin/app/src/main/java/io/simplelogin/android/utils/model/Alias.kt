@@ -65,7 +65,7 @@ data class Alias(
         get() = _replyCount
 
     fun setReplyCount(count: Int) {
-        _replyCount = replyCount
+        _replyCount = count
     }
 
     val handleCount: Int

@@ -260,7 +260,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
-                MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
                     .setTitle("Email to \"${contact.email}\"")
                     .setItems(
                         arrayOf("Copy reverse-alias", "Begin composing with default email")
@@ -298,7 +298,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val contact = viewModel.contacts[viewHolder.adapterPosition]
-                MaterialAlertDialogBuilder(context)
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Delete \"${contact.email}\"?")
                     .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
                     .setNeutralButton("Cancel", null)

@@ -55,7 +55,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.editNoteButton.setOnClickListener {
             val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
             dialogTextViewBinding.editText.setText(viewModel.alias.note)
-            MaterialAlertDialogBuilder(context)
+            MaterialAlertDialogBuilder(requireContext())
                 .setTitle(addOrEditString)
                 .setMessage(viewModel.alias.email)
                 .setView(dialogTextViewBinding.root)
@@ -184,7 +184,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     else -> aliasActivity.from
                 }
 
-                MaterialAlertDialogBuilder(context, R.style.SlAlertDialogTheme)
+                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
                     .setTitle("Email to \"$toEmail\"")
                     .setItems(
                         arrayOf("Copy reverse-alias", "Begin composing with default email")

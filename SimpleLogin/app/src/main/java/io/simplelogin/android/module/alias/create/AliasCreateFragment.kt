@@ -69,7 +69,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     if (userOptions.canCreate) {
                         setUpSuffixesSpinner(userOptions.suffixes)
                     } else {
-                        MaterialAlertDialogBuilder(context)
+                        MaterialAlertDialogBuilder(requireContext())
                             .setTitle("Can not create more alias")
                             .setMessage("Go premium for unlimited aliases and more.")
                             .setPositiveButton("See pricing", null)
