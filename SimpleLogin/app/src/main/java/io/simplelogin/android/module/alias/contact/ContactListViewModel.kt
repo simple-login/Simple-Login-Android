@@ -32,7 +32,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     val eventHaveNewContacts: LiveData<Boolean>
         get() = _eventHaveNewContacts
 
-    fun fetchContacts(firebaseAnalytics: FirebaseAnalytics) {
+    fun fetchContacts() {
         if (!moreToLoad || _isFetching) return
         _isFetching = true
         SLApiService.fetchContacts(apiKey, alias, _currentPage + 1) { result ->
@@ -57,7 +57,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         _currentPage = -1
         moreToLoad = true
         _contacts = mutableListOf()
-        fetchContacts(firebaseAnalytics)
+        fetchContacts()
         firebaseAnalytics.logEvent("contact_fetch_more", null)
     }
 

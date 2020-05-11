@@ -199,7 +199,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             } ?: throw IllegalStateException("Context is null")
         }
         viewModel = tempViewModel
-        viewModel.fetchContacts(firebaseAnalytics)
+        viewModel.fetchContacts()
         setLoading(true)
         viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
             activity?.runOnUiThread {
@@ -297,7 +297,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1) && viewModel.moreToLoad) {
-                    viewModel.fetchContacts(firebaseAnalytics)
+                    viewModel.fetchContacts()
                     firebaseAnalytics.logEvent("contact_fetch_more", null)
                 }
             }
