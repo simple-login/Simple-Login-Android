@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityVerificationBinding
 import io.simplelogin.android.utils.SLApiService
@@ -65,22 +66,14 @@ class VerificationActivity : BaseAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val clipboardManager =
-            (getSystemService(Context.CLIPBOARD_SERVICE) ?: return) as ClipboardManager
-        val clip = clipboardManager.primaryClip ?: return
-        val item = clip.getItemAt(0) ?: return
-        val copiedCharacterSequence = item.text ?: return
 
-        if (copiedCharacterSequence.count() != 6) return
-
-        val copiedString = copiedCharacterSequence.toString()
-        copiedString.toIntOrNull() ?: return
-
-        copiedCharacterSequence.asIterable().forEach { char ->
-            addNumber(char.toString())
+        getCodeFromClipboard()?.let { code ->
+            Snackbar.make(binding.root, "\"$code\" is found in the clipboard", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Paste & Verify") {
+                    pasteAndVerify(code)
+                }
+                .show()
         }
-
-        verify(copiedString)
     }
 
     private fun getVerificationMode(): VerificationMode {
@@ -110,6 +103,29 @@ class VerificationActivity : BaseAppCompatActivity() {
         binding.nineButton.setOnClickListener { addNumber("9") }
         binding.cancelButton.setOnClickListener { finish() }
         binding.deleteButton.setOnClickListener { deleteLastNumber() }
+    }
+
+    private fun getCodeFromClipboard() : String? {
+        val clipboardManager =
+            (getSystemService(Context.CLIPBOARD_SERVICE) ?: return null) as ClipboardManager
+        val clip = clipboardManager.primaryClip ?: return null
+        val item = clip.getItemAt(0) ?: return null
+        val copiedCharacterSequence = item.text ?: return null
+
+        if (copiedCharacterSequence.count() != 6) return null
+
+        val copiedString = copiedCharacterSequence.toString()
+        copiedString.toIntOrNull() ?: return null
+
+        return copiedString
+    }
+
+    private fun pasteAndVerify(code: String) {
+        code.asIterable().forEach { char ->
+            addNumber(char.toString())
+        }
+
+        verify(code)
     }
 
     private fun addNumber(number: String) {
