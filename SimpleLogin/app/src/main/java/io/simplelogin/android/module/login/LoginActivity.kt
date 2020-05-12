@@ -8,18 +8,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
@@ -36,14 +25,12 @@ import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
-        private const val RC_GOOGLE_SIGN_IN = 0 // Request code for Google Sign In
-        private const val RC_MFA_VERIFICATION = 1
-        private const val RC_EMAIL_VERIFICATION = 2
-        private const val RC_SIGN_UP = 3
+        private const val RC_MFA_VERIFICATION = 0
+        private const val RC_EMAIL_VERIFICATION = 1
+        private const val RC_SIGN_UP = 2
     }
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var facebookCallbackManager: CallbackManager
 
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
@@ -304,11 +291,6 @@ class LoginActivity : BaseAppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            RC_GOOGLE_SIGN_IN -> {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleGoogleSignInResult(task)
-            }
-
             RC_MFA_VERIFICATION -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
@@ -340,71 +322,7 @@ class LoginActivity : BaseAppCompatActivity() {
                 }
             }
 
-            else -> facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun loginWithFacebook() {
-        facebookCallbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance().logInWithReadPermissions(this, setOf("email"))
-        LoginManager.getInstance()
-            .registerCallback(facebookCallbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-
-                    if (result?.accessToken?.token != null) {
-                        socialLogin(SocialService.FACEBOOK, result.accessToken?.token!!)
-                    } else {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Facebook access token is null",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-                override fun onCancel() {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Facebook login cancelled",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                override fun onError(error: FacebookException?) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Facebook login failed: ${error.toString()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-            })
-    }
-
-    private fun loginWithGoogle() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestServerAuthCode(getString(R.string.google_web_client_id))
-            .requestIdToken(getString(R.string.google_web_client_id))
-            .requestEmail()
-            .build()
-
-        val googleSignInClient = GoogleSignIn.getClient(this, gso)
-        startActivityForResult(googleSignInClient.signInIntent, RC_GOOGLE_SIGN_IN)
-    }
-
-    private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-//            Log.d("google_auth", "idToken: ${account?.idToken}")
-//            Log.d("google_auth", "serverAuthCode ${account?.serverAuthCode}")
-            if (account?.serverAuthCode != null) {
-                socialLogin(SocialService.GOOGLE, account.serverAuthCode!!)
-            } else {
-                toastShortly("Google access token is null")
-            }
-
-        } catch (e: ApiException) {
-            toastShortly("Google sign in failed: ${e.localizedMessage}")
+            else -> Unit
         }
     }
 
@@ -433,18 +351,6 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         } else {
             toastShortly("Please enter both email and password")
-        }
-    }
-
-    private fun socialLogin(service: SocialService, accessToken: String) {
-        val deviceName = Build.DEVICE
-        setLoading(true)
-        SLApiService.socialLogin(service, accessToken, deviceName) { result ->
-            runOnUiThread {
-                setLoading(false)
-                result.onSuccess(::processUserLogin)
-                result.onFailure(::toastThrowable)
-            }
         }
     }
 

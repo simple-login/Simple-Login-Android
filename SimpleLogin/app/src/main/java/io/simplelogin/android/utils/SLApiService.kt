@@ -81,54 +81,6 @@ object SLApiService {
         })
     }
 
-    fun socialLogin(
-        socialService: SocialService,
-        accessToken: String,
-        device: String,
-        completion: (Result<UserLogin>) -> Unit
-    ) {
-        val requestBody = mapOf(
-            "${socialService.serviceName}_token" to accessToken,
-            "device" to device
-        )
-            .toRequestBody()
-
-        val request = Request.Builder()
-            .url("${BASE_URL}/api/auth/${socialService.serviceName}")
-            .post(requestBody)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> {
-                        val jsonString = response.body?.string()
-
-                        if (jsonString != null) {
-                            val userLogin = Gson().fromJson(jsonString, UserLogin::class.java)
-                            if (userLogin != null) {
-                                completion(Result.success(userLogin))
-                            } else {
-                                completion(Result.failure(SLError.FailedToParse(UserLogin::class.java)))
-                            }
-                        } else {
-                            completion(Result.failure(SLError.NoData))
-                        }
-                    }
-
-                    400 -> completion(Result.failure(SLError.BadRequest("Wrong token format")))
-                    500 -> completion(Result.failure(SLError.InternalServerError))
-                    502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
-                }
-            }
-        })
-    }
-
     fun verifyMfa(
         mfaKey: MfaKey,
         mfaToken: String,
