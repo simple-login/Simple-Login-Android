@@ -17,6 +17,7 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 - Manage your alias contacts: list, create, delete.
 - View alias activities.
 - Share extension which allows you to create alias on the fly while using a browser.
+- Support self-hosted: you can use this application with your own SimpleLogin instance.
 
 ## TODO
 - [ ] Manage custom domains
