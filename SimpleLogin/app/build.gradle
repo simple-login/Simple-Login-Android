@@ -14,8 +14,8 @@ android {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,5 +69,5 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.4"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
+    //implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
 }
