@@ -1,0 +1,3 @@
+• Support self-hosted.
+• Fixed log-in error when password contains double quote.
+• Some performance improvements.

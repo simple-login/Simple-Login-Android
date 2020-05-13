@@ -1,0 +1,29 @@
+<b>Application features:</b>
+<ul>
+<li>Manage aliases: create/edit/delete & enable/disable an alias.</li>
+<li>Manage contacts: create contacts to send email from your aliases.</li>
+<li>Secure login with Two Factor Authentication (2FA).</li>
+<li>Support self-hosted: you can use this application with your own SimpleLogin instance.</li>
+</ul>
+
+And many more features in active development.
+
+********************************************************************************************
+
+<p><b>SimpleLogin</b> is an open source solution to protect your email inbox. It allows you to create quickly a random email address (aka alias). All emails sent to an alias is forwarded to your personal email address. You can use the alias when subscribing to a newsletter, signing up for a new account, giving your email to someone you don't trust. Not only an alias can receive emails, it can also send emails. An alias is a full-fledged email address. Later if you can simply block or delete an alias if it's too spammy.</p>
+
+<b>Why SimpleLogin?</b>
+When you give away your personal email online, there is a good chance that your email address would end up with a spammer or a hacker. SimpleLogin acts as a firewall for to protect your personal email inbox.
+
+<b>What distinguishes SimpleLogin:</b>
+
+<ul>
+<li>Open-source and easy to self-host. The self-hosting is based on Docker and could be run on almost any Linux server. The hosting instruction is on our repository at <a href="https://github.com/simple-login/app">https://github.com/simple-login/app</a></li>
+<li>Powerful features if you have a domain (only available at premium plan).</li>
+<li>Generous free plan: there's no cap on bandwidth or number of replies/sends. The Free Plan is enough for protecting your personal email. Premium Plan targets at more "advanced" users with features like custom domain, unlimited alias or catch-all alias.</li>
+<li>Open Roadmap with exciting upcoming features: email directory, extension for Safari, mobile applications, etc. Feel free to check it out on <a href="https://trello.com/b/4d6A69I4/open-roadmap">https://trello.com/b/4d6A69I4/open-roadmap</a></li>
+<li>Export your data: allows you to change the service provider if someday you decide to leave SimpleLogin.</li>
+</ul>
+
+Terms and conditions: <a href="https://simplelogin.io/terms/">https://simplelogin.io/terms/</a>
+Privacy policy: <a href="https://simplelogin.io/privacy/">https://simplelogin.io/privacy/</a>

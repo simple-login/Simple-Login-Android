@@ -1,0 +1,5 @@
+This initial version includes core functions related to alias:
+- Manage your aliases: list, create, edit, delete, enable/disable.
+- Manage your alias contacts: list, create, delete.
+- View alias activities.
+- Share extension which allows you to create alias on the fly while using a browser.
