@@ -41,6 +41,18 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    flavorDimensions 'version'
+    productFlavors {
+        playstore {
+            dimension "version"
+        }
+        fdroid {
+            dimension "version"
+            applicationIdSuffix = ".fdroid"
+            versionNameSuffix = "-fdroid"
+        }
+    }
 }
 
 dependencies {
@@ -67,5 +79,5 @@ dependencies {
 
     // Sentry
     // https://github.com/getsentry/sentry-android/releases
-    implementation 'io.sentry:sentry-android:2.1.1'
+    playstoreImplementation 'io.sentry:sentry-android:2.1.1'
 }
