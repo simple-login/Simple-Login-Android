@@ -11,6 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--Sentry configuration-->
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://e7ccfb25fd4246a1adac854c8bd020e3@o392631.ingest.sentry.io/5240834" />
+        <meta-data
+            android:name="io.sentry.session-tracking.enable"
+            android:value="true" />
+        <!--End of Sentry configuration-->
+
         <activity android:name=".module.startup.StartupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

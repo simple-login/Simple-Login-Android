@@ -64,4 +64,8 @@ dependencies {
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.4"
+
+    // Sentry
+    // https://github.com/getsentry/sentry-android/releases
+    implementation 'io.sentry:sentry-android:2.1.1'
 }
