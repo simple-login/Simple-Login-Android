@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <group android:id="@+id/firstGroup">
         <item
             android:id="@+id/aliasMenuItem"
             android:icon="@drawable/ic_home_32dp"
-            android:title="Alias"
+            android:title="Aliases"
+            tools:ignore="HardcodedText" />
+        <item
+            android:id="@+id/mailboxMenuItem"
+            android:icon="@drawable/ic_tray_32dp"
+            android:title="Mailboxes"
             tools:ignore="HardcodedText" />
         <!--        <item-->
         <!--            android:id="@+id/directoryMenuItem"-->
@@ -23,7 +28,7 @@
             android:id="@+id/settingsMenuItem"
             android:icon="@drawable/ic_settings_32dp"
             android:title="Settings"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
         <item
             android:id="@+id/aboutMenuItem"
             android:icon="@drawable/ic_info_32dp"
@@ -41,7 +46,7 @@
             android:id="@+id/signOutMenuItem"
             android:icon="@drawable/ic_logout_32dp"
             android:title="Sign Out"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
     </group>
 
     <item

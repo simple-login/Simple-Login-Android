@@ -763,4 +763,44 @@ object SLApiService {
         })
     }
     //endregion
+
+    //region Mailbox
+    fun fetchMailboxes(apiKey: String, completion: (Result<List<Mailbox>>) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/mailboxes")
+            .header("Authentication", apiKey)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val mailboxArray = Gson().fromJson(jsonString, MailboxArray::class.java)
+                            if (mailboxArray != null) {
+                                completion(Result.success(mailboxArray.mailboxes))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(MailboxArray::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+    //endregion
 }

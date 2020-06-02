@@ -25,39 +25,19 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:menu="@menu/menu_contact_mailbox_list"
-                    app:navigationIcon="@drawable/ic_chevron_left_36dp">
+                    app:navigationIcon="@drawable/ic_hamburger">
 
                     <TextView
                         android:id="@+id/toolbarTitleText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Contacts"
+                        android:text="Mailboxes"
                         android:textSize="@dimen/toolbarTitleSize"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
 
                 </androidx.appcompat.widget.Toolbar>
-
-                <TextView
-                    android:id="@+id/emailTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar"
-                    tools:text="a-very-very-long-email@example.com" />
 
                 <View
                     android:id="@+id/separatorView"
@@ -66,7 +46,7 @@
                     android:background="@drawable/shape_toolbar_drop_shadow"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/emailTextField" />
+                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                     android:id="@+id/swipeRefreshLayout"
@@ -88,26 +68,6 @@
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/icebergImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="400dp"
-                android:layout_centerInParent="true"
-                android:padding="50dp"
-                android:src="@drawable/ic_iceberg"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/instructionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/icebergImageView"
-                android:layout_centerInParent="true"
-                android:text="Click + button to create a contact"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="@color/colorDarkGray"
-                tools:ignore="HardcodedText" />
-
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -124,12 +84,8 @@
             android:visibility="gone" />
 
         <include
-            android:id="@+id/createContactBottomSheet"
-            layout="@layout/bottom_sheet_create_contact" />
-
-        <include
-            android:id="@+id/howToBottomSheet"
-            layout="@layout/bottom_sheet_how_send_mail" />
+            android:id="@+id/howToUseMailboxBottomSheet"
+            layout="@layout/bottom_sheet_how_to_use_mailbox" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

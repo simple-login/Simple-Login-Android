@@ -75,8 +75,12 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
         when (item.itemId) {
             R.id.aliasMenuItem -> {
-                val aliasNavGraph = navInflater.inflate(R.navigation.nav_graph_alias)
-                navController.graph = aliasNavGraph
+                navController.graph = navInflater.inflate(R.navigation.nav_graph_alias)
+                binding.mainDrawer.closeDrawer(Gravity.LEFT)
+            }
+
+            R.id.mailboxMenuItem -> {
+                navController.graph = navInflater.inflate(R.navigation.nav_graph_mailbox)
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 

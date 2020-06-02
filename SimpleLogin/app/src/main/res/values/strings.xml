@@ -16,4 +16,5 @@
     <string name="api_key_explanation">To get your API key, you must sign in SimpleLogin by using a browser, then navigate to \"API Key\" tab, create one if not already then copy and paste the key here.</string>
     <string name="do_not_change_api_url"><b>DO NOT</b> change API URL unless you are hosting SimpleLogin with your own server.</string>
     <string name="default_api_url">The default value is <b>https://app.simplelogin.io</b></string>
+    <string name="how_to_use_mailbox">A mailbox is just another personal email address. When creating a new alias, you could choose the mailbox that owns this alias, i.e:\n- all emails sent to this alias will be forwarded to this mailbox\n- from this mailbox, you can reply/send emails from the alias.\n\nWhen you signed up, a mailbox is automatically created with your the provided email.\n\nThe mailbox doesn\'t have to be your email: it can be your friend\'s email if you want to create aliases for your buddy.</string>
 </resources>

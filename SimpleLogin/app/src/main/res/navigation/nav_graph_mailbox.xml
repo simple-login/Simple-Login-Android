@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph_mailbox"
+    app:startDestination="@id/mailboxListFragment">
+
+    <fragment
+        android:id="@+id/mailboxListFragment"
+        android:name="io.simplelogin.android.module.mailbox.MailboxListFragment"
+        android:label="MailboxListFragment" />
+</navigation>
