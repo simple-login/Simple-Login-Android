@@ -22,6 +22,10 @@ private fun Map<String, Any?>.toRequestBody(): RequestBody {
     return jsonObject.toString().toRequestBody(CONTENT_TYPE_JSON)
 }
 
+private fun Exception.notNullLocalizedMessage(): String {
+    return localizedMessage ?: return "Null error message"
+}
+
 private val client = OkHttpClient()
 
 object SLApiService {
@@ -52,7 +56,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -101,7 +105,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -144,7 +148,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -188,7 +192,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -214,7 +218,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -255,7 +259,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -295,7 +299,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -348,7 +352,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -393,7 +397,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -434,7 +438,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -488,7 +492,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -529,7 +533,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -567,7 +571,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -595,7 +599,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -642,7 +646,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -673,7 +677,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -719,7 +723,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -744,7 +748,7 @@ object SLApiService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.localizedMessage)))
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
             }
 
             override fun onResponse(call: Call, response: Response) {
