@@ -22,7 +22,7 @@ fun Context.toastThrowable(throwable: Throwable) {
     toastShortly(throwable.localizedMessage)
 }
 
-fun Context.toastError(error: SLError) = toastShortly(error.description)
+fun Context.toastError(error: SLError) = toastLongly(error.description)
 
 fun Context.toastUpToDate() = toastShortly("You are up to date")
 

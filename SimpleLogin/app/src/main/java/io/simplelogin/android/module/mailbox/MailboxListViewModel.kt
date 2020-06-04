@@ -45,4 +45,20 @@ class MailboxListViewModel(private val context: Context) : ViewModel() {
             result.onFailure { _error.postValue(it as SLError) }
         }
     }
+
+    // Create mailbox
+    private var _createdMailbox = MutableLiveData<String>()
+    val createdMailbox: LiveData<String>
+        get() = _createdMailbox
+
+    fun onHandleCreatedMailboxComplete() {
+        _createdMailbox.value = null
+    }
+
+    fun create(email: String) {
+        SLApiService.createMailbox(apiKey, email) { result ->
+            result.onSuccess { _createdMailbox.postValue(email) }
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
 }

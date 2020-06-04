@@ -14,7 +14,7 @@ sealed class SLError(val description: String) : Throwable(description) {
     object WrongTotpToken : SLError("Wrong TOTP token")
     object CanNotCreateMoreAlias : SLError("Can not create more alias")
     object WrongVerificationCode : SLError("Wrong verification code")
-    class BadRequest(description: String) : SLError("Bad request: $description")
+    class BadRequest(description: String) : SLError(description)
     class FailedToParse(any: Any) : SLError("Failed to parse ${any.javaClass.kotlin}")
     class ResponseError(code: Int) : SLError("Response error code $code")
     class UnknownError(description: String) : SLError("Unknown error: $description")

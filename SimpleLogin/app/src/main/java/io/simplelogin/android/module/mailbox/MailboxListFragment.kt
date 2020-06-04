@@ -10,7 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
+import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentMailboxListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.baseclass.BaseFragment
@@ -108,6 +110,16 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 }
             }
         })
+
+        viewModel.createdMailbox.observe(viewLifecycleOwner, Observer { createdMailbox ->
+            activity?.runOnUiThread {
+                setLoading(false)
+                if (createdMailbox != null) {
+                    context?.toastLongly("You are going to receive a confirmation email for $createdMailbox")
+                    viewModel.onHandleCreatedMailboxComplete()
+                }
+            }
+        })
     }
 
     private fun setUpRecyclerView() {
@@ -130,7 +142,18 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.addMenuItem -> {
-                // add mailbox
+                val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+                dialogTextViewBinding.editText.hint = "my-another-email@example.com"
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("New mailbox")
+                    .setMessage("A verification email will be sent to this email address")
+                    .setView(dialogTextViewBinding.root)
+                    .setNeutralButton("Cancel", null)
+                    .setPositiveButton("Create") { _, _ ->
+                        setLoading(true)
+                        viewModel.create(dialogTextViewBinding.editText.text.toString())
+                    }
+                    .show()
             }
 
             R.id.howToMenuItem -> howToUseMailboxBehavior.expand()
