@@ -154,22 +154,7 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> completion(Result.success(Unit))
-
-                    400 -> {
-                        val jsonString = response.body?.string()
-
-                        if (jsonString != null) {
-                            val errorMessage = Gson().fromJson(jsonString, ErrorMessage::class.java)
-                            if (errorMessage != null) {
-                                completion(Result.failure(SLError.BadRequest(errorMessage.value)))
-                            } else {
-                                completion(Result.failure(SLError.FailedToParse(ErrorMessage::class.java)))
-                            }
-                        } else {
-                            completion(Result.failure(SLError.NoData))
-                        }
-                    }
-
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
                     else -> completion(Result.failure(SLError.ResponseError(response.code)))
@@ -819,20 +804,7 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     201 -> completion(Result.success(Unit))
-                    400 -> {
-                        val jsonString = response.body?.string()
-
-                        if (jsonString != null) {
-                            val errorMessage = Gson().fromJson(jsonString, ErrorMessage::class.java)
-                            if (errorMessage != null) {
-                                completion(Result.failure(SLError.BadRequest(errorMessage.value)))
-                            } else {
-                                completion(Result.failure(SLError.FailedToParse(ErrorMessage::class.java)))
-                            }
-                        } else {
-                            completion(Result.failure(SLError.NoData))
-                        }
-                    }
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
