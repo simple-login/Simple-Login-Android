@@ -18,11 +18,13 @@ data class Alias(
     @SerializedName("email") val email: String,
     @SerializedName("creation_date") val creationDate: String,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
+    @SerializedName("mailboxes") private var _mailboxes: List<AliasMailbox>,
     @SerializedName("enabled") private var _enabled: Boolean,
+    @SerializedName("name") private var _name: String?,
     @SerializedName("note") private var _note: String?,
-    @SerializedName("nb_block") private var _blockCount: Int,
-    @SerializedName("nb_forward") private var _forwardCount: Int,
-    @SerializedName("nb_reply") private var _replyCount: Int,
+    @SerializedName("nb_block") val blockCount: Int,
+    @SerializedName("nb_forward") val forwardCount: Int,
+    @SerializedName("nb_reply") val replyCount: Int,
     @SerializedName("latest_activity") val latestActivity: LatestActivity?
 ) : Parcelable {
     // Expose enabled
@@ -31,6 +33,20 @@ data class Alias(
 
     fun setEnabled(enabled: Boolean) {
         _enabled = enabled
+    }
+
+    // Expose mailboxes
+    fun setMailboxes(context: Context, mailboxes: List<AliasMailbox>) {
+        _mailboxes = mailboxes
+        generateMailboxesString(context)
+    }
+
+    // Expose name
+    val name: String?
+        get() = _name
+
+    fun setName(name: String?) {
+        _name = name
     }
 
     // Expose note
@@ -44,30 +60,6 @@ data class Alias(
         _note = note
     }
 
-    // Expose blockCount
-    val blockCount: Int
-        get() = _blockCount
-
-    fun setBlockCount(count: Int) {
-        _blockCount = count
-    }
-
-    // Expose forwardCount
-    val forwardCount: Int
-        get() = _forwardCount
-
-    fun setForwardCount(count: Int) {
-        _forwardCount = count
-    }
-
-    // Expose replyCount
-    val replyCount: Int
-        get() = _replyCount
-
-    fun setReplyCount(count: Int) {
-        _replyCount = count
-    }
-
     val handleCount: Int
         get() = blockCount + forwardCount + replyCount
 
@@ -78,7 +70,7 @@ data class Alias(
             val darkGrayColor = ContextCompat.getColor(context, R.color.colorDarkGray)
             val blackColor = ContextCompat.getColor(context, android.R.color.black)
             val spannableString = SpannableStringBuilder()
-                .color(blackColor) { append(" $forwardCount ") }
+                .color(blackColor) { append("$forwardCount ") }
                 .color(darkGrayColor) { append(if (forwardCount > 1) "forwards," else "forwards,") }
                 .color(blackColor) { append(" $blockCount ") }
                 .color(darkGrayColor) { append(if (blockCount > 1) "blocks," else "blocks,") }
@@ -89,6 +81,31 @@ data class Alias(
         }
 
         return _countSpannableString!!
+    }
+
+    @IgnoredOnParcel
+    private var _mailboxesString: Spannable? = null
+    fun getMailboxesString(context: Context) : Spannable {
+        if (_mailboxesString == null) {
+            generateMailboxesString(context)
+        }
+
+        return _mailboxesString!!
+    }
+
+    private fun generateMailboxesString(context: Context) {
+        val primaryColor = ContextCompat.getColor(context, R.color.colorPrimary)
+        val blackColor = ContextCompat.getColor(context, android.R.color.black)
+        val spannableString = SpannableStringBuilder()
+
+        _mailboxes.forEachIndexed { index, aliasMailbox ->
+            spannableString.color(blackColor) { append(" ${aliasMailbox.email} ") }
+            if (index != _mailboxes.size - 1) {
+                spannableString.color(primaryColor) { append("&") }
+            }
+        }
+
+        _mailboxesString = spannableString
     }
 
     @IgnoredOnParcel
@@ -121,7 +138,8 @@ data class Alias(
             else -> {
                 if (_latestActivityString == null) {
                     val distance = SLDateTimeFormatter.distanceFromNow(latestActivity.timestamp)
-                    _latestActivityString = "${latestActivity.contact.email} • ${distance.first} ${distance.second} ago"
+                    _latestActivityString =
+                        "${latestActivity.contact.email} • ${distance.first} ${distance.second} ago"
                 }
 
                 _latestActivityString!!

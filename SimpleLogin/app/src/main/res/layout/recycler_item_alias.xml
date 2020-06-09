@@ -77,6 +77,33 @@
                         tools:text="0 forward, 0 block, 1 reply" />
 
                     <TextView
+                        android:id="@+id/mailboxesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_tray_16dp"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:maxLines="3"
+                        android:paddingTop="5dp"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorDarkGray"
+                        app:drawableTint="@color/colorDarkGray"
+                        tools:text="email@example.com" />
+
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_name_16dp"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:paddingTop="5dp"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorDarkGray"
+                        app:drawableTint="@color/colorDarkGray"
+                        tools:text="John Doe" />
+
+                    <TextView
                         android:id="@+id/noteTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

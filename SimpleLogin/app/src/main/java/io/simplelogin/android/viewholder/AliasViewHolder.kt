@@ -36,6 +36,8 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
             binding.rootRelativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMediumGray))
         }
 
+        binding.mailboxesTextView.setText(alias.getMailboxesString(context), TextView.BufferType.SPANNABLE)
+
         when (val latestActivityString = alias.getLatestActivityString()) {
             null -> {
                 binding.creationDateTextView.setDrawableStart(R.drawable.ic_clock_16dp)
@@ -55,6 +57,9 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
                 binding.creationDateTextView.setDrawableStart(drawableRes)
             }
         }
+
+        binding.nameTextView.text = alias.name
+        binding.nameTextView.visibility = if (alias.name != null) View.VISIBLE else View.GONE
 
         binding.noteTextView.text = alias.note
         binding.noteTextView.visibility = if (alias.note != null) View.VISIBLE else View.GONE
