@@ -1,16 +1,17 @@
 package io.simplelogin.android.module.alias.activity
 
 import android.annotation.SuppressLint
+import androidx.appcompat.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
@@ -23,16 +24,14 @@ import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.AliasActivity
+import io.simplelogin.android.utils.model.AliasMailbox
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasActivityBinding
     private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var viewModel: AliasActivityListViewModel
-    private lateinit var adapter: AliasActivityListAdapter
-    private val addOrEditString: String
-        get() {
-            return if (viewModel.alias.note != null && viewModel.alias.note != "") "Edit note" else "Add note"
-        }
+    private lateinit var headerAdapter: AliasActivityListHeaderAdapter
+    private lateinit var activityAdapter: AliasActivityListAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -48,93 +47,15 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbarTitleText.text = viewModel.alias.email
         binding.toolbarTitleText.isSelected = true // to trigger marquee animation
 
-        // Bind create date
-        binding.creationDateTextView.text = viewModel.alias.getPreciseCreationString()
-        updateNote()
-
-        binding.editNoteButton.setOnClickListener {
-            val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-            dialogTextViewBinding.editText.setText(viewModel.alias.note)
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(addOrEditString)
-                .setMessage(viewModel.alias.email)
-                .setView(dialogTextViewBinding.root)
-                .setNeutralButton("Cancel", null)
-                .setPositiveButton("Update") { _, _ ->
-                    viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
-                }
-                .show()
-
-            dialogTextViewBinding.editText.requestFocus()
-        }
-
-        setUpStats()
         setUpRecyclerView()
+        setLoading(false)
 
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setUpStats() {
-        // Handled
-        binding.handledStat.root.makeSubviewsClippedToBound()
-        binding.handledStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_at_48dp
-            )
-        )
-        binding.handledStat.numberTextView.text = "${viewModel.alias.handleCount}"
-        binding.handledStat.typeTextView.text = "Email handled"
-
-        // Forwarded
-        binding.forwardedStat.root.makeSubviewsClippedToBound()
-        binding.forwardedStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_send_48dp
-            )
-        )
-        binding.forwardedStat.numberTextView.text = "${viewModel.alias.forwardCount}"
-        binding.forwardedStat.typeTextView.text = "Email forwarded"
-
-        // Reply
-        binding.repliedStat.root.makeSubviewsClippedToBound()
-        binding.repliedStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_reply_48dp
-            )
-        )
-        binding.repliedStat.numberTextView.text = "${viewModel.alias.replyCount}"
-        binding.repliedStat.typeTextView.text = "Email replied"
-
-        // Block
-        binding.blockedStat.root.makeSubviewsClippedToBound()
-        binding.blockedStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.ic_block_48dp
-            )
-        )
-        binding.blockedStat.rootLinearLayout.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorNegative
-            )
-        )
-        binding.blockedStat.numberTextView.text = "${viewModel.alias.blockCount}"
-        binding.blockedStat.typeTextView.text = "Email blocked"
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateNote() {
-        if (viewModel.alias.note != null) {
-            binding.noteTextView.text = viewModel.alias.note
-        } else {
-            binding.noteTextView.text = "Add some note for this alias"
-        }
-        binding.editNoteButton.text = addOrEditString
+    private fun setLoading(loading: Boolean) {
+        binding.rootConstraintLayout.isEnabled = !loading
+        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun setUpViewModel() {
@@ -149,8 +70,10 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         viewModel.fetchActivities()
         viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
             activity?.runOnUiThread {
+                setLoading(false)
+
                 if (haveNewActivities) {
-                    adapter.submitList(viewModel.activities)
+                    activityAdapter.submitList(viewModel.activities)
                 }
 
                 if (binding.swipeRefreshLayout.isRefreshing) {
@@ -162,22 +85,70 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
+                setLoading(false)
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
         })
 
-        viewModel.eventNoteUpdate.observe(viewLifecycleOwner, Observer { noteUpdated ->
-            if (noteUpdated) {
-                updateNote()
-                viewModel.onHandleNoteUpdateComplete()
+        viewModel.eventUpdateMetadata.observe(viewLifecycleOwner, Observer { metadataUpdated ->
+            if (metadataUpdated) {
+                setLoading(false)
+                headerAdapter.notifyDataSetChanged()
+                viewModel.onHandleUpdateMetadataComplete()
             }
         })
     }
 
     private fun setUpRecyclerView() {
-        adapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
+        headerAdapter = AliasActivityListHeaderAdapter(viewModel.alias, object : AliasActivityListHeaderAdapter.ClickListener {
+            override fun editMailboxesButtonClicked() {
+                fetchMailboxesAndShowAlert()
+            }
+
+            override fun editNameButtonClicked() {
+                val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+                dialogTextViewBinding.editText.hint = "Ex: Jane Doe"
+                dialogTextViewBinding.editText.setText(viewModel.alias.name)
+                val title = when (viewModel.alias.name) {
+                    null -> "Add name for alias"
+                    else -> "Edit name for alias"
+                }
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(title)
+                    .setMessage(viewModel.alias.email)
+                    .setView(dialogTextViewBinding.root)
+                    .setNeutralButton("Cancel", null)
+                    .setPositiveButton("Save") { _, _ ->
+                        viewModel.updateName(dialogTextViewBinding.editText.text.toString())
+                    }
+                    .show()
+            }
+
+            override fun editNoteButtonClicked() {
+                val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+                dialogTextViewBinding.editText.hint = "Ex: For tech newsletters, online shopping..."
+                dialogTextViewBinding.editText.setText(viewModel.alias.note)
+                val title = when (viewModel.alias.note) {
+                    null -> "Add note for alias"
+                    else -> "Edit note for alias"
+                }
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(title)
+                    .setMessage(viewModel.alias.email)
+                    .setView(dialogTextViewBinding.root)
+                    .setNeutralButton("Cancel", null)
+                    .setPositiveButton("Save") { _, _ ->
+                        viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
+                    }
+                    .show()
+            }
+        })
+
+        activityAdapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
             override fun onClick(aliasActivity: AliasActivity) {
                 val toEmail = when (aliasActivity.action) {
                     Action.REPLY -> aliasActivity.to
@@ -206,7 +177,8 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     .show()
             }
         })
-        binding.recyclerView.adapter = adapter
+
+        binding.recyclerView.adapter = MergeAdapter(headerAdapter, activityAdapter)
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
@@ -224,13 +196,72 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
     }
 
+    private fun fetchMailboxesAndShowAlert() {
+        setLoading(true)
+        SLApiService.fetchMailboxes(viewModel.apiKey) { result ->
+            activity?.runOnUiThread {
+                setLoading(false)
+
+                result.onFailure(requireContext()::toastThrowable)
+
+                result.onSuccess { mailboxes ->
+                    val items = arrayOf("[Select all]") + mailboxes.map { it.email }.toTypedArray()
+                    val checkedItems = BooleanArray(items.size)
+                    val selectedMailboxesName = viewModel.alias.mailboxes.map { it.email }
+                    checkedItems.forEachIndexed { index, _ ->
+                        if (selectedMailboxesName.contains(items[index])) {
+                            checkedItems[index] = true
+                        }
+                    }
+
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Select mailboxes")
+                        .setMultiChoiceItems(items, checkedItems) { dialog, which, isChecked ->
+                            val listView = (dialog as AlertDialog).listView
+                            // Select all
+                            if (which == 0) {
+                                checkedItems.forEachIndexed { index, _ ->
+                                    checkedItems[index] = true
+                                    listView.setItemChecked(index, true)
+                                }
+
+                                checkedItems[0] = false
+                                listView.setItemChecked(0, false)
+                            }
+
+                            // At least 1 mailbox is selected
+                            if (checkedItems.none { it }) {
+                                checkedItems[which] = true
+                                listView.setItemChecked(which, true)
+                            }
+                        }
+                        .setPositiveButton("Save") { _, _ ->
+                            val aliasMailboxes = mutableListOf<AliasMailbox>()
+                            checkedItems.forEachIndexed { index, isChecked ->
+                                if (isChecked) {
+                                    aliasMailboxes.add(mailboxes.first { it.email == items[index] }.toAliasMailbox())
+                                }
+                            }
+
+                            setLoading(true)
+                            viewModel.updateMailboxes(aliasMailboxes)
+                        }
+                        .setNeutralButton("Cancel", null)
+                        .show()
+                }
+            }
+        }
+    }
+
     private fun refreshAlias() {
+        setLoading(true)
         SLApiService.getAlias(viewModel.apiKey, viewModel.alias.id) { result ->
             activity?.runOnUiThread {
+                setLoading(false)
 
                 result.onSuccess { alias ->
                     viewModel.alias = alias
-                    setUpStats()
+                    headerAdapter.notifyDataSetChanged()
                 }
 
                 result.onFailure(requireContext()::toastThrowable)

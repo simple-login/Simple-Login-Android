@@ -28,6 +28,8 @@ data class Mailbox (
 
         return _aliasCountString!!
     }
+
+    fun toAliasMailbox() = AliasMailbox(id, email)
 }
 
 data class MailboxArray(

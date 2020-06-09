@@ -7,6 +7,7 @@ import io.simplelogin.android.utils.model.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
@@ -16,7 +17,7 @@ private fun Map<String, Any?>.toRequestBody(): RequestBody {
     val jsonObject = JSONObject()
 
     for ((key, value) in this) {
-        jsonObject.put(key, value)
+        jsonObject.put(key, value ?: JSONObject.NULL)
     }
 
     return jsonObject.toString().toRequestBody(CONTENT_TYPE_JSON)
@@ -617,6 +618,7 @@ object SLApiService {
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
                     200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     500 -> completion(Result.failure(SLError.InternalServerError))
                     502 -> completion(Result.failure(SLError.BadGateway))
@@ -626,6 +628,59 @@ object SLApiService {
         })
     }
 
+    fun updateAliasName(apiKey: String, alias: Alias, name: String?, completion: (Result<Unit>) -> Unit) {
+        val requestBody = mapOf("name" to name).toRequestBody()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/${alias.id}")
+            .header("Authentication", apiKey)
+            .put(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+
+    fun updateAliasMailboxes(apiKey: String, alias: Alias, mailboxes: List<AliasMailbox>, completion: (Result<Unit>) -> Unit) {
+        val requestBody = mapOf("mailbox_ids" to JSONArray(mailboxes.map { it.id })).toRequestBody()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/${alias.id}")
+            .header("Authentication", apiKey)
+            .put(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
 
     //region Contact

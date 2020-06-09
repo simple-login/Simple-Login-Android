@@ -36,6 +36,9 @@ data class Alias(
     }
 
     // Expose mailboxes
+    val mailboxes: List<AliasMailbox>
+        get() = _mailboxes
+
     fun setMailboxes(context: Context, mailboxes: List<AliasMailbox>) {
         _mailboxes = mailboxes
         generateMailboxesString(context)
@@ -85,7 +88,7 @@ data class Alias(
 
     @IgnoredOnParcel
     private var _mailboxesString: Spannable? = null
-    fun getMailboxesString(context: Context) : Spannable {
+    fun getMailboxesString(context: Context): Spannable {
         if (_mailboxesString == null) {
             generateMailboxesString(context)
         }

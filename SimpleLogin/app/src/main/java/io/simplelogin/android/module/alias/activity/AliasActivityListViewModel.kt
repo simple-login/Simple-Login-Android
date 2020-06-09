@@ -8,8 +8,9 @@ import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasActivity
+import io.simplelogin.android.utils.model.AliasMailbox
 
-class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewModel(context) {
+class AliasActivityListViewModel(private val context: Context, var alias: Alias) : BaseViewModel(context) {
     private val _error = MutableLiveData<SLError>()
     val error: LiveData<SLError>
         get() = _error
@@ -59,26 +60,63 @@ class AliasActivityListViewModel(context: Context, var alias: Alias) : BaseViewM
         fetchActivities()
     }
 
-    // Note
-    private val _eventNoteUpdate = MutableLiveData<Boolean>()
-    val eventNoteUpdate: LiveData<Boolean>
-        get() = _eventNoteUpdate
+    // Metadata: mailboxes, name & note
+    private val _eventUpdateMetadata = MutableLiveData<Boolean>()
+    val eventUpdateMetadata: LiveData<Boolean>
+        get() = _eventUpdateMetadata
 
-    fun onHandleNoteUpdateComplete() {
-        _eventNoteUpdate.value = false
+    fun onHandleUpdateMetadataComplete() {
+        _eventUpdateMetadata.value = false
     }
 
+    // Mailboxes
+    private var _isUpdatingMailboxes: Boolean = false
+    fun updateMailboxes(mailboxes: List<AliasMailbox>) {
+        if (_isUpdatingMailboxes) return
+        _isUpdatingMailboxes = true
+        SLApiService.updateAliasMailboxes(apiKey, alias, mailboxes) { result ->
+            _isUpdatingMailboxes = false
+
+            result.onSuccess {
+                alias.setMailboxes(context, mailboxes)
+                _eventUpdateMetadata.postValue(true)
+            }
+
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    // Name
+    private var _isUpdatingName: Boolean = false
+    fun updateName(name: String?) {
+        if (_isUpdatingName) return
+        _isUpdatingName = true
+        val nullableName = if (name == "") null else name
+        SLApiService.updateAliasName(apiKey, alias, nullableName) { result ->
+            _isUpdatingName = false
+
+            result.onSuccess {
+                alias.setName(nullableName)
+                _eventUpdateMetadata.postValue(true)
+            }
+
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    // Note
     private var _isUpdatingNote: Boolean = false
 
     fun updateNote(note: String?) {
         if (_isUpdatingNote) return
         _isUpdatingNote = true
-        SLApiService.updateAliasNote(apiKey, alias, note) { result ->
+        val nullableNote = if (note == "") null else note
+        SLApiService.updateAliasNote(apiKey, alias, nullableNote) { result ->
             _isUpdatingNote = false
 
             result.onSuccess {
-                alias.setNote(note)
-                _eventNoteUpdate.postValue(true)
+                alias.setNote(nullableNote)
+                _eventUpdateMetadata.postValue(true)
             }
 
             result.onFailure { _error.postValue(it as SLError) }
