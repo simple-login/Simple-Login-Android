@@ -548,27 +548,7 @@ object SLApiService {
     }
 
     fun deleteAlias(apiKey: String, alias: Alias, completion: (Result<Unit>) -> Unit) {
-        val request = Request.Builder()
-            .url("${BASE_URL}/api/aliases/${alias.id}")
-            .header("Authentication", apiKey)
-            .delete()
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> completion(Result.success(Unit))
-                    401 -> completion(Result.failure(SLError.InvalidApiKey))
-                    500 -> completion(Result.failure(SLError.InternalServerError))
-                    502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
-                }
-            }
-        })
+        delete(apiKey, "${BASE_URL}/api/aliases/${alias.id}", completion)
     }
 
     fun fetchAliasActivities(
@@ -725,27 +705,7 @@ object SLApiService {
     }
 
     fun deleteContact(apiKey: String, contact: Contact, completion: (Result<Unit>) -> Unit) {
-        val request = Request.Builder()
-            .url("${BASE_URL}/api/contacts/${contact.id}")
-            .header("Authentication", apiKey)
-            .delete()
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                when (response.code) {
-                    200 -> completion(Result.success(Unit))
-                    401 -> completion(Result.failure(SLError.InvalidApiKey))
-                    500 -> completion(Result.failure(SLError.InternalServerError))
-                    502 -> completion(Result.failure(SLError.BadGateway))
-                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
-                }
-            }
-        })
+        delete(apiKey, "${BASE_URL}/api/contacts/${contact.id}", completion)
     }
     //endregion
 
@@ -813,5 +773,60 @@ object SLApiService {
             }
         })
     }
+
+    fun deleteMailbox(apiKey: String, mailbox: Mailbox, completion: (Result<Unit>) -> Unit) {
+        delete(apiKey, "${BASE_URL}/api/mailboxes/${mailbox.id}", completion)
+    }
+
+    fun makeDefaultMailbox(apiKey: String, mailbox: Mailbox, completion: (Result<Unit>) -> Unit) {
+        val requestBody = mapOf("default" to true).toRequestBody()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/mailboxes/${mailbox.id}")
+            .header("Authentication", apiKey)
+            .put(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
+
+    private fun delete(apiKey: String, requestUrlString: String, completion: (Result<Unit>) -> Unit) {
+        val request = Request.Builder()
+            .url(requestUrlString)
+            .header("Authentication", apiKey)
+            .delete()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(Result.success(Unit))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
 }

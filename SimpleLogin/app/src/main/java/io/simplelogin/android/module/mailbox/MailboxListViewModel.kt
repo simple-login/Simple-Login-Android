@@ -33,12 +33,17 @@ class MailboxListViewModel(private val context: Context) : ViewModel() {
     val eventUpdateMailboxes: LiveData<Boolean>
         get() = _eventUpdateMailboxes
 
+    fun onHandleUpdateMailboxesComplete() {
+        _eventUpdateMailboxes.value = false
+    }
 
     fun fetchMailboxes() {
         SLApiService.fetchMailboxes(apiKey) { result ->
             result.onSuccess { mailboxes ->
-                _mailboxes.clear()
-                _mailboxes.addAll(mailboxes)
+                with(_mailboxes) {
+                    clear()
+                    addAll(mailboxes)
+                }
                 _eventUpdateMailboxes.postValue(true)
             }
 
@@ -58,6 +63,26 @@ class MailboxListViewModel(private val context: Context) : ViewModel() {
     fun create(email: String) {
         SLApiService.createMailbox(apiKey, email) { result ->
             result.onSuccess { _createdMailbox.postValue(email) }
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    // Delete mailbox
+    fun deleteMailbox(mailbox: Mailbox) {
+        SLApiService.deleteMailbox(apiKey, mailbox) { result ->
+            result.onSuccess {
+                _mailboxes.removeAll { it.id == mailbox.id }
+                _eventUpdateMailboxes.postValue(true)
+            }
+
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    // Make default
+    fun makeDefault(mailbox: Mailbox) {
+        SLApiService.makeDefaultMailbox(apiKey, mailbox) { result ->
+            result.onSuccess { fetchMailboxes() }
             result.onFailure { _error.postValue(it as SLError) }
         }
     }

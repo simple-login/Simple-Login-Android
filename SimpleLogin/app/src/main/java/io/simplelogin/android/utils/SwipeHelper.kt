@@ -120,6 +120,10 @@ abstract class SwipeHelper(
         recoverSwipedItem()
     }
 
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return .2f
+    }
+
     abstract fun instantiateUnderlayButton(position: Int): List<UnderlayButton>
 
     //region UnderlayButton

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -15,6 +16,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentMailboxListBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 
@@ -22,6 +24,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
     private lateinit var binding: FragmentMailboxListBinding
     private lateinit var viewModel: MailboxListViewModel
+    private var itemTouchHelper: ItemTouchHelper? = null
     private lateinit var adapter: MailboxListAdapter
     private lateinit var howToUseMailboxBehavior: BottomSheetBehavior<View>
 
@@ -48,7 +51,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpBinding() {
         binding = FragmentMailboxListBinding.inflate(layoutInflater)
-        binding.toolbar.setNavigationOnClickListener { showLeftMenu()  }
+        binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
         binding.toolbar.setOnMenuItemClickListener(this)
     }
 
@@ -101,7 +104,10 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 setLoading(false)
 
                 if (haveNewMailboxes) {
-                    adapter.submitList(viewModel.mailboxes)
+                    // toMutableList() is required. Refer to AliasListFragment viewModel
+                    adapter.submitList(viewModel.mailboxes.toMutableList())
+                    setUpItemTouchHelper()
+                    viewModel.onHandleUpdateMailboxesComplete()
                 }
 
                 if (binding.swipeRefreshLayout.isRefreshing) {
@@ -126,8 +132,72 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         adapter = MailboxListAdapter()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.fetchMailboxes() }
+    }
+
+    private fun setUpItemTouchHelper() {
+        itemTouchHelper?.attachToRecyclerView(null)
+
+        itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.recyclerView) {
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+                when (viewModel.mailboxes[position].isDefault) {
+                    true -> return emptyList()
+                    false -> {
+                        val deleteButton = UnderlayButton(
+                            requireContext(),
+                            "Delete",
+                            14.0f,
+                            android.R.color.holo_red_light,
+                            object : UnderlayButtonClickListener {
+                                override fun onClick() {
+                                    confirmDelete(position)
+                                }
+                            })
+
+                        val setAsDefaultButton = UnderlayButton(
+                            requireContext(),
+                            "Set as default",
+                            14.0f,
+                            android.R.color.holo_blue_light,
+                            object : UnderlayButtonClickListener {
+                                override fun onClick() {
+                                    confirmSetAsDefault(position)
+                                }
+                            })
+
+                        return listOf(deleteButton, setAsDefaultButton)
+                    }
+                }
+            }
+        })
+
+        itemTouchHelper?.attachToRecyclerView(binding.recyclerView)
+    }
+
+    private fun confirmDelete(position: Int) {
+        val mailbox = viewModel.mailboxes[position]
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete \"${mailbox.email}\"")
+            .setMessage("\uD83D\uDED1 All aliases associated with this mailbox will also be deleted. This operation is irreversible. Please confirm.")
+            .setNegativeButton("Delete") { _, _ ->
+                setLoading(true)
+                viewModel.deleteMailbox(mailbox)
+            }
+            .setNeutralButton("Cancel", null)
+            .show()
+    }
+
+    private fun confirmSetAsDefault(position: Int) {
+        val mailbox = viewModel.mailboxes[position]
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Please confirm")
+            .setMessage("Make \"${mailbox.email}\" default mailbox?")
+            .setPositiveButton("Confirm") { _, _ ->
+                setLoading(true)
+                viewModel.makeDefault(mailbox)
+            }
+            .setNeutralButton("Cancel", null)
+            .show()
     }
 
     // HomeActivity.OnBackPressed
