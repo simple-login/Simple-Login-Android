@@ -20,7 +20,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
-import io.simplelogin.android.utils.SwipeToDeleteCallback
+import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.RandomMode
@@ -176,21 +176,29 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         })
 
         // Add swipe recognizer to recyclerView
-        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val alias = viewModel.filteredAliases[viewHolder.adapterPosition]
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Delete \"${alias.email}\"?")
-                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
-                    .setNegativeButton("Delete") { _, _ ->
-                        setLoading(true)
-                        viewModel.deleteAlias(alias)
-                    }
-                    .setNeutralButton("Cancel", null)
-                    .setOnDismissListener {
-                        adapter.notifyItemChanged(viewHolder.adapterPosition)
-                    }
-                    .show()
+        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.recyclerView) {
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+                return listOf(
+                    UnderlayButton(
+                        requireContext(),
+                        "Delete",
+                        14.0f,
+                        android.R.color.holo_red_light,
+                        object : UnderlayButtonClickListener {
+                            override fun onClick() {
+                                val alias = viewModel.filteredAliases[position]
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Delete \"${alias.email}\"?")
+                                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                                    .setNegativeButton("Delete") { _, _ ->
+                                        setLoading(true)
+                                        viewModel.deleteAlias(alias)
+                                    }
+                                    .setNeutralButton("Cancel", null)
+                                    .show()
+                            }
+                        })
+                )
             }
         })
 

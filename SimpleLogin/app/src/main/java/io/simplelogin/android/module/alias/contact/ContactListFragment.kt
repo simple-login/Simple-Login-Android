@@ -19,7 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
-import io.simplelogin.android.utils.SwipeToDeleteCallback
+import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
@@ -295,20 +295,29 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         })
 
         // Add swipe recognizer to recyclerView
-        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val contact = viewModel.contacts[viewHolder.adapterPosition]
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Delete \"${contact.email}\"?")
-                    .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
-                    .setNeutralButton("Cancel", null)
-                    .setNegativeButton("Delete") { _, _ ->
-                        setLoading(true)
-                        viewModel.delete(contact)
-                    }.setOnDismissListener {
-                        adapter.notifyItemChanged(viewHolder.adapterPosition)
-                    }
-                    .show()
+        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.recyclerView) {
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+                return listOf(
+                    UnderlayButton(
+                        requireContext(),
+                        "Delete",
+                        14.0f,
+                        android.R.color.holo_red_light,
+                        object : UnderlayButtonClickListener {
+                            override fun onClick() {
+                                val contact = viewModel.contacts[position]
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("Delete \"${contact.email}\"?")
+                                    .setMessage("\uD83D\uDED1 This operation is irreversible. Please confirm.")
+                                    .setNeutralButton("Cancel", null)
+                                    .setNegativeButton("Delete") { _, _ ->
+                                        setLoading(true)
+                                        viewModel.delete(contact)
+                                    }
+                                    .show()
+                            }
+                        })
+                )
             }
         })
 
