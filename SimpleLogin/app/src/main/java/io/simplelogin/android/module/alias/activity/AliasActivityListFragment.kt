@@ -102,7 +102,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpRecyclerView() {
-        headerAdapter = AliasActivityListHeaderAdapter(viewModel.alias, object : AliasActivityListHeaderAdapter.ClickListener {
+        headerAdapter = AliasActivityListHeaderAdapter(viewModel, object : AliasActivityListHeaderAdapter.ClickListener {
             override fun editMailboxesButtonClicked() {
                 fetchMailboxesAndShowAlert()
             }
