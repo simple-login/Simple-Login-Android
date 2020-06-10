@@ -12,7 +12,7 @@
     <string name="what_c">Use alias as your <b>business email</b>.\n\nSave $6/month for each business email created with SimpleLogin.\n\nBy the way your company emails are actually aliases.</string>
     <string name="forgot_password_message">For security reason and to avoid database leak, all \"forgot password\" requests are taken into account silently without you being informed if a request is successful or not.\n\nSo make sure that you enter the correct email address.</string>
     <string name="create_alias_hint">💡Hint: To make it easy to remember for later use, it is a good practice to use the name of the website/service that you plan to register with alias.</string>
-    <string name="create_alias_warning">⚠️ Only letters, numbers, dash (-) &amp; underscore (_) are allowed.</string>
+    <string name="create_alias_warning">⚠️ Only lowercase letters, numbers, dashes (-) and underscores (_) are currently supported.</string>
     <string name="api_key_explanation">To get your API key, you must sign in SimpleLogin by using a browser, then navigate to \"API Key\" tab, create one if not already then copy and paste the key here.</string>
     <string name="do_not_change_api_url"><b>DO NOT</b> change API URL unless you are hosting SimpleLogin with your own server.</string>
     <string name="default_api_url">The default value is <b>https://app.simplelogin.io</b></string>

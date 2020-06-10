@@ -25,8 +25,6 @@
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
-
-
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
@@ -34,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:paddingTop="50dp"
+            android:padding="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +47,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
                     android:layout_weight="1"
                     android:gravity="end"
                     android:singleLine="true"
@@ -66,21 +63,149 @@
                     android:spinnerMode="dropdown" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="@string/create_alias_warning"
+                android:textColor="@color/colorNegative" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDarkGray" />
+
+            <LinearLayout
+                android:id="@+id/mailboxesTitleLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="MAILBOXES"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="The mailboxes that own this alias"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="@color/colorDarkGray"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/mailboxesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:paddingBottom="5dp"
+                tools:text="email@example.com" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDarkGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NAME"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="Display name when sending &amp; replying (optional)"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="@color/colorDarkGray"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/noteTextField"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Alias note (optional)"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                tools:ignore="HardcodedText">
+                android:paddingBottom="10dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions"
-                    android:textColor="@android:color/black" />
+                    android:hint="Ex: Jane Doe"
+                    android:textAppearance="?textAppearanceBody2"
+                    android:textColor="@color/colorText"
+                    tools:ignore="HardcodedText" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDarkGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NOTE"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="Anything to remind you (optional)"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="@color/colorDarkGray"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/noteEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ex: For tech newsletters, online shopping..."
+                    android:textAppearance="?textAppearanceBody2"
+                    android:textColor="@color/colorText"
+                    tools:ignore="HardcodedText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -89,7 +214,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="25dp"
                 android:enabled="false"
                 android:text="Create"
                 tools:ignore="HardcodedText" />
@@ -97,23 +221,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="20dp"
                 android:text="@string/create_alias_hint"
                 android:textColor="@color/colorDarkGray" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/create_alias_warning"
-                android:textColor="@color/colorNegative" />
-
         </LinearLayout>
-
 
         <ProgressBar
             android:id="@+id/progressBar"

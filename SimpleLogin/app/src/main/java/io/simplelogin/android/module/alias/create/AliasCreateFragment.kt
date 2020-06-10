@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.databinding.FragmentAliasCreateBinding
@@ -18,11 +20,13 @@ import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
+import io.simplelogin.android.utils.model.toSpannableString
 
 class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasCreateBinding
     private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private var selectedSuffix: String? = null
+    private lateinit var viewModel: AliasCreateViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,12 +34,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAliasCreateBinding.inflate(inflater)
-
         binding.toolbar.setNavigationOnClickListener { dismissKeyboardAndNavigateUp() }
-
-        val apiKey = SLSharedPreferences.getApiKey(requireContext()) ?: throw IllegalStateException(
-            "API key is null"
-        )
 
         // Enable/disable createButton
         binding.prefixEditText.addTextChangedListener(object : TextWatcher {
@@ -53,40 +52,56 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 context?.toastShortly("No suffix is selected")
                 return@setOnClickListener
             }
-
-            val prefix = binding.prefixEditText.text.toString()
-            val note = binding.noteTextField.editText?.text.toString()
-            createAlias(apiKey, prefix, selectedSuffix!!, note)
+            createAlias()
         }
 
-        // Fetch UserOptions
+        binding.mailboxesTitleLinearLayout.setOnClickListener { showSelectMailboxesAlert() }
+        binding.mailboxesTextView.setOnClickListener { showSelectMailboxesAlert() }
+
+        binding.root.setOnClickListener { activity?.dismissKeyboard() }
+
+        // viewModel
+        viewModel = AliasCreateViewModel(requireContext())
+
         setLoading(true)
-        SLApiService.fetchUserOptions(apiKey) { result ->
-            activity?.runOnUiThread {
+        viewModel.fetchUserOptionsAndMailboxes()
+
+        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            if (error != null) {
+                context?.toastError(error!!)
+                findNavController().navigateUp()
+            }
+        })
+
+        viewModel.userOptions.observe(viewLifecycleOwner, Observer { userOptions ->
+            if (userOptions != null) {
                 setLoading(false)
 
-                result.onSuccess { userOptions ->
-                    if (userOptions.canCreate) {
-                        setUpSuffixesSpinner(userOptions.suffixes)
-                    } else {
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Can not create more alias")
-                            .setMessage("Go premium for unlimited aliases and more.")
-                            .setPositiveButton("See pricing", null)
-                            .setOnDismissListener {
-                                aliasListViewModel.setNeedsSeePricing()
-                                findNavController().navigateUp()
-                            }
-                            .show()
-                    }
-                }
-
-                result.onFailure {
-                    context?.toastThrowable(it)
-                    findNavController().navigateUp()
+                if (userOptions.canCreate) {
+                    setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
+                } else {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Can not create more alias")
+                        .setMessage("Go premium for unlimited aliases and more.")
+                        .setPositiveButton("See pricing", null)
+                        .setOnDismissListener {
+                            aliasListViewModel.setNeedsSeePricing()
+                            findNavController().navigateUp()
+                        }
+                        .show()
                 }
             }
-        }
+        })
+
+        viewModel.selectedMailboxes.observe(viewLifecycleOwner, Observer { selectedMailboxes ->
+            if (selectedMailboxes != null) {
+                setLoading(false)
+                binding.mailboxesTextView.setText(
+                    selectedMailboxes.toSpannableString(requireContext()),
+                    TextView.BufferType.SPANNABLE
+                )
+            }
+        })
 
         return binding.root
     }
@@ -127,9 +142,22 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
     }
 
-    private fun createAlias(apiKey: String, prefix: String, suffix: String, note: String?) {
+    private fun createAlias() {
+        val apiKey = SLSharedPreferences.getApiKey(requireContext()) ?: throw IllegalStateException(
+            "API key is null"
+        )
+
+        val signedSuffix = viewModel.userOptions.value!!.suffixes.first { it[0] == selectedSuffix }[1]
         setLoading(true)
-        SLApiService.createAlias(apiKey, prefix, suffix, note) { result ->
+
+        SLApiService.createAlias(
+            apiKey,
+            binding.prefixEditText.text.toString(),
+            signedSuffix,
+            viewModel.selectedMailboxes.value!!.map { it.id },
+            binding.nameEditText.text.toString(),
+            binding.noteEditText.text.toString()
+        ) { result ->
             activity?.runOnUiThread {
                 setLoading(false)
 
@@ -139,6 +167,17 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 }
 
                 result.onFailure { context?.toastThrowable(it) }
+            }
+        }
+    }
+
+    private fun showSelectMailboxesAlert() {
+        viewModel.selectedMailboxes.value?.let { selectedMailboxes ->
+            activity?.showSelectMailboxesAlert(
+                viewModel.mailboxes,
+                selectedMailboxes
+            ) { checkedMailboxes ->
+                viewModel.setSelectedMailboxes(checkedMailboxes)
             }
         }
     }

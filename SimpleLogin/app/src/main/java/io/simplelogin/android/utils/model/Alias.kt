@@ -97,18 +97,7 @@ data class Alias(
     }
 
     private fun generateMailboxesString(context: Context) {
-        val primaryColor = ContextCompat.getColor(context, R.color.colorPrimary)
-        val blackColor = ContextCompat.getColor(context, android.R.color.black)
-        val spannableString = SpannableStringBuilder()
-
-        _mailboxes.forEachIndexed { index, aliasMailbox ->
-            spannableString.color(blackColor) { append(" ${aliasMailbox.email} ") }
-            if (index != _mailboxes.size - 1) {
-                spannableString.color(primaryColor) { append("&") }
-            }
-        }
-
-        _mailboxesString = spannableString
+        _mailboxesString = _mailboxes.toSpannableString(context)
     }
 
     @IgnoredOnParcel
@@ -154,3 +143,18 @@ data class Alias(
 data class AliasArray(
     @SerializedName("aliases") val aliases: List<Alias>
 )
+
+fun List<AliasMailbox>.toSpannableString(context: Context): Spannable {
+    val primaryColor = ContextCompat.getColor(context, R.color.colorPrimary)
+    val blackColor = ContextCompat.getColor(context, android.R.color.black)
+    val spannableString = SpannableStringBuilder()
+
+    forEachIndexed { index, aliasMailbox ->
+        spannableString.color(blackColor) { append(" ${aliasMailbox.email} ") }
+        if (index != size - 1) {
+            spannableString.color(primaryColor) { append("&") }
+        }
+    }
+
+    return spannableString
+}

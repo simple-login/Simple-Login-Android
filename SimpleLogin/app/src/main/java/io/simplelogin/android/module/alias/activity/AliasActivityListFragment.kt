@@ -1,7 +1,6 @@
 package io.simplelogin.android.module.alias.activity
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +23,6 @@ import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.AliasActivity
-import io.simplelogin.android.utils.model.AliasMailbox
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasActivityBinding
@@ -205,49 +203,10 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 result.onFailure(requireContext()::toastThrowable)
 
                 result.onSuccess { mailboxes ->
-                    val items = arrayOf("[Select all]") + mailboxes.map { it.email }.toTypedArray()
-                    val checkedItems = BooleanArray(items.size)
-                    val selectedMailboxesName = viewModel.alias.mailboxes.map { it.email }
-                    checkedItems.forEachIndexed { index, _ ->
-                        if (selectedMailboxesName.contains(items[index])) {
-                            checkedItems[index] = true
-                        }
+                    activity?.showSelectMailboxesAlert(mailboxes, viewModel.alias.mailboxes) { checkedMailboxes ->
+                        setLoading(true)
+                        viewModel.updateMailboxes(checkedMailboxes)
                     }
-
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Select mailboxes")
-                        .setMultiChoiceItems(items, checkedItems) { dialog, which, isChecked ->
-                            val listView = (dialog as AlertDialog).listView
-                            // Select all
-                            if (which == 0) {
-                                checkedItems.forEachIndexed { index, _ ->
-                                    checkedItems[index] = true
-                                    listView.setItemChecked(index, true)
-                                }
-
-                                checkedItems[0] = false
-                                listView.setItemChecked(0, false)
-                            }
-
-                            // At least 1 mailbox is selected
-                            if (checkedItems.none { it }) {
-                                checkedItems[which] = true
-                                listView.setItemChecked(which, true)
-                            }
-                        }
-                        .setPositiveButton("Save") { _, _ ->
-                            val aliasMailboxes = mutableListOf<AliasMailbox>()
-                            checkedItems.forEachIndexed { index, isChecked ->
-                                if (isChecked) {
-                                    aliasMailboxes.add(mailboxes.first { it.email == items[index] }.toAliasMailbox())
-                                }
-                            }
-
-                            setLoading(true)
-                            viewModel.updateMailboxes(aliasMailboxes)
-                        }
-                        .setNeutralButton("Cancel", null)
-                        .show()
                 }
             }
         }

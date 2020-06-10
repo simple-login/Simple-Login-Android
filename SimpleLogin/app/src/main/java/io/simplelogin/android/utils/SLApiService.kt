@@ -279,7 +279,7 @@ object SLApiService {
         completion: (Result<UserOptions>) -> Unit
     ) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/v3/alias/options")
+            .url("${BASE_URL}/api/v4/alias/options")
             .header("Authentication", apiKey)
             .build()
 
@@ -319,19 +319,23 @@ object SLApiService {
     fun createAlias(
         apiKey: String,
         prefix: String,
-        suffix: String,
+        signedSuffix: String,
+        mailboxIds: List<Int>,
+        name: String?,
         note: String?,
         completion: (Result<Alias>) -> Unit
     ) {
         val requestBody = mapOf(
             "alias_prefix" to prefix,
-            "alias_suffix" to suffix,
+            "signed_suffix" to signedSuffix,
+            "mailbox_ids" to JSONArray(mailboxIds),
+            "name" to name,
             "note" to note?.replace("\n", "\\n")
         )
             .toRequestBody()
 
         val request = Request.Builder()
-            .url("${BASE_URL}/api/alias/custom/new")
+            .url("${BASE_URL}/api/v3/alias/custom/new")
             .header("Authentication", apiKey)
             .post(requestBody)
             .build()

@@ -58,20 +58,20 @@ class ShareActivity : BaseAppCompatActivity() {
             val prefix = binding.prefixEditText.text.toString()
             val note = binding.noteTextField.editText?.text.toString()
             setLoading(true)
-            SLApiService.createAlias(apiKey, prefix, selectedSuffix!!, note) { result ->
-                runOnUiThread {
-                    setLoading(false)
-
-                    result.onSuccess { alias ->
-                        val email = alias.email
-                        toastLongly("Created & copied \"$email\"")
-                        copyToClipboard(email, email)
-                        finish()
-                    }
-
-                    result.onFailure(::toastThrowable)
-                }
-            }
+//            SLApiService.createAlias(apiKey, prefix, selectedSuffix!!, note) { result ->
+//                runOnUiThread {
+//                    setLoading(false)
+//
+//                    result.onSuccess { alias ->
+//                        val email = alias.email
+//                        toastLongly("Created & copied \"$email\"")
+//                        copyToClipboard(email, email)
+//                        finish()
+//                    }
+//
+//                    result.onFailure(::toastThrowable)
+//                }
+//            }
         }
 
         setLoading(true)
@@ -81,7 +81,7 @@ class ShareActivity : BaseAppCompatActivity() {
 
                 result.onSuccess { userOptions ->
                     if (userOptions.canCreate) {
-                        setUpSuffixesSpinner(userOptions.suffixes)
+                        setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
                         binding.prefixEditText.requestFocus()
                         showKeyboard()
                         prefillPrefix()
