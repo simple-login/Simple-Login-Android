@@ -1,29 +1,37 @@
 package io.simplelogin.android.module.share
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
+import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.simplelogin.android.databinding.ActivityShareBinding
+import io.simplelogin.android.databinding.FragmentAliasCreateBinding
 import io.simplelogin.android.module.alias.create.AliasCreateSpinnerAdapter
+import io.simplelogin.android.module.alias.create.AliasCreateViewModel
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.*
+import io.simplelogin.android.utils.model.toSpannableString
 import java.net.URI
 import java.net.URISyntaxException
 
 class ShareActivity : BaseAppCompatActivity() {
-    lateinit var binding: ActivityShareBinding
+    private var apiKey: String? = null
+    private lateinit var binding: FragmentAliasCreateBinding // Use the same layout with AliasCreateFragment
     private var selectedSuffix: String? = null
+    private lateinit var viewModel: AliasCreateViewModel
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityShareBinding.inflate(layoutInflater)
+        binding = FragmentAliasCreateBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { finish() }
         setContentView(binding.root)
 
@@ -42,61 +50,72 @@ class ShareActivity : BaseAppCompatActivity() {
             }
         })
 
-        val apiKey = SLSharedPreferences.getApiKey(this)
+        apiKey = SLSharedPreferences.getApiKey(this)
 
         if (apiKey == null) {
             showNotSignedInAlert()
             return
         }
 
+        binding.mailboxesTitleLinearLayout.setOnClickListener { showSelectMailboxesAlert() }
+        binding.mailboxesTextView.setOnClickListener { showSelectMailboxesAlert() }
+
+        binding.root.setOnClickListener { dismissKeyboard() }
+
+        binding.createButton.text = "Create & Copy"
         binding.createButton.setOnClickListener {
             if (selectedSuffix == null) {
                 toastShortly("No suffix is selected")
                 return@setOnClickListener
             }
-
-            val prefix = binding.prefixEditText.text.toString()
-            val note = binding.noteTextField.editText?.text.toString()
-            setLoading(true)
-//            SLApiService.createAlias(apiKey, prefix, selectedSuffix!!, note) { result ->
-//                runOnUiThread {
-//                    setLoading(false)
-//
-//                    result.onSuccess { alias ->
-//                        val email = alias.email
-//                        toastLongly("Created & copied \"$email\"")
-//                        copyToClipboard(email, email)
-//                        finish()
-//                    }
-//
-//                    result.onFailure(::toastThrowable)
-//                }
-//            }
+            create()
         }
 
+        SLApiService.setUpBaseUrl(this)
+        fillPrefix()
+        setUpViewModel()
+    }
+
+    private fun setUpViewModel() {
+        viewModel = AliasCreateViewModel(this)
         setLoading(true)
-        SLApiService.fetchUserOptions(apiKey) { result ->
-            runOnUiThread {
+        viewModel.fetchUserOptionsAndMailboxes()
+
+        viewModel.error.observe(this, Observer { error ->
+            if (error != null) {
+                toastError(error)
+                finish()
+            }
+        })
+
+        viewModel.userOptions.observe(this, Observer { userOptions ->
+            if (userOptions != null) {
                 setLoading(false)
 
-                result.onSuccess { userOptions ->
-                    if (userOptions.canCreate) {
-                        setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
-                        binding.prefixEditText.requestFocus()
-                        showKeyboard()
-                        prefillPrefix()
-                    } else {
-                        toastLongly("You can not create more alias. Please upgrade to premium.")
-                        finish()
-                    }
-                }
-
-                result.onFailure {
-                    toastThrowable(it)
-                    finish()
+                if (userOptions.canCreate) {
+                    setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
+                } else {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("Can not create more alias")
+                        .setMessage("Go premium for unlimited aliases and more.")
+                        .setPositiveButton("Close", null)
+                        .setOnDismissListener {
+                            finish()
+                        }
+                        .show()
                 }
             }
-        }
+        })
+
+        viewModel.selectedMailboxes.observe(this, Observer { selectedMailboxes ->
+            if (selectedMailboxes != null) {
+                setLoading(false)
+                binding.mailboxesTextView.setText(
+                    selectedMailboxes.toSpannableString(this),
+                    TextView.BufferType.SPANNABLE
+                )
+            }
+        })
     }
 
     private fun setUpSuffixesSpinner(suffixes: List<String>) {
@@ -115,7 +134,7 @@ class ShareActivity : BaseAppCompatActivity() {
             }
     }
 
-    private fun prefillPrefix() {
+    private fun fillPrefix() {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)
         try {
             val uri = URI(text)
@@ -153,5 +172,45 @@ class ShareActivity : BaseAppCompatActivity() {
             }
             .setOnDismissListener { finish() }
             .show()
+    }
+
+    private fun showSelectMailboxesAlert() {
+        viewModel.selectedMailboxes.value?.let { selectedMailboxes ->
+            showSelectMailboxesAlert(
+                viewModel.mailboxes,
+                selectedMailboxes
+            ) { checkedMailboxes ->
+                viewModel.setSelectedMailboxes(checkedMailboxes)
+            }
+        }
+    }
+
+    private fun create() {
+        val signedSuffix =
+            viewModel.userOptions.value!!.suffixes.first { it[0] == selectedSuffix }[1]
+        setLoading(true)
+
+        SLApiService.createAlias(
+            apiKey!!,
+            binding.prefixEditText.text.toString(),
+            signedSuffix,
+            viewModel.selectedMailboxes.value!!.map { it.id },
+            binding.nameEditText.text.toString(),
+            binding.noteEditText.text.toString()
+        ) { result ->
+            runOnUiThread {
+                setLoading(false)
+
+                result.onSuccess { alias ->
+                    val email = alias.email
+                    toastLongly("Created & copied \"$email\"")
+                    copyToClipboard(email, email)
+                    finish()
+                }
+
+                result.onFailure(::toastThrowable)
+
+            }
+        }
     }
 }
