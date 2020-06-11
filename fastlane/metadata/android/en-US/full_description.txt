@@ -2,6 +2,8 @@
 <ul>
 <li>Manage aliases: create/edit/delete & enable/disable an alias.</li>
 <li>Manage contacts: create contacts to send email from your aliases.</li>
+<li>Manage mailboxes: create/delete/make default a mailbox.</li>
+<li>Share extension: create alias without leaving your browser.</li>
 <li>Secure login with Two Factor Authentication (2FA).</li>
 <li>Support self-hosted: you can use this application with your own SimpleLogin instance.</li>
 </ul>

@@ -1,0 +1,3 @@
+• Manage mailboxes: create/delete/make default a mailbox.
+• Manage alias mailboxes: create alias with chosen mailboxes, modify alias's list of mailboxes at anytime.
+• Ability to set/modify alias name.
