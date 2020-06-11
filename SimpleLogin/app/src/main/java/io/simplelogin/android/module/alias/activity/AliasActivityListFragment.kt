@@ -20,6 +20,7 @@ import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
@@ -32,6 +33,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var viewModel: AliasActivityListViewModel
     private lateinit var headerAdapter: AliasActivityListHeaderAdapter
     private lateinit var activityAdapter: AliasActivityListAdapter
+    private val footerAdapter = LoadingFooterAdapter()
     private lateinit var linearSmoothScroller: LinearSmoothScroller
 
     @SuppressLint("SetTextI18n")
@@ -65,6 +67,11 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
+    private fun showLoadingFooter(showing: Boolean) {
+        footerAdapter.isLoading = showing
+        footerAdapter.notifyDataSetChanged()
+    }
+
     private fun setUpViewModel() {
         val alias = AliasActivityListFragmentArgs.fromBundle(requireArguments()).alias
 
@@ -77,7 +84,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         viewModel.fetchActivities()
         viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
             activity?.runOnUiThread {
-                setLoading(false)
+                showLoadingFooter(false)
 
                 if (haveNewActivities) {
                     activityAdapter.submitList(viewModel.activities)
@@ -95,6 +102,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
                 setLoading(false)
+                showLoadingFooter(true)
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -202,14 +210,14 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        binding.recyclerView.adapter = MergeAdapter(headerAdapter, activityAdapter)
+        binding.recyclerView.adapter = MergeAdapter(headerAdapter, activityAdapter, footerAdapter)
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size) && viewModel.moreToLoad) {
-                    setLoading(true)
+                    showLoadingFooter(true)
                     viewModel.fetchActivities()
                 }
 

@@ -4,7 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.viewholder.AliasActivityHeaderViewHolder
 
-class AliasActivityListHeaderAdapter(private val viewModel: AliasActivityListViewModel, private val clickListener: ClickListener) : RecyclerView.Adapter<AliasActivityHeaderViewHolder>() {
+class AliasActivityListHeaderAdapter(
+    private val viewModel: AliasActivityListViewModel,
+    private val clickListener: ClickListener
+) : RecyclerView.Adapter<AliasActivityHeaderViewHolder>() {
     interface ClickListener {
         fun editMailboxesButtonClicked()
         fun editNameButtonClicked()
@@ -13,7 +16,10 @@ class AliasActivityListHeaderAdapter(private val viewModel: AliasActivityListVie
 
     override fun getItemCount() = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AliasActivityHeaderViewHolder =
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AliasActivityHeaderViewHolder =
         AliasActivityHeaderViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: AliasActivityHeaderViewHolder, position: Int) =
