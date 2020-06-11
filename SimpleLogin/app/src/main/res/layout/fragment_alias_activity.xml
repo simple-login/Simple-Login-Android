@@ -35,7 +35,7 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <RelativeLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -63,9 +63,19 @@
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_gravity="center" />
 
-        </RelativeLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/scrollToTopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="24dp"
+                android:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@drawable/ic_arrow_upward_24dp"
+                app:tint="@color/colorWhite"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <View
             android:layout_width="match_parent"

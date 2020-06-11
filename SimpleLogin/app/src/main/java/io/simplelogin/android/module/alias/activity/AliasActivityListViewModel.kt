@@ -32,6 +32,10 @@ class AliasActivityListViewModel(private val context: Context, var alias: Alias)
     val eventHaveNewActivities: LiveData<Boolean>
         get() = _eventHaveNewActivities
 
+    fun onHandleHaveNewActivitiesComplete() {
+        _eventHaveNewActivities.value = false
+    }
+
     fun fetchActivities() {
         if (!moreToLoad || _isFetching) return
         _isFetching = true

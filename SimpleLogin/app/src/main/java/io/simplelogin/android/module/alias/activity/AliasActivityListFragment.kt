@@ -2,6 +2,7 @@ package io.simplelogin.android.module.alias.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.MergeAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,6 +32,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var viewModel: AliasActivityListViewModel
     private lateinit var headerAdapter: AliasActivityListHeaderAdapter
     private lateinit var activityAdapter: AliasActivityListAdapter
+    private lateinit var linearSmoothScroller: LinearSmoothScroller
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -44,6 +47,12 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.toolbar.setNavigationOnClickListener { updateAliasListViewModelAndNavigateUp() }
         binding.toolbarTitleText.text = viewModel.alias.email
         binding.toolbarTitleText.isSelected = true // to trigger marquee animation
+
+        binding.scrollToTopButton.hide()
+        binding.scrollToTopButton.setOnClickListener {
+            linearSmoothScroller.targetPosition = 0
+            binding.recyclerView.layoutManager?.startSmoothScroll(linearSmoothScroller)
+        }
 
         setUpRecyclerView()
         setLoading(false)
@@ -72,6 +81,8 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
                 if (haveNewActivities) {
                     activityAdapter.submitList(viewModel.activities)
+                    activityAdapter.notifyDataSetChanged()
+                    viewModel.onHandleHaveNewActivitiesComplete()
                 }
 
                 if (binding.swipeRefreshLayout.isRefreshing) {
@@ -100,51 +111,66 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpRecyclerView() {
-        headerAdapter = AliasActivityListHeaderAdapter(viewModel, object : AliasActivityListHeaderAdapter.ClickListener {
-            override fun editMailboxesButtonClicked() {
-                fetchMailboxesAndShowAlert()
+        linearSmoothScroller = object : LinearSmoothScroller(requireContext()) {
+            override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+                // MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+                return 5f / (displayMetrics?.densityDpi ?: 1)
             }
 
-            override fun editNameButtonClicked() {
-                val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-                dialogTextViewBinding.editText.hint = "Ex: Jane Doe"
-                dialogTextViewBinding.editText.setText(viewModel.alias.name)
-                val title = when (viewModel.alias.name) {
-                    null -> "Add name for alias"
-                    else -> "Edit name for alias"
+            override fun onStop() {
+                binding.scrollToTopButton.hide()
+                super.onStop()
+            }
+        }
+
+        headerAdapter = AliasActivityListHeaderAdapter(
+            viewModel,
+            object : AliasActivityListHeaderAdapter.ClickListener {
+                override fun editMailboxesButtonClicked() {
+                    fetchMailboxesAndShowAlert()
                 }
 
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(title)
-                    .setMessage(viewModel.alias.email)
-                    .setView(dialogTextViewBinding.root)
-                    .setNeutralButton("Cancel", null)
-                    .setPositiveButton("Save") { _, _ ->
-                        viewModel.updateName(dialogTextViewBinding.editText.text.toString())
+                override fun editNameButtonClicked() {
+                    val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+                    dialogTextViewBinding.editText.hint = "Ex: Jane Doe"
+                    dialogTextViewBinding.editText.setText(viewModel.alias.name)
+                    val title = when (viewModel.alias.name) {
+                        null -> "Add name for alias"
+                        else -> "Edit name for alias"
                     }
-                    .show()
-            }
 
-            override fun editNoteButtonClicked() {
-                val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
-                dialogTextViewBinding.editText.hint = "Ex: For tech newsletters, online shopping..."
-                dialogTextViewBinding.editText.setText(viewModel.alias.note)
-                val title = when (viewModel.alias.note) {
-                    null -> "Add note for alias"
-                    else -> "Edit note for alias"
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(title)
+                        .setMessage(viewModel.alias.email)
+                        .setView(dialogTextViewBinding.root)
+                        .setNeutralButton("Cancel", null)
+                        .setPositiveButton("Save") { _, _ ->
+                            viewModel.updateName(dialogTextViewBinding.editText.text.toString())
+                        }
+                        .show()
                 }
 
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(title)
-                    .setMessage(viewModel.alias.email)
-                    .setView(dialogTextViewBinding.root)
-                    .setNeutralButton("Cancel", null)
-                    .setPositiveButton("Save") { _, _ ->
-                        viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
+                override fun editNoteButtonClicked() {
+                    val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+                    dialogTextViewBinding.editText.hint =
+                        "Ex: For tech newsletters, online shopping..."
+                    dialogTextViewBinding.editText.setText(viewModel.alias.note)
+                    val title = when (viewModel.alias.note) {
+                        null -> "Add note for alias"
+                        else -> "Edit note for alias"
                     }
-                    .show()
-            }
-        })
+
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(title)
+                        .setMessage(viewModel.alias.email)
+                        .setView(dialogTextViewBinding.root)
+                        .setNeutralButton("Cancel", null)
+                        .setPositiveButton("Save") { _, _ ->
+                            viewModel.updateNote(dialogTextViewBinding.editText.text.toString())
+                        }
+                        .show()
+                }
+            })
 
         activityAdapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
             override fun onClick(aliasActivity: AliasActivity) {
@@ -182,8 +208,15 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size - 1) && viewModel.moreToLoad) {
+                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size) && viewModel.moreToLoad) {
+                    setLoading(true)
                     viewModel.fetchActivities()
+                }
+
+                if (dy >= 0) {
+                    binding.scrollToTopButton.hide()
+                } else if (linearLayoutManager.findLastCompletelyVisibleItemPosition() > 20) {
+                    binding.scrollToTopButton.show()
                 }
             }
         })
@@ -203,7 +236,10 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 result.onFailure(requireContext()::toastThrowable)
 
                 result.onSuccess { mailboxes ->
-                    activity?.showSelectMailboxesAlert(mailboxes, viewModel.alias.mailboxes) { checkedMailboxes ->
+                    activity?.showSelectMailboxesAlert(
+                        mailboxes,
+                        viewModel.alias.mailboxes
+                    ) { checkedMailboxes ->
                         setLoading(true)
                         viewModel.updateMailboxes(checkedMailboxes)
                     }
