@@ -2,23 +2,22 @@ package io.simplelogin.android.module.alias
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
@@ -33,10 +32,10 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasListBinding
     private val viewModel: AliasListViewModel by activityViewModels()
-    private lateinit var adapter: AliasListAdapter
+    private lateinit var aliasListAdapter: AliasListAdapter
+    private val footerAdapter = LoadingFooterAdapter()
     private lateinit var linearLayoutManager: LinearLayoutManager
-
-    private var lastToast: Toast? = null
+    private lateinit var linearSmoothScroller: LinearSmoothScroller
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +50,12 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         setUpViewModel()
         // Reset tab selection state on configuration changed
         binding.tabLayout.getTabAt(viewModel.aliasFilterMode.position)?.select()
+
+        binding.scrollToTopButton.hide()
+        binding.scrollToTopButton.setOnClickListener {
+            linearSmoothScroller.targetPosition = 0
+            binding.recyclerView.layoutManager?.startSmoothScroll(linearSmoothScroller)
+        }
 
         setUpRecyclerView()
         setLoading(false)
@@ -67,8 +72,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     override fun onResume() {
         super.onResume()
         // On configuration change, trigger a recyclerView refresh by calling filter function
-        if (adapter.itemCount == 0) {
-            adapter.submitList(viewModel.filteredAliases.toMutableList())
+        if (aliasListAdapter.itemCount == 0) {
+            aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
             binding.recyclerView.scrollToPosition(viewModel.getLastScrollingPosition())
         }
 
@@ -87,17 +92,21 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
+    private fun showLoadingFooter(showing: Boolean) {
+        footerAdapter.isLoading = showing
+        footerAdapter.notifyDataSetChanged()
+    }
+
     private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
             Observer { updatedAliases ->
                 activity?.runOnUiThread {
                     if (updatedAliases) {
-                        setLoading(false)
-                        lastToast?.cancel()
+                        showLoadingFooter(false)
                         // filteredAliases.toMutableList() to make the recyclerView updates itself
                         // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
-                        adapter.submitList(viewModel.filteredAliases.toMutableList())
+                        aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
 
                         viewModel.onEventUpdateAliasesComplete()
 
@@ -113,7 +122,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             if (toggledAliasIndex != null) {
                 activity?.runOnUiThread {
                     setLoading(false)
-                    adapter.notifyItemChanged(toggledAliasIndex)
+                    aliasListAdapter.notifyItemChanged(toggledAliasIndex)
                     viewModel.onHandleToggleAliasComplete()
                 }
             }
@@ -129,7 +138,19 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     }
 
     private fun setUpRecyclerView() {
-        adapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
+        linearSmoothScroller = object : LinearSmoothScroller(requireContext()) {
+            override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+                // MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+                return 5f / (displayMetrics?.densityDpi ?: 1)
+            }
+
+            override fun onStop() {
+                binding.scrollToTopButton.hide()
+                super.onStop()
+            }
+        }
+
+        aliasListAdapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
             val context = getContext() ?: throw Exception("Context is null")
 
             override fun onClick(alias: Alias) {
@@ -159,7 +180,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 )
             }
         })
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = MergeAdapter(aliasListAdapter, footerAdapter)
         linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
@@ -168,9 +189,14 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1)
                     && viewModel.moreAliasesToLoad
                 ) {
-                    setLoading(true)
-                    lastToast = context?.toastShortly("Loading more...")
+                    showLoadingFooter(true)
                     viewModel.fetchAliases()
+                }
+
+                if (dy >= 0) {
+                    binding.scrollToTopButton.hide()
+                } else if (linearLayoutManager.findLastCompletelyVisibleItemPosition() > 10) {
+                    binding.scrollToTopButton.show()
                 }
             }
         })

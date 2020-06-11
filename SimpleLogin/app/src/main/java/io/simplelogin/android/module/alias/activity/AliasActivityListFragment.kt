@@ -87,8 +87,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 showLoadingFooter(false)
 
                 if (haveNewActivities) {
-                    activityAdapter.submitList(viewModel.activities)
-                    activityAdapter.notifyDataSetChanged()
+                    activityAdapter.submitList(viewModel.activities.toMutableList())
                     viewModel.onHandleHaveNewActivitiesComplete()
                 }
 

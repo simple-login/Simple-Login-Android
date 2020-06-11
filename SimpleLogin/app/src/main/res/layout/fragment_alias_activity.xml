@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorListBackground"
                     android:clipToPadding="false"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="50dp" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
