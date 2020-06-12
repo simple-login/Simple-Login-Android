@@ -9,12 +9,14 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 - Play Store: [https://play.google.com/store/apps/details?id=io.simplelogin.android](https://play.google.com/store/apps/details?id=io.simplelogin.android)
 
 ## Screenshots
-|<img src="https://raw.githubusercontent.com/ntnhon/TarotCodexPublicImages/master/SL-Android/01-Homepage.png" width="180" />|<img src="https://raw.githubusercontent.com/ntnhon/TarotCodexPublicImages/master/SL-Android/02-Create.png" width="180" />|<img src="https://raw.githubusercontent.com/ntnhon/TarotCodexPublicImages/master/SL-Android/03-Activity.png" width="180" />|<img src="https://raw.githubusercontent.com/ntnhon/TarotCodexPublicImages/master/SL-Android/04-Contact.png" width="180" />|
-|----|----|----|----|
+|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="180" />|
+|----|----|----|
+|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="180" />|
 
 ## Features
 - Manage your aliases: list, create, edit, delete, enable/disable.
 - Manage your alias contacts: list, create, delete.
+- Manage your mailbox list: create, delete, make default.
 - View alias activities.
 - Share extension which allows you to create alias on the fly while using a browser.
 - Support self-hosted: you can use this application with your own SimpleLogin instance.
@@ -22,7 +24,7 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 ## TODO
 - [ ] Manage custom domains
 - [ ] Manage directories
-- [ ] Manage mailboxes
+- [x] Manage mailboxes
 - [ ] Account settings
 
 ## License
