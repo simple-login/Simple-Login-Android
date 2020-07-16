@@ -7,6 +7,7 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 - Back-end: [https://github.com/simple-login/app](https://github.com/simple-login/app)
 - App Store: [https://apps.apple.com/us/app/simplelogin-anti-spam/id1494359858](https://apps.apple.com/us/app/simplelogin-anti-spam/id1494359858)
 - Play Store: [https://play.google.com/store/apps/details?id=io.simplelogin.android](https://play.google.com/store/apps/details?id=io.simplelogin.android)
+- F-Droid: [https://f-droid.org/packages/io.simplelogin.android.fdroid/](https://f-droid.org/packages/io.simplelogin.android.fdroid/)
 
 ## Screenshots
 |<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="180" />|
