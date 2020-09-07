@@ -1,6 +1,7 @@
 package io.simplelogin.android.module.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -51,6 +52,13 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onBackPressed() {
+        if (binding.mainDrawer.isDrawerOpen(binding.navigationView)) {
+            // When navigationView is already open and user press back
+            // finish this activity with RESULT_CANCELED so that StartupActivity can finish itself to exit app
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
+
         if (supportFragmentManager.fragments.size == 0) return
         val navHostFragment = (supportFragmentManager.fragments[0] as? NavHostFragment) ?: return
 

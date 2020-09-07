@@ -1,5 +1,6 @@
 package io.simplelogin.android.module.startup
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -14,6 +15,10 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.UserInfo
 
 class StartupActivity : BaseAppCompatActivity()  {
+    companion object {
+        const val RC_HOME_ACTIVITY = 0
+    }
+
     private lateinit var binding: ActivityStartUpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +50,7 @@ class StartupActivity : BaseAppCompatActivity()  {
     private fun startHomeActivity(userInfo: UserInfo) {
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra(HomeActivity.USER_INFO, userInfo)
-        startActivity(intent)
+        startActivityForResult(intent, RC_HOME_ACTIVITY)
         overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 
@@ -74,5 +79,18 @@ class StartupActivity : BaseAppCompatActivity()  {
                 }
             }
             .show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            RC_HOME_ACTIVITY -> {
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    // Exit application when backed from HomeActivity
+                    finish()
+                }
+            }
+        }
     }
 }
