@@ -97,7 +97,7 @@ data class Alias(
     }
 
     private fun generateMailboxesString(context: Context) {
-        _mailboxesString = _mailboxes.toSpannableString(context)
+        _mailboxesString = _mailboxes.sorted().toSpannableString(context)
     }
 
     @IgnoredOnParcel

@@ -8,4 +8,6 @@ import kotlinx.android.parcel.Parcelize
 data class AliasMailbox(
     @SerializedName("id") val id: Int,
     @SerializedName("email") val email: String
-) : Parcelable
+) : Parcelable, Comparable<AliasMailbox> {
+    override fun compareTo(other: AliasMailbox): Int = this.email.compareTo(other.email)
+}
