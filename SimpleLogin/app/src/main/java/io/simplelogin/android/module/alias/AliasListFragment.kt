@@ -180,7 +180,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 )
             }
         })
-        binding.recyclerView.adapter = MergeAdapter(aliasListAdapter, footerAdapter)
+        binding.recyclerView.adapter = ConcatAdapter(aliasListAdapter, footerAdapter)
         linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 

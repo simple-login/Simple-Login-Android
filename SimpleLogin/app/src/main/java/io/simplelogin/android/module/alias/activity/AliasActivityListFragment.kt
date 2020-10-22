@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.MergeAdapter
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
@@ -209,7 +209,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        binding.recyclerView.adapter = MergeAdapter(headerAdapter, activityAdapter, footerAdapter)
+        binding.recyclerView.adapter = ConcatAdapter(headerAdapter, activityAdapter, footerAdapter)
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
