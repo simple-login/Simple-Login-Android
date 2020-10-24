@@ -8,8 +8,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavArgument
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -119,6 +121,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 goToMarketIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
 
                 try {
+                    SLSharedPreferences.setRated(this, true)
                     startActivity(goToMarketIntent)
                 } catch (e: ActivityNotFoundException) {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=$packageName")))
@@ -176,5 +179,24 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
             }
         }
+
+        // Define a nested function in order to reuse it later
+        fun hideRateUsMenuItemIfApplicable() {
+            binding.navigationView.menu.findItem(R.id.rateUsMenuItem).isVisible =
+                !SLSharedPreferences.getRated(this)
+        }
+
+        hideRateUsMenuItemIfApplicable()
+
+        // Add listener to properly hide "Rate us" menu item
+        binding.mainDrawer.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) = Unit
+            override fun onDrawerOpened(drawerView: View) = Unit
+            override fun onDrawerStateChanged(newState: Int) = Unit
+
+            override fun onDrawerClosed(drawerView: View) {
+                hideRateUsMenuItemIfApplicable()
+            }
+        })
     }
 }

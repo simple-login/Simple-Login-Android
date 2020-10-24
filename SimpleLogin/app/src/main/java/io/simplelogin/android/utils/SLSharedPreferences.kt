@@ -55,5 +55,20 @@ class SLSharedPreferences {
             }
         }
         //endregion
+
+        //region RATED
+        private const val RATED = "RATED"
+
+        fun getRated(context: Context) : Boolean {
+            return getSharedPreferences(context).getBoolean(RATED, false)
+        }
+
+        fun setRated(context: Context, rated: Boolean = true) {
+            with(getSharedPreferences(context).edit()) {
+                putBoolean(RATED, rated)
+                commit()
+            }
+        }
+        //endregion
     }
 }
