@@ -8,13 +8,27 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
+}
+
+plugins {
+    id("io.gitlab.arturbosch.detekt").version("1.14.2")
+}
+
+repositories {
+    jcenter()
+}
+
+detekt {
+    toolVersion = "1.14.2"
+    input = files(rootProject.rootDir)
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
 }
 
 allprojects {
