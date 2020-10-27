@@ -29,6 +29,13 @@ detekt {
     input = files(rootProject.rootDir)
     config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
+
+    reports {
+        txt {
+            enabled = true
+            destination = file("report/detekt.txt")
+        }
+    }
 }
 
 allprojects {

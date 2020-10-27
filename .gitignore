@@ -29,3 +29,5 @@ google-services.json
 .DS_Store
 *.apk
 output.json
+
+SimpleLogin/report/
