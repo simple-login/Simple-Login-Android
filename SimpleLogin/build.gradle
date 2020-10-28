@@ -31,9 +31,9 @@ detekt {
     buildUponDefaultConfig = true
 
     reports {
-        txt {
+        html {
             enabled = true
-            destination = file("report/detekt.txt")
+            destination = file("report/detekt.html")
         }
     }
 }
