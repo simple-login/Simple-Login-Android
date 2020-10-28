@@ -26,7 +26,6 @@ import io.simplelogin.android.utils.enums.RandomMode
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
-import java.lang.Exception
 
 class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
@@ -189,9 +188,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1)
-                    && viewModel.moreAliasesToLoad
-                ) {
+                val isPenultimateItem =
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1
+                if (isPenultimateItem  && viewModel.moreAliasesToLoad) {
                     showLoadingFooter(true)
                     viewModel.fetchAliases()
                 }

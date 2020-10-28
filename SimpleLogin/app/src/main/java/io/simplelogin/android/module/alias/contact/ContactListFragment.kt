@@ -279,9 +279,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                                 context?.toastShortly("Copied \"${contact.reverseAlias}\"")
                             }
 
-                            1 -> {
-                                activity?.startSendEmailIntent(contact.reverseAlias)
-                            }
+                            1 -> activity?.startSendEmailIntent(contact.reverseAlias)
                         }
                     }
                     .show()

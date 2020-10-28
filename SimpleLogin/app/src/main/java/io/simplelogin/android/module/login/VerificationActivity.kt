@@ -234,7 +234,7 @@ class VerificationActivity : BaseAppCompatActivity() {
                     val returnIntent = Intent()
                     returnIntent.putExtra(
                         ACCOUNT,
-                        (verificationMode as VerificationMode.AccountActivation)
+                        verificationMode as VerificationMode.AccountActivation
                     )
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()

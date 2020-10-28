@@ -15,7 +15,7 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         findNavController(R.id.navHostFragment).graph.addArgument(
             AboutFragment.OPEN_FROM_LOGIN_ACTIVITY,
             NavArgument.Builder().setDefaultValue(true).build()

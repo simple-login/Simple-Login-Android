@@ -6,7 +6,6 @@ import io.simplelogin.android.utils.diffutil.AliasActivityDiffCallback
 import io.simplelogin.android.utils.model.AliasActivity
 import io.simplelogin.android.viewholder.AliasActivityViewHolder
 
-
 class AliasActivityListAdapter(private val clickListener: ClickListener) :
     ListAdapter<AliasActivity, AliasActivityViewHolder>(AliasActivityDiffCallback()) {
     interface ClickListener {

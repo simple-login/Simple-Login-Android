@@ -81,17 +81,15 @@ abstract class SwipeHelper(
         var maxDX = dX
         val itemView = viewHolder.itemView
 
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            if (dX < 0) {
-                if (!buttonsBuffer.containsKey(position)) {
-                    buttonsBuffer[position] = instantiateUnderlayButton(position)
-                }
-
-                val buttons = buttonsBuffer[position] ?: return
-                if (buttons.isEmpty()) return
-                maxDX = max(-buttons.intrinsicWidth(), dX)
-                drawButtons(c, buttons, itemView, maxDX)
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && dX < 0) {
+            if (!buttonsBuffer.containsKey(position)) {
+                buttonsBuffer[position] = instantiateUnderlayButton(position)
             }
+
+            val buttons = buttonsBuffer[position] ?: return
+            if (buttons.isEmpty()) return
+            maxDX = max(-buttons.intrinsicWidth(), dX)
+            drawButtons(c, buttons, itemView, maxDX)
         }
 
         super.onChildDraw(
@@ -109,9 +107,7 @@ abstract class SwipeHelper(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
+    ) : Boolean = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
@@ -120,9 +116,7 @@ abstract class SwipeHelper(
         recoverSwipedItem()
     }
 
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-        return .2f
-    }
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = .2f
 
     abstract fun instantiateUnderlayButton(position: Int): List<UnderlayButton>
 

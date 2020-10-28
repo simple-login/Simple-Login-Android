@@ -201,9 +201,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                                 context?.toastShortly("Copied \"${aliasActivity.reverseAlias}\"")
                             }
 
-                            1 -> {
-                                activity?.startSendEmailIntent(aliasActivity.reverseAlias)
-                            }
+                            1 -> activity?.startSendEmailIntent(aliasActivity.reverseAlias)
                         }
                     }
                     .show()

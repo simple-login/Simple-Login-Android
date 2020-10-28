@@ -298,14 +298,13 @@ class LoginActivity : BaseAppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            RC_MFA_VERIFICATION -> {
+            RC_MFA_VERIFICATION ->
                 if (resultCode == Activity.RESULT_OK) {
                     val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
                     apiKey?.let { finalizeLogin(it) }
                 }
-            }
 
-            RC_EMAIL_VERIFICATION -> {
+            RC_EMAIL_VERIFICATION ->
                 if (resultCode == Activity.RESULT_OK) {
                     val verificationMode =
                         data?.getParcelableExtra<VerificationMode.AccountActivation>(
@@ -315,9 +314,8 @@ class LoginActivity : BaseAppCompatActivity() {
                     binding.passwordTextField.editText?.setText(verificationMode?.password?.value)
                     login()
                 }
-            }
 
-            RC_SIGN_UP -> {
+            RC_SIGN_UP ->
                 when (resultCode) {
                     Activity.RESULT_OK -> {
                         val email = data?.getStringExtra(SignUpActivity.EMAIL) ?: ""
@@ -327,7 +325,6 @@ class LoginActivity : BaseAppCompatActivity() {
 
                     else -> Unit
                 }
-            }
 
             else -> Unit
         }
@@ -337,7 +334,7 @@ class LoginActivity : BaseAppCompatActivity() {
         val email = binding.emailTextField.editText?.text.toString()
         val password = binding.passwordTextField.editText?.text.toString()
 
-        binding.loginButton.isEnabled = (email != "") && (password != "")
+        binding.loginButton.isEnabled = email != "" && password != ""
     }
 
     private fun login() {

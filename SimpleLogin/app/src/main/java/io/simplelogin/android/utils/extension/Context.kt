@@ -31,10 +31,8 @@ fun Context.getVersionName(): String {
     return packageInfo.versionName
 }
 
-fun Context.dpToPixel(dp: Float): Float {
-    return dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-}
+fun Context.dpToPixel(dp: Float): Float =
+    dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
-fun Context.pixelsToDp(px: Float): Float {
-    return px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-}
+fun Context.pixelsToDp(px: Float): Float =
+    px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)

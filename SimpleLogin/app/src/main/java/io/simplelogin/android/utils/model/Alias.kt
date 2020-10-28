@@ -125,8 +125,8 @@ data class Alias(
 
     @IgnoredOnParcel
     private var _latestActivityString: String? = null
-    fun getLatestActivityString(): String? {
-        return when (latestActivity) {
+    fun getLatestActivityString(): String? =
+        when (latestActivity) {
             null -> null
             else -> {
                 if (_latestActivityString == null) {
@@ -138,7 +138,6 @@ data class Alias(
                 _latestActivityString!!
             }
         }
-    }
 }
 
 data class AliasArray(

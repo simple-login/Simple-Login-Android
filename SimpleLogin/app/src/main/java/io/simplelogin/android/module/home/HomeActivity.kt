@@ -62,7 +62,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         }
 
         if (supportFragmentManager.fragments.size == 0) return
-        val navHostFragment = (supportFragmentManager.fragments[0] as? NavHostFragment) ?: return
+        val navHostFragment = supportFragmentManager.fragments[0] as? NavHostFragment ?: return
 
         for (fragment in navHostFragment.childFragmentManager.fragments) {
             if (fragment is OnBackPressed) {
