@@ -68,7 +68,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error != null) {
-                context?.toastError(error!!)
+                context?.toastError(error)
                 findNavController().navigateUp()
             }
         })

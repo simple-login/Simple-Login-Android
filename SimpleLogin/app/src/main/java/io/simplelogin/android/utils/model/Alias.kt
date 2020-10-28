@@ -12,6 +12,7 @@ import io.simplelogin.android.utils.SLDateTimeFormatter
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
+@Suppress("ConstructorParameterNaming")
 @Parcelize
 data class Alias(
     @SerializedName("id") val id: Int,

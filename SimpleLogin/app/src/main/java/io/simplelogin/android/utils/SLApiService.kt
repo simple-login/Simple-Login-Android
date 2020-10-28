@@ -29,6 +29,7 @@ private fun Exception.notNullLocalizedMessage(): String {
 
 private val client = OkHttpClient()
 
+@Suppress("MagicNumber")
 object SLApiService {
     private lateinit var BASE_URL: String
 
@@ -316,6 +317,7 @@ object SLApiService {
     //endregion
 
     //region Alias
+    @Suppress("LongParameterList")
     fun createAlias(
         apiKey: String,
         prefix: String,
@@ -659,7 +661,12 @@ object SLApiService {
         })
     }
 
-    fun updateAliasMailboxes(apiKey: String, alias: Alias, mailboxes: List<AliasMailbox>, completion: (Result<Unit>) -> Unit) {
+    fun updateAliasMailboxes(
+        apiKey: String,
+        alias: Alias,
+        mailboxes: List<AliasMailbox>,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf("mailbox_ids" to JSONArray(mailboxes.map { it.id })).toRequestBody()
 
         val request = Request.Builder()

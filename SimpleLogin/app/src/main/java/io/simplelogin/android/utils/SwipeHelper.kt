@@ -138,9 +138,13 @@ abstract class SwipeHelper(
         @ColorRes private val colorRes: Int,
         private val clickListener: UnderlayButtonClickListener
     ) {
+        companion object {
+            const val DEFAULT_TEXT_SIZE = 14.0f
+            private const val HORIZONTAL_PADDING = 50.0f
+        }
+
         private var clickableRegion: RectF? = null
         private val textSizeInPixel: Float = textSize * context.resources.displayMetrics.density // dp to px
-        private val horizontalPadding = 50.0f
         val intrinsicWidth: Float
 
         init {
@@ -150,7 +154,7 @@ abstract class SwipeHelper(
             paint.textAlign = Paint.Align.LEFT
             val titleBounds = Rect()
             paint.getTextBounds(title, 0, title.length, titleBounds)
-            intrinsicWidth = titleBounds.width() + 2 * horizontalPadding
+            intrinsicWidth = titleBounds.width() + 2 * HORIZONTAL_PADDING
         }
 
         fun draw(canvas: Canvas, rect: RectF) {
@@ -170,7 +174,7 @@ abstract class SwipeHelper(
             paint.getTextBounds(title, 0, title.length, titleBounds)
 
             val y = rect.height() / 2 + titleBounds.height() / 2 - titleBounds.bottom
-            canvas.drawText(title, rect.left + horizontalPadding, rect.top + y, paint)
+            canvas.drawText(title, rect.left + HORIZONTAL_PADDING, rect.top + y, paint)
 
             clickableRegion = rect
         }

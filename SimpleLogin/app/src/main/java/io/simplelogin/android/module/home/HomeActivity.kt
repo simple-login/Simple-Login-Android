@@ -118,13 +118,19 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 val uri = Uri.parse("market://details?id=$packageName")
                 val goToMarketIntent = Intent(Intent.ACTION_VIEW, uri)
 
-                goToMarketIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                @Suppress("MaxLineLength")
+                goToMarketIntent.flags =
+                    Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
 
                 try {
                     SLSharedPreferences.setRated(this, true)
                     startActivity(goToMarketIntent)
                 } catch (e: ActivityNotFoundException) {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=$packageName")))
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=$packageName")
+                    )
+                    startActivity(intent)
                 }
             }
 

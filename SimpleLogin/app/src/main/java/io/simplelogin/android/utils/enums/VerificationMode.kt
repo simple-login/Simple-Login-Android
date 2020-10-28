@@ -11,6 +11,7 @@ sealed class VerificationMode {
     class AccountActivation(val email: Email, val password: Password) : VerificationMode(), Parcelable
 }
 
+@Suppress("ForbiddenComment")
 // TODO: Should be inline class
 @Parcelize
 class MfaKey(val value: String): Parcelable

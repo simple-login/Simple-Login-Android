@@ -25,7 +25,8 @@ data class Contact(
     fun getLastEmailSentString(): String? {
         if (lastEmailSentTimestamp != null) {
             if (_lastEmailSentString == null) {
-                _lastEmailSentString = SLDateTimeFormatter.preciseCreationDateStringFrom(lastEmailSentTimestamp, "Last sent on")
+                _lastEmailSentString =
+                    SLDateTimeFormatter.preciseCreationDateStringFrom(lastEmailSentTimestamp, "Last sent on")
             }
 
             return _lastEmailSentString!!

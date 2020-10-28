@@ -15,12 +15,13 @@ import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
-import io.simplelogin.android.utils.enums.SocialService
 import io.simplelogin.android.utils.enums.VerificationMode
 import io.simplelogin.android.utils.enums.Email
 import io.simplelogin.android.utils.enums.Password
 import io.simplelogin.android.utils.enums.MfaKey
 import io.simplelogin.android.utils.extension.*
+import io.simplelogin.android.utils.extension.expand
+import io.simplelogin.android.utils.extension.hide
 import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
@@ -28,6 +29,8 @@ class LoginActivity : BaseAppCompatActivity() {
         private const val RC_MFA_VERIFICATION = 0
         private const val RC_EMAIL_VERIFICATION = 1
         private const val RC_SIGN_UP = 2
+        private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
+        private const val DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET = 60.0f / 100
     }
 
     private lateinit var binding: ActivityLoginBinding
@@ -115,7 +118,8 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private fun setUpForgotPasswordBottomSheet() {
-        binding.forgotPasswordBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
+        binding.forgotPasswordBottomSheet.root.layoutParams.height =
+            (getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
         forgotPasswordBottomSheetBehavior =
             BottomSheetBehavior.from(binding.forgotPasswordBottomSheet.root)
@@ -125,7 +129,7 @@ class LoginActivity : BaseAppCompatActivity() {
         forgotPasswordBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -185,7 +189,8 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private fun setUpApiKeyBottomSheet() {
-        binding.apiKeyBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
+        binding.apiKeyBottomSheet.root.layoutParams.height =
+            (getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
         apiKeyBottomSheetBehavior = BottomSheetBehavior.from(binding.apiKeyBottomSheet.root)
         apiKeyBottomSheetBehavior.hide()
@@ -195,7 +200,7 @@ class LoginActivity : BaseAppCompatActivity() {
         apiKeyBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -235,7 +240,8 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private fun setUpChangeApiUrlBottomSheet() {
-        binding.changeApiUrlBottomSheet.root.layoutParams.height = getScreenHeight() * 90 / 100
+        binding.changeApiUrlBottomSheet.root.layoutParams.height =
+            (getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
         changeApiUrlBottomSheetBehavior = BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
         changeApiUrlBottomSheetBehavior.hide()
@@ -245,7 +251,7 @@ class LoginActivity : BaseAppCompatActivity() {
         changeApiUrlBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -256,7 +262,8 @@ class LoginActivity : BaseAppCompatActivity() {
                     }
 
                     else -> {
-                        binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.setText(SLSharedPreferences.getApiUrl(this@LoginActivity))
+                        val apiUrl = SLSharedPreferences.getApiUrl(this@LoginActivity)
+                        binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.setText(apiUrl)
                         binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.placeCursorToEnd()
                         binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.requestFocus()
                         showKeyboard()

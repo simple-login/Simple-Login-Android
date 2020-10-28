@@ -27,6 +27,11 @@ import io.simplelogin.android.utils.model.Contact
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
+    companion object {
+        private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
+        private const val DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET = 60.0f / 100
+    }
+
     private lateinit var binding: FragmentContactListBinding
     private lateinit var alias: Alias
     private lateinit var viewModel: ContactListViewModel
@@ -86,7 +91,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpHowToBottomSheet() {
         binding.howToBottomSheet.root.layoutParams.height =
-            requireActivity().getScreenHeight() * 90 / 100
+            (requireActivity().getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
         howToBottomSheetBehavior = BottomSheetBehavior.from(binding.howToBottomSheet.root)
         howToBottomSheetBehavior.hide()
@@ -96,7 +101,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         howToBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -118,7 +123,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpCreateContactBottomSheet() {
         binding.createContactBottomSheet.root.layoutParams.height =
-            requireActivity().getScreenHeight() * 90 / 100
+            (requireActivity().getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
         binding.createContactBottomSheet.aliasTextView.text = alias.email
 
         createContactBottomSheetBehavior =
@@ -131,7 +136,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         createContactBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -288,7 +293,9 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1) && viewModel.moreToLoad) {
+                val isPenultimateItem =
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1
+                if (isPenultimateItem && viewModel.moreToLoad) {
                     viewModel.fetchContacts()
                 }
             }
@@ -301,7 +308,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     UnderlayButton(
                         requireContext(),
                         "Delete",
-                        14.0f,
+                        UnderlayButton.DEFAULT_TEXT_SIZE,
                         android.R.color.holo_red_light,
                         object : UnderlayButtonClickListener {
                             override fun onClick() {

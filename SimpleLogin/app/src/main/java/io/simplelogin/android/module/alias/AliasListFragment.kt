@@ -69,6 +69,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         viewModel.setLastScrollingPosition(linearLayoutManager.findFirstVisibleItemPosition())
     }
 
+    @Suppress("MagicNumber")
     override fun onResume() {
         super.onResume()
         // On configuration change, trigger a recyclerView refresh by calling filter function
@@ -97,10 +98,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         footerAdapter.notifyDataSetChanged()
     }
 
+    @Suppress("MaxLineLength")
     private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
             viewLifecycleOwner,
-            Observer { updatedAliases ->
+            { updatedAliases ->
                 activity?.runOnUiThread {
                     if (updatedAliases) {
                         showLoadingFooter(false)
@@ -118,7 +120,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 }
             })
 
-        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, Observer { toggledAliasIndex ->
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, { toggledAliasIndex ->
             if (toggledAliasIndex != null) {
                 activity?.runOnUiThread {
                     setLoading(false)
@@ -137,6 +139,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         })
     }
 
+    @Suppress("MagicNumber")
     private fun setUpRecyclerView() {
         linearSmoothScroller = object : LinearSmoothScroller(requireContext()) {
             override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
@@ -151,7 +154,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         }
 
         aliasListAdapter = AliasListAdapter(object : AliasListAdapter.ClickListener {
-            val context = getContext() ?: throw Exception("Context is null")
+            val context = getContext() ?: throw IllegalStateException("Context is null")
 
             override fun onClick(alias: Alias) {
                 findNavController().navigate(
@@ -208,14 +211,14 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     UnderlayButton(
                         requireContext(),
                         "Delete",
-                        14.0f,
+                        UnderlayButton.DEFAULT_TEXT_SIZE,
                         android.R.color.holo_red_light,
                         object : UnderlayButtonClickListener {
                             override fun onClick() {
                                 val alias = viewModel.filteredAliases[position]
                                 MaterialAlertDialogBuilder(requireContext())
                                     .setTitle("Delete \"${alias.email}\"?")
-                                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                                    .setMessage(R.string.warning_before_deleting_alias)
                                     .setNegativeButton("Delete") { _, _ ->
                                         setLoading(true)
                                         viewModel.deleteAlias(alias)
@@ -294,9 +297,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.searchMenuItem -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
+            R.id.searchMenuItem ->
+                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
             R.id.randomMenuItem -> showSelectRandomModeAlert()
-            R.id.addMenuItem -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment())
+            R.id.addMenuItem ->
+                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment())
         }
 
         return true

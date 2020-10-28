@@ -49,6 +49,7 @@ class SignUpActivity : BaseAppCompatActivity() {
         }
     }
 
+    @Suppress("MagicNumber")
     private fun verifyEnteredEmailAndPassword() {
         // Verify email
         val email = binding.emailTextField.editText?.text.toString()

@@ -6,16 +6,15 @@ fun String.isValidEmail() : Boolean {
     return emailRegex.matches(this)
 }
 
+@Suppress("MagicNumber")
 fun String.isValidEmailPrefix() : Boolean {
-    if (isEmpty()) return false
-
-    val count = count()
-    if (count > 100 || count == 0) return false
+    if (isEmpty() || length > 100) return false
 
     val prefixRegex = Regex("""([0-9|A-Z|a-z|\-|_]*)""")
     return prefixRegex.matches(this)
 }
 
+@Suppress("LoopWithTooManyJumpStatements")
 fun String.extractWebsiteName() : String {
     var websiteName = ""
     var reachedFirstDot = false

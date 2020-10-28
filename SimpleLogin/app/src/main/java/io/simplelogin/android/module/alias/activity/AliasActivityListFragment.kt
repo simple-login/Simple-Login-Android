@@ -117,6 +117,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         })
     }
 
+    @Suppress("MagicNumber")
     private fun setUpRecyclerView() {
         linearSmoothScroller = object : LinearSmoothScroller(requireContext()) {
             override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
@@ -215,7 +216,9 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size) && viewModel.moreToLoad) {
+                val isLastItem =
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size
+                if (isLastItem && viewModel.moreToLoad) {
                     showLoadingFooter(true)
                     viewModel.fetchActivities()
                 }

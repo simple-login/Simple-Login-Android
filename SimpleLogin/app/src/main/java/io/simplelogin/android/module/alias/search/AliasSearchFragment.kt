@@ -176,7 +176,9 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 activity?.dismissKeyboard()
-                if ((linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.aliases.size - 1) && viewModel.moreToLoad) {
+                val isPenultimateItem =
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.aliases.size - 1
+                if (isPenultimateItem && viewModel.moreToLoad) {
                     viewModel.search(null)
                 }
             }
@@ -189,14 +191,14 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     UnderlayButton(
                         requireContext(),
                         "Delete",
-                        14.0f,
+                        UnderlayButton.DEFAULT_TEXT_SIZE,
                         android.R.color.holo_red_light,
                         object : UnderlayButtonClickListener {
                             override fun onClick() {
                                 val alias = viewModel.aliases[position]
                                 MaterialAlertDialogBuilder(requireContext())
                                     .setTitle("Delete \"${alias.email}\"?")
-                                    .setMessage("\uD83D\uDED1 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.")
+                                    .setMessage(R.string.warning_before_deleting_alias)
                                     .setNegativeButton("Delete") { _, _ ->
                                         setLoading(true)
                                         viewModel.deleteAlias(alias)

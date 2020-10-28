@@ -16,6 +16,7 @@ object SLDateTimeFormatter {
         }
     }
 
+    @Suppress("MagicNumber", "ReturnCount")
     fun distanceFromNow(seconds: Long) : Pair<Int, String> {
         val nowSeconds = TimeUnit.MILLISECONDS.toSeconds(Date().time)
         val secondsGap = nowSeconds - seconds

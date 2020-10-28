@@ -22,6 +22,11 @@ import io.simplelogin.android.utils.extension.*
 
 class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
+    companion object {
+        private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
+        private const val DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET = 60.0f / 100
+    }
+
     private lateinit var binding: FragmentMailboxListBinding
     private lateinit var viewModel: MailboxListViewModel
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -57,7 +62,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun setUpHowToUseMailboxBottomSheet() {
         binding.howToUseMailboxBottomSheet.root.layoutParams.height =
-            requireActivity().getScreenHeight() * 90 / 100
+            (requireActivity().getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
         howToUseMailboxBehavior =
             BottomSheetBehavior.from(binding.howToUseMailboxBottomSheet.root)
@@ -67,7 +72,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         howToUseMailboxBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimView.alpha = slideOffset * 60 / 100
+                binding.dimView.alpha = slideOffset * DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -146,7 +151,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                         val deleteButton = UnderlayButton(
                             requireContext(),
                             "Delete",
-                            14.0f,
+                            UnderlayButton.DEFAULT_TEXT_SIZE,
                             android.R.color.holo_red_light,
                             object : UnderlayButtonClickListener {
                                 override fun onClick() {
@@ -157,7 +162,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                         val setAsDefaultButton = UnderlayButton(
                             requireContext(),
                             "Set as default",
-                            14.0f,
+                            UnderlayButton.DEFAULT_TEXT_SIZE,
                             android.R.color.holo_blue_light,
                             object : UnderlayButtonClickListener {
                                 override fun onClick() {
@@ -178,7 +183,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         val mailbox = viewModel.mailboxes[position]
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete \"${mailbox.email}\"")
-            .setMessage("\uD83D\uDED1 All aliases associated with this mailbox will also be deleted. This operation is irreversible. Please confirm.")
+            .setMessage(R.string.warning_before_deleting_mailbox)
             .setNegativeButton("Delete") { _, _ ->
                 setLoading(true)
                 viewModel.deleteMailbox(mailbox)

@@ -6,7 +6,8 @@ import io.simplelogin.android.utils.diffutil.ContactDiffCallback
 import io.simplelogin.android.utils.model.Contact
 import io.simplelogin.android.viewholder.ContactViewHolder
 
-class ContactListAdapter(private val clickListener: ClickListener) : ListAdapter<Contact, ContactViewHolder>(ContactDiffCallback()) {
+class ContactListAdapter(private val clickListener: ClickListener) :
+    ListAdapter<Contact, ContactViewHolder>(ContactDiffCallback()) {
     interface ClickListener {
         fun onClick(contact: Contact)
     }

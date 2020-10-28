@@ -105,6 +105,7 @@ class VerificationActivity : BaseAppCompatActivity() {
         binding.deleteButton.setOnClickListener { deleteLastNumber() }
     }
 
+    @Suppress("MagicNumber", "ReturnCount")
     private fun getCodeFromClipboard() : String? {
         val clipboardManager =
             (getSystemService(Context.CLIPBOARD_SERVICE) ?: return null) as ClipboardManager

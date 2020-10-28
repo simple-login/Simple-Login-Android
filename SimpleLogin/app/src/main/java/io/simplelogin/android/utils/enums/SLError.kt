@@ -23,6 +23,7 @@ sealed class SLError(val description: String) : Throwable(description) {
     class UnknownError(description: String) : SLError("Unknown error: $description")
 
     companion object {
+        @Suppress("ReturnCount")
         // Required JSON syntax: { "error": "error message" }
         fun from(errorJsonString: String?) : SLError {
             if (errorJsonString == null) return NoData
