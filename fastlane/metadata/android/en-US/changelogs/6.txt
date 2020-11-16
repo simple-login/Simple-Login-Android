@@ -1,0 +1,2 @@
+• Fix reverse-alias issue for ProtonMail user. There are now 2 options to copy a reverse-alias (with or without display name).
+• Exit app on back button pressed.
