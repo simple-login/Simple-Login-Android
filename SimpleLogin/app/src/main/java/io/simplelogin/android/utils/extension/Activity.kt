@@ -30,7 +30,8 @@ fun Activity.dismissKeyboard() {
 fun Activity.copyToClipboard(label: String, text: String): Boolean {
     val clipboardManager =
         (getSystemService(Context.CLIPBOARD_SERVICE) ?: false) as ClipboardManager
-    clipboardManager.primaryClip = ClipData.newPlainText(label, text)
+    val clipData = ClipData.newPlainText(label, text)
+    clipboardManager.setPrimaryClip(clipData) // using setter will cause error 'val cannot be reassigned'
     return true
 }
 
