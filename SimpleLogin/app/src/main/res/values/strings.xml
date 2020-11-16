@@ -19,4 +19,7 @@
     <string name="how_to_use_mailbox">A mailbox is just another personal email address. When creating a new alias, you could choose the mailbox that owns this alias, i.e:\n- all emails sent to this alias will be forwarded to this mailbox\n- from this mailbox, you can reply/send emails from the alias.\n\nWhen you signed up, a mailbox is automatically created with your the provided email.\n\nThe mailbox doesn\'t have to be your email: it can be your friend\'s email if you want to create aliases for your buddy.</string>
     <string name="warning_before_deleting_alias">🛑 People/apps who used to contact you via this alias cannot reach you any more. This operation is irreversible. Please confirm.</string>
     <string name="warning_before_deleting_mailbox">🛑 All aliases associated with this mailbox will also be deleted. This operation is irreversible. Please confirm.</string>
+    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (w/ display name)</string>
+    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (w/o display name)</string>
+    <string name="begin_composing_with_default_email">Begin composing with default email</string>
 </resources>

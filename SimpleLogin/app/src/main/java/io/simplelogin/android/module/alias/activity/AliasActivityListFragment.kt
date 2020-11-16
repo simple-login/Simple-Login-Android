@@ -182,29 +182,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         activityAdapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
             override fun onClick(aliasActivity: AliasActivity) {
-                val toEmail = when (aliasActivity.action) {
-                    Action.REPLY -> aliasActivity.to
-                    else -> aliasActivity.from
-                }
-
-                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-                    .setTitle("Email to \"$toEmail\"")
-                    .setItems(
-                        arrayOf("Copy reverse-alias", "Begin composing with default email")
-                    ) { _, itemIndex ->
-                        when (itemIndex) {
-                            0 -> {
-                                activity?.copyToClipboard(
-                                    aliasActivity.reverseAlias,
-                                    aliasActivity.reverseAlias
-                                )
-                                context?.toastShortly("Copied \"${aliasActivity.reverseAlias}\"")
-                            }
-
-                            1 -> activity?.startSendEmailIntent(aliasActivity.reverseAlias)
-                        }
-                    }
-                    .show()
+                activity?.alertReversableOptions(aliasActivity)
             }
         })
 

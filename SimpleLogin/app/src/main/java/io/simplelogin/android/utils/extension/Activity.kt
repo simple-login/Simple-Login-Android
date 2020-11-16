@@ -10,6 +10,8 @@ import android.net.Uri
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.simplelogin.android.R
+import io.simplelogin.android.utils.interfaces.Reversable
 import io.simplelogin.android.utils.model.AliasMailbox
 import io.simplelogin.android.utils.model.Mailbox
 
@@ -98,5 +100,29 @@ fun Activity.showSelectMailboxesAlert(
             save(aliasMailboxes)
         }
         .setNeutralButton("Cancel", null)
+        .show()
+}
+
+fun Activity.alertReversableOptions(reversable: Reversable) {
+    fun copyToClipboardAndToast(text: String) {
+        copyToClipboard(text, text)
+        toastShortly("Copied $text")
+    }
+
+    MaterialAlertDialogBuilder(this, R.style.SlAlertDialogTheme)
+        .setTitle("Email to \"${reversable.email}\"")
+        .setItems(
+            arrayOf(
+                getString(R.string.copy_reverse_alias_with_display_name),
+                getString(R.string.copy_reverse_alias_without_display_name),
+                getString(R.string.begin_composing_with_default_email)
+            )
+        ) { _, itemIndex ->
+            when (itemIndex) {
+                0 -> copyToClipboardAndToast(reversable.reverseAlias)
+                1 -> copyToClipboardAndToast(reversable.reverseAliasAddress)
+                2 -> startSendEmailIntent(reversable.reverseAlias)
+            }
+        }
         .show()
 }

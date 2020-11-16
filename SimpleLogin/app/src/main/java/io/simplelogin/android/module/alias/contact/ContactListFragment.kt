@@ -265,24 +265,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
-                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-                    .setTitle("Email to \"${contact.email}\"")
-                    .setItems(
-                        arrayOf("Copy reverse-alias", "Begin composing with default email")
-                    ) { _, itemIndex ->
-                        when (itemIndex) {
-                            0 -> {
-                                activity?.copyToClipboard(
-                                    contact.reverseAlias,
-                                    contact.reverseAlias
-                                )
-                                context?.toastShortly("Copied \"${contact.reverseAlias}\"")
-                            }
-
-                            1 -> activity?.startSendEmailIntent(contact.reverseAlias)
-                        }
-                    }
-                    .show()
+                activity?.alertReversableOptions(contact)
             }
         })
         binding.recyclerView.adapter = adapter

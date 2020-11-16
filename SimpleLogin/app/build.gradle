@@ -6,14 +6,14 @@ apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 5
-        versionName "1.4"
+        targetSdkVersion 29
+        versionCode 6
+        versionName "1.4.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

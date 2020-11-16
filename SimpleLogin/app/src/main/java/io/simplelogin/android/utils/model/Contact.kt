@@ -2,16 +2,18 @@ package io.simplelogin.android.utils.model
 
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.utils.SLDateTimeFormatter
+import io.simplelogin.android.utils.interfaces.Reversable
 
 data class Contact(
     @SerializedName("id") val id: Int,
-    @SerializedName("contact") val email: String,
-    @SerializedName("reverse_alias") val reverseAlias: String,
+    @SerializedName("contact") override val email: String,
+    @SerializedName("reverse_alias") override val reverseAlias: String,
+    @SerializedName("reverse_alias_address") override val reverseAliasAddress: String,
     @SerializedName("creation_date") val creationDate: String,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
     @SerializedName("last_email_sent_date") val lastEmailSentDate: String?,
     @SerializedName("last_email_sent_timestamp") val lastEmailSentTimestamp: Long?
-) {
+) : Reversable {
     private var _creationString: String? = null
     fun getCreationString(): String {
         if (_creationString == null) {
