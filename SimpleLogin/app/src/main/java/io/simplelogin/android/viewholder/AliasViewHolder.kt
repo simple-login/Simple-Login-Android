@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.RecyclerItemAliasBinding
@@ -31,9 +30,9 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
         binding.enabledSwitch.isChecked = alias.enabled
         if (alias.enabled) {
-            binding.rootRelativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite))
+            binding.rootRelativeLayout.alpha = 1f
         } else {
-            binding.rootRelativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMediumGray))
+            binding.rootRelativeLayout.alpha = 0.8f
         }
 
         binding.mailboxesTextView.setText(alias.getMailboxesString(context), TextView.BufferType.SPANNABLE)

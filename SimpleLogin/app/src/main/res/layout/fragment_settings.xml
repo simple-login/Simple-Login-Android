@@ -23,6 +23,7 @@
                 android:layout_gravity="center"
                 android:text="Settings"
                 android:textSize="@dimen/toolbarTitleSize"
+                android:textColor="@color/DayNightBW"
                 android:textStyle="bold" />
 
 
@@ -31,7 +32,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorListBackground"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/howAndFaqCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -55,7 +56,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -107,7 +108,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/profileRootLinearLayout"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/DayNightBW"
+                            android:alpha="0.1"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -136,7 +138,38 @@
                         </LinearLayout>
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/darkModeCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardCornerRadius="@dimen/itemBorderRadius">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/darkModeSwitch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Force dark mode" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Brought to you by Stjin :) | Stjin.host"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 

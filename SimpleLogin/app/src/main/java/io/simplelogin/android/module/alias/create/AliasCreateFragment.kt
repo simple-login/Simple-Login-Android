@@ -32,7 +32,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAliasCreateBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { dismissKeyboardAndNavigateUp() }
 
@@ -66,14 +66,14 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setLoading(true)
         viewModel.fetchUserOptionsAndMailboxes()
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 context?.toastError(error)
                 findNavController().navigateUp()
             }
         })
 
-        viewModel.userOptions.observe(viewLifecycleOwner, Observer { userOptions ->
+        viewModel.userOptions.observe(viewLifecycleOwner, { userOptions ->
             if (userOptions != null) {
                 setLoading(false)
 
@@ -93,7 +93,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        viewModel.selectedMailboxes.observe(viewLifecycleOwner, Observer { selectedMailboxes ->
+        viewModel.selectedMailboxes.observe(viewLifecycleOwner, { selectedMailboxes ->
             if (selectedMailboxes != null) {
                 setLoading(false)
                 binding.mailboxesTextView.setText(

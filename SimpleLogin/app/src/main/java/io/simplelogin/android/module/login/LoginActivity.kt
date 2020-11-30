@@ -8,20 +8,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
-import io.simplelogin.android.utils.enums.VerificationMode
 import io.simplelogin.android.utils.enums.Email
-import io.simplelogin.android.utils.enums.Password
 import io.simplelogin.android.utils.enums.MfaKey
+import io.simplelogin.android.utils.enums.Password
+import io.simplelogin.android.utils.enums.VerificationMode
 import io.simplelogin.android.utils.extension.*
-import io.simplelogin.android.utils.extension.expand
-import io.simplelogin.android.utils.extension.hide
 import io.simplelogin.android.utils.model.UserLogin
 
 class LoginActivity : BaseAppCompatActivity() {
@@ -49,9 +46,6 @@ class LoginActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Change status bar background color
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
 
         // Login
         binding.emailTextField.editText?.addTextChangedListener(object : TextWatcher {

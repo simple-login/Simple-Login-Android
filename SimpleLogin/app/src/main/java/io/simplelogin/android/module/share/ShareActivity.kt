@@ -81,14 +81,14 @@ class ShareActivity : BaseAppCompatActivity() {
         setLoading(true)
         viewModel.fetchUserOptionsAndMailboxes()
 
-        viewModel.error.observe(this, Observer { error ->
+        viewModel.error.observe(this, { error ->
             if (error != null) {
                 toastError(error)
                 finish()
             }
         })
 
-        viewModel.userOptions.observe(this, Observer { userOptions ->
+        viewModel.userOptions.observe(this, { userOptions ->
             if (userOptions != null) {
                 setLoading(false)
 
@@ -107,7 +107,7 @@ class ShareActivity : BaseAppCompatActivity() {
             }
         })
 
-        viewModel.selectedMailboxes.observe(this, Observer { selectedMailboxes ->
+        viewModel.selectedMailboxes.observe(this, { selectedMailboxes ->
             if (selectedMailboxes != null) {
                 setLoading(false)
                 binding.mailboxesTextView.setText(
@@ -141,7 +141,7 @@ class ShareActivity : BaseAppCompatActivity() {
             binding.prefixEditText.setText(uri.host.extractWebsiteName())
         } catch (e: URISyntaxException) {
             // Can not detect domain from text, take the first word from text
-            binding.prefixEditText.setText(text.extractFirstWord())
+            binding.prefixEditText.setText(text?.extractFirstWord())
         }
         // Move cursor to the last character
         binding.prefixEditText.setSelection(binding.prefixEditText.text.count())

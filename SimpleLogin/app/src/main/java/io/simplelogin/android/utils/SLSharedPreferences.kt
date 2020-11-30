@@ -11,6 +11,17 @@ object SLSharedPreferences {
 
     //region API KEY
     private const val API_KEY = "API_KEY"
+    private const val FORCE_DARK_MODE = "FORCE_DARK_MODE"
+
+    fun getShouldForceDarkMode(context: Context) : Boolean =
+        getSharedPreferences(context).getBoolean(FORCE_DARK_MODE, false)
+
+    fun setShouldForceDarkMode(context: Context, b: Boolean) {
+        with(getSharedPreferences(context).edit()) {
+            putBoolean(FORCE_DARK_MODE, b)
+            commit()
+        }
+    }
 
     fun getApiKey(context: Context) : String? =
         getSharedPreferences(context).getString(API_KEY, null)

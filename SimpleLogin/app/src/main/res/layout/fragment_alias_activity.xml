@@ -30,6 +30,7 @@
                 android:singleLine="true"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/DayNightBW"
                 android:textStyle="bold"
                 tools:text="email@example.com" />
 
@@ -47,13 +48,13 @@
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorListBackground">
+                >
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorListBackground"
+
                     android:clipToPadding="false"
                     android:paddingBottom="50dp" />
 

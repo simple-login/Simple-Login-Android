@@ -35,7 +35,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAliasSearchBinding.inflate(inflater)
         binding.backImageView.setOnClickListener {
             activity?.dismissKeyboard()
@@ -102,7 +102,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
         viewModel = tempViewModel
 
-        viewModel.eventUpdateResults.observe(viewLifecycleOwner, Observer { updatedResults ->
+        viewModel.eventUpdateResults.observe(viewLifecycleOwner, { updatedResults ->
             if (updatedResults) {
                 activity?.runOnUiThread {
                     setLoading(false)
@@ -119,7 +119,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 activity?.run {
                     toastError(error)
@@ -128,7 +128,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, Observer { toggledAliasIndex ->
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, { toggledAliasIndex ->
             if (toggledAliasIndex != null) {
                 activity?.runOnUiThread {
                     setLoading(false)

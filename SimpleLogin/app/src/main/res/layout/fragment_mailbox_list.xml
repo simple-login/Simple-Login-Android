@@ -34,6 +34,7 @@
                         android:layout_gravity="center"
                         android:text="Mailboxes"
                         android:textSize="@dimen/toolbarTitleSize"
+                        android:textColor="@color/DayNightBW"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
 
@@ -61,7 +62,6 @@
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:background="@color/colorListBackground"
                         android:clipToPadding="false"
                         android:paddingBottom="20dp" />
 

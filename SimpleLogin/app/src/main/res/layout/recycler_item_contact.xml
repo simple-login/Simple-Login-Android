@@ -6,9 +6,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorListBackground">
+        >
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,6 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="@color/DayNightBW"
                     tools:text="yautiden@gmail.com" />
 
                 <TextView
@@ -67,7 +68,7 @@
                     tools:text="Last sent on 6 Feb 2020 at 18:05 (1 month ago)" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 

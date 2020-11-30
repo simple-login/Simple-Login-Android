@@ -36,7 +36,7 @@
                 app:drawableTint="@color/colorDarkGray"
                 tools:text="mail1@example.com" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/editMailboxesButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                 app:drawableTint="@color/colorDarkGray"
                 tools:text="John Doe" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/editNameButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                 android:textColor="@color/colorDarkGray"
                 tools:text="Add some note for this alias" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/editNoteButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -139,7 +139,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <include
                     android:id="@+id/repliedStat"

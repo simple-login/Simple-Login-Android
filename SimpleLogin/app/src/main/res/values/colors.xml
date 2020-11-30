@@ -13,4 +13,6 @@
     <color name="colorPremium">#8DB600</color>
     <color name="colorText">#000000</color>
     <color name="colorListBackground">#F3F2F8</color>
+    <color name="DayNightBW">#000000</color>
+    <color name="DarkModeColor">#FFFFFF</color>
 </resources>

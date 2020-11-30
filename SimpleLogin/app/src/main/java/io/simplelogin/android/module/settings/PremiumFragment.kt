@@ -18,7 +18,7 @@ class PremiumFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPremiumBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 

@@ -40,7 +40,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAliasListBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
         binding.toolbar.setOnMenuItemClickListener(this)
@@ -129,7 +129,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             }
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()

@@ -6,7 +6,4 @@ import androidx.appcompat.app.AppCompatActivity
 
 @SuppressLint("Registered")
 open class BaseAppCompatActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 }

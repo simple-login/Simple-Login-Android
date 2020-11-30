@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Create Alias"
+                android:textColor="@color/DayNightBW"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -51,7 +52,7 @@
                     android:gravity="end"
                     android:singleLine="true"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/DayNightBW"
                     tools:ignore="Autofill,LabelFor" />
 
                 <Spinner
@@ -155,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Ex: Jane Doe"
                     android:textAppearance="?textAppearanceBody2"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/DayNightBW"
                     tools:ignore="HardcodedText" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -204,11 +205,11 @@
                     android:layout_height="wrap_content"
                     android:hint="Ex: For tech newsletters, online shopping..."
                     android:textAppearance="?textAppearanceBody2"
-                    android:textColor="@color/colorText"
+                    android:textColor="@color/DayNightBW"
                     tools:ignore="HardcodedText" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/createButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"

@@ -18,7 +18,7 @@ class WebViewFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentWebviewBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 

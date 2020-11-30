@@ -16,7 +16,7 @@ class HowItWorksFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHowItWorksBinding.inflate(inflater)
 
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }

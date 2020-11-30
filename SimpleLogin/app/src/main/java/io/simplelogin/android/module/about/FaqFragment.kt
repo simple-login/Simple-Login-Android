@@ -16,7 +16,7 @@ class FaqFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFaqBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         return binding.root

@@ -8,14 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
@@ -24,7 +22,6 @@ import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
-import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.AliasActivity
 
 class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
@@ -41,7 +38,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAliasActivityBinding.inflate(inflater)
 
         setUpViewModel()
@@ -82,7 +79,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
         viewModel = tempViewModel
         viewModel.fetchActivities()
-        viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, Observer { haveNewActivities ->
+        viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, { haveNewActivities ->
             activity?.runOnUiThread {
                 showLoadingFooter(false)
 
@@ -98,7 +95,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 setLoading(false)
                 showLoadingFooter(true)
@@ -108,7 +105,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
-        viewModel.eventUpdateMetadata.observe(viewLifecycleOwner, Observer { metadataUpdated ->
+        viewModel.eventUpdateMetadata.observe(viewLifecycleOwner, { metadataUpdated ->
             if (metadataUpdated) {
                 setLoading(false)
                 headerAdapter.notifyDataSetChanged()

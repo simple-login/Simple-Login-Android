@@ -45,7 +45,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/DayNightBW" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -60,14 +60,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/DayNightBW" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/loginButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                         android:orientation="horizontal"
                         android:weightSum="2">
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/forgotPasswordButton"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                             android:textAppearance="?attr/textAppearanceBody2"
                             tools:ignore="HardcodedText" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/signUpButton"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
@@ -105,9 +105,10 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/colorMediumGray" />
+                        android:background="@color/DayNightBW"
+                        android:alpha="0.1"/>
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/apiKeyButton"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
@@ -119,9 +120,10 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/colorMediumGray" />
+                        android:background="@color/DayNightBW"
+                        android:alpha="0.1"/>
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/changeApiUrlButton"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"

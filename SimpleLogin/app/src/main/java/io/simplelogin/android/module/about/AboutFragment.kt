@@ -27,7 +27,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Determine if this is opened from LoginActivity or HomeActivity
         openFromLoginActivity =
             findNavController().graph.arguments.getValue(OPEN_FROM_LOGIN_ACTIVITY).defaultValue as Boolean

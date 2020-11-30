@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavArgument
@@ -42,15 +44,40 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Retrieve UserInfo from intent
-        userInfo = intent.getParcelableExtra<UserInfo>(USER_INFO)
+        userInfo = intent.getParcelableExtra(USER_INFO)!!
 
+        checkDarkMode()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
         setContentView(binding.root)
+    }
 
-        // Change status bar background color
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+
+    private fun checkDarkMode() {
+        val currentNightMode = (resources.configuration.uiMode
+                and Configuration.UI_MODE_NIGHT_MASK)
+
+        // Check if force dark mode is enabled:
+        if (SLSharedPreferences.getShouldForceDarkMode(this)) {
+            // If Dark mode is already enabled, skip
+            if (currentNightMode != Configuration.UI_MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        } else {
+            when (currentNightMode) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    val view = window.decorView
+                    view.systemUiVisibility =
+                        view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                } // Night mode is not active, we're using the light theme
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    val view = window.decorView
+                    view.systemUiVisibility =
+                        view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                } // Night mode is active, we're using dark theme
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -172,7 +199,12 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         when {
             userInfo.inTrial -> {
                 membershipTextView.text = "Premium trial"
-                membershipTextView.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_light))
+                membershipTextView.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.holo_blue_light
+                    )
+                )
             }
 
             userInfo.isPremium -> {
