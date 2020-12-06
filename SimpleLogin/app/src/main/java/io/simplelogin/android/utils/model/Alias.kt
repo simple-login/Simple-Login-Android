@@ -72,7 +72,7 @@ data class Alias(
     fun getCountSpannableString(context: Context): Spannable {
         if (_countSpannableString == null) {
             val darkGrayColor = ContextCompat.getColor(context, R.color.colorDarkGray)
-            val blackColor = ContextCompat.getColor(context, R.color.DayNightBW)
+            val blackColor = ContextCompat.getColor(context, R.color.colorText)
             val spannableString = SpannableStringBuilder()
                 .color(blackColor) { append("$forwardCount ") }
                 .color(darkGrayColor) { append(if (forwardCount > 1) "forwards," else "forwards,") }
@@ -146,7 +146,7 @@ data class AliasArray(
 
 fun List<AliasMailbox>.toSpannableString(context: Context): Spannable {
     val primaryColor = ContextCompat.getColor(context, R.color.colorPrimary)
-    val blackColor = ContextCompat.getColor(context, R.color.DayNightBW)
+    val blackColor = ContextCompat.getColor(context, R.color.colorText)
     val spannableString = SpannableStringBuilder()
 
     forEachIndexed { index, aliasMailbox ->

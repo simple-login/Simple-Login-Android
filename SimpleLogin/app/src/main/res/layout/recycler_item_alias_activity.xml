@@ -6,7 +6,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@color/colorItemBackground">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCardView"
@@ -35,7 +35,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?attr/textAppearanceSubtitle2"
-                        android:textColor="@color/DayNightBW"
+                        android:textColor="@color/colorText"
                         tools:text="email@example.com" />
 
                     <TextView

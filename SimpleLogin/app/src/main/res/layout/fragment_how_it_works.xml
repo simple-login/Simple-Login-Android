@@ -22,8 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="The journey to a sane inbox"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -32,7 +32,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -67,7 +67,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="1. Sign up and start creating aliases"
                             android:textAppearance="?attr/textAppearanceHeadline6"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <TextView
@@ -97,7 +97,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -107,7 +107,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="2. Receive emails safely"
                             android:textAppearance="?attr/textAppearanceHeadline6"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <TextView
@@ -137,7 +137,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -147,7 +147,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="3. Create aliases without leaving the browser"
                             android:textAppearance="?attr/textAppearanceHeadline6"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <TextView

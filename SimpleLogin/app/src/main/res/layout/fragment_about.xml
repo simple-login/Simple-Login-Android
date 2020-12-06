@@ -24,7 +24,7 @@
                 android:text="About SimpleLogin"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 tools:ignore="HardcodedText" />
 
 
@@ -34,6 +34,7 @@
             android:id="@+id/rootNestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +60,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -76,7 +77,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/appVersionTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -115,7 +116,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -125,7 +126,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="How it works"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -133,7 +134,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/howTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -144,7 +145,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Security"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -163,7 +164,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -173,7 +174,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="What you can do with aliases"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -181,7 +182,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/whatTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -192,7 +193,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Frequently asked questions"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -212,7 +213,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -222,7 +223,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Our team"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -230,7 +231,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/teamTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -241,7 +242,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Contact us"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -261,7 +262,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -271,7 +272,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Pricing"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -279,7 +280,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/pricingTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -290,7 +291,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Blog"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -310,7 +311,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -320,7 +321,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Help"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -328,7 +329,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/helpTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -339,7 +340,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Roadmap"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -359,7 +360,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -369,7 +370,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Terms &amp; conditions"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -377,7 +378,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/termsTextView"
-                            android:background="@color/DayNightBW"
+                            android:background="@color/colorText"
                             android:alpha="0.1"/>
 
                         <TextView
@@ -388,7 +389,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Privacy policy"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/DayNightBW"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>

@@ -33,7 +33,7 @@
                 android:layout_gravity="center"
                 android:text="Change API URL"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -44,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
             android:layout_centerInParent="true"
-
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -59,8 +58,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/default_api_url"
-                android:textColor="@color/DayNightBW"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/colorText" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/apiUrlTextField"
@@ -75,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textNoSuggestions"
-                    android:textColor="@color/DayNightBW" />
+                    android:textColor="@color/colorText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

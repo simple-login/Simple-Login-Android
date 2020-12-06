@@ -11,7 +11,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
@@ -29,7 +29,7 @@
                 android:layout_gravity="center"
                 android:text="Sign Up"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/DayNightBW" />
+                    android:textColor="@color/colorText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:textColor="@color/DayNightBW" />
+                    android:textColor="@color/colorText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View

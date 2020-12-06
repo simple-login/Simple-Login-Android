@@ -11,7 +11,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:text="OTP Code" />
 
@@ -145,7 +145,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -159,7 +159,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="2"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -173,7 +173,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="3"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
             </LinearLayout>
@@ -193,7 +193,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="4"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -207,7 +207,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="5"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -221,7 +221,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="6"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
             </LinearLayout>
@@ -241,7 +241,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="7"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -255,7 +255,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="8"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View
@@ -269,7 +269,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="9"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
             </LinearLayout>
@@ -298,7 +298,7 @@
                     android:background="@drawable/shape_oval"
                     android:gravity="center"
                     android:text="0"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/numPadTextSize" />
 
                 <View

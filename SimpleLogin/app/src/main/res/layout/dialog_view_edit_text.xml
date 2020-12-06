@@ -7,6 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="@color/DayNightBW"
+        android:textColor="@color/colorText"
         tools:ignore="Autofill,LabelFor,TextFields" />
 </layout>

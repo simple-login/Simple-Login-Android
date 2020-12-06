@@ -45,7 +45,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
-                            android:textColor="@color/DayNightBW" />
+                            android:textColor="@color/colorText" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -60,7 +60,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
-                            android:textColor="@color/DayNightBW" />
+                            android:textColor="@color/colorText" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <View
@@ -105,7 +105,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/DayNightBW"
+                        android:background="@color/colorText"
                         android:alpha="0.1"/>
 
                     <com.google.android.material.button.MaterialButton
@@ -120,7 +120,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/DayNightBW"
+                        android:background="@color/colorText"
                         android:alpha="0.1"/>
 
                     <com.google.android.material.button.MaterialButton

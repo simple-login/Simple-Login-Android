@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:text="How To Use Mailboxes"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -47,7 +47,7 @@
             android:paddingTop="20dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:textColor="@color/DayNightBW"
+            android:textColor="@color/colorText"
             android:text="@string/how_to_use_mailbox"/>
 
         <View

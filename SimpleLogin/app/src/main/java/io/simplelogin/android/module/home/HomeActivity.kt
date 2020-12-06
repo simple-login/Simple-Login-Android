@@ -65,17 +65,17 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
         } else {
+            val view = window.decorView
             when (currentNightMode) {
-                Configuration.UI_MODE_NIGHT_NO -> {
-                    val view = window.decorView
+                Configuration.UI_MODE_NIGHT_NO ->
+                    // Night mode is not active, we're using the light theme
                     view.systemUiVisibility =
                         view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                } // Night mode is not active, we're using the light theme
-                Configuration.UI_MODE_NIGHT_YES -> {
-                    val view = window.decorView
+
+                Configuration.UI_MODE_NIGHT_YES ->
+                    // Night mode is active, we're using dark theme
                     view.systemUiVisibility =
                         view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                } // Night mode is active, we're using dark theme
             }
         }
     }

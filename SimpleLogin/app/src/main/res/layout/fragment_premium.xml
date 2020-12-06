@@ -23,7 +23,7 @@
                 android:layout_gravity="center"
                 android:text="It's never too late to protect your email"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -120,7 +120,7 @@
                     android:paddingTop="10dp"
                     android:text="Unlimited aliases"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -132,7 +132,7 @@
                     android:paddingTop="5dp"
                     android:text="Unlimited custom domains"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -156,7 +156,7 @@
                     android:paddingTop="5dp"
                     android:text="Catch-all (or wildcard) domain"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -168,7 +168,7 @@
                     android:paddingTop="5dp"
                     android:text="50 directories/usernames"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -180,7 +180,7 @@
                     android:paddingTop="5dp"
                     android:text="Unlimited mailboxes"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -192,7 +192,7 @@
                     android:paddingTop="5dp"
                     android:text="PGP Encryption"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -202,7 +202,7 @@
                     android:paddingTop="5dp"
                     android:text="...and all of our upcoming features."
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     tools:ignore="HardcodedText" />
 
                 <TextView
@@ -318,7 +318,7 @@
                     android:paddingTop="10dp"
                     android:text="Dedicated server &amp; database"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -330,7 +330,7 @@
                     android:paddingTop="5dp"
                     android:text="Dashboard to manage team accounts"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
@@ -342,7 +342,7 @@
                     android:paddingTop="5dp"
                     android:text="Single Sign-On (SAML or OAuth2)"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/DayNightBW"
+                    android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 

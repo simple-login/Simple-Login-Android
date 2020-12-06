@@ -77,22 +77,22 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         }
 
-        binding.darkModeSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            this.context?.let { SLSharedPreferences.setShouldForceDarkMode(it, b) }
+        binding.darkModeSwitch.setOnCheckedChangeListener { _, shouldForceDarkMode ->
+            this.context?.let { SLSharedPreferences.setShouldForceDarkMode(it, shouldForceDarkMode) }
 
-            if (b){
+            if (shouldForceDarkMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
             }
 
-            val i: Intent? = context?.packageName?.let {
+            val intent: Intent? = context?.packageName?.let {
                 context?.packageManager
                     ?.getLaunchIntentForPackage(it)
             }
-            i?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            i?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(i)
+            intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
             activity?.finish()
         }
 

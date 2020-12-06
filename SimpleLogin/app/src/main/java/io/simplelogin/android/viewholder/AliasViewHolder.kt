@@ -30,9 +30,9 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
         binding.enabledSwitch.isChecked = alias.enabled
         if (alias.enabled) {
-            binding.rootRelativeLayout.alpha = 1f
+            binding.rootCardView.alpha = 1f
         } else {
-            binding.rootRelativeLayout.alpha = 0.8f
+            binding.rootCardView.alpha = 0.8f
         }
 
         binding.mailboxesTextView.setText(alias.getMailboxesString(context), TextView.BufferType.SPANNABLE)

@@ -5,7 +5,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorListBackground">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCardView"
@@ -15,6 +16,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
+            android:background="@color/colorItemBackground"
             app:cardCornerRadius="@dimen/itemBorderRadius">
 
             <RelativeLayout
@@ -41,7 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?attr/textAppearanceSubtitle2"
-                        android:textColor="@color/DayNightBW"
+                        android:textColor="@color/colorText"
                         tools:text="yautiden@gmail.com" />
 
                     <TextView
@@ -110,7 +112,7 @@
                         android:maxLines="2"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="@color/DayNightBW"
+                        android:textColor="@color/colorText"
                         tools:text="Alias note" />
 
                     <LinearLayout

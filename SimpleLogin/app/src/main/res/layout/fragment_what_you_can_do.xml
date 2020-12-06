@@ -22,8 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="What you can do with aliases"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -33,7 +33,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +53,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
@@ -98,6 +99,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
@@ -114,6 +116,7 @@
                             android:text="B. Send emails from alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+
                         <ImageView
                             android:id="@+id/stepBImageView"
                             android:layout_width="match_parent"
@@ -141,6 +144,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
@@ -157,6 +161,7 @@
                             android:text="C. Run your business with alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+
                         <ImageView
                             android:id="@+id/stepCImageView"
                             android:layout_width="match_parent"

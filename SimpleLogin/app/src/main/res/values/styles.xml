@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/DarkModeColor</item>
+        <item name="android:statusBarColor">@color/colorItemBackground</item>
         <item name="android:textColorPrimary">@color/colorPrimary</item>
         <item name="materialAlertDialogTheme">@style/SLMaterialAlertDialog</item>
     </style>
@@ -45,7 +45,7 @@
     </style>
 
     <style name="SLMaterialDialogTitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">@color/DayNightBW</item>
+        <item name="android:textColor">@color/colorText</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
@@ -57,7 +57,7 @@
     <style name="SlAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="textAppearanceListItemSmall">?attr/textAppearanceSubtitle2</item>
         <item name="textColorAlertDialogListItem">@color/colorPrimary</item>
-        <item name="android:textColor">@color/DayNightBW</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
 

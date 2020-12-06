@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Frequently Asked Questions"
-                android:textColor="@color/DayNightBW"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -33,7 +33,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -95,7 +95,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -132,7 +132,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -169,7 +169,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -206,7 +206,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -243,7 +243,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -280,7 +280,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -317,7 +317,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -354,7 +354,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -391,7 +391,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -428,7 +428,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -465,7 +465,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -502,7 +502,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView
@@ -539,7 +539,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical">
 
                         <TextView

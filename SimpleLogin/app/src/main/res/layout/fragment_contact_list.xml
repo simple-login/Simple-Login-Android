@@ -33,7 +33,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="Contacts"
-                        android:textColor="@color/DayNightBW"
+                        android:textColor="@color/colorText"
                         android:textSize="@dimen/toolbarTitleSize"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
@@ -82,6 +82,7 @@
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:background="@color/colorListBackground"
                         android:clipToPadding="false"
                         android:paddingBottom="20dp" />
 

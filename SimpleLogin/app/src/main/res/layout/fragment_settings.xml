@@ -22,8 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Settings"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/toolbarTitleSize"
-                android:textColor="@color/DayNightBW"
                 android:textStyle="bold" />
 
 
@@ -32,7 +32,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -73,7 +73,7 @@
                                 android:background="@drawable/shape_oval_bordered"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_user_48dp"
-                                android:tint="@color/colorPrimary"
+                                app:tint="@color/colorPrimary"
                                 tools:ignore="ContentDescription" />
 
                             <LinearLayout
@@ -108,8 +108,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/profileRootLinearLayout"
-                            android:background="@color/DayNightBW"
-                            android:alpha="0.1"/>
+                            android:alpha="0.1"
+                            android:background="@color/colorText" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -139,6 +139,7 @@
 
                     </RelativeLayout>
                 </com.google.android.material.card.MaterialCardView>
+
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/darkModeCardView"
                     android:layout_width="match_parent"
@@ -152,6 +153,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/colorItemBackground"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -160,13 +162,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Force dark mode" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Brought to you by Stjin :) | Stjin.host"
-                            android:textSize="12sp" />
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

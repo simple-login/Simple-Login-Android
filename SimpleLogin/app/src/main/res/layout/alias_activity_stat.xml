@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:alpha="0.1"
-                android:tint="@color/colorWhite"
+                app:tint="@color/colorWhite"
                 tools:ignore="ContentDescription"
                 tools:src="@drawable/ic_send_48dp" />
 
