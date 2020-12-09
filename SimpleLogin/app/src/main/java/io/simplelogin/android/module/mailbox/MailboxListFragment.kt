@@ -37,7 +37,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         setUpBinding()
         setUpHowToUseMailboxBottomSheet()
         setUpViewModel()
@@ -95,7 +95,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpViewModel() {
         viewModel = MailboxListViewModel(requireContext())
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 setLoading(false)
                 context?.toastError(error)
@@ -104,7 +104,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
-        viewModel.eventUpdateMailboxes.observe(viewLifecycleOwner, Observer { haveNewMailboxes ->
+        viewModel.eventUpdateMailboxes.observe(viewLifecycleOwner, { haveNewMailboxes ->
             activity?.runOnUiThread {
                 setLoading(false)
 
@@ -122,7 +122,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
-        viewModel.createdMailbox.observe(viewLifecycleOwner, Observer { createdMailbox ->
+        viewModel.createdMailbox.observe(viewLifecycleOwner, { createdMailbox ->
             activity?.runOnUiThread {
                 setLoading(false)
                 if (createdMailbox != null) {

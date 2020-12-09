@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorListBackground">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,13 +16,13 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
+            android:background="@color/colorItemBackground"
             app:cardCornerRadius="@dimen/itemBorderRadius">
 
             <RelativeLayout
                 android:id="@+id/rootRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:paddingStart="10dp"
                 android:paddingTop="10dp"
@@ -43,6 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?attr/textAppearanceSubtitle2"
+                        android:textColor="@color/colorText"
                         tools:text="yautiden@gmail.com" />
 
                     <TextView
@@ -111,6 +112,7 @@
                         android:maxLines="2"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="@color/colorText"
                         tools:text="Alias note" />
 
                     <LinearLayout
@@ -118,14 +120,14 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <Switch
+                        <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/enabledSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:theme="@style/SLSwitch" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/copyButton"
                             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                             android:layout_width="wrap_content"
@@ -135,7 +137,7 @@
                             app:icon="@drawable/ic_copy_24dp"
                             tools:ignore="HardcodedText" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/sendEmailButton"
                             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                             android:layout_width="wrap_content"
@@ -159,7 +161,7 @@
                     tools:ignore="ContentDescription" />
 
             </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
 
     </FrameLayout>

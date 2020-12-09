@@ -27,6 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Your Aliases"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/toolbarTitleSize"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />

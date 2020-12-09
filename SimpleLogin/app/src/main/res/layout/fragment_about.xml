@@ -24,6 +24,7 @@
                 android:text="About SimpleLogin"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
+                android:textColor="@color/colorText"
                 tools:ignore="HardcodedText" />
 
 
@@ -33,7 +34,7 @@
             android:id="@+id/rootNestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorLightGray"
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +47,7 @@
                 android:paddingBottom="20dp">
 
                 <!--Version-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/versionAndInfoCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -59,7 +60,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -76,7 +77,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/appVersionTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/descriptionTextView"
@@ -98,10 +100,10 @@
                             tools:ignore="ContentDescription" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--How & FAQ-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/howAndSecurityCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -114,7 +116,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -124,6 +126,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="How it works"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -131,7 +134,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/howTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/securityTextView"
@@ -141,12 +145,13 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Security"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/whatAndFaqCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -159,7 +164,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -169,6 +174,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="What you can do with aliases"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -176,7 +182,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/whatTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/faqTextView"
@@ -186,13 +193,14 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Frequently asked questions"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--Team & Contact-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/teamAndContactCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -205,7 +213,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -215,6 +223,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Our team"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -222,7 +231,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/teamTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/contactTextView"
@@ -232,13 +242,14 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Contact us"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--Pricing & Blog-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/pricingAndBlogCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -251,7 +262,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -261,6 +272,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Pricing"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -268,7 +280,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/pricingTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/blogTextView"
@@ -278,13 +291,14 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Blog"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--Help & Roadmap-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/helpAndRoadmapCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -297,7 +311,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -307,6 +321,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Help"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -314,7 +329,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/helpTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/roadmapTextView"
@@ -324,13 +340,14 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Roadmap"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--Terms & Privacy-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/termsAndPrivacyCardView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -343,7 +360,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+                        android:background="@color/colorItemBackground"
                         android:orientation="horizontal">
 
                         <TextView
@@ -353,6 +370,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Terms &amp; conditions"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                         <View
@@ -360,7 +378,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/termsTextView"
-                            android:background="@color/colorMediumGray" />
+                            android:background="@color/colorText"
+                            android:alpha="0.1"/>
 
                         <TextView
                             android:id="@+id/privacyTextView"
@@ -370,10 +389,11 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="Privacy policy"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 

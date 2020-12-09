@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorListBackground">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/rootCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,6 +16,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
+            android:background="@color/colorItemBackground"
             app:cardCornerRadius="@dimen/itemBorderRadius">
 
             <LinearLayout
@@ -34,6 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="@color/colorText"
                     tools:text="yautiden@gmail.com" />
 
                 <LinearLayout
@@ -49,11 +51,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:drawableStart="@drawable/ic_clock_16dp"
                         android:drawablePadding="5dp"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@color/colorDarkGray"
-                        android:layout_weight="1"
                         app:drawableTint="@color/colorDarkGray"
                         tools:text="Created 5 days ago" />
 
@@ -61,11 +63,11 @@
                         android:id="@+id/defaultTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Default Mailbox"
                         android:background="@drawable/shape_default_mailbox"
-                        android:textColor="@color/colorWhite"
                         android:paddingHorizontal="5dp"
+                        android:text="Default Mailbox"
                         android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorWhite"
                         tools:ignore="HardcodedText" />
                 </LinearLayout>
 
@@ -85,7 +87,7 @@
                     tools:text="123 aliases" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 

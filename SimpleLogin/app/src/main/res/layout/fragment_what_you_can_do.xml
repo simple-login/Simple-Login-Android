@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="What you can do with aliases"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -32,7 +33,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorLightGray"
+            android:background="@color/colorListBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,19 +46,20 @@
                 android:paddingBottom="20dp">
 
                 <!--What A-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+
                         android:orientation="horizontal">
 
                         <TextView
@@ -87,22 +89,23 @@
                             android:textColor="@color/colorDarkGray" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--What B-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+
                         android:orientation="horizontal">
 
                         <TextView
@@ -113,6 +116,7 @@
                             android:text="B. Send emails from alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+
                         <ImageView
                             android:id="@+id/stepBImageView"
                             android:layout_width="match_parent"
@@ -130,22 +134,23 @@
                             android:textColor="@color/colorDarkGray" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <!--What C-->
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
+                    android:background="@color/colorItemBackground"
                     app:cardCornerRadius="@dimen/itemBorderRadius">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorWhite"
+
                         android:orientation="horizontal">
 
                         <TextView
@@ -156,6 +161,7 @@
                             android:text="C. Run your business with alias"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             tools:ignore="HardcodedText" />
+
                         <ImageView
                             android:id="@+id/stepCImageView"
                             android:layout_width="match_parent"
@@ -173,7 +179,7 @@
                             android:textColor="@color/colorDarkGray" />
 
                     </RelativeLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 

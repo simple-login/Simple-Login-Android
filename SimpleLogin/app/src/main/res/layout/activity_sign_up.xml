@@ -11,10 +11,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightGray"
+            android:background="@color/colorListBackground"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelButton"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -29,6 +29,7 @@
                 android:layout_gravity="center"
                 android:text="Sign Up"
                 android:textSize="@dimen/toolbarTitleSize"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -71,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/colorText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View
@@ -90,14 +91,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/colorText" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

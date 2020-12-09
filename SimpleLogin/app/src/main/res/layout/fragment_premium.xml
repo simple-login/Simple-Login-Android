@@ -23,6 +23,7 @@
                 android:layout_gravity="center"
                 android:text="It's never too late to protect your email"
                 android:textSize="@dimen/toolbarTitleSize"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -238,7 +239,7 @@
                     android:textColor="@color/colorDarkGray"
                     tools:ignore="HardcodedText" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/upgradeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -345,7 +346,7 @@
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/contactButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

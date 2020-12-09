@@ -65,4 +65,18 @@ object SLSharedPreferences {
         }
     }
     //endregion
+
+    //region DARK MODE
+    private const val FORCE_DARK_MODE = "FORCE_DARK_MODE"
+
+    fun getShouldForceDarkMode(context: Context) : Boolean =
+        getSharedPreferences(context).getBoolean(FORCE_DARK_MODE, false)
+
+    fun setShouldForceDarkMode(context: Context, shouldForceDarkMode: Boolean) {
+        with(getSharedPreferences(context).edit()) {
+            putBoolean(FORCE_DARK_MODE, shouldForceDarkMode)
+            commit()
+        }
+    }
+    //endregion
 }

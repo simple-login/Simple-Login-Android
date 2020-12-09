@@ -43,7 +43,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Binding
         binding = FragmentContactListBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
@@ -200,7 +200,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel = tempViewModel
         viewModel.fetchContacts()
         setLoading(true)
-        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, Observer { haveNewContacts ->
+        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, { haveNewContacts ->
             activity?.runOnUiThread {
                 setLoading(false)
                 if (haveNewContacts) {
@@ -216,7 +216,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner, { error ->
             if (error != null) {
                 setLoading(false)
                 context?.toastError(error)
@@ -228,14 +228,14 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         // Create contact
         viewModel.eventFinishCallingCreateContact.observe(
             viewLifecycleOwner,
-            Observer { finishedCallingCreateContact ->
+            { finishedCallingCreateContact ->
                 if (finishedCallingCreateContact) {
                     setLoading(false)
                     viewModel.onHandleFinishCallingCreateContactComplete()
                 }
             })
 
-        viewModel.eventCreatedContact.observe(viewLifecycleOwner, Observer { createdContact ->
+        viewModel.eventCreatedContact.observe(viewLifecycleOwner, { createdContact ->
             if (createdContact != null) {
                 context?.toastShortly("Created \"$createdContact\"")
                 viewModel.refreshContacts()
@@ -246,14 +246,14 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         // Delete contact
         viewModel.eventFinishCallingDeleteContact.observe(
             viewLifecycleOwner,
-            Observer { finishedCallingDeleteContact ->
+            { finishedCallingDeleteContact ->
                 if (finishedCallingDeleteContact) {
                     setLoading(false)
                     viewModel.onHandleFinishCallingDeleteContactComplete()
                 }
             })
 
-        viewModel.eventDeletedContact.observe(viewLifecycleOwner, Observer { deletedContact ->
+        viewModel.eventDeletedContact.observe(viewLifecycleOwner, { deletedContact ->
             if (deletedContact != null) {
                 context?.toastShortly("Deleted \"$deletedContact\"")
                 viewModel.refreshContacts()

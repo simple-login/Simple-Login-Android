@@ -30,6 +30,7 @@
                 android:singleLine="true"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="@color/colorText"
                 android:textStyle="bold"
                 tools:text="email@example.com" />
 
@@ -46,8 +47,7 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorListBackground">
+                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -73,7 +73,7 @@
                 android:layout_margin="24dp"
                 android:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_arrow_upward_24dp"
-                app:tint="@color/colorWhite"/>
+                app:tint="@color/colorWhite" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
