@@ -51,7 +51,6 @@ android {
         fdroid {
             dimension "version"
             applicationIdSuffix = ".fdroid"
-            versionNameSuffix = "-fdroid"
         }
     }
 }
