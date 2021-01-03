@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        app:cardCornerRadius="@dimen/itemBorderRadius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorItemBackground"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/force_dark_mode_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Force dark mode"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="@color/colorText" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

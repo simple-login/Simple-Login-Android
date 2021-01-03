@@ -2,6 +2,8 @@ package io.simplelogin.android.utils
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import io.simplelogin.android.utils.enums.*
 import io.simplelogin.android.utils.model.*
 import okhttp3.*
@@ -634,7 +636,12 @@ object SLApiService {
         })
     }
 
-    fun updateAliasName(apiKey: String, alias: Alias, name: String?, completion: (Result<Unit>) -> Unit) {
+    fun updateAliasName(
+        apiKey: String,
+        alias: Alias,
+        name: String?,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf("name" to name).toRequestBody()
 
         val request = Request.Builder()
@@ -872,7 +879,11 @@ object SLApiService {
     }
     //endregion
 
-    private fun delete(apiKey: String, requestUrlString: String, completion: (Result<Unit>) -> Unit) {
+    private fun delete(
+        apiKey: String,
+        requestUrlString: String,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val request = Request.Builder()
             .url(requestUrlString)
             .header("Authentication", apiKey)
@@ -895,4 +906,130 @@ object SLApiService {
             }
         })
     }
+
+    //region Settings
+    fun fetchUserSettings(apiKey: String, completion: (Result<UserSettings>) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/setting")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            deserializeUserSettings(jsonString, completion)
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+
+    fun updateUserSettings(
+        apiKey: String,
+        option: UserSettings.Option,
+        completion: (Result<UserSettings>) -> Unit
+    ) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/setting")
+            .header("Authentication", apiKey)
+            .patch(option.requestMap.toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            deserializeUserSettings(jsonString, completion)
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+
+    private fun deserializeUserSettings(
+        jsonString: String,
+        completion: (Result<UserSettings>) -> Unit
+    ) {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(RandomMode::class.java, RandomModeDeserializer())
+            .registerTypeAdapter(SenderFormat::class.java, SenderFormatDeserializer())
+            .create()
+        val userSettings = gson.fromJson(jsonString, UserSettings::class.java)
+        if (userSettings != null) {
+            completion(Result.success(userSettings))
+        } else {
+            completion(Result.failure(SLError.FailedToParse(UserSettings::class.java)))
+        }
+    }
+
+    fun fetchDomainLites(apiKey: String, completion: (Result<List<DomainLite>>) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/v2/setting/domains")
+            .header("Authentication", apiKey)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val domainLiteListType = object : TypeToken<List<DomainLite>>() {}.type
+                            val domainLiteList =
+                                Gson().fromJson<List<DomainLite>>(jsonString, domainLiteListType)
+                            if (domainLiteList != null) {
+                                completion(Result.success(domainLiteList))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(MailboxArray::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+    //endregion
 }
