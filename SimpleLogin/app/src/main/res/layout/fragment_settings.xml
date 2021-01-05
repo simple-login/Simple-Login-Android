@@ -26,7 +26,6 @@
                 android:textSize="@dimen/toolbarTitleSize"
                 android:textStyle="bold" />
 
-
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.core.widget.NestedScrollView
@@ -62,7 +61,12 @@
                 <io.simplelogin.android.module.settings.view.RandomAliasCardView
                     android:id="@+id/random_alias_card_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
+                <io.simplelogin.android.module.settings.view.SenderAddressFormatCardView
+                    android:id="@+id/sender_address_format_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -86,6 +90,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </layout>

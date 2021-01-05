@@ -43,6 +43,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Other options
         binding.newslettersCardView.visibility = GONE
         binding.randomAliasCardView.visibility = GONE
+        binding.senderAddressFormatCardView.visibility = GONE
         setUpViewModel()
         viewModel.fetchUserSettingsAndDomainLites()
 
@@ -86,6 +87,16 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.randomAliasCardView.setDefaultDomainSpinnerSelectionListener { selectedDomainLite ->
             if (selectedDomainLite.name != viewModel.userSettings.randomAliasDefaultDomain) {
                 val option = UserSettings.Option.RandomAliasDefaultDomainOption(selectedDomainLite.name)
+                viewModel.updateUserSettings(option)
+            }
+        }
+
+        // Sender address format
+        binding.senderAddressFormatCardView.visibility = VISIBLE
+        binding.senderAddressFormatCardView.bind(viewModel.userSettings.senderFormat)
+        binding.senderAddressFormatCardView.setSenderAddressFormatSpinnerSelectionListener { selectedSenderFormat ->
+            if (selectedSenderFormat != viewModel.userSettings.senderFormat) {
+                val option = UserSettings.Option.SenderFormatOption(selectedSenderFormat)
                 viewModel.updateUserSettings(option)
             }
         }
