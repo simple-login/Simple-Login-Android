@@ -42,6 +42,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         // Other options
         binding.newslettersCardView.visibility = GONE
+        binding.randomAliasCardView.visibility = GONE
         setUpViewModel()
         viewModel.fetchUserSettingsAndDomainLites()
 
@@ -65,6 +66,28 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.newslettersCardView.setOnSwitchChangedListener { isChecked ->
             val option = UserSettings.Option.NotificationOption(isChecked)
             viewModel.updateUserSettings(option)
+        }
+
+        // Random mode & Default domain
+        binding.randomAliasCardView.visibility = VISIBLE
+        binding.randomAliasCardView.bind(
+            viewModel.userSettings.randomMode,
+            viewModel.userSettings.randomAliasDefaultDomain,
+            viewModel.domainLites
+        )
+
+        binding.randomAliasCardView.setRandomModeSpinnerSelectionListener { selectedRandomMode ->
+            if (selectedRandomMode != viewModel.userSettings.randomMode) {
+                val option = UserSettings.Option.RandomModeOption(selectedRandomMode)
+                viewModel.updateUserSettings(option)
+            }
+        }
+
+        binding.randomAliasCardView.setDefaultDomainSpinnerSelectionListener { selectedDomainLite ->
+            if (selectedDomainLite.name != viewModel.userSettings.randomAliasDefaultDomain) {
+                val option = UserSettings.Option.RandomAliasDefaultDomainOption(selectedDomainLite.name)
+                viewModel.updateUserSettings(option)
+            }
         }
     }
 

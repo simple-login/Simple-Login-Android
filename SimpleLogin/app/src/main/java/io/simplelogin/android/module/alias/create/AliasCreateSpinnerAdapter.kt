@@ -5,33 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
-import io.simplelogin.android.R
+import io.simplelogin.android.databinding.SpinnerRowTextOnlyBinding
 
-class AliasCreateSpinnerAdapter(context: Context, private val suffixes: List<String>) : BaseAdapter() {
-    private val inflater = LayoutInflater.from(context)
-
+class AliasCreateSpinnerAdapter(private val context: Context, private val suffixes: List<String>) : BaseAdapter() {
     override fun getCount() = suffixes.size
     override fun getItem(position: Int) = suffixes[position]
     override fun getItemId(position: Int) = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
-        val viewHolder: SpinnerRowHolder
+        val binding: SpinnerRowTextOnlyBinding
         if (convertView == null) {
-            view = inflater.inflate(R.layout.spinner_row_text_only, parent, false)
-            viewHolder = SpinnerRowHolder(view)
-            view.tag = viewHolder
+            binding = SpinnerRowTextOnlyBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
+            view.tag = binding
         } else {
             view = convertView
-            viewHolder = view.tag as SpinnerRowHolder
+            binding = convertView.tag as SpinnerRowTextOnlyBinding
         }
-
-        viewHolder.textView.text = getItem(position)
+        binding.textView.text = getItem(position)
         return view
     }
-}
-
-private class SpinnerRowHolder(row: View?) {
-    val textView: TextView = row?.findViewById(R.id.textView) as TextView
 }

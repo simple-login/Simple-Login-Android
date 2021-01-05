@@ -59,6 +59,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <io.simplelogin.android.module.settings.view.RandomAliasCardView
+                    android:id="@+id/random_alias_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
