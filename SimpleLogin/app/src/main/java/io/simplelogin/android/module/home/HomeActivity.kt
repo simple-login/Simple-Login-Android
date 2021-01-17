@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -39,18 +40,29 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     lateinit var binding: ActivityHomeBinding
         private set
 
-    private lateinit var userInfo: UserInfo
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Retrieve UserInfo from intent
-        userInfo = intent.getParcelableExtra(USER_INFO)!!
-
+        setUpViewModel()
         checkDarkMode()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
         setContentView(binding.root)
+    }
+
+    private fun setUpViewModel() {
+        viewModel.eventUserInfoUpdated.observe(this, { updated ->
+            if (updated) {
+                updateHeaderView()
+                viewModel.onHandleUserInfoUpdateComplete()
+            }
+        })
+        // Retrieve UserInfo from intent
+        val userInfo = intent.getParcelableExtra(USER_INFO) as? UserInfo
+            ?: throw IllegalStateException("UserInfo can not be null")
+        viewModel.setUserInfo(userInfo)
     }
 
     private fun checkDarkMode() {
@@ -124,7 +136,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 val settingsNavGraph = navInflater.inflate(R.navigation.nav_graph_settings)
                 settingsNavGraph.addArgument(
                     USER_INFO,
-                    NavArgument.Builder().setDefaultValue(userInfo).build()
+                    NavArgument.Builder().setDefaultValue(viewModel.userInfo).build()
                 )
                 navController.graph = settingsNavGraph
                 binding.mainDrawer.closeDrawer(Gravity.LEFT)
@@ -184,38 +196,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         appVersionMenuItem.isEnabled = false
 
         // Header info
-        val headerView = binding.navigationView.getHeaderView(0)
-//        val avatarImageView = headerView.findViewById<ImageView>(R.id.avatarImageView)
-
-        val usernameTextView = headerView.findViewById<TextView>(R.id.usernameTextView)
-        usernameTextView.text = userInfo.name
-
-        val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
-        emailTextView.text = userInfo.email
-
-        val membershipTextView = headerView.findViewById<TextView>(R.id.membershipTextView)
-
-        when {
-            userInfo.inTrial -> {
-                membershipTextView.text = "Premium trial"
-                membershipTextView.setTextColor(
-                    ContextCompat.getColor(
-                        this,
-                        android.R.color.holo_blue_light
-                    )
-                )
-            }
-
-            userInfo.isPremium -> {
-                membershipTextView.text = "Premium"
-                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
-            }
-
-            else -> {
-                membershipTextView.text = "Free plan"
-                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-            }
-        }
+        updateHeaderView()
 
         // Define a nested function in order to reuse it later
         fun hideRateUsMenuItemIfApplicable() {
@@ -235,5 +216,40 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 hideRateUsMenuItemIfApplicable()
             }
         })
+    }
+
+    private fun updateHeaderView() {
+        val headerView = binding.navigationView.getHeaderView(0)
+//        val avatarImageView = headerView.findViewById<ImageView>(R.id.avatarImageView)
+
+        val usernameTextView = headerView.findViewById<TextView>(R.id.usernameTextView)
+        usernameTextView.text = viewModel.userInfo.name
+
+        val emailTextView = headerView.findViewById<TextView>(R.id.emailTextView)
+        emailTextView.text = viewModel.userInfo.email
+
+        val membershipTextView = headerView.findViewById<TextView>(R.id.membershipTextView)
+
+        when {
+            viewModel.userInfo.inTrial -> {
+                membershipTextView.text = "Premium trial"
+                membershipTextView.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.holo_blue_light
+                    )
+                )
+            }
+
+            viewModel.userInfo.isPremium -> {
+                membershipTextView.text = "Premium"
+                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorPremium))
+            }
+
+            else -> {
+                membershipTextView.text = "Free plan"
+                membershipTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+            }
+        }
     }
 }

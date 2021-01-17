@@ -8,12 +8,14 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentSettingsBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.module.home.HomeViewModel
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
@@ -23,6 +25,7 @@ import io.simplelogin.android.utils.model.UserSettings
 class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var viewModel: SettingsViewModel
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -142,6 +145,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         viewModel.eventUserInfoUpdated.observe(viewLifecycleOwner, { updated ->
             if (updated) {
                 bind(viewModel.userInfo)
+                homeViewModel.setUserInfo(viewModel.userInfo)
                 viewModel.onHandleUserInfoUpdatedComplete()
             }
         })
