@@ -35,10 +35,12 @@
                     tools:ignore="ContentDescription" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:orientation="vertical"
+                    android:paddingHorizontal="10dp"
                     android:paddingStart="@dimen/card_view_padding"
                     tools:ignore="RtlSymmetry">
 
@@ -48,6 +50,7 @@
                         android:layout_height="wrap_content"
                         android:paddingBottom="5dp"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="@color/colorText"
                         tools:text="John Doe" />
 
                     <TextView
@@ -59,6 +62,17 @@
                         tools:text="email@example.com" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/modify_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="MODIFY"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="@color/colorPrimary"
+                    tools:ignore="HardcodedText" />
+
             </LinearLayout>
 
             <View

@@ -8,6 +8,7 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.DomainLite
+import io.simplelogin.android.utils.model.UserInfo
 import io.simplelogin.android.utils.model.UserSettings
 
 class SettingsViewModel(val context: Context) : BaseViewModel(context) {
@@ -20,10 +21,36 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
         _error.value = null
     }
 
+    // UserInfo
+    lateinit var userInfo: UserInfo
+        private set
+
+    private val _eventUserInfoUpdated = MutableLiveData<Boolean>()
+    val eventUserInfoUpdated: LiveData<Boolean>
+        get() = _eventUserInfoUpdated
+
+    fun setUserInfo(userInfo: UserInfo) {
+        this.userInfo = userInfo
+        _eventUserInfoUpdated.postValue(true)
+    }
+
+    fun updateName(name: String?) {
+        if (_isFetching.value == true) return
+        _isFetching.postValue(true)
+        SLApiService.updateName(apiKey, name) { result ->
+            _isFetching.postValue(false)
+            result.onSuccess { setUserInfo(it) }
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    fun onHandleUserInfoUpdatedComplete() {
+        _eventUserInfoUpdated.value = false
+    }
+
     // UserSettings
-    private lateinit var _userSettings: UserSettings
-    val userSettings: UserSettings
-        get() = _userSettings
+    lateinit var userSettings: UserSettings
+        private set
 
     private val _evenUserSettingsUpdated = MutableLiveData<Boolean>()
     val evenUserSettingsUpdated: LiveData<Boolean>
@@ -53,7 +80,7 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
         dispatchGroup.enter()
         SLApiService.fetchUserSettings(apiKey) { result ->
             dispatchGroup.leave()
-            result.onSuccess { _userSettings = it }
+            result.onSuccess { userSettings = it }
             result.onFailure { storedError = it as SLError }
         }
 
@@ -82,7 +109,7 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
 
         SLApiService.updateUserSettings(apiKey, option) { result ->
             _isFetching.postValue(false)
-            result.onSuccess { _userSettings = it }
+            result.onSuccess { userSettings = it }
             result.onFailure { _error.postValue(it as SLError) }
             _evenUserSettingsUpdated.postValue(true)
         }

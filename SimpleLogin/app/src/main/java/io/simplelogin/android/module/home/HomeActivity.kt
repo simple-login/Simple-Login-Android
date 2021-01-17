@@ -53,7 +53,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         setContentView(binding.root)
     }
 
-
     private fun checkDarkMode() {
         val currentNightMode = (resources.configuration.uiMode
                 and Configuration.UI_MODE_NIGHT_MASK)

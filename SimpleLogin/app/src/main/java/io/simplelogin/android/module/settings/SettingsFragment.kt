@@ -9,6 +9,9 @@ import android.view.View.*
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.simplelogin.android.R
+import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentSettingsBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLSharedPreferences
@@ -30,11 +33,8 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
 
-        // UserInfo
-        binding.profileInfoCardView.visibility = GONE
-        val userInfo =
-            findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
-        bind(userInfo)
+        // Profile info
+        binding.profileInfoCardView.setOnModifyClickListener { alertModificationOptions() }
 
         // Dark mode
         binding.forceDarkModeCardView.visibility = GONE
@@ -139,12 +139,55 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
 
+        viewModel.eventUserInfoUpdated.observe(viewLifecycleOwner, { updated ->
+            if (updated) {
+                bind(viewModel.userInfo)
+                viewModel.onHandleUserInfoUpdatedComplete()
+            }
+        })
+        val userInfo =
+            findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
+        viewModel.setUserInfo(userInfo)
+
         viewModel.evenUserSettingsUpdated.observe(viewLifecycleOwner, { updated ->
             if (updated) {
                 bind(viewModel.userSettings)
                 viewModel.onHandleUserSettingsUpdatedComplete()
             }
         })
+    }
+
+    private fun alertModificationOptions() {
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle("Modify profile")
+            .setItems(
+                arrayOf("Modify profile photo", "Modify display name")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> alertProfilePhotoModificationOptions()
+                    1 -> alertModifyDisplayName()
+                }
+            }
+            .show()
+    }
+
+    private fun alertProfilePhotoModificationOptions() {
+
+    }
+
+    private fun alertModifyDisplayName() {
+        val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Enter new display name")
+            .setView(dialogTextViewBinding.root)
+            .setNeutralButton("Cancel", null)
+            .setPositiveButton("Save") { _, _ ->
+                setLoading(true)
+                val text = dialogTextViewBinding.editText.text
+                val name = if (text.isNullOrEmpty()) null else text.toString()
+                viewModel.updateName(name)
+            }
+            .show()
     }
 
     private fun setLoading(loading: Boolean) {

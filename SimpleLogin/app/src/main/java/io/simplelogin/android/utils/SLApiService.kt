@@ -1031,5 +1031,43 @@ object SLApiService {
             }
         })
     }
+
+    fun updateName(apiKey: String, name: String?, completion: (Result<UserInfo>) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/user_info")
+            .header("Authentication", apiKey)
+            .patch(mapOf("name" to name).toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val userInfo = Gson().fromJson(jsonString, UserInfo::class.java)
+                            if (userInfo != null) {
+                                completion(Result.success(userInfo))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(UserInfo::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
 }

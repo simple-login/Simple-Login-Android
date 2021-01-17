@@ -57,4 +57,8 @@ class ProfileInfoCardView : MaterialCardView {
     fun setOnUpgradeClickListener(listener: () -> Unit) {
         binding.upgradeTextView.setOnClickListener { listener() }
     }
+
+    fun setOnModifyClickListener(listener: () -> Unit) {
+        binding.modifyTextView.setOnClickListener { listener() }
+    }
 }
