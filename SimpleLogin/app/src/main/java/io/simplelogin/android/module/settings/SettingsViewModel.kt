@@ -37,11 +37,25 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
     fun updateName(name: String?) {
         if (_isFetching.value == true) return
         _isFetching.postValue(true)
-        SLApiService.updateName(apiKey, name) { result ->
-            _isFetching.postValue(false)
-            result.onSuccess { setUserInfo(it) }
-            result.onFailure { _error.postValue(it as SLError) }
-        }
+        SLApiService.updateName(apiKey, name) { handleUserInfoResult(it) }
+    }
+
+    fun removeProfilePhoto() {
+        if (_isFetching.value == true) return
+        _isFetching.postValue(true)
+        SLApiService.updateProfilePhoto(apiKey, null) { handleUserInfoResult(it) }
+    }
+
+    fun updateProfilePhoto(base64String: String) {
+        if (_isFetching.value == true) return
+        _isFetching.postValue(true)
+        SLApiService.updateProfilePhoto(apiKey, base64String) { handleUserInfoResult(it) }
+    }
+
+    private fun handleUserInfoResult(result: Result<UserInfo>) {
+        _isFetching.postValue(false)
+        result.onSuccess { setUserInfo(it) }
+        result.onFailure { _error.postValue(it as SLError) }
     }
 
     fun onHandleUserInfoUpdatedComplete() {

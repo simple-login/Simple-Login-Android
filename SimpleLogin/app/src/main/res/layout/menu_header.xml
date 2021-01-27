@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="150dp">
@@ -20,15 +21,11 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
-        <ImageView
-            android:id="@+id/avatarImageView"
+        <io.simplelogin.android.module.settings.view.AvatarView
+            android:id="@+id/avatar_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_oval_bordered"
-            android:padding="10dp"
-            android:src="@drawable/ic_user_48dp"
-            android:tint="@color/colorPrimary"
-            tools:ignore="ContentDescription" />
+            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:layout_width="wrap_content"

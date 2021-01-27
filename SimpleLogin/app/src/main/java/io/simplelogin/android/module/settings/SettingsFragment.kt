@@ -1,8 +1,15 @@
 package io.simplelogin.android.module.settings
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -19,10 +26,17 @@ import io.simplelogin.android.module.home.HomeViewModel
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.toastError
+import io.simplelogin.android.utils.extension.toastShortly
 import io.simplelogin.android.utils.model.UserInfo
 import io.simplelogin.android.utils.model.UserSettings
+import java.io.ByteArrayOutputStream
 
 class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
+    companion object {
+        private const val PICK_PHOTO_CODE = 1000
+        private const val PHOTO_LIBRARY_REQUEST_CODE = 1001
+    }
+
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var viewModel: SettingsViewModel
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -176,7 +190,32 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun alertProfilePhotoModificationOptions() {
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle("Modify profile photo")
+            .setItems(
+                arrayOf("Upload new photo", "Remove profile photo")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> askForPhotoLibraryPermission()
+                    1 -> viewModel.removeProfilePhoto()
+                }
+            }
+            .show()
+    }
 
+    private fun askForPhotoLibraryPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
+            if (requireActivity().checkSelfPermission(readPermission) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(arrayOf(readPermission), PHOTO_LIBRARY_REQUEST_CODE)
+            } else { openPhotoPicker() }
+        } else { openPhotoPicker() }
+    }
+
+    private fun openPhotoPicker() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_PHOTO_CODE)
     }
 
     private fun alertModifyDisplayName() {
@@ -202,5 +241,29 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     // HomeActivity.OnBackPressed
     override fun onBackPressed() {
         showLeftMenu()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == PHOTO_LIBRARY_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+                openPhotoPicker()
+            } else {
+                requireContext().toastShortly("Permission denied")
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_PHOTO_CODE) {
+            data?.data?.let { uri ->
+                val input = activity?.contentResolver?.openInputStream(uri)
+                val image = BitmapFactory.decodeStream(input)
+                val baos = ByteArrayOutputStream()
+                image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val byteArray = baos.toByteArray()
+                val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                viewModel.updateProfilePhoto(base64String)
+            }
+        }
     }
 }

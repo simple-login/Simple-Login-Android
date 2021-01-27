@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.module.about.AboutFragment
+import io.simplelogin.android.module.settings.view.AvatarView
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.getVersionName
@@ -220,7 +221,8 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun updateHeaderView() {
         val headerView = binding.navigationView.getHeaderView(0)
-//        val avatarImageView = headerView.findViewById<ImageView>(R.id.avatarImageView)
+        val avatarView = headerView.findViewById<AvatarView>(R.id.avatar_view)
+        avatarView.setAvatar(viewModel.userInfo.profilePhotoUrl)
 
         val usernameTextView = headerView.findViewById<TextView>(R.id.usernameTextView)
         usernameTextView.text = viewModel.userInfo.name
