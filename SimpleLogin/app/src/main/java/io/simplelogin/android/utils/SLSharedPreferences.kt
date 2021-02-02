@@ -9,6 +9,12 @@ object SLSharedPreferences {
     private fun getSharedPreferences(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE)
 
+    fun reset(context: Context) {
+        removeApiKey(context)
+        setShouldForceDarkMode(context, false)
+        setShouldLocallyAuthenticate(context, false)
+    }
+
     //region API KEY
     private const val API_KEY = "API_KEY"
 
@@ -75,6 +81,20 @@ object SLSharedPreferences {
     fun setShouldForceDarkMode(context: Context, shouldForceDarkMode: Boolean) {
         with(getSharedPreferences(context).edit()) {
             putBoolean(FORCE_DARK_MODE, shouldForceDarkMode)
+            commit()
+        }
+    }
+    //endregion
+
+    //region LOCAL AUTHENTICATION
+    private const val SHOULD_LOCALLY_AUTHENTICATE = "SHOULD_LOCALLY_AUTHENTICATE"
+
+    fun getShouldLocallyAuthenticate(context: Context) : Boolean =
+        getSharedPreferences(context).getBoolean(SHOULD_LOCALLY_AUTHENTICATE, false)
+
+    fun setShouldLocallyAuthenticate(context: Context, shouldLocallyAuthenticate: Boolean) {
+        with(getSharedPreferences(context).edit()) {
+            putBoolean(SHOULD_LOCALLY_AUTHENTICATE, shouldLocallyAuthenticate)
             commit()
         }
     }

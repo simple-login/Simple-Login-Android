@@ -3,6 +3,7 @@ package io.simplelogin.android.module.startup
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityStartUpBinding
@@ -30,12 +31,9 @@ class StartupActivity : BaseAppCompatActivity()  {
 
     override fun onResume() {
         super.onResume()
-
-        val apiKey = SLSharedPreferences.getApiKey(this)
-        if (apiKey != null) {
-            fetchUserInfoAndProceed(apiKey)
-        } else {
-            startLoginActivity()
+        when (SLSharedPreferences.getApiKey(this)) {
+            null -> startLoginActivity()
+            else -> fetchUserInfoAndProceed()
         }
     }
 
@@ -54,31 +52,30 @@ class StartupActivity : BaseAppCompatActivity()  {
         overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 
-    private fun fetchUserInfoAndProceed(apiKey: String) {
+    private fun fetchUserInfoAndProceed() {
+        val apiKey = SLSharedPreferences.getApiKey(this)
+        if (apiKey == null) {
+            startLoginActivity()
+            return
+        }
+        binding.progressBar.visibility = View.VISIBLE
         SLApiService.fetchUserInfo(apiKey) { result ->
             runOnUiThread {
+                binding.progressBar.visibility = View.GONE
                 result.onSuccess(::startHomeActivity)
-
-                result.onFailure {
-                    val error = it as SLError
-                    showErrorSnackBar(error)
-                    if (error == SLError.InvalidApiKey) {
-                        startLoginActivity()
-                    }
-                }
+                result.onFailure(::handleError)
             }
         }
     }
 
-    private fun showErrorSnackBar(error: SLError) {
-        Snackbar.make(binding.bottomCoordinatorLayout, error.description, Snackbar.LENGTH_INDEFINITE)
-            .setAction("Retry") {
-                SLSharedPreferences.getApiKey(this)?.let { apiKey ->
-
-                    fetchUserInfoAndProceed(apiKey)
-                }
-            }
-            .show()
+    private fun handleError(error: Throwable) {
+        when (error as SLError) {
+            SLError.InvalidApiKey -> startLoginActivity()
+            else ->
+                Snackbar.make(binding.bottomCoordinatorLayout, error.description, Snackbar.LENGTH_INDEFINITE).apply {
+                    setAction("Retry") { fetchUserInfoAndProceed() }
+                }.show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

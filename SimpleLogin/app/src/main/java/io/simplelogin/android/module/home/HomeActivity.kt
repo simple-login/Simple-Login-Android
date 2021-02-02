@@ -13,7 +13,10 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavArgument
 import androidx.navigation.findNavController
@@ -24,6 +27,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.module.about.AboutFragment
 import io.simplelogin.android.module.settings.view.AvatarView
+import io.simplelogin.android.module.startup.StartupActivity
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.getVersionName
@@ -38,18 +42,20 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         const val USER_INFO = "userInfo"
     }
 
-    lateinit var binding: ActivityHomeBinding
-        private set
-
+    private lateinit var binding: ActivityHomeBinding
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpViewModel()
-        checkDarkMode()
+        applyDarkModeIfApplicable()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
+        if (SLSharedPreferences.getShouldLocallyAuthenticate(this)) {
+            binding.root.visibility = View.GONE
+            locallyAuthenticate()
+        }
         setContentView(binding.root)
     }
 
@@ -64,32 +70,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         val userInfo = intent.getParcelableExtra(USER_INFO) as? UserInfo
             ?: throw IllegalStateException("UserInfo can not be null")
         viewModel.setUserInfo(userInfo)
-    }
-
-    private fun checkDarkMode() {
-        val currentNightMode = (resources.configuration.uiMode
-                and Configuration.UI_MODE_NIGHT_MASK)
-
-        // Check if force dark mode is enabled:
-        if (SLSharedPreferences.getShouldForceDarkMode(this)) {
-            // If Dark mode is already enabled, skip
-            if (currentNightMode != Configuration.UI_MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        } else {
-            val view = window.decorView
-            when (currentNightMode) {
-                Configuration.UI_MODE_NIGHT_NO ->
-                    // Night mode is not active, we're using the light theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
-                Configuration.UI_MODE_NIGHT_YES ->
-                    // Night mode is active, we're using dark theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            }
-        }
     }
 
     override fun onBackPressed() {
@@ -115,6 +95,60 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         if (isFinishing) {
             overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
         }
+    }
+
+    private fun applyDarkModeIfApplicable() {
+        val currentNightMode = (resources.configuration.uiMode
+                and Configuration.UI_MODE_NIGHT_MASK)
+
+        // Check if force dark mode is enabled:
+        if (SLSharedPreferences.getShouldForceDarkMode(this)) {
+            // If Dark mode is already enabled, skip
+            if (currentNightMode != Configuration.UI_MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        } else {
+            val view = window.decorView
+            when (currentNightMode) {
+                Configuration.UI_MODE_NIGHT_NO ->
+                    // Night mode is not active, we're using the light theme
+                    view.systemUiVisibility =
+                        view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
+                Configuration.UI_MODE_NIGHT_YES ->
+                    // Night mode is active, we're using dark theme
+                    view.systemUiVisibility =
+                        view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }
+        }
+    }
+
+    private fun locallyAuthenticate() {
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                removeApiKeyAndRestartApp()
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                binding.root.visibility = View.VISIBLE
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                removeApiKeyAndRestartApp()
+            }
+        }
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder().apply {
+            setTitle("Local Authentication")
+            setSubtitle("Please authenticate to access SimpleLogin")
+            setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+        }.build()
+
+        val executor = ContextCompat.getMainExecutor(this)
+        BiometricPrompt(this, executor, callback).authenticate(promptInfo)
     }
 
     @SuppressLint("RtlHardcoded")
@@ -179,14 +213,20 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                     .setTitle("You will be signed out")
                     .setMessage("Please confirm")
                     .setNeutralButton("Cancel", null)
-                    .setPositiveButton("Yes, sign me out") { _, _ ->
-                        SLSharedPreferences.removeApiKey(this)
-                        finish()
-                    }
+                    .setPositiveButton("Yes, sign me out") { _, _ -> removeApiKeyAndRestartApp() }
                     .show()
             }
         }
         return true
+    }
+
+    private fun removeApiKeyAndRestartApp(){
+        SLSharedPreferences.removeApiKey(this)
+        val intent = Intent(this, StartupActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+        startActivity(intent)
+        Runtime.getRuntime().exit(0)
     }
 
     @SuppressLint("SetTextI18n")
@@ -217,6 +257,10 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 hideRateUsMenuItemIfApplicable()
             }
         })
+    }
+
+    fun openDrawer() {
+        binding.mainDrawer.openDrawer(GravityCompat.START)
     }
 
     private fun updateHeaderView() {

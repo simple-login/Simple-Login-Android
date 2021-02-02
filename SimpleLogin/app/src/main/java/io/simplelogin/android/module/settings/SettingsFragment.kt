@@ -33,8 +33,8 @@ import java.io.ByteArrayOutputStream
 
 class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     companion object {
-        private const val PICK_PHOTO_CODE = 1000
-        private const val PHOTO_LIBRARY_REQUEST_CODE = 1001
+        private const val PICK_PHOTO_REQUEST_CODE = 1000
+        private const val PHOTO_LIBRARY_PERMISSION_REQUEST_CODE = 1001
     }
 
     private lateinit var binding: FragmentSettingsBinding
@@ -56,6 +56,12 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Dark mode
         binding.forceDarkModeCardView.visibility = GONE
         bindForceDarkMode()
+
+        // Local Authentication
+        binding.localAuthenticationView.setOnSwitchChangedListener { isChecked ->
+            SLSharedPreferences.setShouldLocallyAuthenticate(requireContext(), isChecked)
+        }
+        binding.localAuthenticationView.bind(SLSharedPreferences.getShouldLocallyAuthenticate(requireContext()))
 
         // Other options
         binding.newslettersCardView.visibility = GONE
@@ -207,7 +213,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
             if (requireActivity().checkSelfPermission(readPermission) == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(readPermission), PHOTO_LIBRARY_REQUEST_CODE)
+                requestPermissions(arrayOf(readPermission), PHOTO_LIBRARY_PERMISSION_REQUEST_CODE)
             } else { openPhotoPicker() }
         } else { openPhotoPicker() }
     }
@@ -215,7 +221,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun openPhotoPicker() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, PICK_PHOTO_CODE)
+        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
     }
 
     private fun alertModifyDisplayName() {
@@ -244,7 +250,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == PHOTO_LIBRARY_REQUEST_CODE) {
+        if (requestCode == PHOTO_LIBRARY_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
                 openPhotoPicker()
             } else {
@@ -254,15 +260,18 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_PHOTO_CODE) {
-            data?.data?.let { uri ->
-                val input = activity?.contentResolver?.openInputStream(uri)
-                val image = BitmapFactory.decodeStream(input)
-                val baos = ByteArrayOutputStream()
-                image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                val byteArray = baos.toByteArray()
-                val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                viewModel.updateProfilePhoto(base64String)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                PICK_PHOTO_REQUEST_CODE ->
+                    data?.data?.let { uri ->
+                        val input = activity?.contentResolver?.openInputStream(uri)
+                        val image = BitmapFactory.decodeStream(input)
+                        val baos = ByteArrayOutputStream()
+                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        val byteArray = baos.toByteArray()
+                        val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                        viewModel.updateProfilePhoto(base64String)
+                    }
             }
         }
     }

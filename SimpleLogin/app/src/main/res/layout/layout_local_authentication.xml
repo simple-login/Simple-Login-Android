@@ -21,26 +21,26 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@id/newsletters_switch"
+                android:layout_toStartOf="@id/biometric_switch"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/newletters"
+                    android:text="Local Authentication"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
                     android:textColor="@color/colorText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/newletters_explication" />
+                    android:text="Restrict unwanted access to your SimpleLogin account on this device with biometric authentication or device passcode" />
 
             </LinearLayout>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/newsletters_switch"
+                android:id="@+id/biometric_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
