@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -12,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -48,7 +46,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpViewModel()
-        applyDarkModeIfApplicable()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
@@ -97,37 +94,11 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
-    private fun applyDarkModeIfApplicable() {
-        val currentNightMode = (resources.configuration.uiMode
-                and Configuration.UI_MODE_NIGHT_MASK)
-
-        // Check if force dark mode is enabled:
-        if (SLSharedPreferences.getShouldForceDarkMode(this)) {
-            // If Dark mode is already enabled, skip
-            if (currentNightMode != Configuration.UI_MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        } else {
-            val view = window.decorView
-            when (currentNightMode) {
-                Configuration.UI_MODE_NIGHT_NO ->
-                    // Night mode is not active, we're using the light theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
-                Configuration.UI_MODE_NIGHT_YES ->
-                    // Night mode is active, we're using dark theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            }
-        }
-    }
-
     private fun locallyAuthenticate() {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                removeApiKeyAndRestartApp()
+                resetSettingsAndRestartApp()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -137,7 +108,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
-                removeApiKeyAndRestartApp()
+                resetSettingsAndRestartApp()
             }
         }
 
@@ -213,15 +184,15 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                     .setTitle("You will be signed out")
                     .setMessage("Please confirm")
                     .setNeutralButton("Cancel", null)
-                    .setPositiveButton("Yes, sign me out") { _, _ -> removeApiKeyAndRestartApp() }
+                    .setPositiveButton("Yes, sign me out") { _, _ -> resetSettingsAndRestartApp() }
                     .show()
             }
         }
         return true
     }
 
-    private fun removeApiKeyAndRestartApp(){
-        SLSharedPreferences.removeApiKey(this)
+    private fun resetSettingsAndRestartApp(){
+        SLSharedPreferences.reset(this)
         val intent = Intent(this, StartupActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }

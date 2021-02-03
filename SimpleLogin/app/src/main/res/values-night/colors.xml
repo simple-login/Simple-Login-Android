@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorLightGray">#222831</color>
     <color name="colorText">#FFFFFF</color>
     <color name="colorItemBackground">#151515</color>
     <color name="colorListBackground">#000000</color>
