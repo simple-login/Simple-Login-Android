@@ -28,7 +28,7 @@ object SLSharedPreferences {
         }
     }
 
-    fun removeApiKey(context: Context) {
+    private fun removeApiKey(context: Context) {
         with(getSharedPreferences(context).edit()) {
             remove(API_KEY)
             commit()
