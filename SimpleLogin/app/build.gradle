@@ -73,8 +73,8 @@ dependencies {
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha02"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.5"
