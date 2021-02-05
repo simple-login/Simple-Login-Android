@@ -26,7 +26,7 @@ class SenderAddressFormatCardView : MaterialCardView {
         background = ContextCompat.getDrawable(context, android.R.color.transparent)
     }
 
-    private val senderFormats = listOf(A, AT, FULL, VIA)
+    private val senderFormats = listOf(A, AT)
 
     // Functions
     fun bind(senderFormat: SenderFormat) {
