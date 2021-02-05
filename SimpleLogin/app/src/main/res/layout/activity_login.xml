@@ -3,28 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/rootRelativeLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbarThumbVertical="@android:color/transparent">
 
                 <LinearLayout
                     android:id="@+id/rootLinearLayout"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -105,8 +109,8 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/colorText"
-                        android:alpha="0.1"/>
+                        android:alpha="0.1"
+                        android:background="@color/colorText" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/apiKeyButton"
@@ -120,8 +124,8 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/colorText"
-                        android:alpha="0.1"/>
+                        android:alpha="0.1"
+                        android:background="@color/colorText" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/changeApiUrlButton"
@@ -133,52 +137,53 @@
                         android:textAppearance="?attr/textAppearanceBody2"
                         tools:ignore="HardcodedText" />
                 </LinearLayout>
+            </ScrollView>
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/app_version_and_about_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/appVersionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/colorDarkGray"
+                    tools:text="SimpleLogin vX.X" />
+
+                <TextView
+                    android:id="@+id/aboutUsTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:drawablePadding="5dp"
+                    android:text="About Us"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_info_outline_black_24dp"
+                    app:drawableTint="@color/colorPrimary"
+                    tools:ignore="HardcodedText" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/appVersionTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/colorDarkGray"
-                tools:text="SimpleLogin vX.X" />
-
-            <TextView
-                android:id="@+id/aboutUsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_info_outline_black_24dp"
-                android:drawablePadding="5dp"
-                android:text="About Us"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                app:drawableTint="@color/colorPrimary"
-                tools:ignore="HardcodedText" />
+            </LinearLayout>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/dimView"
@@ -187,21 +192,27 @@
             android:background="@color/colorDarkGray"
             android:visibility="gone" />
 
-        <include
-            android:id="@+id/forgotPasswordBottomSheet"
-            layout="@layout/bottom_sheet_forgot_password"
-            tools:visibility="gone" />
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/apiKeyBottomSheet"
-            layout="@layout/bottom_sheet_enter_api_key"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/forgotPasswordBottomSheet"
+                layout="@layout/bottom_sheet_forgot_password"
+                tools:visibility="gone" />
 
-        <include
-            android:id="@+id/changeApiUrlBottomSheet"
-            layout="@layout/bottom_sheet_change_api_url"
-            tools:visibility="gone" />
+            <include
+                android:id="@+id/apiKeyBottomSheet"
+                layout="@layout/bottom_sheet_enter_api_key"
+                tools:visibility="gone" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <include
+                android:id="@+id/changeApiUrlBottomSheet"
+                layout="@layout/bottom_sheet_change_api_url"
+                tools:visibility="gone" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </RelativeLayout>
 
 </layout>
