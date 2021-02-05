@@ -6,14 +6,12 @@ import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
 enum class SenderFormat(val parameterName: String) {
-    A("A"), AT("AT"), FULL("FULL"), VIA("VIA");
+    A("A"), AT("AT");
 
     val description
         get() = when (this) {
             A -> "John Doe - john.doe(a)example.com"
             AT -> "John Doe - john.doe at example.com"
-            FULL -> "John Doe - john.doe@example.com"
-            VIA -> "john.doe@example.com via SimpleLogin"
         }
 }
 
@@ -25,8 +23,6 @@ class SenderFormatDeserializer : JsonDeserializer<SenderFormat> {
     ): SenderFormat =
         when (json?.asString) {
             "AT" -> SenderFormat.AT
-            "FULL" -> SenderFormat.FULL
-            "VIA" -> SenderFormat.VIA
             else -> SenderFormat.A
         }
 }
