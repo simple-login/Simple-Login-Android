@@ -13,8 +13,8 @@ android {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 7
-        versionName "1.5"
+        versionCode 10
+        versionName "1.6"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +29,8 @@ android {
             ndk {
                 debugSymbolLevel = "full"
             }
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -82,8 +83,4 @@ dependencies {
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.5"
-
-    // Sentry
-    // https://github.com/getsentry/sentry-android/releases
-    playstoreImplementation 'io.sentry:sentry-android:2.1.1'
 }
