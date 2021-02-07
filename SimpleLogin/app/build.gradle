@@ -7,13 +7,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
+    ndkVersion = "22.0.7026061"
 
     defaultConfig {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.4.1"
+        versionCode 7
+        versionName "1.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,6 +26,9 @@ android {
 
     buildTypes {
         release {
+            ndk {
+                debugSymbolLevel = "full"
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
