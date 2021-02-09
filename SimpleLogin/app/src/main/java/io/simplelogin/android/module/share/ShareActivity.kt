@@ -70,7 +70,6 @@ class ShareActivity : BaseAppCompatActivity() {
             create()
         }
 
-        SLApiService.setUpBaseUrl(this)
         fillPrefix()
         setUpViewModel()
     }

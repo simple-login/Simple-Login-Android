@@ -33,7 +33,7 @@ private val client = OkHttpClient()
 
 @Suppress("MagicNumber")
 object SLApiService {
-    private lateinit var BASE_URL: String
+    private var BASE_URL: String = "https://app.simplelogin.io"
 
     fun setUpBaseUrl(context: Context) {
         BASE_URL = SLSharedPreferences.getApiUrl(context)
