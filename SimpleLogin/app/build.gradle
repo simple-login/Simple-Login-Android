@@ -7,14 +7,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    ndkVersion = "22.0.7026061"
 
     defaultConfig {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 7
-        versionName "1.5"
+        versionCode 13
+        versionName "1.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,9 +25,6 @@ android {
 
     buildTypes {
         release {
-            ndk {
-                debugSymbolLevel = "full"
-            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -74,16 +70,12 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation "androidx.recyclerview:recyclerview:1.2.0-beta01"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha02"
+    implementation "androidx.biometric:biometric:1.1.0"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.5"
-
-    // Sentry
-    // https://github.com/getsentry/sentry-android/releases
-    playstoreImplementation 'io.sentry:sentry-android:2.1.1'
 }

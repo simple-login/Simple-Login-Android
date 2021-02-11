@@ -18,22 +18,30 @@ import io.simplelogin.android.utils.model.UserInfo
 class StartupActivity : BaseAppCompatActivity()  {
     companion object {
         const val RC_HOME_ACTIVITY = 0
+        const val RC_LOCAL_AUTH_ACTIVITY = 1
     }
 
     private lateinit var binding: ActivityStartUpBinding
+    private var shouldLocallyAuthenticate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStartUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        SLApiService.setUpBaseUrl(this)
+        shouldLocallyAuthenticate = SLSharedPreferences.getShouldLocallyAuthenticate(this)
     }
 
     override fun onResume() {
         super.onResume()
         when (SLSharedPreferences.getApiKey(this)) {
             null -> startLoginActivity()
-            else -> fetchUserInfoAndProceed()
+            else -> {
+                if (shouldLocallyAuthenticate) {
+                    startLocalAuthActivity()
+                } else {
+                    fetchUserInfoAndProceed()
+                }
+            }
         }
     }
 
@@ -42,6 +50,12 @@ class StartupActivity : BaseAppCompatActivity()  {
     private fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
+    }
+
+    private fun startLocalAuthActivity() {
+        val intent = Intent(this, LocalAuthActivity::class.java)
+        startActivityForResult(intent, RC_LOCAL_AUTH_ACTIVITY)
         overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 
@@ -82,12 +96,16 @@ class StartupActivity : BaseAppCompatActivity()  {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            RC_HOME_ACTIVITY -> {
+            RC_HOME_ACTIVITY ->
                 if (resultCode == Activity.RESULT_CANCELED) {
                     // Exit application when backed from HomeActivity
                     finish()
                 }
-            }
+
+            RC_LOCAL_AUTH_ACTIVITY ->
+                if (resultCode == Activity.RESULT_OK) {
+                    shouldLocallyAuthenticate = false
+                }
         }
     }
 }

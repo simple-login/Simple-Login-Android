@@ -11,8 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -49,10 +47,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         binding = ActivityHomeBinding.inflate(layoutInflater)
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
-        if (SLSharedPreferences.getShouldLocallyAuthenticate(this)) {
-            binding.root.visibility = View.GONE
-            locallyAuthenticate()
-        }
         setContentView(binding.root)
     }
 
@@ -92,34 +86,6 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         if (isFinishing) {
             overridePendingTransition(R.anim.stay_still, R.anim.slide_out_down)
         }
-    }
-
-    private fun locallyAuthenticate() {
-        val callback = object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                resetSettingsAndRestartApp()
-            }
-
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                binding.root.visibility = View.VISIBLE
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                resetSettingsAndRestartApp()
-            }
-        }
-
-        val promptInfo = BiometricPrompt.PromptInfo.Builder().apply {
-            setTitle("Local Authentication")
-            setSubtitle("Please authenticate to access SimpleLogin")
-            setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
-        }.build()
-
-        val executor = ContextCompat.getMainExecutor(this)
-        BiometricPrompt(this, executor, callback).authenticate(promptInfo)
     }
 
     @SuppressLint("RtlHardcoded")
