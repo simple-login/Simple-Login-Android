@@ -7,14 +7,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    ndkVersion = "22.0.7026061"
 
     defaultConfig {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
-        versionName "1.6"
+        versionCode 13
+        versionName "1.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,11 +25,7 @@ android {
 
     buildTypes {
         release {
-            ndk {
-                debugSymbolLevel = "full"
-            }
-            shrinkResources true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -78,8 +73,8 @@ dependencies {
     implementation "androidx.biometric:biometric:1.1.0"
 
     // Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
 
     // Shared view model
     implementation "androidx.fragment:fragment-ktx:1.2.5"
