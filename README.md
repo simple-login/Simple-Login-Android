@@ -21,15 +21,17 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 - View alias activities.
 - Share extension which allows you to create alias on the fly while using a browser.
 - Support self-hosted: you can use this application with your own SimpleLogin instance.
+- Local authentication: biometric (TouchID or FaceID) & passcode.
+- Dark mode.
 
 ## TODO
 - [ ] Manage custom domains
 - [ ] Manage directories
 - [x] Manage mailboxes
-- [ ] Account settings
+- [x] Account settings
 
 ## License
-Copyright 2020 SimpleLogin
+Copyright 2021 SimpleLogin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
