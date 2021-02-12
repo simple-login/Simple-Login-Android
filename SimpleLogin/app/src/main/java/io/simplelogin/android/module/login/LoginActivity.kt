@@ -69,6 +69,11 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         })
 
+        // Remember me
+        val savedEmail = SLSharedPreferences.getEmail(this)
+        binding.emailTextField.editText?.setText(savedEmail)
+        binding.rememberMeCheckbox.isChecked = !savedEmail.isNullOrEmpty()
+
         binding.loginButton.isEnabled = false // disable login button by default
         binding.loginButton.setOnClickListener { login() }
 
@@ -78,10 +83,6 @@ class LoginActivity : BaseAppCompatActivity() {
             startActivityForResult(signUpIntent, RC_SIGN_UP)
             overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
         }
-
-        // Social login
-//        binding.facebookButton.setOnClickListener { loginWithFacebook() }
-//        binding.googleButton.setOnClickListener { loginWithGoogle() }
 
         // Forgot password
         binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }
@@ -104,6 +105,15 @@ class LoginActivity : BaseAppCompatActivity() {
         }
 
         binding.root.setOnClickListener { dismissKeyboard() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (binding.rememberMeCheckbox.isChecked) {
+            SLSharedPreferences.setEmail(this, binding.emailTextField.editText?.text.toString())
+        } else {
+            SLSharedPreferences.setEmail(this, null)
+        }
     }
 
     override fun onBackPressed() {
