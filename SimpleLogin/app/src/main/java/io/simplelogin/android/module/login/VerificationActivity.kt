@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.Window
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import io.simplelogin.android.R
@@ -20,7 +21,7 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.enums.VerificationMode
 import io.simplelogin.android.utils.extension.*
 
-class VerificationActivity : BaseAppCompatActivity() {
+class VerificationActivity : BaseAppCompatActivity(), Window.Callback {
     companion object {
         const val MFA_MODE = "mfaMode"
         const val ACCOUNT_ACTIVATION_MODE = "accountActivationMode"
@@ -64,9 +65,8 @@ class VerificationActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
         getCodeFromClipboard()?.let { code ->
             Snackbar.make(binding.root, "\"$code\" is found in the clipboard", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Paste & Verify") {
