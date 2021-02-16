@@ -58,11 +58,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"
+                        android:paddingTop="4dp"
                         tools:ignore="HardcodedText">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableEnd="@drawable/ic_eye_fill"
                             android:inputType="textPassword"
                             android:textColor="@color/colorText" />
                     </com.google.android.material.textfield.TextInputLayout>

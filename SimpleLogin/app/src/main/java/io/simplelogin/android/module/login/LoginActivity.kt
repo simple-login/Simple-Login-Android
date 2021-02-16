@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.simplelogin.android.R
@@ -31,7 +32,7 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private lateinit var binding: ActivityLoginBinding
-
+    private var isShowingPassword = false
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
 
@@ -68,6 +69,20 @@ class LoginActivity : BaseAppCompatActivity() {
                 updateLoginButtonState()
             }
         })
+
+        binding.passwordTextField.editText?.onDrawableEndTouch {
+            if (binding.passwordTextField.editText?.text.isNullOrEmpty()) return@onDrawableEndTouch
+            isShowingPassword = !isShowingPassword
+            binding.passwordTextField.editText?.setShowPassword(isShowingPassword)
+        }
+
+        binding.passwordTextField.editText?.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                login()
+                return@setOnKeyListener true
+            }
+            false
+        }
 
         // Remember me
         val savedEmail = SLSharedPreferences.getEmail(this)
@@ -345,11 +360,11 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun login() {
         dismissKeyboard()
 
-        val email = binding.emailTextField.editText?.text.toString()
+        val email = binding.emailTextField.editText?.text.toString().trim()
         val password = binding.passwordTextField.editText?.text.toString()
         val deviceName = Build.DEVICE
 
-        if (email != "" && password != "") {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
             setLoading(true)
             SLApiService.login(email, password, deviceName) { result ->
                 runOnUiThread {
