@@ -48,6 +48,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableEnd="@drawable/ic_close_fill_16dp"
                             android:inputType="textEmailAddress"
                             android:textColor="@color/colorText" />
                     </com.google.android.material.textfield.TextInputLayout>

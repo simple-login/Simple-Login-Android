@@ -33,6 +33,7 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private var isShowingPassword = false
+
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
 
@@ -59,6 +60,10 @@ class LoginActivity : BaseAppCompatActivity() {
                 updateLoginButtonState()
             }
         })
+
+        binding.emailTextField.editText?.onDrawableEndTouch {
+            binding.emailTextField.editText?.text = null
+        }
 
         binding.passwordTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
@@ -263,7 +268,8 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.changeApiUrlBottomSheet.root.layoutParams.height =
             (getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
-        changeApiUrlBottomSheetBehavior = BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
+        changeApiUrlBottomSheetBehavior =
+            BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
         changeApiUrlBottomSheetBehavior.hide()
         binding.changeApiUrlBottomSheet.cancelButton.setOnClickListener {
             changeApiUrlBottomSheetBehavior.hide()
@@ -299,7 +305,8 @@ class LoginActivity : BaseAppCompatActivity() {
         })
 
         binding.changeApiUrlBottomSheet.setButton.setOnClickListener {
-            val enteredApiUrl = binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.text.toString()
+            val enteredApiUrl =
+                binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.text.toString()
             SLSharedPreferences.setApiUrl(this, enteredApiUrl)
             changeApiUrlBottomSheetBehavior.hide()
             toastShortly("Changed API URL to: $enteredApiUrl")
@@ -407,7 +414,8 @@ class LoginActivity : BaseAppCompatActivity() {
 
                 result.onSuccess {
                     toastLongly("Check your inbox for verification code")
-                    startVerificationActivity(VerificationMode.AccountActivation(Email(email), Password(password)))
+                    val mode = VerificationMode.AccountActivation(Email(email), Password(password))
+                    startVerificationActivity(mode)
                 }
 
                 result.onFailure(::toastThrowable)
