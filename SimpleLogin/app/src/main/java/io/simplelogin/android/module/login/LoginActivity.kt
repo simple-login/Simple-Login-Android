@@ -89,11 +89,6 @@ class LoginActivity : BaseAppCompatActivity() {
             false
         }
 
-        // Remember me
-        val savedEmail = SLSharedPreferences.getEmail(this)
-        binding.emailTextField.editText?.setText(savedEmail)
-        binding.rememberMeCheckbox.isChecked = !savedEmail.isNullOrEmpty()
-
         binding.loginButton.isEnabled = false // disable login button by default
         binding.loginButton.setOnClickListener { login() }
 
@@ -125,15 +120,6 @@ class LoginActivity : BaseAppCompatActivity() {
         }
 
         binding.root.setOnClickListener { dismissKeyboard() }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (binding.rememberMeCheckbox.isChecked) {
-            SLSharedPreferences.setEmail(this, binding.emailTextField.editText?.text.toString())
-        } else {
-            SLSharedPreferences.setEmail(this, null)
-        }
     }
 
     override fun onBackPressed() {

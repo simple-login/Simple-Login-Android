@@ -15,20 +15,6 @@ object SLSharedPreferences {
         setShouldLocallyAuthenticate(context, false)
     }
 
-    //region EMAIL
-    private const val EMAIL = "EMAIL"
-
-    fun getEmail(context: Context): String? =
-        getSharedPreferences(context).getString(EMAIL, null)
-
-    fun setEmail(context: Context, email: String?) {
-        with(getSharedPreferences(context).edit()) {
-            putString(EMAIL, email)
-            commit()
-        }
-    }
-    //endregion
-
     //region API KEY
     private const val API_KEY = "API_KEY"
 
