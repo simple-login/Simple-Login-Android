@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.simplelogin.android.R
@@ -31,6 +32,7 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private lateinit var binding: ActivityLoginBinding
+    private var isShowingPassword = false
 
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
@@ -59,6 +61,10 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         })
 
+        binding.emailTextField.editText?.onDrawableEndTouch {
+            binding.emailTextField.editText?.text = null
+        }
+
         binding.passwordTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
@@ -69,6 +75,20 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         })
 
+        binding.passwordTextField.editText?.onDrawableEndTouch {
+            if (binding.passwordTextField.editText?.text.isNullOrEmpty()) return@onDrawableEndTouch
+            isShowingPassword = !isShowingPassword
+            binding.passwordTextField.editText?.setShowPassword(isShowingPassword)
+        }
+
+        binding.passwordTextField.editText?.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                login()
+                return@setOnKeyListener true
+            }
+            false
+        }
+
         binding.loginButton.isEnabled = false // disable login button by default
         binding.loginButton.setOnClickListener { login() }
 
@@ -78,10 +98,6 @@ class LoginActivity : BaseAppCompatActivity() {
             startActivityForResult(signUpIntent, RC_SIGN_UP)
             overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
         }
-
-        // Social login
-//        binding.facebookButton.setOnClickListener { loginWithFacebook() }
-//        binding.googleButton.setOnClickListener { loginWithGoogle() }
 
         // Forgot password
         binding.forgotPasswordButton.setOnClickListener { forgotPasswordBottomSheetBehavior.expand() }
@@ -238,7 +254,8 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.changeApiUrlBottomSheet.root.layoutParams.height =
             (getScreenHeight() * BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT).toInt()
 
-        changeApiUrlBottomSheetBehavior = BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
+        changeApiUrlBottomSheetBehavior =
+            BottomSheetBehavior.from(binding.changeApiUrlBottomSheet.root)
         changeApiUrlBottomSheetBehavior.hide()
         binding.changeApiUrlBottomSheet.cancelButton.setOnClickListener {
             changeApiUrlBottomSheetBehavior.hide()
@@ -274,7 +291,8 @@ class LoginActivity : BaseAppCompatActivity() {
         })
 
         binding.changeApiUrlBottomSheet.setButton.setOnClickListener {
-            val enteredApiUrl = binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.text.toString()
+            val enteredApiUrl =
+                binding.changeApiUrlBottomSheet.apiUrlTextField.editText?.text.toString()
             SLSharedPreferences.setApiUrl(this, enteredApiUrl)
             changeApiUrlBottomSheetBehavior.hide()
             toastShortly("Changed API URL to: $enteredApiUrl")
@@ -335,11 +353,11 @@ class LoginActivity : BaseAppCompatActivity() {
     private fun login() {
         dismissKeyboard()
 
-        val email = binding.emailTextField.editText?.text.toString()
+        val email = binding.emailTextField.editText?.text.toString().trim()
         val password = binding.passwordTextField.editText?.text.toString()
         val deviceName = Build.DEVICE
 
-        if (email != "" && password != "") {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
             setLoading(true)
             SLApiService.login(email, password, deviceName) { result ->
                 runOnUiThread {
@@ -382,7 +400,8 @@ class LoginActivity : BaseAppCompatActivity() {
 
                 result.onSuccess {
                     toastLongly("Check your inbox for verification code")
-                    startVerificationActivity(VerificationMode.AccountActivation(Email(email), Password(password)))
+                    val mode = VerificationMode.AccountActivation(Email(email), Password(password))
+                    startVerificationActivity(mode)
                 }
 
                 result.onFailure(::toastThrowable)
