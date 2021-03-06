@@ -35,7 +35,8 @@ fun String.extractWebsiteName() : String {
     return websiteName.reversed()
 }
 
-fun String.extractFirstWord() : String {
-    val index = indexOf(' ')
-    return substring(0, index)
-}
+fun String.extractFirstWord() =
+    when {
+        contains(' ') -> substring(0, indexOf(' '))
+        else -> this
+    }

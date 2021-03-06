@@ -134,13 +134,14 @@ class ShareActivity : BaseAppCompatActivity() {
 
     private fun fillPrefix() {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-        try {
-            val uri = URI(text)
+        val uri = try { URI(text) } catch (e: URISyntaxException) { null }
+        if (uri?.host != null) {
             binding.prefixEditText.setText(uri.host.extractWebsiteName())
-        } catch (e: URISyntaxException) {
+        } else {
             // Can not detect domain from text, take the first word from text
             binding.prefixEditText.setText(text?.extractFirstWord())
         }
+
         // Move cursor to the last character
         binding.prefixEditText.setSelection(binding.prefixEditText.text.count())
     }
