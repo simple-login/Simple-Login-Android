@@ -26,6 +26,7 @@ import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.Contact
+import io.simplelogin.android.utils.model.PickedEmail
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
@@ -370,15 +371,15 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         createContactBottomSheetBehavior.expand()
     }
 
-    private fun showPickedEmailAddresses(contactName: String, emails: List<String>) {
+    private fun showPickedEmailAddresses(contactName: String, emails: List<PickedEmail>) {
         MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
             .setTitle(contactName)
-            .setItems(emails.toTypedArray()) { _, itemIndex ->
+            .setItems(emails.map { it.description }.toTypedArray()) { _, itemIndex ->
                 val email = emails[itemIndex]
-                if (email.isValidEmail()) {
-                    viewModel.create(email)
+                if (email.address.isValidEmail()) {
+                    viewModel.create(email.address)
                 } else {
-                    context?.toastShortly("Invalid email address: $email")
+                    context?.toastShortly("Invalid email address: ${email.address}")
                 }
             }
             .show()
@@ -398,15 +399,15 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,
                 null, null
             ) ?: return
-            val emails = mutableListOf<String>()
+            val pickedEmails = mutableListOf<PickedEmail>()
             while (emailsCursor.moveToNext()) {
-                val email = emailsCursor.getString(emailsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
-                emails.add(email)
+                val email = PickedEmail(emailsCursor)
+                pickedEmails.add(email)
             }
-            if (emails.isEmpty()) {
+            if (pickedEmails.isEmpty()) {
                 context?.toastShortly("This contact has no email address")
             } else {
-                showPickedEmailAddresses(name, emails)
+                showPickedEmailAddresses(name, pickedEmails)
             }
         }
     }
