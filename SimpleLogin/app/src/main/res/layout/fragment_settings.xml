@@ -58,6 +58,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <io.simplelogin.android.module.settings.view.ContactsAccessView
+                    android:id="@+id/contacts_access_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <io.simplelogin.android.module.settings.view.NewslettersCardView
                     android:id="@+id/newsletters_card_view"
                     android:layout_width="match_parent"

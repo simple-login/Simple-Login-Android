@@ -1,6 +1,9 @@
 package io.simplelogin.android.module.alias.contact
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -23,12 +26,14 @@ import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.Contact
+import io.simplelogin.android.utils.model.PickedEmail
 
 class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
     companion object {
         private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
         private const val DIM_VIEW_ALPHA_PERCENTAGE_TO_SLIDE_OFFSET = 60.0f / 100
+        private const val RC_CONTACTS_ACCESS = 1000
     }
 
     private lateinit var binding: FragmentContactListBinding
@@ -328,16 +333,82 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.addMenuItem -> {
-                // Clear text and error state before showing the sheet
-                binding.createContactBottomSheet.emailTextField.editText?.text = null
-                binding.createContactBottomSheet.emailTextField.error = null
-                binding.createContactBottomSheet.createButton.isEnabled = false
-                createContactBottomSheetBehavior.expand()
+                if (context?.canReadContacts() == true) {
+                    alertCreationOptions()
+                } else {
+                    showCreateContactBottomSheet()
+                }
             }
-
             R.id.howToMenuItem -> howToBottomSheetBehavior.expand()
         }
-
         return true
+    }
+
+    private fun alertCreationOptions() {
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle("Create new contact")
+            .setItems(
+                arrayOf("Open phone contacts", "Manually enter email address")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> openPhoneContacts()
+                    1 -> showCreateContactBottomSheet()
+                }
+            }
+            .show()
+    }
+
+    private fun openPhoneContacts() {
+        val contactsIntent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        startActivityForResult(contactsIntent, RC_CONTACTS_ACCESS)
+    }
+
+    private fun showCreateContactBottomSheet() {
+        // Clear text and error state before showing the sheet
+        binding.createContactBottomSheet.emailTextField.editText?.text = null
+        binding.createContactBottomSheet.emailTextField.error = null
+        binding.createContactBottomSheet.createButton.isEnabled = false
+        createContactBottomSheetBehavior.expand()
+    }
+
+    private fun showPickedEmailAddresses(contactName: String, emails: List<PickedEmail>) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle(contactName)
+            .setItems(emails.map { it.description }.toTypedArray()) { _, itemIndex ->
+                val email = emails[itemIndex]
+                if (email.address.isValidEmail()) {
+                    viewModel.create(email.address)
+                } else {
+                    context?.toastShortly("Invalid email address: ${email.address}")
+                }
+            }
+            .show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == RC_CONTACTS_ACCESS) {
+            val contactData = data?.data ?: return
+            val contentResolver = activity?.contentResolver ?: return
+            val cursor = contentResolver.query(contactData, null, null, null, null) ?: return
+            if (!cursor.moveToFirst()) return
+            val contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+            val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+            val emailsCursor = contentResolver.query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,
+                null, null
+            ) ?: return
+            val pickedEmails = mutableListOf<PickedEmail>()
+            while (emailsCursor.moveToNext()) {
+                val email = PickedEmail(emailsCursor)
+                pickedEmails.add(email)
+            }
+            if (pickedEmails.isEmpty()) {
+                context?.toastShortly("This contact has no email address")
+            } else {
+                showPickedEmailAddresses(name, pickedEmails)
+            }
+        }
     }
 }

@@ -43,9 +43,9 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
@@ -73,12 +73,17 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.contactsAccessView.updateSwitchState()
+    }
+
     private fun bind(userInfo: UserInfo) {
         binding.profileInfoCardView.visibility = VISIBLE
         binding.profileInfoCardView.bind(userInfo)
         binding.profileInfoCardView.setOnUpgradeClickListener {
             findNavController().navigate(
-                SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
+                    SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
             )
         }
     }
@@ -95,9 +100,9 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Random mode & Default domain
         binding.randomAliasCardView.visibility = VISIBLE
         binding.randomAliasCardView.bind(
-            viewModel.userSettings.randomMode,
-            viewModel.userSettings.randomAliasDefaultDomain,
-            viewModel.domainLites
+                viewModel.userSettings.randomMode,
+                viewModel.userSettings.randomAliasDefaultDomain,
+                viewModel.domainLites
         )
 
         binding.randomAliasCardView.setRandomModeSpinnerSelectionListener { selectedRandomMode ->
@@ -140,7 +145,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
             val intent: Intent? = context?.packageName?.let {
                 context?.packageManager
-                    ?.getLaunchIntentForPackage(it)
+                        ?.getLaunchIntentForPackage(it)
             }
             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -152,7 +157,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun setUpViewModel() {
         viewModel = SettingsViewModel(requireContext())
 
-        viewModel.isFetching.observe(viewLifecycleOwner, { isFetching ->  setLoading(isFetching) })
+        viewModel.isFetching.observe(viewLifecycleOwner, { isFetching -> setLoading(isFetching) })
 
         viewModel.error.observe(viewLifecycleOwner, {
             it?.let { error ->
@@ -170,7 +175,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         })
         val userInfo =
-            findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
+                findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
         viewModel.setUserInfo(userInfo)
 
         viewModel.evenUserSettingsUpdated.observe(viewLifecycleOwner, { updated ->
@@ -183,30 +188,30 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
     private fun alertModificationOptions() {
         MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-            .setTitle("Modify profile")
-            .setItems(
-                arrayOf("Modify profile photo", "Modify display name")
-            ) { _, itemIndex ->
-                when (itemIndex) {
-                    0 -> alertProfilePhotoModificationOptions()
-                    1 -> alertModifyDisplayName()
+                .setTitle("Modify profile")
+                .setItems(
+                        arrayOf("Modify profile photo", "Modify display name")
+                ) { _, itemIndex ->
+                    when (itemIndex) {
+                        0 -> alertProfilePhotoModificationOptions()
+                        1 -> alertModifyDisplayName()
+                    }
                 }
-            }
-            .show()
+                .show()
     }
 
     private fun alertProfilePhotoModificationOptions() {
         MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-            .setTitle("Modify profile photo")
-            .setItems(
-                arrayOf("Upload new photo", "Remove profile photo")
-            ) { _, itemIndex ->
-                when (itemIndex) {
-                    0 -> askForPhotoLibraryPermission()
-                    1 -> viewModel.removeProfilePhoto()
+                .setTitle("Modify profile photo")
+                .setItems(
+                        arrayOf("Upload new photo", "Remove profile photo")
+                ) { _, itemIndex ->
+                    when (itemIndex) {
+                        0 -> askForPhotoLibraryPermission()
+                        1 -> viewModel.removeProfilePhoto()
+                    }
                 }
-            }
-            .show()
+                .show()
     }
 
     private fun askForPhotoLibraryPermission() {
@@ -214,8 +219,12 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
             if (requireActivity().checkSelfPermission(readPermission) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(arrayOf(readPermission), PHOTO_LIBRARY_PERMISSION_REQUEST_CODE)
-            } else { openPhotoPicker() }
-        } else { openPhotoPicker() }
+            } else {
+                openPhotoPicker()
+            }
+        } else {
+            openPhotoPicker()
+        }
     }
 
     private fun openPhotoPicker() {
@@ -227,16 +236,16 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun alertModifyDisplayName() {
         val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Enter new display name")
-            .setView(dialogTextViewBinding.root)
-            .setNeutralButton("Cancel", null)
-            .setPositiveButton("Save") { _, _ ->
-                setLoading(true)
-                val text = dialogTextViewBinding.editText.text
-                val name = if (text.isNullOrEmpty()) null else text.toString()
-                viewModel.updateName(name)
-            }
-            .show()
+                .setTitle("Enter new display name")
+                .setView(dialogTextViewBinding.root)
+                .setNeutralButton("Cancel", null)
+                .setPositiveButton("Save") { _, _ ->
+                    setLoading(true)
+                    val text = dialogTextViewBinding.editText.text
+                    val name = if (text.isNullOrEmpty()) null else text.toString()
+                    viewModel.updateName(name)
+                }
+                .show()
     }
 
     private fun setLoading(loading: Boolean) {

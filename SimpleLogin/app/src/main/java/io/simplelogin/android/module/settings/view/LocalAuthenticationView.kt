@@ -17,7 +17,6 @@ class LocalAuthenticationView : CardView {
 
     init {
         background = ContextCompat.getDrawable(context, android.R.color.transparent)
-
     }
 
     fun bind(isChecked: Boolean) {
