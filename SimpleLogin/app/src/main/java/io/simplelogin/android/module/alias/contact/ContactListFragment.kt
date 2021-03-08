@@ -151,7 +151,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     }
 
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.createContactBottomSheet.emailTextField.editText?.requestFocus()
+                        binding.createContactBottomSheet.contactEmailTextField.editText?.requestFocus()
                         activity?.showKeyboard()
                     }
 
@@ -167,7 +167,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             }
         })
 
-        binding.createContactBottomSheet.emailTextField.editText?.addTextChangedListener(object :
+        binding.createContactBottomSheet.contactEmailTextField.editText?.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
@@ -176,16 +176,16 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString().isValidEmail()) {
                     binding.createContactBottomSheet.createButton.isEnabled = true
-                    binding.createContactBottomSheet.emailTextField.error = null
+                    binding.createContactBottomSheet.contactEmailTextField.error = null
                 } else {
                     binding.createContactBottomSheet.createButton.isEnabled = false
-                    binding.createContactBottomSheet.emailTextField.error = "Invalid email address"
+                    binding.createContactBottomSheet.contactEmailTextField.error = "Invalid email address"
                 }
             }
         })
 
         binding.createContactBottomSheet.createButton.setOnClickListener {
-            val email = binding.createContactBottomSheet.emailTextField.editText?.text.toString()
+            val email = binding.createContactBottomSheet.contactEmailTextField.editText?.text.toString()
             if (!email.isValidEmail()) return@setOnClickListener
 
             createContactBottomSheetBehavior.hide()
@@ -365,8 +365,8 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
     private fun showCreateContactBottomSheet() {
         // Clear text and error state before showing the sheet
-        binding.createContactBottomSheet.emailTextField.editText?.text = null
-        binding.createContactBottomSheet.emailTextField.error = null
+        binding.createContactBottomSheet.contactEmailTextField.editText?.text = null
+        binding.createContactBottomSheet.contactEmailTextField.error = null
         binding.createContactBottomSheet.createButton.isEnabled = false
         createContactBottomSheetBehavior.expand()
     }
