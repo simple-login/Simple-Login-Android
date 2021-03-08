@@ -68,7 +68,7 @@
                 tools:text="email@example.com" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextField"
+                android:id="@+id/contactEmailTextField"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
