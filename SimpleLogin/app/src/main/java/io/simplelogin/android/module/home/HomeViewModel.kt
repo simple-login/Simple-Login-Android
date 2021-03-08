@@ -11,6 +11,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val eventUserInfoUpdated: LiveData<Boolean>
         get() = _eventUserInfoUpdated
 
+    var navigationGraph = HomeActivity.NavigationGraph.ALIAS
+
     lateinit var userInfo: UserInfo
         private set
 
