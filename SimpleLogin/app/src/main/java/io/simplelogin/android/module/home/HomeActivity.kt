@@ -34,6 +34,10 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         fun onBackPressed()
     }
 
+    enum class NavigationGraph {
+        ALIAS, MAILBOX, SETTINGS, ABOUT
+    }
+
     companion object {
         const val USER_INFO = "userInfo"
     }
@@ -48,6 +52,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         binding.navigationView.setNavigationItemSelectedListener(this)
         setUpDrawer()
         setContentView(binding.root)
+        setNavigationGraph(viewModel.navigationGraph)
     }
 
     private fun setUpViewModel() {
@@ -88,41 +93,42 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
-    @SuppressLint("RtlHardcoded")
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val navController = findNavController(R.id.navHostFragment)
+    private fun setNavigationGraph(navigationGraph: NavigationGraph) {
+        val navController = findNavController(R.id.homeNavHostFragment)
         val navInflater = navController.navInflater
+        when (navigationGraph) {
+            NavigationGraph.ALIAS -> navController.graph = navInflater.inflate(R.navigation.nav_graph_alias)
+            NavigationGraph.MAILBOX -> navController.graph = navInflater.inflate(R.navigation.nav_graph_mailbox)
 
-        when (item.itemId) {
-            R.id.aliasMenuItem -> {
-                navController.graph = navInflater.inflate(R.navigation.nav_graph_alias)
-                binding.mainDrawer.closeDrawer(Gravity.LEFT)
-            }
-
-            R.id.mailboxMenuItem -> {
-                navController.graph = navInflater.inflate(R.navigation.nav_graph_mailbox)
-                binding.mainDrawer.closeDrawer(Gravity.LEFT)
-            }
-
-            R.id.settingsMenuItem -> {
+            NavigationGraph.SETTINGS -> {
                 val settingsNavGraph = navInflater.inflate(R.navigation.nav_graph_settings)
                 settingsNavGraph.addArgument(
                     USER_INFO,
                     NavArgument.Builder().setDefaultValue(viewModel.userInfo).build()
                 )
                 navController.graph = settingsNavGraph
-                binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
 
-            R.id.aboutMenuItem -> {
+            NavigationGraph.ABOUT -> {
                 val aboutNavGraph = navInflater.inflate(R.navigation.nav_graph_about)
                 aboutNavGraph.addArgument(
                     AboutFragment.OPEN_FROM_LOGIN_ACTIVITY,
                     NavArgument.Builder().setDefaultValue(false).build()
                 )
                 navController.graph = aboutNavGraph
-                binding.mainDrawer.closeDrawer(Gravity.LEFT)
             }
+        }
+        viewModel.navigationGraph = navigationGraph
+        binding.mainDrawer.closeDrawer(Gravity.LEFT)
+    }
+
+    @SuppressLint("RtlHardcoded")
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.aliasMenuItem -> setNavigationGraph(NavigationGraph.ALIAS)
+            R.id.mailboxMenuItem -> setNavigationGraph(NavigationGraph.MAILBOX)
+            R.id.settingsMenuItem -> setNavigationGraph(NavigationGraph.SETTINGS)
+            R.id.aboutMenuItem -> setNavigationGraph(NavigationGraph.ABOUT)
 
             R.id.rateUsMenuItem -> {
                 val uri = Uri.parse("market://details?id=$packageName")
