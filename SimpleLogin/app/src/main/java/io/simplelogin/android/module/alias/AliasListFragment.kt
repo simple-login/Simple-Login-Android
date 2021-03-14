@@ -58,6 +58,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         setUpRecyclerView()
         setLoading(false)
         viewModel.fetchAliases()
+        askForEmailActionIfNeed()
 
         return binding.root
     }
@@ -250,7 +251,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             .show()
     }
 
-    private fun randomAlias(randomMode: RandomMode) {
+    private fun randomAlias(randomMode: RandomMode?) {
         setLoading(true)
         SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { result ->
             activity?.runOnUiThread {
@@ -290,6 +291,35 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 "https://simplelogin.io/pricing"
             )
         )
+    }
+
+    private fun askForEmailActionIfNeed() {
+        val email = activity?.intent?.getStringExtra(HomeActivity.EMAIL) ?: return
+        if (email.isEmpty()) { return }
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle("Email to $email")
+            .setItems(
+                arrayOf("Pick an alias", "Random an alias", "Create an alias")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> pickAliasAction(email)
+                    1 -> randomAliasAction(email)
+                    2 -> createAliasAction(email)
+                }
+            }
+            .show()
+    }
+
+    private fun pickAliasAction(email: String) {
+        context?.toastShortly("pick $email")
+    }
+
+    private fun randomAliasAction(email: String) {
+        context?.toastShortly("random $email")
+    }
+
+    private fun createAliasAction(email: String) {
+        context?.toastShortly("create $email")
     }
 
     // Toolbar.OnMenuItemClickListener

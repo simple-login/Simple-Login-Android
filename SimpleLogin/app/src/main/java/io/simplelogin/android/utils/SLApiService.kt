@@ -377,14 +377,17 @@ object SLApiService {
 
     fun randomAlias(
         apiKey: String,
-        randomMode: RandomMode,
+        randomMode: RandomMode?,
         note: String?,
         completion: (Result<Alias>) -> Unit
     ) {
         val requestBody = mapOf("note" to note?.replace("\n", "\\n")).toRequestBody()
-
+        val urlString = when (randomMode) {
+            null -> "${BASE_URL}/api/alias/random/new"
+            else -> "${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}"
+        }
         val request = Request.Builder()
-            .url("${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}")
+            .url(urlString)
             .header("Authentication", apiKey)
             .post(requestBody)
             .build()
