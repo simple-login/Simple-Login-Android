@@ -1,9 +1,11 @@
 package io.simplelogin.android.module.alias
 
 import android.app.Application
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.enums.AliasFilterMode
@@ -164,5 +166,37 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     fun getLastScrollingPosition() = _lastScrollingPosition
     fun setLastScrollingPosition(position: Int) {
         _lastScrollingPosition = position
+    }
+
+    // Handle mailto email
+    private var _shouldActionOnMailToEmail = MutableLiveData<Boolean>()
+    val shouldActionOnMailToEmail: LiveData<Boolean>
+        get() = _shouldActionOnMailToEmail
+    var mailToEmail: String? = null
+        private set
+
+    fun getMailToEmail(intent: Intent) {
+        val email = intent.getStringExtra(HomeActivity.EMAIL)
+        if (email != null && email.isNotEmpty()) {
+            mailToEmail = email
+            _shouldActionOnMailToEmail.value = true
+            intent.removeExtra(HomeActivity.EMAIL)
+        }
+    }
+
+    fun onActionOnMailToEmailComplete() {
+        _shouldActionOnMailToEmail.value = false
+    }
+
+    private var _mailFromAlias = MutableLiveData<Alias>()
+    val mailFromAlias: LiveData<Alias>
+        get() = _mailFromAlias
+
+    fun setMailFromAlias(alias: Alias) {
+        _mailFromAlias.value = alias
+    }
+
+    fun onHandleMailFromAliasComplete() {
+        _mailFromAlias.value = null
     }
 }

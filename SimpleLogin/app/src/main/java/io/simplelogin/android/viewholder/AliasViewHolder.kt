@@ -29,11 +29,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         binding.countsTextView.setText(alias.getCountSpannableString(context), TextView.BufferType.SPANNABLE)
 
         binding.enabledSwitch.isChecked = alias.enabled
-        if (alias.enabled) {
-            binding.rootCardView.alpha = 1f
-        } else {
-            binding.rootCardView.alpha = 0.8f
-        }
+        binding.rootCardView.alpha = if (alias.enabled) 1f else 0.8f
 
         binding.mailboxesTextView.setText(alias.getMailboxesString(context), TextView.BufferType.SPANNABLE)
 
@@ -58,10 +54,10 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         }
 
         binding.nameTextView.text = alias.name
-        binding.nameTextView.visibility = if (alias.name != null) View.VISIBLE else View.GONE
+        binding.nameTextView.visibility = if (alias.name.isNullOrEmpty()) View.GONE else View.VISIBLE
 
         binding.noteTextView.text = alias.note
-        binding.noteTextView.visibility = if (alias.note != null) View.VISIBLE else View.GONE
+        binding.noteTextView.visibility = if (alias.note.isNullOrEmpty()) View.GONE else View.VISIBLE
 
         // Add click events
         binding.rootRelativeLayout.setOnClickListener { clickListener.onClick(alias) }

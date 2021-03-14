@@ -57,8 +57,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         setUpRecyclerView()
         setLoading(false)
-        viewModel.fetchAliases()
-        askForEmailActionIfNeed()
+        // Do not fetch more aliases on configuration changed
+        if (viewModel.filteredAliases.isEmpty()) {
+            viewModel.fetchAliases()
+        }
+        activity?.intent?.let { viewModel.getMailToEmail(it) }
 
         return binding.root
     }
@@ -134,6 +137,32 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+
+        viewModel.shouldActionOnMailToEmail.observe(viewLifecycleOwner, { shouldAction ->
+            val mailToEmail = viewModel.mailToEmail ?: return@observe
+            if (shouldAction) {
+                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+                    .setTitle("Email to $mailToEmail")
+                    .setItems(
+                        arrayOf("Pick an alias", "Random an alias", "Create an alias")
+                    ) { _, itemIndex ->
+                        when (itemIndex) {
+                            0 -> pickAliasAction()
+                            1 -> randomAliasAction()
+                            2 -> createAliasAction()
+                        }
+                    }
+                    .show()
+                viewModel.onActionOnMailToEmailComplete()
+            }
+        })
+
+        viewModel.mailFromAlias.observe(viewLifecycleOwner, { mailFromAlias ->
+            if (mailFromAlias != null) {
+                context?.toastShortly("mailFromAlias ${mailFromAlias.email}")
+                viewModel.onHandleMailFromAliasComplete()
             }
         })
     }
@@ -293,33 +322,16 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         )
     }
 
-    private fun askForEmailActionIfNeed() {
-        val email = activity?.intent?.getStringExtra(HomeActivity.EMAIL) ?: return
-        if (email.isEmpty()) { return }
-        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-            .setTitle("Email to $email")
-            .setItems(
-                arrayOf("Pick an alias", "Random an alias", "Create an alias")
-            ) { _, itemIndex ->
-                when (itemIndex) {
-                    0 -> pickAliasAction(email)
-                    1 -> randomAliasAction(email)
-                    2 -> createAliasAction(email)
-                }
-            }
-            .show()
+    private fun pickAliasAction() {
+        findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasPickerFragment())
     }
 
-    private fun pickAliasAction(email: String) {
-        context?.toastShortly("pick $email")
+    private fun randomAliasAction() {
+        context?.toastShortly("random")
     }
 
-    private fun randomAliasAction(email: String) {
-        context?.toastShortly("random $email")
-    }
-
-    private fun createAliasAction(email: String) {
-        context?.toastShortly("create $email")
+    private fun createAliasAction() {
+        context?.toastShortly("create")
     }
 
     // Toolbar.OnMenuItemClickListener
