@@ -150,9 +150,13 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                         arrayOf("Pick an alias", "Random an alias", "Create an alias")
                     ) { _, itemIndex ->
                         when (itemIndex) {
-                            0 -> pickAliasAction()
+                            0 -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasPickerFragment())
                             1 -> randomAlias(null, true)
-                            2 -> createAliasAction()
+                            2 -> findNavController().navigate(
+                                AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment(
+                                    true
+                                )
+                            )
                         }
                     }
                     .show()
@@ -220,7 +224,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1
-                if (isPenultimateItem  && viewModel.moreAliasesToLoad) {
+                if (isPenultimateItem && viewModel.moreAliasesToLoad) {
                     showLoadingFooter(true)
                     viewModel.fetchAliases()
                 }
@@ -327,14 +331,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         )
     }
 
-    private fun pickAliasAction() {
-        findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasPickerFragment())
-    }
-
-    private fun createAliasAction() {
-        context?.toastShortly("create")
-    }
-
     // Toolbar.OnMenuItemClickListener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -342,7 +338,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
             R.id.randomMenuItem -> showSelectRandomModeAlert()
             R.id.addMenuItem ->
-                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment())
+                findNavController().navigate(
+                    AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment(
+                        false
+                    )
+                )
         }
 
         return true

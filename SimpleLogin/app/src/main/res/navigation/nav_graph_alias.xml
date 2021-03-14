@@ -90,7 +90,11 @@
     <fragment
         android:id="@+id/aliasCreateFragment"
         android:name="io.simplelogin.android.module.alias.create.AliasCreateFragment"
-        android:label="AliasCreateFragment" />
+        android:label="AliasCreateFragment" >
+        <argument
+            android:name="isMailFromAlias"
+            app:argType="boolean" />
+    </fragment>
     <fragment
         android:id="@+id/webViewFragment"
         android:name="io.simplelogin.android.module.about.WebViewFragment"
