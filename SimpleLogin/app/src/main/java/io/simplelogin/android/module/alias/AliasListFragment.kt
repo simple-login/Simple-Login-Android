@@ -106,6 +106,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             viewLifecycleOwner,
             { updatedAliases ->
                 activity?.runOnUiThread {
+                    setLoading(false)
                     if (updatedAliases) {
                         showLoadingFooter(false)
                         // filteredAliases.toMutableList() to make the recyclerView updates itself
@@ -150,7 +151,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     ) { _, itemIndex ->
                         when (itemIndex) {
                             0 -> pickAliasAction()
-                            1 -> randomAliasAction()
+                            1 -> randomAlias(null, true)
                             2 -> createAliasAction()
                         }
                     }
@@ -280,7 +281,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             .show()
     }
 
-    private fun randomAlias(randomMode: RandomMode?) {
+    private fun randomAlias(randomMode: RandomMode?, isMailFromAlias: Boolean = false) {
         setLoading(true)
         SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { result ->
             activity?.runOnUiThread {
@@ -290,7 +291,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     viewModel.addAlias(alias)
                     viewModel.filterAliases()
                     binding.recyclerView.smoothScrollToPosition(0)
-                    context?.toastShortly("Created \"${alias.email}\"")
+                    if (isMailFromAlias) {
+                        viewModel.setMailFromAlias(alias)
+                    } else {
+                        context?.toastShortly("Created \"${alias.email}\"")
+                    }
                 }
 
                 result.onFailure { error ->
@@ -324,10 +329,6 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
     private fun pickAliasAction() {
         findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasPickerFragment())
-    }
-
-    private fun randomAliasAction() {
-        context?.toastShortly("random")
     }
 
     private fun createAliasAction() {
