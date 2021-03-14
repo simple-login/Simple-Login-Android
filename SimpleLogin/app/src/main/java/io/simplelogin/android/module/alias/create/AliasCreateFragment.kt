@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.databinding.FragmentAliasCreateBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
-import io.simplelogin.android.module.alias.contact.ContactListFragmentArgs
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences

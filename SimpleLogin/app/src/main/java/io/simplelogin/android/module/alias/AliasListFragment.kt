@@ -166,8 +166,16 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         viewModel.mailFromAlias.observe(viewLifecycleOwner, { mailFromAlias ->
             if (mailFromAlias != null) {
-                context?.toastShortly("mailFromAlias ${mailFromAlias.email}")
-                viewModel.onHandleMailFromAliasComplete()
+                viewModel.createContact(mailFromAlias)
+            }
+        })
+
+        viewModel.createdContact.observe(viewLifecycleOwner, { createdContact ->
+            activity?.runOnUiThread {
+                if (createdContact != null) {
+                    activity?.alertReversableOptions(createdContact, viewModel.mailFromAlias.value)
+                    viewModel.onHandleCreatedContactComplete()
+                }
             }
         })
     }

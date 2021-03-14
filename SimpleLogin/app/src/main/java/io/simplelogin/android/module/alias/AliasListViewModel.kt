@@ -11,6 +11,7 @@ import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
+import io.simplelogin.android.utils.model.Contact
 import java.lang.IllegalStateException
 
 class AliasListViewModel(application: Application) : AndroidViewModel(application) {
@@ -196,7 +197,23 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
         _mailFromAlias.value = alias
     }
 
-    fun onHandleMailFromAliasComplete() {
+    private var _createdContact = MutableLiveData<Contact>()
+    val createdContact: LiveData<Contact>
+        get() = _createdContact
+
+    fun createContact(alias: Alias) {
+        val mailToEmail = mailToEmail ?: return
+        SLApiService.createContact(apiKey, alias, mailToEmail) { result ->
+            result.onSuccess {
+                _createdContact.postValue(it)
+                _mailFromAlias.postValue(null)
+            }
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    fun onHandleCreatedContactComplete() {
+        _createdContact.value = null
         _mailFromAlias.value = null
     }
 }

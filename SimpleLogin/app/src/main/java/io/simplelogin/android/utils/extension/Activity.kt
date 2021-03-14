@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.utils.interfaces.Reversable
+import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasMailbox
 import io.simplelogin.android.utils.model.Mailbox
 
@@ -104,14 +105,21 @@ fun Activity.showSelectMailboxesAlert(
         .show()
 }
 
-fun Activity.alertReversableOptions(reversable: Reversable) {
+fun Activity.alertReversableOptions(reversable: Reversable, alias: Alias? = null) {
     fun copyToClipboardAndToast(text: String) {
         copyToClipboard(text, text)
         toastShortly("Copied $text")
     }
 
+    val toString = "Email to \"${reversable.email}\""
+    val fromString = if (alias != null) {
+        " from \"${alias.email}\""
+    } else {
+        ""
+    }
+
     MaterialAlertDialogBuilder(this, R.style.SlAlertDialogTheme)
-        .setTitle("Email to \"${reversable.email}\"")
+        .setTitle(toString + fromString)
         .setItems(
             arrayOf(
                 getString(R.string.copy_reverse_alias_with_display_name),

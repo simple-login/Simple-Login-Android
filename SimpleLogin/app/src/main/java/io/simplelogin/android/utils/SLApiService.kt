@@ -752,7 +752,7 @@ object SLApiService {
         apiKey: String,
         alias: Alias,
         email: String,
-        completion: (Result<Unit>) -> Unit
+        completion: (Result<Contact>) -> Unit
     ) {
         val requestBody = mapOf("contact" to email).toRequestBody()
 
@@ -769,7 +769,20 @@ object SLApiService {
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    201 -> completion(Result.success(Unit))
+                    201 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val contact = Gson().fromJson(jsonString, Contact::class.java)
+                            if (contact != null) {
+                                completion(Result.success(contact))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(Contact::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     409 -> completion(Result.failure(SLError.DuplicatedContact))
                     500 -> completion(Result.failure(SLError.InternalServerError))
