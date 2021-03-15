@@ -208,7 +208,10 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
                 _createdContact.postValue(it)
                 _mailFromAlias.postValue(null)
             }
-            result.onFailure { _error.postValue(it as SLError) }
+            result.onFailure {
+                _error.postValue(it as SLError)
+                _mailFromAlias.postValue(null)
+            }
         }
     }
 
