@@ -179,7 +179,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
         activityAdapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
             override fun onClick(aliasActivity: AliasActivity) {
-                activity?.alertReversableOptions(aliasActivity)
+                activity?.alertReversableOptions(aliasActivity, viewModel.alias)
             }
         })
 
