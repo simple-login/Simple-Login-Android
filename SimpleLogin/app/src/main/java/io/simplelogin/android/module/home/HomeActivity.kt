@@ -39,6 +39,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     companion object {
+        const val EMAIL = "email"
         const val USER_INFO = "userInfo"
     }
 

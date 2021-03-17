@@ -1,17 +1,18 @@
 package io.simplelogin.android.utils.extension
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
+import android.content.pm.LabeledIntent
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
+import android.os.Parcelable
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.utils.interfaces.Reversable
+import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.AliasMailbox
 import io.simplelogin.android.utils.model.Mailbox
 
@@ -36,10 +37,57 @@ fun Activity.copyToClipboard(label: String, text: String): Boolean {
 }
 
 fun Activity.startSendEmailIntent(emailAddress: String) {
-    val intent = Intent(Intent.ACTION_SENDTO)
-    intent.data = Uri.parse("mailto:")
-    intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
-    startActivity(intent)
+    val mailToIntent = Intent(Intent.ACTION_SENDTO)
+    mailToIntent.data = Uri.parse("mailto:")
+    mailToIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
+    getIntentChooser(mailToIntent, "Send email using", listOf(packageName))?.let {
+        startActivity(it)
+    }
+}
+
+fun Activity.getIntentChooser(intent: Intent, chooserTitle: CharSequence? = null, filteredPackageNames: List<String>): Intent? {
+    val resolveInfos = packageManager.queryIntentActivities(intent, 0)
+    val excludedComponentNames = HashSet<ComponentName>()
+    resolveInfos.forEach {
+        val activityInfo = it.activityInfo
+        val componentName = ComponentName(activityInfo.packageName, activityInfo.name)
+        if (filteredPackageNames.contains(componentName.packageName))
+            excludedComponentNames.add(componentName)
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        return Intent.createChooser(intent, chooserTitle).putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, excludedComponentNames.toTypedArray())
+    }
+    if (resolveInfos.isNotEmpty()) {
+        val targetIntents: MutableList<Intent> = ArrayList()
+        for (resolveInfo in resolveInfos) {
+            val activityInfo = resolveInfo.activityInfo
+            if (excludedComponentNames.contains(ComponentName(activityInfo.packageName, activityInfo.name)))
+                continue
+            val targetIntent = Intent(intent)
+            targetIntent.setPackage(activityInfo.packageName)
+            targetIntent.component = ComponentName(activityInfo.packageName, activityInfo.name)
+            // wrap with LabeledIntent to show correct name and icon
+            val labeledIntent = LabeledIntent(targetIntent, activityInfo.packageName, resolveInfo.labelRes, resolveInfo.icon)
+            // add filtered intent to a list
+            targetIntents.add(labeledIntent)
+        }
+        val chooserIntent: Intent?
+        // deal with M list separate problem
+        chooserIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // create chooser with empty intent in M could fix the empty cells problem
+            Intent.createChooser(Intent(), chooserTitle)
+        } else {
+            // create chooser with one target intent below M
+            Intent.createChooser(targetIntents.removeAt(0), chooserTitle)
+        }
+        if (chooserIntent == null) {
+            return null
+        }
+        // add initial intents
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetIntents.toTypedArray<Parcelable>())
+        return chooserIntent
+    }
+    return null
 }
 
 fun Activity.getScreenHeight(): Int {
@@ -104,14 +152,17 @@ fun Activity.showSelectMailboxesAlert(
         .show()
 }
 
-fun Activity.alertReversableOptions(reversable: Reversable) {
+fun Activity.alertReversableOptions(reversable: Reversable, alias: Alias? = null) {
     fun copyToClipboardAndToast(text: String) {
         copyToClipboard(text, text)
         toastShortly("Copied $text")
     }
 
+    val toString = "Email to \"${reversable.email}\""
+    val fromString = if (alias != null) " from \"${alias.email}\"" else ""
+
     MaterialAlertDialogBuilder(this, R.style.SlAlertDialogTheme)
-        .setTitle("Email to \"${reversable.email}\"")
+        .setTitle(toString + fromString)
         .setItems(
             arrayOf(
                 getString(R.string.copy_reverse_alias_with_display_name),

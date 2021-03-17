@@ -377,14 +377,17 @@ object SLApiService {
 
     fun randomAlias(
         apiKey: String,
-        randomMode: RandomMode,
+        randomMode: RandomMode?,
         note: String?,
         completion: (Result<Alias>) -> Unit
     ) {
         val requestBody = mapOf("note" to note?.replace("\n", "\\n")).toRequestBody()
-
+        val urlString = when (randomMode) {
+            null -> "${BASE_URL}/api/alias/random/new"
+            else -> "${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}"
+        }
         val request = Request.Builder()
-            .url("${BASE_URL}/api/alias/random/new?mode=${randomMode.parameterName}")
+            .url(urlString)
             .header("Authentication", apiKey)
             .post(requestBody)
             .build()
@@ -749,7 +752,7 @@ object SLApiService {
         apiKey: String,
         alias: Alias,
         email: String,
-        completion: (Result<Unit>) -> Unit
+        completion: (Result<Contact>) -> Unit
     ) {
         val requestBody = mapOf("contact" to email).toRequestBody()
 
@@ -766,7 +769,20 @@ object SLApiService {
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    201 -> completion(Result.success(Unit))
+                    200, 201 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val contact = Gson().fromJson(jsonString, Contact::class.java)
+                            if (contact != null) {
+                                completion(Result.success(contact))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(Contact::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
                     409 -> completion(Result.failure(SLError.DuplicatedContact))
                     500 -> completion(Result.failure(SLError.InternalServerError))

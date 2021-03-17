@@ -57,7 +57,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         setUpRecyclerView()
         setLoading(false)
-        viewModel.fetchAliases()
+        // Do not fetch more aliases on configuration changed
+        if (viewModel.filteredAliases.isEmpty()) {
+            viewModel.fetchAliases()
+        }
+        activity?.intent?.let { viewModel.getMailToEmail(it) }
 
         return binding.root
     }
@@ -102,6 +106,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             viewLifecycleOwner,
             { updatedAliases ->
                 activity?.runOnUiThread {
+                    setLoading(false)
                     if (updatedAliases) {
                         showLoadingFooter(false)
                         // filteredAliases.toMutableList() to make the recyclerView updates itself
@@ -133,6 +138,44 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+        })
+
+        viewModel.shouldActionOnMailToEmail.observe(viewLifecycleOwner, { shouldAction ->
+            val mailToEmail = viewModel.mailToEmail ?: return@observe
+            if (shouldAction) {
+                MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+                    .setTitle("Email to \"$mailToEmail\"")
+                    .setItems(
+                        arrayOf("Pick an alias", "Random an alias", "Create an alias")
+                    ) { _, itemIndex ->
+                        when (itemIndex) {
+                            0 -> findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasPickerFragment())
+                            1 -> randomAlias(null, true)
+                            2 -> findNavController().navigate(
+                                AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment(
+                                    true
+                                )
+                            )
+                        }
+                    }
+                    .show()
+                viewModel.onActionOnMailToEmailComplete()
+            }
+        })
+
+        viewModel.mailFromAlias.observe(viewLifecycleOwner, { mailFromAlias ->
+            if (mailFromAlias != null) {
+                viewModel.createContact(mailFromAlias)
+            }
+        })
+
+        viewModel.createdContact.observe(viewLifecycleOwner, { createdContact ->
+            activity?.runOnUiThread {
+                if (createdContact != null) {
+                    activity?.alertReversableOptions(createdContact, viewModel.mailFromAlias.value)
+                    viewModel.onHandleCreatedContactComplete()
+                }
             }
         })
     }
@@ -189,7 +232,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1
-                if (isPenultimateItem  && viewModel.moreAliasesToLoad) {
+                if (isPenultimateItem && viewModel.moreAliasesToLoad) {
                     showLoadingFooter(true)
                     viewModel.fetchAliases()
                 }
@@ -250,7 +293,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             .show()
     }
 
-    private fun randomAlias(randomMode: RandomMode) {
+    private fun randomAlias(randomMode: RandomMode?, isMailFromAlias: Boolean = false) {
         setLoading(true)
         SLApiService.randomAlias(viewModel.apiKey, randomMode, "") { result ->
             activity?.runOnUiThread {
@@ -260,7 +303,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     viewModel.addAlias(alias)
                     viewModel.filterAliases()
                     binding.recyclerView.smoothScrollToPosition(0)
-                    context?.toastShortly("Created \"${alias.email}\"")
+                    if (isMailFromAlias) {
+                        viewModel.setMailFromAlias(alias)
+                    } else {
+                        context?.toastShortly("Created \"${alias.email}\"")
+                    }
                 }
 
                 result.onFailure { error ->
@@ -299,7 +346,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                 findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
             R.id.randomMenuItem -> showSelectRandomModeAlert()
             R.id.addMenuItem ->
-                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment())
+                findNavController().navigate(
+                    AliasListFragmentDirections.actionAliasListFragmentToAliasCreateFragment(
+                        false
+                    )
+                )
         }
 
         return true

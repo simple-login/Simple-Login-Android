@@ -1,14 +1,17 @@
 package io.simplelogin.android.module.alias
 
 import android.app.Application
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.enums.AliasFilterMode
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
+import io.simplelogin.android.utils.model.Contact
 import java.lang.IllegalStateException
 
 class AliasListViewModel(application: Application) : AndroidViewModel(application) {
@@ -164,5 +167,56 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     fun getLastScrollingPosition() = _lastScrollingPosition
     fun setLastScrollingPosition(position: Int) {
         _lastScrollingPosition = position
+    }
+
+    // Handle mailto email
+    private var _shouldActionOnMailToEmail = MutableLiveData<Boolean>()
+    val shouldActionOnMailToEmail: LiveData<Boolean>
+        get() = _shouldActionOnMailToEmail
+    var mailToEmail: String? = null
+        private set
+
+    fun getMailToEmail(intent: Intent) {
+        val email = intent.getStringExtra(HomeActivity.EMAIL)
+        if (email != null && email.isNotEmpty()) {
+            mailToEmail = email
+            _shouldActionOnMailToEmail.value = true
+            intent.removeExtra(HomeActivity.EMAIL)
+        }
+    }
+
+    fun onActionOnMailToEmailComplete() {
+        _shouldActionOnMailToEmail.value = false
+    }
+
+    private var _mailFromAlias = MutableLiveData<Alias>()
+    val mailFromAlias: LiveData<Alias>
+        get() = _mailFromAlias
+
+    fun setMailFromAlias(alias: Alias) {
+        _mailFromAlias.value = alias
+    }
+
+    private var _createdContact = MutableLiveData<Contact>()
+    val createdContact: LiveData<Contact>
+        get() = _createdContact
+
+    fun createContact(alias: Alias) {
+        val mailToEmail = mailToEmail ?: return
+        SLApiService.createContact(apiKey, alias, mailToEmail) { result ->
+            result.onSuccess {
+                _createdContact.postValue(it)
+                _mailFromAlias.postValue(null)
+            }
+            result.onFailure {
+                _error.postValue(it as SLError)
+                _mailFromAlias.postValue(null)
+            }
+        }
+    }
+
+    fun onHandleCreatedContactComplete() {
+        _createdContact.value = null
+        _mailFromAlias.value = null
     }
 }

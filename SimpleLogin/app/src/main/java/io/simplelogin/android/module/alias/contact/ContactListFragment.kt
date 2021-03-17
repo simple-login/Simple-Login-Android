@@ -269,7 +269,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
-                activity?.alertReversableOptions(contact)
+                activity?.alertReversableOptions(contact, alias)
             }
         })
         binding.recyclerView.adapter = adapter

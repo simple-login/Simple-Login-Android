@@ -2,6 +2,7 @@ package io.simplelogin.android.module.startup
 
 import android.app.Activity
 import android.content.Intent
+import android.net.MailTo
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
@@ -62,6 +63,7 @@ class StartupActivity : BaseAppCompatActivity()  {
     private fun startHomeActivity(userInfo: UserInfo) {
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra(HomeActivity.USER_INFO, userInfo)
+        getMailToFromIntent()?.to.let { intent.putExtra(HomeActivity.EMAIL, it) }
         startActivityForResult(intent, RC_HOME_ACTIVITY)
         overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
@@ -90,6 +92,16 @@ class StartupActivity : BaseAppCompatActivity()  {
                     setAction("Retry") { fetchUserInfoAndProceed() }
                 }.show()
         }
+    }
+
+    private fun getMailToFromIntent(): MailTo? {
+        // App launched from mailto: link
+        val action = intent.action
+        if (action == Intent.ACTION_VIEW || action == Intent.ACTION_SENDTO) {
+            val uri = intent.data
+            return MailTo.parse(uri.toString())
+        }
+        return null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

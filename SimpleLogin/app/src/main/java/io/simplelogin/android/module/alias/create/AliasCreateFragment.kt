@@ -111,6 +111,11 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun updateAliasListViewModelAndNavigateUp(alias: Alias) {
+        if (AliasCreateFragmentArgs.fromBundle(requireArguments()).isMailFromAlias) {
+            aliasListViewModel.setMailFromAlias(alias)
+        } else {
+            context?.toastShortly("Created \"${alias.email}\"")
+        }
         aliasListViewModel.addAlias(alias)
         dismissKeyboardAndNavigateUp()
     }
@@ -159,12 +164,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         ) { result ->
             activity?.runOnUiThread {
                 setLoading(false)
-
-                result.onSuccess { alias ->
-                    updateAliasListViewModelAndNavigateUp(alias)
-                    context?.toastShortly("Created \"${alias.email}\"")
-                }
-
+                result.onSuccess(::updateAliasListViewModelAndNavigateUp)
                 result.onFailure { context?.toastThrowable(it) }
             }
         }

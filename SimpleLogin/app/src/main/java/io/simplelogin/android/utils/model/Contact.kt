@@ -12,7 +12,8 @@ data class Contact(
     @SerializedName("creation_date") val creationDate: String,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
     @SerializedName("last_email_sent_date") val lastEmailSentDate: String?,
-    @SerializedName("last_email_sent_timestamp") val lastEmailSentTimestamp: Long?
+    @SerializedName("last_email_sent_timestamp") val lastEmailSentTimestamp: Long?,
+    @SerializedName("existed") val existed: Boolean
 ) : Reversable {
     private var _creationString: String? = null
     fun getCreationString(): String {
