@@ -79,7 +79,13 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     fun create(email: String) {
         SLApiService.createContact(apiKey, alias, email) { result ->
             _eventFinishCallingCreateContact.postValue(true)
-            result.onSuccess { _eventCreatedContact.postValue(email) }
+            result.onSuccess { contact ->
+                if (contact.existed) {
+                    _error.postValue(SLError.DuplicatedContact)
+                } else {
+                    _eventCreatedContact.postValue(email)
+                }
+            }
             result.onFailure { _error.postValue(it as SLError) }
         }
     }

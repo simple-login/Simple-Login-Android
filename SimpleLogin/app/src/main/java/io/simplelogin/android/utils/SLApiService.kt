@@ -769,7 +769,7 @@ object SLApiService {
 
             override fun onResponse(call: Call, response: Response) {
                 when (response.code) {
-                    201 -> {
+                    200, 201 -> {
                         val jsonString = response.body?.string()
 
                         if (jsonString != null) {

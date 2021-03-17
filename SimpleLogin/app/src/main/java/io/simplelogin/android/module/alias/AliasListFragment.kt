@@ -145,7 +145,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
             val mailToEmail = viewModel.mailToEmail ?: return@observe
             if (shouldAction) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-                    .setTitle("Email to $mailToEmail")
+                    .setTitle("Email to \"$mailToEmail\"")
                     .setItems(
                         arrayOf("Pick an alias", "Random an alias", "Create an alias")
                     ) { _, itemIndex ->
