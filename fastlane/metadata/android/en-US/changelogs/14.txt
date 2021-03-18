@@ -1,0 +1,5 @@
+• 2 ways to quickly create reverse-aliases (pick from contacts & tap on email addresses).
+• Detect OTP code from clipboard (fix for Android 10 and above).
+• Able to see password in plain text to verify it.
+• Fix crash when rotating the device on certain pages.
+• Fix crash when "sharing" a text without space character.
