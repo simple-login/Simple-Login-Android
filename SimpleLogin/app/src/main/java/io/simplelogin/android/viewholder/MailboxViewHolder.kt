@@ -20,6 +20,7 @@ class MailboxViewHolder(private val binding: RecyclerItemMailboxBinding): Recycl
         binding.emailTextView.text = mailbox.email
         binding.creationDateTextView.text = mailbox.getCreationString()
         binding.aliasCountTextView.text = mailbox.getAliasCountString()
-        binding.defaultTextView.visibility = if (mailbox.isDefault) View.VISIBLE else View.INVISIBLE
+        binding.defaultTextView.visibility = if (mailbox.isDefault) View.VISIBLE else View.GONE
+        binding.notVerifiedTextView.visibility = if (mailbox.isVerified) View.GONE else View.VISIBLE
     }
 }

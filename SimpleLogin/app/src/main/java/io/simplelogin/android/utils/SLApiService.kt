@@ -801,7 +801,7 @@ object SLApiService {
     //region Mailbox
     fun fetchMailboxes(apiKey: String, completion: (Result<List<Mailbox>>) -> Unit) {
         val request = Request.Builder()
-            .url("${BASE_URL}/api/mailboxes")
+            .url("${BASE_URL}/api/v2/mailboxes")
             .header("Authentication", apiKey)
             .get()
             .build()

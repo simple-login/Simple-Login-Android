@@ -8,7 +8,8 @@ data class Mailbox (
     @SerializedName("email") val email: String,
     @SerializedName("default") val isDefault: Boolean,
     @SerializedName("creation_timestamp") val creationTimestamp: Long,
-    @SerializedName("nb_alias") val aliasCount: Int
+    @SerializedName("nb_alias") val aliasCount: Int,
+    @SerializedName("verified") val isVerified: Boolean
 ) {
     private var _creationString: String? = null
     fun getCreationString(): String {
