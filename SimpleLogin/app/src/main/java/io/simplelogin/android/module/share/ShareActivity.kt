@@ -91,7 +91,7 @@ class ShareActivity : BaseAppCompatActivity() {
                 setLoading(false)
 
                 if (userOptions.canCreate) {
-                    setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
+                    setUpSuffixesSpinner(userOptions.suffixes.map { it.suffix })
                 } else {
                     MaterialAlertDialogBuilder(this)
                         .setTitle("Can not create more alias")
@@ -186,7 +186,7 @@ class ShareActivity : BaseAppCompatActivity() {
 
     private fun create() {
         val signedSuffix =
-            viewModel.userOptions.value!!.suffixes.first { it[0] == selectedSuffix }[1]
+            viewModel.userOptions.value!!.suffixes.first { it.suffix == selectedSuffix }.signedSuffix
         setLoading(true)
 
         SLApiService.createAlias(

@@ -69,6 +69,17 @@
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@color/colorWhite"
                         tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/notVerifiedTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_not_verified_mailbox"
+                        android:paddingHorizontal="5dp"
+                        android:text="Not verified"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="@color/colorWhite"
+                        tools:ignore="HardcodedText" />
                 </LinearLayout>
 
                 <TextView

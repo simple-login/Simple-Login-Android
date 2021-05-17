@@ -77,7 +77,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 setLoading(false)
 
                 if (userOptions.canCreate) {
-                    setUpSuffixesSpinner(userOptions.suffixes.map { it[0] })
+                    setUpSuffixesSpinner(userOptions.suffixes.map { it.suffix })
                 } else {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle("Can not create more alias")
@@ -151,7 +151,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
             "API key is null"
         )
 
-        val signedSuffix = viewModel.userOptions.value!!.suffixes.first { it[0] == selectedSuffix }[1]
+        val signedSuffix = viewModel.userOptions.value!!.suffixes.first { it.suffix == selectedSuffix }.signedSuffix
         setLoading(true)
 
         SLApiService.createAlias(

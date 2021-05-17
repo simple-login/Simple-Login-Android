@@ -42,7 +42,7 @@ class AliasCreateViewModel(context: Context) : BaseViewModel(context) {
 
                     mailboxesResult.onSuccess { fetchedMailboxes ->
                         _userOptions.postValue(fetchedUserOptions)
-                        mailboxes = fetchedMailboxes
+                        mailboxes = fetchedMailboxes.filter { it.isVerified }
 
                         val defaultMailbox = fetchedMailboxes.first { it.isDefault }
                         _selectedMailboxes.postValue(listOf(defaultMailbox.toAliasMailbox()))
