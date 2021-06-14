@@ -126,6 +126,12 @@ class LoginActivity : BaseAppCompatActivity() {
         forgotPasswordBottomSheetBehavior.hide()
         apiKeyBottomSheetBehavior.hide()
         changeApiUrlBottomSheetBehavior.hide()
+        if (forgotPasswordBottomSheetBehavior.isHidden() &&
+            apiKeyBottomSheetBehavior.isHidden() &&
+            changeApiUrlBottomSheetBehavior.isHidden()) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
     }
 
     private fun setUpForgotPasswordBottomSheet() {
