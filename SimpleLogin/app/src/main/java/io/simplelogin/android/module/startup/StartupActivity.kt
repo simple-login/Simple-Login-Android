@@ -18,8 +18,9 @@ import io.simplelogin.android.utils.model.UserInfo
 
 class StartupActivity : BaseAppCompatActivity()  {
     companion object {
-        const val RC_HOME_ACTIVITY = 0
-        const val RC_LOCAL_AUTH_ACTIVITY = 1
+        const val RC_LOGIN_ACTIVITY = 0
+        const val RC_HOME_ACTIVITY = 1
+        const val RC_LOCAL_AUTH_ACTIVITY = 2
     }
 
     private lateinit var binding: ActivityStartUpBinding
@@ -50,7 +51,7 @@ class StartupActivity : BaseAppCompatActivity()  {
 
     private fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, RC_LOGIN_ACTIVITY)
         overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
     }
 
@@ -108,9 +109,9 @@ class StartupActivity : BaseAppCompatActivity()  {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            RC_HOME_ACTIVITY ->
+            RC_LOGIN_ACTIVITY, RC_HOME_ACTIVITY ->
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    // Exit application when backed from HomeActivity
+                    // Exit application when backed from LoginActivity or HomeActivity
                     finish()
                 }
 
