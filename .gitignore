@@ -32,4 +32,5 @@ output.json
 
 SimpleLogin/report/
 output-metadata.json
-.idea/
+.idea/*
+SimpleLogin/.idea/*
