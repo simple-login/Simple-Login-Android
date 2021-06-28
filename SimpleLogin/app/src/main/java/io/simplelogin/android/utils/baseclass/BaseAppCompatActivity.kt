@@ -32,13 +32,15 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             when (currentNightMode) {
                 Configuration.UI_MODE_NIGHT_NO ->
                     // Night mode is not active, we're using the light theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    view.systemUiVisibility = view.systemUiVisibility or
+                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+                            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 
                 Configuration.UI_MODE_NIGHT_YES ->
                     // Night mode is active, we're using dark theme
-                    view.systemUiVisibility =
-                        view.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                    view.systemUiVisibility = view.systemUiVisibility and
+                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv() and
+                            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
             }
         }
     }
