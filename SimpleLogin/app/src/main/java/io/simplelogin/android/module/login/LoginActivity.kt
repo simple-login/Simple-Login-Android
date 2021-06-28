@@ -10,15 +10,13 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
-import io.simplelogin.android.utils.enums.Email
-import io.simplelogin.android.utils.enums.MfaKey
-import io.simplelogin.android.utils.enums.Password
-import io.simplelogin.android.utils.enums.VerificationMode
+import io.simplelogin.android.utils.enums.*
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.UserLogin
 
@@ -369,7 +367,20 @@ class LoginActivity : BaseAppCompatActivity() {
                 runOnUiThread {
                     setLoading(false)
                     result.onSuccess(::processUserLogin)
-                    result.onFailure(::toastThrowable)
+                    result.onFailure {
+                        if (it is SLError && it.description == SLError.ResponseError(403).description) {
+                            MaterialAlertDialogBuilder(this)
+                                .setTitle("WebAuthn currently not supported")
+                                .setMessage("Please log in using API key while we are working on supporting WebAuthn on mobile.")
+                                .setNeutralButton("Cancel", null)
+                                .setPositiveButton("Enter API key") { _, _ ->
+                                    apiKeyBottomSheetBehavior.expand()
+                                }
+                                .show()
+                        } else {
+                            toastThrowable(it)
+                        }
+                    }
                 }
             }
         } else {
