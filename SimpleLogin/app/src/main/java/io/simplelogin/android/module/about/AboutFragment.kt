@@ -94,7 +94,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
 
         binding.root.findViewById<View>(R.id.roadmapTextView).setOnClickListener {
-            activity?.openUrlInBrowser("https://trello.com/b/4d6A69I4/open-roadmap")
+            activity?.openUrlInBrowser("https://github.com/simple-login/app/projects/1")
         }
 
         binding.root.findViewById<View>(R.id.termsTextView).setOnClickListener {
