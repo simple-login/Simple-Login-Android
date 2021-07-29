@@ -1,0 +1,2 @@
+• Ability to search for aliases when creating contacts.
+• Update roadmap link.
