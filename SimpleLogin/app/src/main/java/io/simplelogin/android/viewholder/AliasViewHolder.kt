@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.RecyclerItemAliasBinding
 import io.simplelogin.android.module.alias.AliasListAdapter
+import io.simplelogin.android.module.alias.search.AliasSearchMode
 import io.simplelogin.android.utils.extension.setDrawableStart
 import io.simplelogin.android.utils.model.Action
 import io.simplelogin.android.utils.model.Alias
@@ -24,7 +25,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
     private val context: Context by lazy { binding.root.context }
 
-    fun bind(alias: Alias, clickListener: AliasListAdapter.ClickListener) {
+    fun bind(alias: Alias, searchMode: AliasSearchMode, clickListener: AliasListAdapter.ClickListener) {
         binding.emailTextView.text = alias.email
         binding.countsTextView.setText(alias.getCountSpannableString(context), TextView.BufferType.SPANNABLE)
 
@@ -64,5 +65,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, adapterPosition)  }
         binding.copyButton.setOnClickListener { clickListener.onCopy(alias) }
         binding.sendEmailButton.setOnClickListener { clickListener.onSendEmail(alias) }
+
+        binding.actionsLinearLayout.visibility = if (searchMode == AliasSearchMode.DEFAULT) View.VISIBLE else View.GONE
     }
 }

@@ -2,16 +2,20 @@ package io.simplelogin.android.module.alias.picker
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasPickerBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
+import io.simplelogin.android.module.alias.search.AliasSearchMode
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.baseclass.BaseFragment
@@ -20,7 +24,7 @@ import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.extension.toastUpToDate
 import io.simplelogin.android.utils.model.Alias
 
-class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
+class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Toolbar.OnMenuItemClickListener, HomeActivity.OnBackPressed {
     private val viewModel: AliasListViewModel by activityViewModels()
     private lateinit var binding: FragmentAliasPickerBinding
     private lateinit var aliasListAdapter: AliasPickerAdapter
@@ -34,6 +38,7 @@ class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Hom
         binding = FragmentAliasPickerBinding.inflate(inflater)
         binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.tabLayout.addOnTabSelectedListener(this)
+        binding.toolbar.setOnMenuItemClickListener(this)
         setUpViewModel()
         setUpRecyclerView()
         return binding.root
@@ -105,6 +110,16 @@ class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Hom
     private fun showLoadingFooter(showing: Boolean) {
         footerAdapter.isLoading = showing
         footerAdapter.notifyDataSetChanged()
+    }
+
+    // Toolbar.OnMenuItemClickListener
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.searchMenuItem ->
+                findNavController().navigate(AliasPickerFragmentDirections.actionAliasPickerFragmentToAliasSearchFragment(AliasSearchMode.CONTACT_CREATION))
+        }
+
+        return true
     }
 
     // TabLayout.OnTabSelectedListener

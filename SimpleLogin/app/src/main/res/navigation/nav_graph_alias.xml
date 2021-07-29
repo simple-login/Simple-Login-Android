@@ -29,7 +29,11 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
+            <argument
+                android:name="searchMode"
+                app:argType="io.simplelogin.android.module.alias.search.AliasSearchMode" />
+        </action>
         <action
             android:id="@+id/action_aliasListFragment_to_aliasCreateFragment"
             app:destination="@id/aliasCreateFragment"
@@ -71,7 +75,7 @@
     <fragment
         android:id="@+id/aliasSearchFragment"
         android:name="io.simplelogin.android.module.alias.search.AliasSearchFragment"
-        android:label="AliasSearchFragment" >
+        android:label="AliasSearchFragment">
         <action
             android:id="@+id/action_aliasSearchFragment_to_contactListFragment"
             app:destination="@id/contactListFragment"
@@ -86,6 +90,9 @@
             app:exitAnim="@anim/exit_anim_slide_out_to_left"
             app:popEnterAnim="@anim/pop_enter_anim_slide_in_from_left"
             app:popExitAnim="@anim/pop_exit_anim_slide_out_to_right" />
+        <argument
+            android:name="searchMode"
+            app:argType="io.simplelogin.android.module.alias.search.AliasSearchMode" />
     </fragment>
     <fragment
         android:id="@+id/aliasCreateFragment"
@@ -106,5 +113,17 @@
     <fragment
         android:id="@+id/aliasPickerFragment"
         android:name="io.simplelogin.android.module.alias.picker.AliasPickerFragment"
-        android:label="AliasPickerFragment" />
+        android:label="AliasPickerFragment" >
+        <action
+            android:id="@+id/action_aliasPickerFragment_to_aliasSearchFragment"
+            app:destination="@id/aliasSearchFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
+            <argument
+                android:name="searchMode"
+                app:argType="io.simplelogin.android.module.alias.search.AliasSearchMode" />
+        </action>
+    </fragment>
 </navigation>
