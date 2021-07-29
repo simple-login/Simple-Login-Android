@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentAliasListBinding
+import io.simplelogin.android.module.alias.search.AliasSearchMode
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.SLApiService
@@ -343,7 +344,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.searchMenuItem ->
-                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment())
+                findNavController().navigate(AliasListFragmentDirections.actionAliasListFragmentToAliasSearchFragment(AliasSearchMode.DEFAULT))
             R.id.randomMenuItem -> showSelectRandomModeAlert()
             R.id.addMenuItem ->
                 findNavController().navigate(

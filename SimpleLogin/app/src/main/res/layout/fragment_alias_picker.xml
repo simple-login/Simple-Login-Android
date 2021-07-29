@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/alias_picker_menu"
             app:navigationIcon="@drawable/ic_close_36dp">
 
             <TextView

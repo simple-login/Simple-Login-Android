@@ -24,11 +24,18 @@ import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 
+enum class AliasSearchMode {
+    DEFAULT, CONTACT_CREATION
+}
+
 class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasSearchBinding
     private val aliasListViewModel: AliasListViewModel by activityViewModels()
     private lateinit var viewModel: AliasSearchViewModel
     private lateinit var adapter: AliasSearchAdapter
+    private val searchMode: AliasSearchMode by lazy {
+        AliasSearchFragmentArgs.fromBundle(requireArguments()).searchMode
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -139,13 +146,20 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpRecyclerView() {
-        adapter = AliasSearchAdapter(object : AliasListAdapter.ClickListener {
+        adapter = AliasSearchAdapter(searchMode, object : AliasListAdapter.ClickListener {
             override fun onClick(alias: Alias) {
-                findNavController().navigate(
-                    AliasSearchFragmentDirections.actionAliasSearchFragmentToAliasActivityListFragment(
-                        alias
-                    )
-                )
+                when (searchMode) {
+                    AliasSearchMode.DEFAULT ->
+                        findNavController().navigate(
+                            AliasSearchFragmentDirections.actionAliasSearchFragmentToAliasActivityListFragment(
+                                alias
+                            )
+                        )
+                    AliasSearchMode.CONTACT_CREATION -> {
+                        aliasListViewModel.setMailFromAlias(alias)
+                        findNavController().popBackStack(R.id.aliasListFragment, false)
+                    }
+                }
             }
 
             override fun onSwitch(alias: Alias, position: Int) {
