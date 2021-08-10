@@ -5,12 +5,12 @@
     <group android:id="@+id/firstGroup">
         <item
             android:id="@+id/aliasMenuItem"
-            android:icon="@drawable/ic_home_32dp"
+            android:icon="@drawable/ic_home_24dp"
             android:title="Aliases"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"/>
         <item
             android:id="@+id/mailboxMenuItem"
-            android:icon="@drawable/ic_tray_32dp"
+            android:icon="@drawable/ic_mailbox_24dp"
             android:title="Mailboxes"
             tools:ignore="HardcodedText" />
         <!--        <item-->
@@ -26,12 +26,12 @@
     <group android:id="@+id/secondGroup">
         <item
             android:id="@+id/settingsMenuItem"
-            android:icon="@drawable/ic_settings_32dp"
+            android:icon="@drawable/ic_settings_24dp"
             android:title="Settings"
             tools:ignore="HardcodedText" />
         <item
             android:id="@+id/aboutMenuItem"
-            android:icon="@drawable/ic_info_32dp"
+            android:icon="@drawable/ic_about_24dp"
             android:title="About"
             tools:ignore="HardcodedText" />
     </group>

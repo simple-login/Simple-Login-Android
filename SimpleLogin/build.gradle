@@ -7,10 +7,11 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        //jcenter() [DEPRECATED]
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:7.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
@@ -21,7 +22,8 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
+    //jcenter() [DEPRECATED]
 }
 
 detekt {
@@ -41,7 +43,8 @@ detekt {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        //jcenter() [DEPRECATED]
     }
 }
 

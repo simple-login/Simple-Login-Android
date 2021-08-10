@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorItemBackground">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -13,16 +14,17 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/alias_picker_menu"
-            app:navigationIcon="@drawable/ic_close_36dp">
+            app:navigationIcon="@drawable/ic_close_24dp"
+            app:contentInsetStartWithNavigation="0dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/margin_8"
                 android:text="Pick An Alias"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/toolbarTitleSize"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 tools:ignore="HardcodedText" />
         </androidx.appcompat.widget.Toolbar>
 
@@ -30,9 +32,12 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:tabIndicator="@drawable/tab_indicator"
+            app:tabIndicatorFullWidth="false">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/all_tab_item"
@@ -60,8 +65,8 @@
         <View
             android:id="@+id/separator_view"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@drawable/shape_toolbar_drop_shadow"
+            android:layout_height="1dp"
+            android:background="@color/dividerColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tab_layout" />
@@ -79,7 +84,7 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@color/colorListBackground"
+                android:background="@color/colorItemBackground"
                 android:clipToPadding="false"
                 android:paddingBottom="20dp" />
 

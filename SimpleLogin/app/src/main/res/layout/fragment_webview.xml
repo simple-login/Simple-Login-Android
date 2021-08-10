@@ -13,16 +13,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_chevron_left_36dp">
+            app:navigationIcon="@drawable/ic_chevron_left_36dp"
+            app:contentInsetStartWithNavigation="0dp"
+            android:background="@color/colorItemBackground">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/toolbarTitleSize"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 tools:text="Title" />
 
 

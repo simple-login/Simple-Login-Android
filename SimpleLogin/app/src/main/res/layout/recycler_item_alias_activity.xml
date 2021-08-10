@@ -3,20 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorItemBackground">
-
-        <com.google.android.material.card.MaterialCardView
+        <RelativeLayout
             android:id="@+id/rootCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            app:cardCornerRadius="@dimen/itemBorderRadius">
+            android:background="@drawable/card_shape_with_ripple"
+            android:padding="@dimen/margin_4">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,19 +30,21 @@
                         android:id="@+id/emailTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_4"
                         android:textAppearance="?attr/textAppearanceSubtitle2"
                         android:textColor="@color/colorText"
+                        android:textSize="15.5sp"
                         tools:text="email@example.com" />
 
                     <TextView
                         android:id="@+id/timeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_clock_16dp"
+                        app:drawableStartCompat="@drawable/ic_clock_16dp"
                         android:drawablePadding="5dp"
-                        android:drawableTint="@color/colorDarkGray"
+                        app:drawableTint="?attr/colorControlNormal"
                         android:paddingTop="5dp"
-                        android:textColor="@color/colorDarkGray"
+                        android:textColor="?attr/colorControlNormal"
                         tools:text="18 Mar 2020 at 22:03 (1 day ago)" />
 
                 </LinearLayout>
@@ -61,7 +59,6 @@
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
+        </RelativeLayout>
 
 </layout>

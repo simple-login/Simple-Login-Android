@@ -14,17 +14,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_chevron_left_36dp">
+            app:navigationIcon="@drawable/ic_chevron_left_36dp"
+            app:contentInsetStartWithNavigation="0dp"
+            android:background="@color/colorItemBackground">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
                 android:text="It's never too late to protect your email"
-                android:textSize="@dimen/toolbarTitleSize"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
 
@@ -57,50 +58,50 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="10dp"
                     android:text="15 aliases"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Unlimited bandwidth"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Unlimited reply/send from alias"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Sign in with SimpleLogin"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -115,86 +116,86 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="10dp"
                     android:text="Unlimited aliases"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Unlimited custom domains"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Bring your own domain to create aliases like contact@your-domain.com"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@android:color/transparent"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Catch-all (or wildcard) domain"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="50 directories/usernames"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Unlimited mailboxes"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="PGP Encryption"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -313,38 +314,38 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="10dp"
                     android:text="Dedicated server &amp; database"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Dashboard to manage team accounts"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_check_mark_16dp"
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Single Sign-On (SAML or OAuth2)"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/contactButton"

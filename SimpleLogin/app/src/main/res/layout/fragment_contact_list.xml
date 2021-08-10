@@ -5,7 +5,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorItemBackground">
 
         <RelativeLayout
             android:id="@+id/rootRelativeLayout"
@@ -25,17 +26,17 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:menu="@menu/menu_contact_mailbox_list"
-                    app:navigationIcon="@drawable/ic_chevron_left_36dp">
+                    app:navigationIcon="@drawable/ic_chevron_left_36dp"
+                    app:contentInsetStartWithNavigation="0dp">
 
                     <TextView
                         android:id="@+id/toolbarTitleText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="start"
                         android:text="Contacts"
                         android:textColor="@color/colorText"
-                        android:textSize="@dimen/toolbarTitleSize"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         tools:ignore="HardcodedText" />
 
                 </androidx.appcompat.widget.Toolbar>
@@ -63,8 +64,8 @@
                 <View
                     android:id="@+id/separatorView"
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:background="@drawable/shape_toolbar_drop_shadow"
+                    android:layout_height="1dp"
+                    android:background="@color/dividerColor"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/emailTextField" />
@@ -73,6 +74,7 @@
                     android:id="@+id/swipeRefreshLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -82,9 +84,10 @@
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:background="@color/colorListBackground"
+                        android:background="@color/colorItemBackground"
                         android:clipToPadding="false"
-                        android:paddingBottom="20dp" />
+                        android:paddingBottom="20dp"
+                        tools:listitem="@layout/recycler_item_contact"/>
 
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

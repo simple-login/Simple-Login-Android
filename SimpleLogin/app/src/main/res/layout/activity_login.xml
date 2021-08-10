@@ -170,7 +170,7 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_info_outline_black_24dp"
+                    app:drawableStartCompat="@drawable/ic_about_24dp"
                     app:drawableTint="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
 

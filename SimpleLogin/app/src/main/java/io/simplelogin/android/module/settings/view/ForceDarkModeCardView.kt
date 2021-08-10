@@ -3,11 +3,12 @@ package io.simplelogin.android.module.settings.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import io.simplelogin.android.databinding.LayoutForceDarkModeCardViewBinding
 
-class ForceDarkModeCardView : MaterialCardView {
+class ForceDarkModeCardView : RelativeLayout {
     // Initializer
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

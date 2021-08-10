@@ -5,35 +5,36 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorItemBackground">
 
         <!--Toolbar-->
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_chevron_left_36dp">
+            app:navigationIcon="@drawable/ic_chevron_left_36dp"
+            app:contentInsetStartWithNavigation="0dp">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
                 android:text="What you can do with aliases"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/toolbarTitleSize"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 tools:ignore="HardcodedText" />
 
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorListBackground"
+            android:background="@color/colorItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,140 +47,121 @@
                 android:paddingBottom="20dp">
 
                 <!--What A-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/colorItemBackground"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
-                    <RelativeLayout
+                    <TextView
+                        android:id="@+id/stepATextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="A. Replace email by alias everywhere"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        tools:ignore="HardcodedText" />
 
-                        android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/stepAImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepATextView"
+                        android:src="@mipmap/what_a"
+                        tools:ignore="ContentDescription" />
 
-                        <TextView
-                            android:id="@+id/stepATextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="A. Replace email by alias everywhere"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
-                            tools:ignore="HardcodedText" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepAImageView"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="@string/what_a"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorControlNormal" />
 
-                        <ImageView
-                            android:id="@+id/stepAImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepATextView"
-                            android:src="@mipmap/what_a"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepAImageView"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/what_a"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
-
-                    </RelativeLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--What B-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/colorItemBackground"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
-                    <RelativeLayout
+                    <TextView
+                        android:id="@+id/stepBTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="B. Send emails from alias"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        tools:ignore="HardcodedText" />
 
-                        android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/stepBImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepBTextView"
+                        android:src="@mipmap/what_b"
+                        tools:ignore="ContentDescription" />
 
-                        <TextView
-                            android:id="@+id/stepBTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="B. Send emails from alias"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
-                            tools:ignore="HardcodedText" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepBImageView"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="@string/what_b"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorControlNormal" />
 
-                        <ImageView
-                            android:id="@+id/stepBImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepBTextView"
-                            android:src="@mipmap/what_b" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepBImageView"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/what_b"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
-
-                    </RelativeLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--What C-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:background="@color/colorItemBackground"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
-                    <RelativeLayout
+                    <TextView
+                        android:id="@+id/stepCTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="C. Run your business with alias"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        tools:ignore="HardcodedText" />
 
-                        android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/stepCImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepCTextView"
+                        android:src="@mipmap/what_c"
+                        tools:ignore="ContentDescription" />
 
-                        <TextView
-                            android:id="@+id/stepCTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="C. Run your business with alias"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
-                            tools:ignore="HardcodedText" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/stepCImageView"
+                        android:padding="@dimen/card_view_padding"
+                        android:text="@string/what_c"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorControlNormal" />
 
-                        <ImageView
-                            android:id="@+id/stepCImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepCTextView"
-                            android:src="@mipmap/what_c" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/stepCImageView"
-                            android:padding="@dimen/card_view_padding"
-                            android:text="@string/what_c"
-                            android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
-
-                    </RelativeLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -187,8 +169,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@drawable/shape_toolbar_drop_shadow"
+            android:layout_height="1dp"
+            android:background="@color/dividerColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
