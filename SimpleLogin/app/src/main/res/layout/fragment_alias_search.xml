@@ -11,56 +11,33 @@
 
         <!--Toolbar-->
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/ic_chevron_left_36dp">
 
-            <RelativeLayout
-                android:id="@+id/toolbarRootRelativeLayout"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                app:boxBackgroundMode="none"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
 
-                <ImageView
-                    android:id="@+id/backImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_arrow_back_black_24dp"
-                    app:tint="@color/colorPrimary"
-                    tools:ignore="ContentDescription" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/searchTextInputLayout"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_toEndOf="@id/backImageView"
-                    android:background="@drawable/shape_search_bar"
-                    app:boxBackgroundMode="none"
-                    app:endIconMode="clear_text"
-                    app:hintEnabled="false">
+                    android:hint="Search alias"
+                    android:inputType="textNoSuggestions"
+                    android:padding="10dp"
+                    android:textColor="@color/colorText"
+                    tools:ignore="HardcodedText" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:hint="Search alias"
-                        android:inputType="textNoSuggestions"
-                        android:padding="10dp"
-                        android:textColor="@color/colorDarkGray"
-                        tools:ignore="HardcodedText" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </RelativeLayout>
-
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
 
         <androidx.recyclerview.widget.RecyclerView

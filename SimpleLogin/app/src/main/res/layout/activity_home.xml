@@ -20,13 +20,16 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorItemBackground"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
+            app:itemIconPadding="@dimen/margin_20"
+            app:itemHorizontalPadding="@dimen/margin_20"
             app:headerLayout="@layout/menu_header"
             app:itemIconTint="@color/colorPrimary"
-            app:itemTextColor="@color/colorDarkGray"
+            app:itemTextColor="?attr/colorControlNormal"
             app:menu="@menu/home_left_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

@@ -39,7 +39,7 @@
     <group android:id="@+id/thirdGroup">
         <item
             android:id="@+id/rateUsMenuItem"
-            android:icon="@drawable/ic_star_32dp"
+            android:icon="@drawable/ic_rate_24dp"
             android:title="Rate Us"
             tools:ignore="HardcodedText" />
         <item

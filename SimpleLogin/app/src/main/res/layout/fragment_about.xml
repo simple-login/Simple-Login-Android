@@ -71,7 +71,7 @@
                             android:layout_height="wrap_content"
                             android:padding="@dimen/card_view_padding"
                             android:textAppearance="?attr/textAppearanceSubtitle2"
-                            android:textColor="@color/colorDarkGray"
+                            android:textColor="?attr/colorControlNormal"
                             tools:text="SimpleLogin vX.X" />
 
                         <View
@@ -90,7 +90,7 @@
                             android:padding="@dimen/card_view_padding"
                             android:text="@string/app_short_description"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                         <ImageView
                             android:layout_width="match_parent"
