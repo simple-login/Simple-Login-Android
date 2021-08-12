@@ -26,7 +26,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:menu="@menu/menu_contact_mailbox_list"
-                    app:navigationIcon="@drawable/ic_chevron_left_36dp"
+                    app:navigationIcon="@drawable/ic_chevron_left_24dp"
                     app:contentInsetStartWithNavigation="0dp">
 
                     <TextView

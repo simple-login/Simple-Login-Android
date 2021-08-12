@@ -44,7 +44,7 @@
             tools:ignore="HardcodedText" />
         <item
             android:id="@+id/signOutMenuItem"
-            android:icon="@drawable/ic_logout_32dp"
+            android:icon="@drawable/ic_logout_24dp"
             android:title="Sign Out"
             tools:ignore="HardcodedText" />
     </group>

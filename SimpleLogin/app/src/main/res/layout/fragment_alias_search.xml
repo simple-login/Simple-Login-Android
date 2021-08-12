@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/ic_chevron_left_36dp">
+            app:navigationIcon="@drawable/ic_chevron_left_24dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchTextInputLayout"

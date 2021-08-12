@@ -155,7 +155,7 @@
                             android:padding="0dp"
                             android:text="Send Email"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            app:icon="@drawable/ic_send_24dp"
+                            app:icon="@drawable/ic_send_28dp"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
                 </LinearLayout>

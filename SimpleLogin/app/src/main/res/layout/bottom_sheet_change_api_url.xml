@@ -11,7 +11,7 @@
         app:behavior_skipCollapsed="true"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,12 +32,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Change API URL"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="12dp"
                 android:text="Apply change"
                 tools:ignore="HardcodedText" />
 
@@ -99,9 +99,9 @@
         <View
             android:id="@+id/separatorView"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_below="@id/toolbar"
-            android:background="@drawable/shape_toolbar_drop_shadow" />
+            android:background="@color/dividerColor" />
 
     </RelativeLayout>
 </layout>

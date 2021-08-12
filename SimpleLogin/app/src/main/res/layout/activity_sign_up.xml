@@ -5,22 +5,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorItemBackground">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorListBackground"
             app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancelButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/toolbarTitleText"
@@ -28,24 +20,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Sign Up"
-                android:textSize="@dimen/toolbarTitleSize"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 tools:ignore="HardcodedText" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@drawable/shape_toolbar_drop_shadow"
+            android:layout_height="1dp"
+            android:background="@color/dividerColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <LinearLayout
             android:id="@+id/rootLinearLayout"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:orientation="vertical"
@@ -57,6 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
                 android:src="@drawable/ic_logo_colored_horizontal"
                 tools:ignore="ContentDescription" />
 
@@ -65,6 +58,10 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:paddingStart="@dimen/margin_15"
+                android:paddingEnd="@dimen/margin_15"
                 android:hint="Email address"
                 tools:ignore="HardcodedText">
 
@@ -84,7 +81,13 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:paddingStart="@dimen/margin_15"
+                android:paddingEnd="@dimen/margin_15"
                 android:hint="Password"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/colorPrimary"
                 tools:ignore="HardcodedText">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -103,7 +106,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:padding="12dp"
                 android:text="Sign Up"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_4"
+                android:layout_gravity="center"
+                android:text="Cancel"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>

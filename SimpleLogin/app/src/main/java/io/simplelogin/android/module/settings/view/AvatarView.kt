@@ -25,10 +25,8 @@ class AvatarView : CardView {
     fun setAvatar(urlString: String?) {
         if (urlString != null) {
             Glide.with(this).load(Uri.parse(urlString)).into(binding.imageView)
-            binding.cardView.foreground = null
         } else {
             binding.imageView.setImageResource(R.drawable.ic_user_48dp)
-            binding.cardView.foreground = ContextCompat.getDrawable(context, R.drawable.shape_oval_outline_primary_color)
         }
     }
 }

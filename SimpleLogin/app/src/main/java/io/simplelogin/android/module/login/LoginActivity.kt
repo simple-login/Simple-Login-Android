@@ -73,11 +73,11 @@ class LoginActivity : BaseAppCompatActivity() {
             }
         })
 
-        binding.passwordTextField.editText?.onDrawableEndTouch {
+        /*binding.passwordTextField.editText?.onDrawableEndTouch {
             if (binding.passwordTextField.editText?.text.isNullOrEmpty()) return@onDrawableEndTouch
             isShowingPassword = !isShowingPassword
             binding.passwordTextField.editText?.setShowPassword(isShowingPassword)
-        }
+        }*/
 
         binding.passwordTextField.editText?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {

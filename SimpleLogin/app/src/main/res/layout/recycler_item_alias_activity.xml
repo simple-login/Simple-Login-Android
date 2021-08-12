@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     tools:ignore="ContentDescription"
-                    tools:src="@drawable/ic_block_48dp" />
+                    tools:src="@drawable/ic_block_58dp" />
 
             </LinearLayout>
 
