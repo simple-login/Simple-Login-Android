@@ -19,23 +19,14 @@
             android:background="@drawable/shape_bottom_sheet_toolbar"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancelButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                tools:ignore="HardcodedText" />
-
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Create Contact"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -93,14 +84,23 @@
                 android:text="CREATE"
                 tools:ignore="HardcodedText" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Cancel"
+                tools:ignore="HardcodedText" />
+
         </LinearLayout>
 
         <View
             android:id="@+id/separatorView"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_below="@id/toolbar"
-            android:background="@drawable/shape_toolbar_drop_shadow" />
+            android:background="@color/dividerColor" />
 
     </RelativeLayout>
 </layout>

@@ -34,9 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="How To Send Email From Alias"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/colorText"
-                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -93,9 +92,9 @@
         <View
             android:id="@+id/separatorView"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_below="@id/toolbar"
-            android:background="@drawable/shape_toolbar_drop_shadow" />
+            android:background="@color/dividerColor" />
 
     </RelativeLayout>
 </layout>
