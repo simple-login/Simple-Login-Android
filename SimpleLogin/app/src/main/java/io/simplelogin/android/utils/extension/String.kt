@@ -10,7 +10,7 @@ fun String.isValidEmail() : Boolean {
 fun String.isValidEmailPrefix() : Boolean {
     if (isEmpty() || length > 100) return false
 
-    val prefixRegex = Regex("""([0-9|A-Z|a-z|\-|_]*)""")
+    val prefixRegex = Regex("""([0-9|A-Z|a-z|\-|_|\.]*)""")
     return prefixRegex.matches(this)
 }
 
