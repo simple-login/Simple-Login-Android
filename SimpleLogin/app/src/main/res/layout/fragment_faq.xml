@@ -5,35 +5,36 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorItemBackground">
 
         <!--Toolbar-->
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_chevron_left_36dp">
+            app:navigationIcon="@drawable/ic_chevron_left_24dp"
+            app:contentInsetStartWithNavigation="0dp">
 
             <TextView
                 android:id="@+id/toolbarTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start"
                 android:text="Frequently Asked Questions"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/toolbarTitleSize"
-                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorListBackground"
+            android:background="@color/colorItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,14 +47,15 @@
                 android:paddingBottom="20dp">
 
                 <!--FAQ 1-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -77,20 +79,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_1_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 2-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -114,20 +117,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_2_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 3-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -151,20 +155,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_3_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 4-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -188,20 +193,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_4_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 5-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -225,20 +231,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_5_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 6-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -262,20 +269,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_6_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 7-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -299,20 +307,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_7_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 8-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -336,20 +345,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_8_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 9-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -373,20 +383,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_9_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 10-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -410,20 +421,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_10_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 11-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -447,20 +459,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_11_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 12-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -484,20 +497,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_12_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 13-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -521,20 +535,21 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_13_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
                 <!--FAQ 14-->
-                <com.google.android.material.card.MaterialCardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="@dimen/itemBorderRadius">
+                    android:background="@drawable/card_shape_with_ripple"
+                    android:padding="@dimen/margin_4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -558,10 +573,10 @@
                             android:paddingBottom="@dimen/card_view_padding"
                             android:text="@string/faq_14_answer"
                             android:textAppearance="?attr/textAppearanceBody2"
-                            android:textColor="@color/colorDarkGray" />
+                            android:textColor="?attr/colorControlNormal" />
 
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -569,8 +584,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@drawable/shape_toolbar_drop_shadow"
+            android:layout_height="1dp"
+            android:background="@color/dividerColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />

@@ -66,7 +66,7 @@ class AliasActivityHeaderViewHolder(private val binding: RecyclerItemAliasActivi
         // Handled
         binding.handledStat.root.makeSubviewsClippedToBound()
         binding.handledStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(context, R.drawable.ic_at_48dp)
+            ContextCompat.getDrawable(context, R.drawable.ic_at_58dp)
         )
         binding.handledStat.numberTextView.text = "${alias.handleCount}"
         binding.handledStat.typeTextView.text = "Email handled"
@@ -82,7 +82,7 @@ class AliasActivityHeaderViewHolder(private val binding: RecyclerItemAliasActivi
         // Reply
         binding.repliedStat.root.makeSubviewsClippedToBound()
         binding.repliedStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(context, R.drawable.ic_reply_48dp)
+            ContextCompat.getDrawable(context, R.drawable.ic_reply_58dp)
         )
         binding.repliedStat.numberTextView.text = "${alias.replyCount}"
         binding.repliedStat.typeTextView.text = "Email replied"
@@ -90,7 +90,7 @@ class AliasActivityHeaderViewHolder(private val binding: RecyclerItemAliasActivi
         // Block
         binding.blockedStat.root.makeSubviewsClippedToBound()
         binding.blockedStat.iconImageView.setImageDrawable(
-            ContextCompat.getDrawable(context, R.drawable.ic_block_48dp)
+            ContextCompat.getDrawable(context, R.drawable.ic_block_58dp)
         )
         binding.blockedStat.rootLinearLayout.setBackgroundColor(
             ContextCompat.getColor(context, R.color.colorNegative)

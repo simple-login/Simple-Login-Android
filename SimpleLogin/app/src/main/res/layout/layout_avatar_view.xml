@@ -16,9 +16,11 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_user_48dp"
             tools:ignore="ContentDescription" />
 
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+
 </layout>

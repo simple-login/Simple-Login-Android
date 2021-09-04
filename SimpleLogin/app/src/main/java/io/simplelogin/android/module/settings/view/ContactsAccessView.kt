@@ -6,12 +6,13 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.RelativeLayout
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import io.simplelogin.android.databinding.LayoutContactsAccessViewBinding
 import io.simplelogin.android.utils.extension.canReadContacts
 
-class ContactsAccessView : CardView {
+class ContactsAccessView : RelativeLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)

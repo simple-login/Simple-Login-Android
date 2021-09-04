@@ -13,10 +13,10 @@
             android:id="@+id/creationDateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_clock_16dp"
+            app:drawableStartCompat="@drawable/ic_clock_16dp"
             android:drawablePadding="5dp"
-            android:textColor="@color/colorDarkGray"
-            app:drawableTint="@color/colorDarkGray"
+            android:textColor="?attr/colorControlNormal"
+            app:drawableTint="?attr/colorControlNormal"
             tools:text="Created on 6 Feb at 16:20 (1 month ago)" />
 
         <LinearLayout
@@ -31,9 +31,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_tray_16dp"
+                app:drawableStartCompat="@drawable/ic_tray_16dp"
                 android:drawablePadding="5dp"
-                app:drawableTint="@color/colorDarkGray"
+                android:textColor="?attr/colorControlNormal"
+                app:drawableTint="?attr/colorControlNormal"
                 tools:text="mail1@example.com" />
 
             <com.google.android.material.button.MaterialButton
@@ -60,10 +61,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_name_16dp"
+                app:drawableStartCompat="@drawable/ic_name_16dp"
                 android:drawablePadding="5dp"
-                android:textColor="@color/colorDarkGray"
-                app:drawableTint="@color/colorDarkGray"
+                android:textColor="?attr/colorControlNormal"
+                app:drawableTint="?attr/colorControlNormal"
                 tools:text="John Doe" />
 
             <com.google.android.material.button.MaterialButton

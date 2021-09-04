@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.BaseAdapter
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import io.simplelogin.android.databinding.LayoutSenderAddressFormatCardViewBinding
@@ -14,7 +15,7 @@ import io.simplelogin.android.databinding.SpinnerRowTextOnlyBinding
 import io.simplelogin.android.utils.enums.SenderFormat
 import io.simplelogin.android.utils.enums.SenderFormat.*
 
-class SenderAddressFormatCardView : MaterialCardView {
+class SenderAddressFormatCardView : RelativeLayout {
     // Initializer
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

@@ -35,7 +35,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding = FragmentAboutBinding.inflate(inflater)
 
         if (openFromLoginActivity) {
-            binding.toolbar.setNavigationIcon(R.drawable.ic_close_36dp)
+            binding.toolbar.setNavigationIcon(R.drawable.ic_close_24dp)
         }
 
         binding.toolbar.setNavigationOnClickListener { finishOrNavigateUp() }

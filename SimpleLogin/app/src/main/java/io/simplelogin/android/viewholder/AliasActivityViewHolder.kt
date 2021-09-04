@@ -33,7 +33,7 @@ class AliasActivityViewHolder(private val binding: RecyclerItemAliasActivityBind
                 binding.iconImageView.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.ic_send_24dp
+                        R.drawable.ic_send_28dp
                     )
                 )
                 binding.iconImageView.setTint(R.color.colorPrimary)

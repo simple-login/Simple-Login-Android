@@ -17,12 +17,6 @@
         <item name="android:windowTranslucentStatus">false</item>
     </style>
 
-    <!--Custom Switch color-->
-    <style name="SLSwitch" parent="Theme.MaterialComponents.Light">
-        <item name="colorControlActivated">@color/colorPrimary</item>
-        <item name="colorSwitchThumbNormal">@color/colorDarkGray</item>
-    </style>
-
     <!--Custom MaterialAlertDialogTheme-->
     <style name="SLMaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarNeutralButtonStyle">@style/SLMaterialAlertButtonNeutral</item>

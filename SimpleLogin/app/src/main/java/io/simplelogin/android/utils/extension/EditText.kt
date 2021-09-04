@@ -24,7 +24,7 @@ fun EditText.onDrawableEndTouch(listener: () -> Unit) {
     }
 }
 
-fun EditText.setShowPassword(isShowing: Boolean) {
+/*fun EditText.setShowPassword(isShowing: Boolean) {
     val drawableEnd: Drawable
     val inputType: Int
     if (isShowing) {
@@ -37,7 +37,7 @@ fun EditText.setShowPassword(isShowing: Boolean) {
     drawableEnd.setBounds(0, 0, drawableEnd.intrinsicWidth, drawableEnd.intrinsicHeight)
     setCompoundDrawables(null, null, drawableEnd, null)
     this.inputType = inputType
-}
+}*/
 
 fun EditText.trim() {
     setText(text.toString().trim())

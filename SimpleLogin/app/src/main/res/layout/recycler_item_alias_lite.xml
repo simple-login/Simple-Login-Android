@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorListBackground">
-
-        <com.google.android.material.card.MaterialCardView
+        <RelativeLayout
             android:id="@+id/root_card_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/colorItemBackground"
-            app:cardCornerRadius="@dimen/itemBorderRadius">
+            android:background="@drawable/card_shape_with_ripple"
+            android:padding="@dimen/margin_4">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,8 +39,6 @@
                     android:textColor="@color/colorText"
                     tools:text="Alias note" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </FrameLayout>
+        </RelativeLayout>
 
 </layout>

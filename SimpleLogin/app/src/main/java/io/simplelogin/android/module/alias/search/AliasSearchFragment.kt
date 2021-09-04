@@ -1,6 +1,5 @@
 package io.simplelogin.android.module.alias.search
 
-import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
@@ -43,10 +42,11 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAliasSearchBinding.inflate(inflater)
-        binding.backImageView.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        /*binding.backImageView.setOnClickListener {
             activity?.dismissKeyboard()
             updateAliasListViewModelAndNavigateUp()
-        }
+        }*/
 
         setLoading(false)
         binding.messageTextView.visibility = View.GONE
@@ -61,10 +61,10 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     override fun onResume() {
         // Animate slide search bar
         super.onResume()
-        val slideInFromLeftAnimator =
+        /*val slideInFromLeftAnimator =
             AnimatorInflater.loadAnimator(context, R.animator.slide_in_from_left)
         slideInFromLeftAnimator.setTarget(binding.toolbarRootRelativeLayout)
-        slideInFromLeftAnimator.start()
+        slideInFromLeftAnimator.start()*/
 
         // On configuration change
         if (viewModel.aliases.isEmpty()) {

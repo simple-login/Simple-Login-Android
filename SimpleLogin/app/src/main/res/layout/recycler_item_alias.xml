@@ -3,21 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorListBackground">
-
-        <com.google.android.material.card.MaterialCardView
+        <RelativeLayout
             android:id="@+id/rootCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/colorItemBackground"
-            app:cardCornerRadius="@dimen/itemBorderRadius">
+            android:padding="@dimen/margin_4"
+            android:background="@drawable/card_shape_with_ripple">
 
             <RelativeLayout
                 android:id="@+id/rootRelativeLayout"
@@ -43,21 +38,23 @@
                         android:id="@+id/emailTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_4"
                         android:textAppearance="?attr/textAppearanceSubtitle2"
                         android:textColor="@color/colorText"
-                        tools:text="yautiden@gmail.com" />
+                        tools:text="yautiden@gmail.com"
+                        android:textSize="15.5sp"/>
 
                     <TextView
                         android:id="@+id/creationDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_clock_16dp"
+                        app:drawableStartCompat="@drawable/ic_clock_16dp"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@color/colorDarkGray"
-                        app:drawableTint="@color/colorDarkGray"
+                        android:textColor="?attr/colorControlNormal"
+                        app:drawableTint="?attr/colorControlNormal"
                         tools:text="Created 3 days ago" />
 
                     <TextView
@@ -65,44 +62,44 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:drawableStart="@drawable/ic_wave_16dp"
+                        app:drawableStartCompat="@drawable/ic_wave_16dp"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
                         android:maxLines="1"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@color/colorDarkGray"
+                        android:textColor="?attr/colorControlNormal"
+                        app:drawableTint="?attr/colorControlNormal"
                         app:autoSizeMinTextSize="9sp"
                         app:autoSizeStepGranularity="2sp"
                         app:autoSizeTextType="uniform"
-                        app:drawableTint="@color/colorDarkGray"
                         tools:text="0 forward, 0 block, 1 reply" />
 
                     <TextView
                         android:id="@+id/mailboxesTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_tray_16dp"
+                        app:drawableStartCompat="@drawable/ic_tray_16dp"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
                         android:maxLines="3"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@color/colorDarkGray"
-                        app:drawableTint="@color/colorDarkGray"
+                        android:textColor="?attr/colorControlNormal"
+                        app:drawableTint="?attr/colorControlNormal"
                         tools:text="email@example.com" />
 
                     <TextView
                         android:id="@+id/nameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_name_16dp"
+                        app:drawableStartCompat="@drawable/ic_name_16dp"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@color/colorDarkGray"
-                        app:drawableTint="@color/colorDarkGray"
+                        android:textColor="?attr/colorControlNormal"
+                        app:drawableTint="?attr/colorControlNormal"
                         tools:text="John Doe" />
 
                     <TextView
@@ -122,12 +119,18 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
+                        <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/enabledSwitch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
-                            android:theme="@style/SLSwitch" />
+                            android:thumb="@drawable/switch_thumb"
+                            app:track="@drawable/switch_track" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/copyButton"
@@ -139,6 +142,11 @@
                             app:icon="@drawable/ic_copy_24dp"
                             tools:ignore="HardcodedText" />
 
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/sendEmailButton"
                             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
@@ -147,7 +155,7 @@
                             android:padding="0dp"
                             android:text="Send Email"
                             android:textAppearance="?attr/textAppearanceCaption"
-                            app:icon="@drawable/ic_send_24dp"
+                            app:icon="@drawable/ic_send_28dp"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
                 </LinearLayout>
@@ -159,13 +167,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_next_16dp"
-                    app:tint="@color/colorDarkGray"
+                    app:tint="?attr/colorControlNormal"
                     tools:ignore="ContentDescription" />
 
             </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-
-    </FrameLayout>
+        </RelativeLayout>
 
 </layout>
