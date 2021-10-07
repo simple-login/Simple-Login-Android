@@ -1,0 +1,1 @@
+• Fix the bug that causes alias prefix textfield being clipped on some devices.
