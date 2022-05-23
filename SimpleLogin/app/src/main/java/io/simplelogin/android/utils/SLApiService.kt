@@ -796,6 +796,47 @@ object SLApiService {
     fun deleteContact(apiKey: String, contact: Contact, completion: (Result<Unit>) -> Unit) {
         delete(apiKey, "${BASE_URL}/api/contacts/${contact.id}", completion)
     }
+
+    fun toggleContact(
+        apiKey: String,
+        contact: Contact,
+        completion: (Result<ContactToggleResult>) -> Unit
+    ) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/contacts/${contact.id}/toggle")
+            .header("Authentication", apiKey)
+            .post(mapOf("dummy" to "dummy").toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200, 201 -> {
+                        val jsonString = response.body?.string()
+
+                        if (jsonString != null) {
+                            val contact = Gson().fromJson(jsonString, ContactToggleResult::class.java)
+                            if (contact != null) {
+                                completion(Result.success(contact))
+                            } else {
+                                completion(Result.failure(SLError.FailedToParse(Contact::class.java)))
+                            }
+                        } else {
+                            completion(Result.failure(SLError.NoData))
+                        }
+                    }
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
 
     //region Mailbox

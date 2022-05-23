@@ -157,7 +157,6 @@ fun Activity.alertReversableOptions(reversable: Reversable, alias: Alias? = null
         copyToClipboard(text, text)
         toastShortly("Copied $text")
     }
-
     val toString = "Email to \"${reversable.email}\""
     val fromString = if (alias != null) " from \"${alias.email}\"" else ""
 

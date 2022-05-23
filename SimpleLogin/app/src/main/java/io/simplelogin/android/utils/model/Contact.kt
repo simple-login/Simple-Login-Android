@@ -14,7 +14,7 @@ data class Contact(
     @SerializedName("last_email_sent_date") val lastEmailSentDate: String?,
     @SerializedName("last_email_sent_timestamp") val lastEmailSentTimestamp: Long?,
     @SerializedName("existed") val existed: Boolean,
-    @SerializedName("block_forward") val blockForward: Boolean
+    @SerializedName("block_forward") var blockForward: Boolean
 ) : Reversable {
     private var _creationString: String? = null
     fun getCreationString(): String {
@@ -42,4 +42,8 @@ data class Contact(
 
 data class ContactArray(
     @SerializedName("contacts") val contacts: List<Contact>
+)
+
+data class ContactToggleResult(
+    @SerializedName("block_forward") val blockForward: Boolean
 )
