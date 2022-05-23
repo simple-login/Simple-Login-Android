@@ -31,6 +31,9 @@ class ContactViewHolder(private val binding: RecyclerItemContactBinding) :
             binding.lastEmailSentTextView.visibility = View.GONE
         }
 
+        binding.informationLinearLayout.alpha = if (contact.blockForward) 0.5f else 1.0f
+        binding.blockedEmailTextView.visibility = if (contact.blockForward) View.VISIBLE else View.GONE
+
         binding.rootCardView.setOnClickListener { clickListener.onClick(contact) }
     }
 }
