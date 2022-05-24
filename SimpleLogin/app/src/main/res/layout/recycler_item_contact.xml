@@ -3,25 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-        <RelativeLayout
-            android:id="@+id/rootCardView"
+    <RelativeLayout
+        android:id="@+id/rootCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/card_shape_with_ripple"
+        android:padding="@dimen/margin_4">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/card_shape_with_ripple"
-            android:padding="@dimen/margin_4">
+            android:padding="@dimen/margin_10">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/informationLinearLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical|start"
-                android:layout_marginEnd="5dp"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/emailTextView"
@@ -38,14 +42,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    app:drawableStartCompat="@drawable/ic_clock_16dp"
                     android:drawablePadding="5dp"
-                    app:drawableTint="?attr/colorControlNormal"
-                    android:paddingStart="5dp"
                     android:paddingTop="5dp"
-                    android:paddingEnd="5dp"
                     android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="?attr/colorControlNormal"
+                    app:drawableStartCompat="@drawable/ic_clock_16dp"
+                    app:drawableTint="?attr/colorControlNormal"
                     tools:text="Created on 6 Feb 2020 at 18:05 (1 month ago)" />
 
                 <TextView
@@ -53,17 +55,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    app:drawableStartCompat="@drawable/ic_send_16dp"
                     android:drawablePadding="5dp"
-                    app:drawableTint="?attr/colorControlNormal"
-                    android:paddingStart="5dp"
                     android:paddingTop="5dp"
-                    android:paddingEnd="5dp"
                     android:textAppearance="?attr/textAppearanceCaption"
                     android:textColor="?attr/colorControlNormal"
+                    app:drawableStartCompat="@drawable/ic_send_16dp"
+                    app:drawableTint="?attr/colorControlNormal"
                     tools:text="Last sent on 6 Feb 2020 at 18:05 (1 month ago)" />
 
             </LinearLayout>
-        </RelativeLayout>
+
+            <TextView
+                android:id="@+id/blockedEmailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="⛔" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </layout>

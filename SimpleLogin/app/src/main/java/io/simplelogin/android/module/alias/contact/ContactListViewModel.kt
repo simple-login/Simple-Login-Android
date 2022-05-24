@@ -8,6 +8,7 @@ import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.Contact
+import io.simplelogin.android.utils.model.ContactToggleResult
 
 class ContactListViewModel(context: Context, private val alias: Alias) : BaseViewModel(context) {
     private val _error = MutableLiveData<SLError>()
@@ -111,6 +112,25 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
         SLApiService.deleteContact(apiKey, contact) { result ->
             _eventFinishCallingDeleteContact.postValue(true)
             result.onSuccess { _eventDeletedContact.postValue(contact.email) }
+            result.onFailure { _error.postValue(it as SLError) }
+        }
+    }
+
+    // Toggle
+    private var _eventFinishTogglingContact = MutableLiveData<Boolean>()
+    val eventFinishTogglingContact: LiveData<Boolean>
+        get() = _eventFinishTogglingContact
+
+    fun onHandleToggledContactComplete() {
+        _eventFinishTogglingContact.value = false
+    }
+
+    fun toggle(contact: Contact) {
+        SLApiService.toggleContact(apiKey, contact) { result ->
+            _eventFinishTogglingContact.postValue(true)
+            result.onSuccess { contactToggleResult ->
+                _contacts.find { it.id == contact.id }?.blockForward = contactToggleResult.blockForward
+            }
             result.onFailure { _error.postValue(it as SLError) }
         }
     }

@@ -264,12 +264,21 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 viewModel.onHandleDeletedContactComplete()
             }
         })
+
+        // Toggle contact
+        viewModel.eventFinishTogglingContact.observe(viewLifecycleOwner, { finishTogglingContact ->
+            if (finishTogglingContact) {
+                setLoading(false)
+                adapter.notifyDataSetChanged()
+                viewModel.onHandleToggledContactComplete()
+            }
+        })
     }
 
     private fun setUpRecyclerView() {
         adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
-                activity?.alertReversableOptions(contact, alias)
+                alertContactOptions(contact)
             }
         })
         binding.recyclerView.adapter = adapter
@@ -380,6 +389,35 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     viewModel.create(email.address)
                 } else {
                     context?.toastShortly("Invalid email address: ${email.address}")
+                }
+            }
+            .show()
+    }
+
+    private fun alertContactOptions(contact: Contact) {
+        fun copyToClipboardAndToast(text: String) {
+            copyToClipboard(text, text)
+            context?.toastShortly("Copied $text")
+        }
+
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle(contact.email)
+            .setItems(
+                arrayOf(
+                    getString(R.string.copy_reverse_alias_with_display_name),
+                    getString(R.string.copy_reverse_alias_without_display_name),
+                    getString(R.string.begin_composing_with_default_email),
+                    if (contact.blockForward) "Unblock" else "Block"
+                )
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> copyToClipboardAndToast(contact.reverseAlias)
+                    1 -> copyToClipboardAndToast(contact.reverseAliasAddress)
+                    2 -> activity?.startSendEmailIntent(contact.reverseAlias)
+                    3 -> {
+                        setLoading(true)
+                        viewModel.toggle(contact)
+                    }
                 }
             }
             .show()
