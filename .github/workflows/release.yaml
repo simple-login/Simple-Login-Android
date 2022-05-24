@@ -1,0 +1,183 @@
+name: Build the app
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  create-release:
+    name: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Create artifacts directory
+        run: mkdir artifacts
+
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          configuration: ".github/changelog_configuration.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare Slack notification contents
+        run: |
+          changelog=$(cat << EOH
+          ${{ steps.build_changelog.outputs.changelog }}
+          EOH
+          )
+          messageWithoutNewlines=$(echo "${changelog}" | awk '{printf "%s\\n", $0}')
+          messageWithoutDoubleQuotes=$(echo "${messageWithoutNewlines}" | sed "s/\"/'/g")
+          echo "${messageWithoutDoubleQuotes}"
+          
+          echo "${messageWithoutDoubleQuotes}" > artifacts/slack-changelog
+
+      - name: Setup app version
+        run: |
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create GitHub release
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: ${{ env.RELEASE_VERSION }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+
+      - name: Save release upload URL and version number to artifact
+        run: |
+          echo "${{ steps.release.outputs.upload_url }}" > artifacts/release-upload-url
+          echo "${{ env.RELEASE_VERSION }}" > artifacts/release-version
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: artifacts
+          path: artifacts
+
+
+  build-release:
+    name: build-release
+    needs: ['create-release']
+    runs-on: ubuntu-latest
+    container: thyrlian/android-sdk:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Get create-release artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: artifacts
+          path: artifacts
+
+      - name: Read artifacts
+        shell: bash
+        run: |
+          # Set the release_upload_url
+          release_upload_url="$(cat artifacts/release-upload-url)"
+          echo "RELEASE_UPLOAD_URL=$release_upload_url" >> $GITHUB_ENV
+          echo "release upload url: $RELEASE_UPLOAD_URL"
+          
+          # Set the release_version
+          release_version="$(cat artifacts/release-version)"
+          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+          echo "release version: $RELEASE_VERSION"
+          
+          # Set the slack-changelog
+          slack_changelog=$(cat artifacts/slack-changelog)
+          echo "SLACK_CHANGELOG=$slack_changelog" >> $GITHUB_ENV
+          echo "slack changelog: $SLACK_CHANGELOG"
+
+      # Install dependencies and setup keystore
+      - name: Setup environment
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          apt-get update && apt-get install -y file make
+          echo "$KEYSTORE_BASE64" | base64 -d > SimpleLogin/simplelogin.keystore
+
+      - name: Build application
+        shell: bash
+        env:
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          pushd SimpleLogin/
+          ./gradlew assembleRelease
+          popd
+          
+
+      - name: Prepare uploads
+        shell: bash
+        run: |
+          echo "PLAYSTORE_ASSET_NAME=simplelogin-playstore-${RELEASE_VERSION}.apk" >> $GITHUB_ENV
+          echo "PLAYSTORE_ASSET_PATH=SimpleLogin/app/build/outputs/apk/playstore/release/app-playstore-release.apk" >> $GITHUB_ENV
+          
+          echo "FDROID_ASSET_NAME=simplelogin-fdroid-${RELEASE_VERSION}.apk" >> $GITHUB_ENV
+          echo "FDROID_ASSET_PATH=SimpleLogin/app/build/outputs/apk/fdroid/release/app-fdroid-release.apk" >> $GITHUB_ENV
+
+      - name: Upload release archive (Playstore)
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+          asset_path: ${{ env.PLAYSTORE_ASSET_PATH }}
+          asset_name: ${{ env.PLAYSTORE_ASSET_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload release archive (FDroid)
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+          asset_path: ${{ env.FDROID_ASSET_PATH }}
+          asset_name: ${{ env.FDROID_ASSET_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Post notification to Slack
+        uses: slackapi/slack-github-action@v1.19.0
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "New tag created on SimpleLogin Android",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                      "type": "mrkdwn",
+                      "text": "*Tag: ${{ github.ref_name }}* (${{ github.sha }})"
+                    }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Changelog:*\n${{ env.SLACK_CHANGELOG }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

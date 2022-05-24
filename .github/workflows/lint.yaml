@@ -1,0 +1,17 @@
+name: Run lint checks
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      
+      - name: Run detekt
+        run: |
+          cd SimpleLogin/
+          ./gradlew detekt || true
+
