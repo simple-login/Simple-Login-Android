@@ -40,7 +40,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/emailTextField"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email address"
@@ -57,7 +57,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/passwordTextField"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"
@@ -81,6 +81,7 @@
                         android:layout_marginTop="8dp"
                         android:padding="12dp"
                         android:text="Sign in"
+                        android:textColor="@color/btn_text_color_state"
                         tools:ignore="HardcodedText" />
 
                     <LinearLayout
@@ -91,7 +92,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/forgotPasswordButton"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -101,7 +102,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/signUpButton"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            style="@style/Widget.Material3.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -118,7 +119,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/apiKeyButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -133,7 +134,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/changeApiUrlButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

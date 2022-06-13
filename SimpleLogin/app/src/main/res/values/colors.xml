@@ -14,7 +14,8 @@
     <color name="colorText">#424242</color>
     <color name="colorItemBackground">#FFFFFF</color>
     <color name="colorListBackground">#F3F2F8</color>
-    <color name="cardStrokeColor">#DBDCE0</color>
+    <color name="cardStrokeColor">#E0E0E0</color>
+    <color name="colorControlNormal">#747474</color>
     <color name="rippleColor">#EBEBEB</color>
     <color name="dividerColor">#DBDCE0</color>
     <color name="switchTrackColor">#C0C1C3</color>

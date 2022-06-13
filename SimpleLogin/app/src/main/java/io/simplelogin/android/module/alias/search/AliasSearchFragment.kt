@@ -108,7 +108,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
         viewModel = tempViewModel
 
-        viewModel.eventUpdateResults.observe(viewLifecycleOwner, { updatedResults ->
+        viewModel.eventUpdateResults.observe(viewLifecycleOwner) { updatedResults ->
             if (updatedResults) {
                 activity?.runOnUiThread {
                     setLoading(false)
@@ -123,18 +123,18 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     viewModel.onHandleUpdateResultsComplete()
                 }
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 activity?.run {
                     toastError(error)
                     viewModel.onHandleErrorComplete()
                 }
             }
-        })
+        }
 
-        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, { toggledAliasIndex ->
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner) { toggledAliasIndex ->
             if (toggledAliasIndex != null) {
                 activity?.runOnUiThread {
                     setLoading(false)
@@ -142,7 +142,7 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     viewModel.onHandleToggleAliasComplete()
                 }
             }
-        })
+        }
     }
 
     private fun setUpRecyclerView() {

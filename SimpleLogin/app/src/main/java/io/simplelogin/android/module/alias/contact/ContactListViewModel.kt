@@ -8,7 +8,6 @@ import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.Contact
-import io.simplelogin.android.utils.model.ContactToggleResult
 
 class ContactListViewModel(context: Context, private val alias: Alias) : BaseViewModel(context) {
     private val _error = MutableLiveData<SLError>()

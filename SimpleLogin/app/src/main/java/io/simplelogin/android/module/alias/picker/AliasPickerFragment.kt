@@ -54,32 +54,32 @@ class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Too
 
     private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
-            viewLifecycleOwner,
-            { updatedAliases ->
-                activity?.runOnUiThread {
-                    if (updatedAliases) {
-                        showLoadingFooter(false)
-                        // filteredAliases.toMutableList() to make the recyclerView updates itself
-                        // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
-                        aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
+            viewLifecycleOwner
+        ) { updatedAliases ->
+            activity?.runOnUiThread {
+                if (updatedAliases) {
+                    showLoadingFooter(false)
+                    // filteredAliases.toMutableList() to make the recyclerView updates itself
+                    // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
+                    aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
 
-                        viewModel.onEventUpdateAliasesComplete()
+                    viewModel.onEventUpdateAliasesComplete()
 
-                        if (binding.swipeRefreshLayout.isRefreshing) {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            context?.toastUpToDate()
-                        }
+                    if (binding.swipeRefreshLayout.isRefreshing) {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        context?.toastUpToDate()
                     }
                 }
-            })
+            }
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
     }
 
     private fun setUpRecyclerView() {

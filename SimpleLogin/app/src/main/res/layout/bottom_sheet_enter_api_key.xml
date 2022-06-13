@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Enter API key"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
                 android:textColor="@color/colorText"
                 tools:ignore="HardcodedText" />
 
@@ -46,7 +46,7 @@
                 android:text="@string/api_key_explanation" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="API Key"
@@ -63,20 +63,22 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/setButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Set API key"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Cancel"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>

@@ -204,7 +204,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel = tempViewModel
         viewModel.fetchContacts()
         setLoading(true)
-        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner, { haveNewContacts ->
+        viewModel.eventHaveNewContacts.observe(viewLifecycleOwner) { haveNewContacts ->
             activity?.runOnUiThread {
                 setLoading(false)
                 if (haveNewContacts) {
@@ -218,61 +218,61 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
 
                 updateUiBaseOnNumOfContacts()
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 setLoading(false)
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
 
         // Create contact
         viewModel.eventFinishCallingCreateContact.observe(
-            viewLifecycleOwner,
-            { finishedCallingCreateContact ->
-                if (finishedCallingCreateContact) {
-                    setLoading(false)
-                    viewModel.onHandleFinishCallingCreateContactComplete()
-                }
-            })
+            viewLifecycleOwner
+        ) { finishedCallingCreateContact ->
+            if (finishedCallingCreateContact) {
+                setLoading(false)
+                viewModel.onHandleFinishCallingCreateContactComplete()
+            }
+        }
 
-        viewModel.eventCreatedContact.observe(viewLifecycleOwner, { createdContact ->
+        viewModel.eventCreatedContact.observe(viewLifecycleOwner) { createdContact ->
             if (createdContact != null) {
                 context?.toastShortly("Created \"$createdContact\"")
                 viewModel.refreshContacts()
                 viewModel.onHandleCreatedContactComplete()
             }
-        })
+        }
 
         // Delete contact
         viewModel.eventFinishCallingDeleteContact.observe(
-            viewLifecycleOwner,
-            { finishedCallingDeleteContact ->
-                if (finishedCallingDeleteContact) {
-                    setLoading(false)
-                    viewModel.onHandleFinishCallingDeleteContactComplete()
-                }
-            })
+            viewLifecycleOwner
+        ) { finishedCallingDeleteContact ->
+            if (finishedCallingDeleteContact) {
+                setLoading(false)
+                viewModel.onHandleFinishCallingDeleteContactComplete()
+            }
+        }
 
-        viewModel.eventDeletedContact.observe(viewLifecycleOwner, { deletedContact ->
+        viewModel.eventDeletedContact.observe(viewLifecycleOwner) { deletedContact ->
             if (deletedContact != null) {
                 context?.toastShortly("Deleted \"$deletedContact\"")
                 viewModel.refreshContacts()
                 viewModel.onHandleDeletedContactComplete()
             }
-        })
+        }
 
         // Toggle contact
-        viewModel.eventFinishTogglingContact.observe(viewLifecycleOwner, { finishTogglingContact ->
+        viewModel.eventFinishTogglingContact.observe(viewLifecycleOwner) { finishTogglingContact ->
             if (finishTogglingContact) {
                 setLoading(false)
                 adapter.notifyDataSetChanged()
                 viewModel.onHandleToggledContactComplete()
             }
-        })
+        }
     }
 
     private fun setUpRecyclerView() {

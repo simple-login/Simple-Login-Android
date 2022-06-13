@@ -11,7 +11,7 @@
 
         <!--Toolbar-->
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,10 +26,10 @@
                 android:layout_gravity="start"
                 android:text="Settings"
                 android:textColor="@color/colorText"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
                 tools:ignore="HardcodedText" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

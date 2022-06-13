@@ -79,14 +79,14 @@ class ShareActivity : BaseAppCompatActivity() {
         setLoading(true)
         viewModel.fetchUserOptionsAndMailboxes()
 
-        viewModel.error.observe(this, { error ->
+        viewModel.error.observe(this) { error ->
             if (error != null) {
                 toastError(error)
                 finish()
             }
-        })
+        }
 
-        viewModel.userOptions.observe(this, { userOptions ->
+        viewModel.userOptions.observe(this) { userOptions ->
             if (userOptions != null) {
                 setLoading(false)
 
@@ -103,9 +103,9 @@ class ShareActivity : BaseAppCompatActivity() {
                         .show()
                 }
             }
-        })
+        }
 
-        viewModel.selectedMailboxes.observe(this, { selectedMailboxes ->
+        viewModel.selectedMailboxes.observe(this) { selectedMailboxes ->
             if (selectedMailboxes != null) {
                 setLoading(false)
                 binding.mailboxesTextView.setText(
@@ -113,7 +113,7 @@ class ShareActivity : BaseAppCompatActivity() {
                     TextView.BufferType.SPANNABLE
                 )
             }
-        })
+        }
     }
 
     private fun setUpSuffixesSpinner(suffixes: List<String>) {

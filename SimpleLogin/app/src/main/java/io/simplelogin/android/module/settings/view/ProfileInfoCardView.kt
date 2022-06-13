@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import com.google.android.material.card.MaterialCardView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.LayoutProfileInfoCardViewBinding
 import io.simplelogin.android.utils.model.UserInfo

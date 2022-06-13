@@ -16,10 +16,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -28,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/colorText"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                style="@style/TextAppearance.Material3.ActionBar.Title"
                 tools:text="OTP Code" />
 
         </com.google.android.material.appbar.MaterialToolbar>

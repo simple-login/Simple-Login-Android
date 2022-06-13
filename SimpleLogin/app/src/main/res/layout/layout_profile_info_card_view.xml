@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?attr/textAppearanceCaption"
-                        android:textColor="@color/colorDarkGray"
+                        android:textColor="@color/colorControlNormal"
                         tools:text="email@example.com" />
 
                 </LinearLayout>

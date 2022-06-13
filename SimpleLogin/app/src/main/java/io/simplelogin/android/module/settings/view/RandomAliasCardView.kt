@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import com.google.android.material.card.MaterialCardView
 import io.simplelogin.android.databinding.LayoutRandomAliasCardViewBinding
 import io.simplelogin.android.databinding.SpinnerRowDomainLiteBinding
 import io.simplelogin.android.databinding.SpinnerRowTextOnlyBinding

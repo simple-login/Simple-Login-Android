@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorItemBackground">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,9 +24,9 @@
                 android:layout_marginStart="@dimen/margin_8"
                 android:text="Pick An Alias"
                 android:textColor="@color/colorText"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
                 tools:ignore="HardcodedText" />
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -37,7 +37,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:tabIndicator="@drawable/tab_indicator"
-            app:tabIndicatorFullWidth="false">
+            app:tabIndicatorFullWidth="false"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextColor="@color/colorControlNormal"
+            app:tabTextAppearance="@style/TabText">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/all_tab_item"
