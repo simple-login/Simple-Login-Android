@@ -7,7 +7,6 @@
         android:id="@+id/main_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
         <fragment
@@ -24,7 +23,6 @@
             android:layout_height="match_parent"
             android:background="@color/colorItemBackground"
             android:layout_gravity="start"
-            android:fitsSystemWindows="true"
             app:itemIconPadding="@dimen/margin_20"
             app:itemIconSize="22dp"
             app:headerLayout="@layout/menu_header"

@@ -44,7 +44,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:thumb="@drawable/switch_thumb"
-                app:track="@drawable/switch_track"/>
+                app:thumbTintMode="screen"
+                app:track="@drawable/switch_track"
+                app:trackTint="@color/switch_track_color_state"/>
         </RelativeLayout>
 
 </layout>

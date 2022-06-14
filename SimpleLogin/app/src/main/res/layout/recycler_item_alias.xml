@@ -130,7 +130,9 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:thumb="@drawable/switch_thumb"
-                            app:track="@drawable/switch_track" />
+                            app:thumbTintMode="screen"
+                            app:track="@drawable/switch_track"
+                            app:trackTint="@color/switch_track_color_state" />
 
                         <Space
                             android:layout_width="wrap_content"

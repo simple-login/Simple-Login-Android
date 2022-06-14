@@ -41,8 +41,8 @@
         <item name="android:textColor">@color/colorNegative</item>
     </style>
 
-    <style name="SLMaterialAlertButtonPositive" parent="Widget.Material3.Button.TextButton.Dialog.Flush">
-        <item name="android:fillColor">@color/colorPrimary</item>
+    <style name="SLMaterialAlertButtonPositive" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
