@@ -20,7 +20,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private lateinit var binding: FragmentAboutBinding
-    private var openFromLoginActivity: Boolean = false
+    private var openFromLoginActivity = true
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -29,8 +29,10 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
         savedInstanceState: Bundle?
     ): View {
         // Determine if this is opened from LoginActivity or HomeActivity
-        openFromLoginActivity =
-            findNavController().graph.arguments.getValue(OPEN_FROM_LOGIN_ACTIVITY).defaultValue as Boolean
+        val arguments = findNavController().graph.arguments
+        if (arguments.isNotEmpty()) {
+            openFromLoginActivity = arguments.getValue(OPEN_FROM_LOGIN_ACTIVITY).defaultValue as Boolean
+        }
 
         binding = FragmentAboutBinding.inflate(inflater)
 
