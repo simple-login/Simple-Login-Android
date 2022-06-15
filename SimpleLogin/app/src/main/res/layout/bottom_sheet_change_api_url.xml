@@ -20,10 +20,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -62,7 +63,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/apiUrlTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Current API URL"
@@ -82,16 +83,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="12dp"
+                android:textColor="@color/btn_text_color_state"
                 android:text="Apply change"
                 tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/resetButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Reset to default value"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>

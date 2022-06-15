@@ -157,33 +157,33 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun setUpViewModel() {
         viewModel = SettingsViewModel(requireContext())
 
-        viewModel.isFetching.observe(viewLifecycleOwner, { isFetching -> setLoading(isFetching) })
+        viewModel.isFetching.observe(viewLifecycleOwner) { isFetching -> setLoading(isFetching) }
 
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner) {
             it?.let { error ->
                 viewModel.onHandleErrorComplete()
                 context?.toastError(error)
                 findNavController().navigateUp()
             }
-        })
+        }
 
-        viewModel.eventUserInfoUpdated.observe(viewLifecycleOwner, { updated ->
+        viewModel.eventUserInfoUpdated.observe(viewLifecycleOwner) { updated ->
             if (updated) {
                 bind(viewModel.userInfo)
                 homeViewModel.setUserInfo(viewModel.userInfo)
                 viewModel.onHandleUserInfoUpdatedComplete()
             }
-        })
+        }
         val userInfo =
                 findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
         viewModel.setUserInfo(userInfo)
 
-        viewModel.evenUserSettingsUpdated.observe(viewLifecycleOwner, { updated ->
+        viewModel.evenUserSettingsUpdated.observe(viewLifecycleOwner) { updated ->
             if (updated) {
                 bind(viewModel.userSettings)
                 viewModel.onHandleUserSettingsUpdatedComplete()
             }
-        })
+        }
     }
 
     private fun alertModificationOptions() {

@@ -10,7 +10,7 @@
 
         <!--Toolbar-->
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,10 +25,10 @@
                 android:layout_gravity="start"
                 android:layout_marginStart="@dimen/margin_8"
                 android:text="Create Alias"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
                 android:textColor="@color/colorText"
                 tools:ignore="HardcodedText" />
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
             android:id="@+id/rootLinearLayout"
@@ -147,7 +147,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
@@ -196,7 +196,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
@@ -215,12 +215,13 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/createButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:enabled="false"
                 android:text="Create"
+                android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
             <TextView

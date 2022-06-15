@@ -65,14 +65,14 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setLoading(true)
         viewModel.fetchUserOptionsAndMailboxes()
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 context?.toastError(error)
                 findNavController().navigateUp()
             }
-        })
+        }
 
-        viewModel.userOptions.observe(viewLifecycleOwner, { userOptions ->
+        viewModel.userOptions.observe(viewLifecycleOwner) { userOptions ->
             if (userOptions != null) {
                 setLoading(false)
 
@@ -90,9 +90,9 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         .show()
                 }
             }
-        })
+        }
 
-        viewModel.selectedMailboxes.observe(viewLifecycleOwner, { selectedMailboxes ->
+        viewModel.selectedMailboxes.observe(viewLifecycleOwner) { selectedMailboxes ->
             if (selectedMailboxes != null) {
                 setLoading(false)
                 binding.mailboxesTextView.setText(
@@ -100,7 +100,7 @@ class AliasCreateFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     TextView.BufferType.SPANNABLE
                 )
             }
-        })
+        }
 
         return binding.root
     }

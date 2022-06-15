@@ -57,12 +57,12 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun setUpViewModel() {
-        viewModel.eventUserInfoUpdated.observe(this, { updated ->
+        viewModel.eventUserInfoUpdated.observe(this) { updated ->
             if (updated) {
                 updateHeaderView()
                 viewModel.onHandleUserInfoUpdateComplete()
             }
-        })
+        }
         // Retrieve UserInfo from intent
         val userInfo = intent.getParcelableExtra(USER_INFO) as? UserInfo
             ?: throw IllegalStateException("UserInfo can not be null")

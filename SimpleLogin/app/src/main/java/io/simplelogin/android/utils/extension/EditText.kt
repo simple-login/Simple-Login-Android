@@ -1,12 +1,8 @@
 package io.simplelogin.android.utils.extension
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
-import android.text.InputType
 import android.view.MotionEvent
 import android.widget.EditText
-import androidx.core.content.ContextCompat
-import io.simplelogin.android.R
 
 fun EditText.placeCursorToEnd() = setSelection(text.length)
 

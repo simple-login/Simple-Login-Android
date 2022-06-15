@@ -15,7 +15,7 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="mailto" />
 
-            <category android:name="android.intent.category.DEFAULT" />
+            <!--<category android:name="android.intent.category.DEFAULT" />-->
             <category android:name="android.intent.category.BROWSABLE" />
         </intent>
     </queries>
@@ -28,7 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".module.startup.StartupActivity">
+        <activity android:name=".module.startup.StartupActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,7 +60,8 @@
         <activity android:name=".module.login.AboutActivity" />
 
         <!--ShareActivity-->
-        <activity android:name=".module.share.ShareActivity">
+        <activity android:name=".module.share.ShareActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

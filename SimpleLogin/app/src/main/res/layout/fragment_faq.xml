@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="Frequently Asked Questions"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:textAppearance="@style/TextAppearance.Material3.ActionBar.Title"
                 android:textColor="@color/colorText"
                 tools:ignore="HardcodedText" />
 

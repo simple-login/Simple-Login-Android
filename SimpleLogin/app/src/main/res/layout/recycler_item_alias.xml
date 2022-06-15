@@ -42,7 +42,7 @@
                         android:textAppearance="?attr/textAppearanceSubtitle2"
                         android:textColor="@color/colorText"
                         tools:text="yautiden@gmail.com"
-                        android:textSize="15.5sp"/>
+                        android:textSize="16sp"/>
 
                     <TextView
                         android:id="@+id/creationDateTextView"
@@ -55,7 +55,8 @@
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="?attr/colorControlNormal"
                         app:drawableTint="?attr/colorControlNormal"
-                        tools:text="Created 3 days ago" />
+                        tools:text="Created 3 days ago"
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/countsTextView"
@@ -73,7 +74,8 @@
                         app:autoSizeMinTextSize="9sp"
                         app:autoSizeStepGranularity="2sp"
                         app:autoSizeTextType="uniform"
-                        tools:text="0 forward, 0 block, 1 reply" />
+                        tools:text="0 forward, 0 block, 1 reply"
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/mailboxesTextView"
@@ -87,7 +89,8 @@
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="?attr/colorControlNormal"
                         app:drawableTint="?attr/colorControlNormal"
-                        tools:text="email@example.com" />
+                        tools:text="email@example.com"
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/nameTextView"
@@ -100,7 +103,8 @@
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="?attr/colorControlNormal"
                         app:drawableTint="?attr/colorControlNormal"
-                        tools:text="John Doe" />
+                        tools:text="John Doe"
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/noteTextView"
@@ -111,7 +115,8 @@
                         android:paddingTop="5dp"
                         android:textAppearance="?attr/textAppearanceBody2"
                         android:textColor="@color/colorText"
-                        tools:text="Alias note" />
+                        tools:text="Alias note"
+                        android:textSize="15sp"/>
 
                     <LinearLayout
                         android:id="@+id/actionsLinearLayout"
@@ -125,7 +130,9 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:thumb="@drawable/switch_thumb"
-                            app:track="@drawable/switch_track" />
+                            app:thumbTintMode="screen"
+                            app:track="@drawable/switch_track"
+                            app:trackTint="@color/switch_track_color_state" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -138,7 +145,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Copy"
-                            android:textAppearance="?attr/textAppearanceCaption"
+                            android:textSize="14sp"
+                            android:textAllCaps="false"
                             app:icon="@drawable/ic_copy_24dp"
                             tools:ignore="HardcodedText" />
 
@@ -154,7 +162,8 @@
                             android:layout_height="wrap_content"
                             android:padding="0dp"
                             android:text="Send Email"
-                            android:textAppearance="?attr/textAppearanceCaption"
+                            android:textSize="14sp"
+                            android:textAllCaps="false"
                             app:icon="@drawable/ic_send_28dp"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>

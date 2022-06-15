@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import com.google.android.material.card.MaterialCardView
 import io.simplelogin.android.databinding.LayoutForceDarkModeCardViewBinding
 
 class ForceDarkModeCardView : RelativeLayout {

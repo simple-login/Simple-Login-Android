@@ -94,16 +94,16 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private fun setUpViewModel() {
         viewModel = MailboxListViewModel(requireContext())
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 setLoading(false)
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
 
-        viewModel.eventUpdateMailboxes.observe(viewLifecycleOwner, { haveNewMailboxes ->
+        viewModel.eventUpdateMailboxes.observe(viewLifecycleOwner) { haveNewMailboxes ->
             activity?.runOnUiThread {
                 setLoading(false)
 
@@ -119,9 +119,9 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
-        })
+        }
 
-        viewModel.createdMailbox.observe(viewLifecycleOwner, { createdMailbox ->
+        viewModel.createdMailbox.observe(viewLifecycleOwner) { createdMailbox ->
             activity?.runOnUiThread {
                 setLoading(false)
                 if (createdMailbox != null) {
@@ -129,7 +129,7 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                     viewModel.onHandleCreatedMailboxComplete()
                 }
             }
-        })
+        }
     }
 
     private fun setUpRecyclerView() {

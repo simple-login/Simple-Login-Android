@@ -79,7 +79,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
         viewModel = tempViewModel
         viewModel.fetchActivities()
-        viewModel.eventHaveNewActivities.observe(viewLifecycleOwner, { haveNewActivities ->
+        viewModel.eventHaveNewActivities.observe(viewLifecycleOwner) { haveNewActivities ->
             activity?.runOnUiThread {
                 showLoadingFooter(false)
 
@@ -93,9 +93,9 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     binding.swipeRefreshLayout.isRefreshing = false
                 }
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 setLoading(false)
                 showLoadingFooter(true)
@@ -103,15 +103,15 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
 
-        viewModel.eventUpdateMetadata.observe(viewLifecycleOwner, { metadataUpdated ->
+        viewModel.eventUpdateMetadata.observe(viewLifecycleOwner) { metadataUpdated ->
             if (metadataUpdated) {
                 setLoading(false)
                 headerAdapter.notifyDataSetChanged()
                 viewModel.onHandleUpdateMetadataComplete()
             }
-        })
+        }
     }
 
     @Suppress("MagicNumber")

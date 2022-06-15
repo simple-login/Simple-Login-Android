@@ -2,6 +2,7 @@ package io.simplelogin.android.module.alias
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -83,7 +84,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
         if (viewModel.needsShowPricing) {
             // Delay here waiting for AliasCreateFragment finish navigateUp()
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 navigateToPricingPage()
             }, 100)
 
@@ -104,27 +105,27 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
     @Suppress("MaxLineLength")
     private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
-            viewLifecycleOwner,
-            { updatedAliases ->
-                activity?.runOnUiThread {
-                    setLoading(false)
-                    if (updatedAliases) {
-                        showLoadingFooter(false)
-                        // filteredAliases.toMutableList() to make the recyclerView updates itself
-                        // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
-                        aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
+            viewLifecycleOwner
+        ) { updatedAliases ->
+            activity?.runOnUiThread {
+                setLoading(false)
+                if (updatedAliases) {
+                    showLoadingFooter(false)
+                    // filteredAliases.toMutableList() to make the recyclerView updates itself
+                    // it not, we have to call adapter.notifyDataSetChanged() which breaks the animation. ListAdapter bug?
+                    aliasListAdapter.submitList(viewModel.filteredAliases.toMutableList())
 
-                        viewModel.onEventUpdateAliasesComplete()
+                    viewModel.onEventUpdateAliasesComplete()
 
-                        if (binding.swipeRefreshLayout.isRefreshing) {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            context?.toastUpToDate()
-                        }
+                    if (binding.swipeRefreshLayout.isRefreshing) {
+                        binding.swipeRefreshLayout.isRefreshing = false
+                        context?.toastUpToDate()
                     }
                 }
-            })
+            }
+        }
 
-        viewModel.toggledAliasIndex.observe(viewLifecycleOwner, { toggledAliasIndex ->
+        viewModel.toggledAliasIndex.observe(viewLifecycleOwner) { toggledAliasIndex ->
             if (toggledAliasIndex != null) {
                 activity?.runOnUiThread {
                     setLoading(false)
@@ -132,17 +133,17 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     viewModel.onHandleToggleAliasComplete()
                 }
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
                 context?.toastError(error)
                 viewModel.onHandleErrorComplete()
                 binding.swipeRefreshLayout.isRefreshing = false
             }
-        })
+        }
 
-        viewModel.shouldActionOnMailToEmail.observe(viewLifecycleOwner, { shouldAction ->
+        viewModel.shouldActionOnMailToEmail.observe(viewLifecycleOwner) { shouldAction ->
             val mailToEmail = viewModel.mailToEmail ?: return@observe
             if (shouldAction) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
@@ -163,22 +164,22 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                     .show()
                 viewModel.onActionOnMailToEmailComplete()
             }
-        })
+        }
 
-        viewModel.mailFromAlias.observe(viewLifecycleOwner, { mailFromAlias ->
+        viewModel.mailFromAlias.observe(viewLifecycleOwner) { mailFromAlias ->
             if (mailFromAlias != null) {
                 viewModel.createContact(mailFromAlias)
             }
-        })
+        }
 
-        viewModel.createdContact.observe(viewLifecycleOwner, { createdContact ->
+        viewModel.createdContact.observe(viewLifecycleOwner) { createdContact ->
             activity?.runOnUiThread {
                 if (createdContact != null) {
                     activity?.alertReversableOptions(createdContact, viewModel.mailFromAlias.value)
                     viewModel.onHandleCreatedContactComplete()
                 }
             }
-        })
+        }
     }
 
     @Suppress("MagicNumber")
