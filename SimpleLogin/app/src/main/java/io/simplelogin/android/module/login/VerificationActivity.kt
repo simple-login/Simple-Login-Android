@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.Window
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,6 +30,8 @@ class VerificationActivity : BaseAppCompatActivity(), Window.Callback {
         const val API_KEY = "apiKey"
         const val ACCOUNT = "account"
     }
+
+    private val DELAY_AFTER_RESET_MS = 100L
 
     private lateinit var binding: ActivityVerificationBinding
     private lateinit var verificationMode: VerificationMode
@@ -122,14 +126,17 @@ class VerificationActivity : BaseAppCompatActivity(), Window.Callback {
     }
 
     private fun pasteAndVerify(code: String) {
-        code.asIterable().forEach { char ->
-            addNumber(char.toString())
-        }
+        reset()
+        Handler(Looper.getMainLooper()).postDelayed({
+            code.asIterable().forEach { char ->
+                addNumber(char.toString(), false)
+            }
 
-        verify(code)
+            verify(code)
+        }, DELAY_AFTER_RESET_MS)
     }
 
-    private fun addNumber(number: String) {
+    private fun addNumber(number: String, launchVerify: Boolean = true) {
         when {
             binding.firstNumberTextView.text == dash -> {
                 binding.firstNumberTextView.text = number
@@ -149,7 +156,9 @@ class VerificationActivity : BaseAppCompatActivity(), Window.Callback {
                 code += binding.fifthNumberTextView.text
                 code += binding.sixthNumberTextView.text
 
-                verify(code)
+                if (launchVerify) {
+                    verify(code)
+                }
             }
         }
     }
