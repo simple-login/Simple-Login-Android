@@ -1,0 +1,1 @@
+Fix TOTP bug when pasting from clipboard with existing content
