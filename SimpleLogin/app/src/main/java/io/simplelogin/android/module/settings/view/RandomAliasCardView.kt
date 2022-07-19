@@ -103,7 +103,7 @@ class DefaultDomainSpinnerAdapter(
         }
         val domainLite = getItem(position)
         binding.domainNameTextView.text = domainLite.name
-        binding.ownerTextView.text = if (domainLite.isCustom) "Your domain" else "SimpleLogin login"
+        binding.ownerTextView.text = if (domainLite.isCustom) "Your domain" else "SimpleLogin provided domain"
         return view
     }
 }
