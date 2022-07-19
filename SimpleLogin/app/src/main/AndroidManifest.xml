@@ -52,7 +52,7 @@
         <activity
             android:name=".module.home.HomeActivity"
             android:theme="@style/HomeActivityTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".module.startup.LocalAuthActivity" />
         <activity android:name=".module.login.LoginActivity" />
         <activity android:name=".module.login.VerificationActivity" />
