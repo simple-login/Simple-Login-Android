@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
                     android:paddingTop="10dp"
-                    android:text="15 aliases"
+                    android:text="10 aliases"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
