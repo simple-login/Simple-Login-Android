@@ -107,6 +107,7 @@
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="5dp"
                         android:text="The mailboxes that own this alias"
+                        android:textAlignment="textEnd"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@color/colorDarkGray"
                         tools:ignore="HardcodedText" />
@@ -148,6 +149,7 @@
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="5dp"
                         android:text="Display name when sending &amp; replying (optional)"
+                        android:textAlignment="textEnd"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@color/colorDarkGray"
                         tools:ignore="HardcodedText" />
@@ -197,6 +199,7 @@
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="5dp"
                         android:text="Anything to remind you (optional)"
+                        android:textAlignment="textEnd"
                         android:textAppearance="?attr/textAppearanceCaption"
                         android:textColor="@color/colorDarkGray"
                         tools:ignore="HardcodedText" />
