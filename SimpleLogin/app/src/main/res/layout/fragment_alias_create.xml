@@ -39,6 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
+
             <LinearLayout
                 android:id="@+id/rootLinearLayout"
                 android:layout_width="match_parent"
@@ -128,7 +129,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="5dp">
+                    android:paddingVertical="5dp"
+                    android:weightSum="5">
 
                     <TextView
                         android:layout_width="0dp"
@@ -140,8 +142,9 @@
                         tools:ignore="HardcodedText" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="4"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="5dp"
                         android:text="Display name when sending &amp; replying (optional)"
