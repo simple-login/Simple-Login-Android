@@ -73,21 +73,47 @@
                             android:textColor="@color/colorText" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.button.MaterialButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/loginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="24dp"
+                        android:elevation="0dp"
+                        android:text="Sign in"
+                        android:background="@color/colorPrimary"
+                        android:textColor="@color/colorWhite"
+
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="or"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        tools:ignore="HardcodedText" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/loginWithProtonButton"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:padding="12dp"
-                        android:text="Sign in"
-                        android:textColor="@color/btn_text_color_state"
-                        tools:ignore="HardcodedText" />
+                        android:elevation="0dp"
+                        android:text="Log in with Proton"
+                        android:textColor="@color/protonMain"
+                        android:background="@drawable/button_border_proton"
+                        android:drawableStart="@drawable/ic_proton"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        tools:ignore="HardcodedText"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
                         android:weightSum="2">
 
                         <com.google.android.material.button.MaterialButton

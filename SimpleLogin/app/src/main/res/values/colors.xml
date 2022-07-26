@@ -19,4 +19,5 @@
     <color name="rippleColor">#EBEBEB</color>
     <color name="dividerColor">#DBDCE0</color>
     <color name="switchTrackColor">#C0C1C3</color>
+    <color name="protonMain">#6D4AFF</color>
 </resources>

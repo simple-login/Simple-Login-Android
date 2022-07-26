@@ -54,7 +54,22 @@
             android:theme="@style/HomeActivityTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".module.startup.LocalAuthActivity" />
-        <activity android:name=".module.login.LoginActivity" />
+
+        <!--
+            - exported="true": Needed for responding to external intents
+            - launchMode="singleTop": Reuse the same LoginActivity instance when receiving the auth.simplelogin callback
+        -->
+        <activity android:name=".module.login.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="auth.simplelogin"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".module.login.VerificationActivity" />
         <activity android:name=".module.login.SignUpActivity" />
         <activity android:name=".module.login.AboutActivity" />

@@ -3,22 +3,28 @@ package io.simplelogin.android.module.login
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
+import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.*
 import io.simplelogin.android.utils.extension.*
+import io.simplelogin.android.utils.model.UserInfo
 import io.simplelogin.android.utils.model.UserLogin
+
 
 class LoginActivity : BaseAppCompatActivity() {
     companion object {
@@ -30,7 +36,6 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private lateinit var binding: ActivityLoginBinding
-    private var isShowingPassword = false
 
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
@@ -90,6 +95,10 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.loginButton.isEnabled = false // disable login button by default
         binding.loginButton.setOnClickListener { login() }
 
+        binding.loginWithProtonButton.setOnClickListener {
+            loginWithProton()
+        }
+
         // Sign up
         binding.signUpButton.setOnClickListener {
             val signUpIntent = Intent(this, SignUpActivity::class.java)
@@ -130,6 +139,19 @@ class LoginActivity : BaseAppCompatActivity() {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
+    }
+
+    /**
+     * Callback for when the Login with Proton process is done.
+     * The Login with Proton will redirect the user to
+     * auth.simplelogin://callback?apikey=YOUR_API_KEY
+     *
+     * (The intent-filter is registered on the AndroidManifest.xml)
+     */
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val apiKey = intent?.data?.getQueryParameter("apikey")
+        apiKey?.let { onApiKey(it) }
     }
 
     private fun setUpForgotPasswordBottomSheet() {
@@ -247,7 +269,8 @@ class LoginActivity : BaseAppCompatActivity() {
             SLApiService.fetchUserInfo(enteredApiKey) { result ->
                 runOnUiThread {
                     setLoading(false)
-                    result.onSuccess { finalizeLogin(enteredApiKey) }
+                    SLSharedPreferences.setApiKey(this, enteredApiKey)
+                    result.onSuccess { finalizeLogin(it) }
                     result.onFailure(::toastThrowable)
                 }
             }
@@ -318,7 +341,7 @@ class LoginActivity : BaseAppCompatActivity() {
             RC_MFA_VERIFICATION ->
                 if (resultCode == Activity.RESULT_OK) {
                     val apiKey = data?.getStringExtra(VerificationActivity.API_KEY)
-                    apiKey?.let { finalizeLogin(it) }
+                    apiKey?.let { onApiKey(it) }
                 }
 
             RC_EMAIL_VERIFICATION ->
@@ -388,6 +411,20 @@ class LoginActivity : BaseAppCompatActivity() {
         }
     }
 
+    private fun loginWithProton() {
+        dismissKeyboard()
+        val baseUrl = SLSharedPreferences.getApiUrl(this)
+        val url = "${baseUrl}/auth/proton/login?mode=apikey"
+
+        val builder = CustomTabsIntent.Builder()
+            .setDefaultColorSchemeParams(CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(R.color.protonMain)
+                .build())
+
+        val customTabsIntent = builder.build()
+        customTabsIntent.launchUrl(this, Uri.parse(url))
+    }
+
     private fun setLoading(loading: Boolean) {
         binding.rootLinearLayout.customSetEnabled(!loading)
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
@@ -399,12 +436,24 @@ class LoginActivity : BaseAppCompatActivity() {
                 startVerificationActivity(VerificationMode.Mfa(MfaKey(it)))
             }
 
-            false -> userLogin.apiKey?.let { finalizeLogin(it) }
+            false -> userLogin.apiKey?.let { onApiKey(userLogin.apiKey) }
         }
     }
 
-    private fun finalizeLogin(apiKey: String) {
+    private fun onApiKey(apiKey: String) {
         SLSharedPreferences.setApiKey(this, apiKey)
+        SLApiService.fetchUserInfo(apiKey) { result ->
+            result.onSuccess(::finalizeLogin)
+            result.onFailure(::toastThrowable)
+        }
+    }
+
+    private fun finalizeLogin(userInfo: UserInfo) {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra(HomeActivity.USER_INFO, userInfo)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.stay_still)
         finish()
     }
 
