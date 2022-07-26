@@ -12,8 +12,8 @@ android {
         applicationId "io.simplelogin.android"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 11600
-        versionName "1.16.0"
+        versionCode 11700
+        versionName "1.17.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
