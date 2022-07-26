@@ -2,26 +2,21 @@ package io.simplelogin.android.module.login
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsServiceConnection
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.module.home.HomeActivity
-import io.simplelogin.android.module.startup.StartupActivity
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -41,7 +36,6 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     private lateinit var binding: ActivityLoginBinding
-    private var isShowingPassword = false
 
     // Forgot password
     private lateinit var forgotPasswordBottomSheetBehavior: BottomSheetBehavior<View>
