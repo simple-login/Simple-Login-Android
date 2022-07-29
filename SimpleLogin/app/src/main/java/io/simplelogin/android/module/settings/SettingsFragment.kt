@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
@@ -67,6 +68,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.newslettersCardView.visibility = GONE
         binding.randomAliasCardView.visibility = GONE
         binding.senderAddressFormatCardView.visibility = GONE
+        binding.deleteAccountCardView.visibility = GONE
         setUpViewModel()
         viewModel.fetchUserSettingsAndDomainLites()
 
@@ -127,6 +129,15 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 val option = UserSettings.Option.SenderFormatOption(selectedSenderFormat)
                 viewModel.updateUserSettings(option)
             }
+        }
+
+        // Delete account
+        binding.deleteAccountCardView.visibility = VISIBLE
+        binding.deleteAccountCardView.setDeleteAccountClickListener {
+            val baseUrl = SLSharedPreferences.getApiUrl(requireContext())
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("${baseUrl}/dashboard/delete_account")
+            startActivity(intent)
         }
     }
 
