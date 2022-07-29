@@ -3,6 +3,8 @@ package io.simplelogin.android.module.startup
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
@@ -19,7 +21,16 @@ class LocalAuthActivity : BaseAppCompatActivity() {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                resetSettingsAndRestartApp()
+                when (errorCode) {
+                    10 -> {
+                        // User dismissed the prompt => prompt again with 500ms delay
+                        // because Android doesn't allow multiple biometric prompts in a short period of time
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            locallyAuthenticate()
+                        }, 500L)
+                    }
+                    else -> resetSettingsAndRestartApp()
+                }
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
