@@ -3,6 +3,8 @@ package io.simplelogin.android.module.settings
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -58,10 +60,16 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         bindForceDarkMode()
 
         // Local Authentication
-        binding.localAuthenticationView.setOnSwitchChangedListener { isChecked ->
-            SLSharedPreferences.setShouldLocallyAuthenticate(requireContext(), isChecked)
+        (context?.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.let {
+            if (it.isDeviceSecure) {
+                binding.localAuthenticationView.setOnSwitchChangedListener { isChecked ->
+                    SLSharedPreferences.setShouldLocallyAuthenticate(requireContext(), isChecked)
+                }
+                binding.localAuthenticationView.bind(SLSharedPreferences.getShouldLocallyAuthenticate(requireContext()))
+            } else {
+                binding.localAuthenticationView.visibility = GONE
+            }
         }
-        binding.localAuthenticationView.bind(SLSharedPreferences.getShouldLocallyAuthenticate(requireContext()))
 
         // Other options
         binding.newslettersCardView.visibility = GONE
