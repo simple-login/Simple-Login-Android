@@ -10,4 +10,5 @@
     <dimen name="margin_10">10dp</dimen>
     <dimen name="margin_15">15dp</dimen>
     <dimen name="margin_20">20dp</dimen>
+    <dimen name="local_auth_logo_padding_top">48dp</dimen>
 </resources>
