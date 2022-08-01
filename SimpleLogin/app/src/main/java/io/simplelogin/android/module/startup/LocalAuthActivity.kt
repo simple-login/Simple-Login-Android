@@ -3,17 +3,21 @@ package io.simplelogin.android.module.startup
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.simplelogin.android.databinding.ActivityLocalAuthBinding
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 
 class LocalAuthActivity : BaseAppCompatActivity() {
+    private lateinit var binding: ActivityLocalAuthBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityLocalAuthBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         locallyAuthenticate()
     }
 
@@ -21,16 +25,7 @@ class LocalAuthActivity : BaseAppCompatActivity() {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                when (errorCode) {
-                    10 -> {
-                        // User dismissed the prompt => prompt again with 500ms delay
-                        // because Android doesn't allow multiple biometric prompts in a short period of time
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            locallyAuthenticate()
-                        }, 500L)
-                    }
-                    else -> resetSettingsAndRestartApp()
-                }
+                authenticateAgainPrompt()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -41,7 +36,7 @@ class LocalAuthActivity : BaseAppCompatActivity() {
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
-                resetSettingsAndRestartApp()
+                authenticateAgainPrompt()
             }
         }
 
@@ -53,6 +48,15 @@ class LocalAuthActivity : BaseAppCompatActivity() {
 
         val executor = ContextCompat.getMainExecutor(this)
         BiometricPrompt(this, executor, callback).authenticate(promptInfo)
+    }
+
+    private fun authenticateAgainPrompt() {
+        MaterialAlertDialogBuilder(this)
+            .setCancelable(false)
+            .setTitle("Failed to authenticate")
+            .setPositiveButton("Try again") { _, _ -> locallyAuthenticate() }
+            .setNegativeButton("Sign out") { _, _ -> resetSettingsAndRestartApp() }
+            .show()
     }
 
     private fun resetSettingsAndRestartApp(){
