@@ -23,14 +23,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/newletters"
+                    android:text="@string/newsletter"
                     android:textAppearance="?attr/textAppearanceSubtitle2"
                     android:textColor="@color/colorText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/newletters_explication" />
+                    android:text="@string/newsletter_explication" />
 
             </LinearLayout>
 
