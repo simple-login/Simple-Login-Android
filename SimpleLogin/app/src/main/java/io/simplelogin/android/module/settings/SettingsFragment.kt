@@ -120,8 +120,9 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
 
         binding.connectWithProtonCardView.setOnUnlinkButtonClickListener {
-            // TODO: Add confirmation dialog
-            viewModel.unlinkProtonAccount()
+            alertUnlinkProtonAccount {
+                viewModel.unlinkProtonAccount()
+            }
         }
     }
 
@@ -264,6 +265,15 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
                     }
                 }
                 .show()
+    }
+
+    private fun alertUnlinkProtonAccount(onConfirm: () -> Unit) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
+            .setTitle(R.string.proton_unlink_account_confirmation_title)
+            .setMessage(R.string.proton_unlink_account_confirmation_content)
+            .setNegativeButton(R.string.dialog_cancel_button, null)
+            .setPositiveButton(R.string.dialog_confirm_button) { _, _ -> onConfirm()}
+            .show()
     }
 
     private fun askForPhotoLibraryPermission() {

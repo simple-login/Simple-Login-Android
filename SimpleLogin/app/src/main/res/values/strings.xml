@@ -56,10 +56,14 @@
     <string name="simple_login_logo">SimpleLogin logo</string>
 
     <!-- Proton -->
-    <string name="proton_link_account">Unlink Proton account</string>
+    <string name="proton_link_account">Connect with Proton</string>
     <string name="proton_unlink_account">Unlink Proton account</string>
     <string name="your_proton_account_has_been_linked">Your Proton account has been successfully linked</string>
     <string name="your_proton_account_has_been_unlinked">Your Proton account has been unlinked</string>
     <string name="connect_with_proton_info_text">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\n\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>
     <string name="currently_linked_proton_account">Your account is currently linked to the Proton account %s</string>
+    <string name="proton_unlink_account_confirmation_title">@string/proton_unlink_account</string>
+    <string name="proton_unlink_account_confirmation_content">Do you really want to unlink your Proton account?</string>
+    <string name="dialog_confirm_button">Confirm</string>
+    <string name="dialog_cancel_button">Cancel</string>
 </resources>
