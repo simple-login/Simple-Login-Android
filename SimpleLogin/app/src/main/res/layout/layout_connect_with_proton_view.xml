@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:padding="@dimen/margin_15"
+        android:background="@drawable/card_shape_with_ripple"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/connectWithProtonButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:elevation="0dp"
+            android:textColor="@color/protonMain"
+            android:background="@drawable/button_border_proton"
+            android:drawableStart="@drawable/ic_proton"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/proton_link_account" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/unlinkProtonAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:elevation="0dp"
+            android:textColor="@color/protonMain"
+            android:background="@drawable/button_border_proton"
+            android:drawableStart="@drawable/ic_proton"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:visibility="gone"
+            android:text="@string/proton_unlink_account"/>
+
+        <TextView
+            android:id="@+id/connectWithProtonInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_with_proton_info_text"
+            android:paddingTop="8dp" />
+
+        <TextView
+            android:id="@+id/accountConnectedWithProtonText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</layout>

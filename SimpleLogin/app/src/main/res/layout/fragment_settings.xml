@@ -52,6 +52,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <io.simplelogin.android.module.settings.view.ConnectWithProtonView
+                    android:id="@+id/connect_with_proton_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <io.simplelogin.android.module.settings.view.ForceDarkModeCardView
                     android:id="@+id/force_dark_mode_card_view"
                     android:layout_width="match_parent"
