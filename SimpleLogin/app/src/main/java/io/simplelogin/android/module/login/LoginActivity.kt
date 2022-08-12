@@ -10,13 +10,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityLoginBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.LoginWithProtonUtils
 import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
@@ -413,16 +412,7 @@ class LoginActivity : BaseAppCompatActivity() {
 
     private fun loginWithProton() {
         dismissKeyboard()
-        val baseUrl = SLSharedPreferences.getApiUrl(this)
-        val url = "${baseUrl}/auth/proton/login?mode=apikey"
-
-        val builder = CustomTabsIntent.Builder()
-            .setDefaultColorSchemeParams(CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(R.color.protonMain)
-                .build())
-
-        val customTabsIntent = builder.build()
-        customTabsIntent.launchUrl(this, Uri.parse(url))
+        LoginWithProtonUtils.launchLoginWithProton(this)
     }
 
     private fun setLoading(loading: Boolean) {

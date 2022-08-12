@@ -10,5 +10,6 @@ data class UserInfo(
     @SerializedName("email") val email: String,
     @SerializedName("profile_picture_url") val profilePhotoUrl: String?,
     @SerializedName("is_premium") val isPremium: Boolean,
-    @SerializedName("in_trial") val inTrial: Boolean
+    @SerializedName("in_trial") val inTrial: Boolean,
+    @SerializedName("connected_proton_address") val connectedProtonAddress: String?
 ) : Parcelable

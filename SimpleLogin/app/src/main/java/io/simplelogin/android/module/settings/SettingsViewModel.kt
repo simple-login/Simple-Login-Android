@@ -8,6 +8,7 @@ import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.baseclass.BaseViewModel
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.DomainLite
+import io.simplelogin.android.utils.model.TemporaryToken
 import io.simplelogin.android.utils.model.UserInfo
 import io.simplelogin.android.utils.model.UserSettings
 
@@ -116,6 +117,26 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
         }
     }
 
+    fun refreshUserInfo(
+        ignoreIsFetching: Boolean = false,
+        onCompletion: () -> Unit = {}
+    ) {
+        if (!ignoreIsFetching) {
+            if (_isFetching.value == true) return
+            _isFetching.postValue(true)
+        }
+
+        SLApiService.fetchUserInfo(apiKey) { result ->
+            _isFetching.postValue(false)
+            result.onSuccess {
+                userInfo = it
+                onCompletion()
+            }
+            result.onFailure { _error.postValue(it as SLError) }
+            _eventUserInfoUpdated.postValue(true)
+        }
+    }
+
     // Update
     fun updateUserSettings(option: UserSettings.Option) {
         if (_isFetching.value == true) return
@@ -126,6 +147,40 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
             result.onSuccess { userSettings = it }
             result.onFailure { _error.postValue(it as SLError) }
             _evenUserSettingsUpdated.postValue(true)
+        }
+    }
+
+    // Unlink Proton account
+    private val _eventProtonAccountUnlinked = MutableLiveData<Boolean>()
+    val eventProtonAccountUnlinked: LiveData<Boolean>
+        get() = _eventProtonAccountUnlinked
+
+    fun unlinkProtonAccount() {
+        if (_isFetching.value == true) return
+        _isFetching.postValue(true)
+
+        SLApiService.unlinkProtonAccount(apiKey) { result ->
+            // Refresh the user info but do not take into account the isFetching value,
+            // as we don't want the loading dialog to flash
+            result.onSuccess {
+                refreshUserInfo(ignoreIsFetching = true) {
+                    _eventProtonAccountUnlinked.postValue(true)
+                }
+            }
+            result.onFailure {
+                _error.postValue(it as SLError)
+                _isFetching.postValue(false)
+            }
+        }
+    }
+
+    fun getTemporaryToken(completion: (TemporaryToken) -> Unit) {
+        if (_isFetching.value == true) return
+        _isFetching.postValue(true)
+        SLApiService.getTemporaryToken(apiKey) { result ->
+            result.onSuccess { completion(it) }
+            result.onFailure { _error.postValue(it as SLError) }
+            _isFetching.postValue(false)
         }
     }
 }

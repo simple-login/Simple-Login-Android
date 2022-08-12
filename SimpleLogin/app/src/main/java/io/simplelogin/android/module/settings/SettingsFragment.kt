@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -26,8 +27,10 @@ import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentSettingsBinding
 import io.simplelogin.android.module.home.HomeActivity
 import io.simplelogin.android.module.home.HomeViewModel
+import io.simplelogin.android.utils.LoginWithProtonUtils
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseFragment
+import io.simplelogin.android.utils.extension.runOnUiThread
 import io.simplelogin.android.utils.extension.toastError
 import io.simplelogin.android.utils.extension.toastShortly
 import io.simplelogin.android.utils.model.UserInfo
@@ -88,6 +91,15 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.contactsAccessView.updateSwitchState()
     }
 
+    fun onNewIntent(intent: Intent?) {
+        // Update the user info
+        viewModel.refreshUserInfo {
+            runOnUiThread {
+                Toast.makeText(requireContext(), R.string.your_proton_account_has_been_linked, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun bind(userInfo: UserInfo) {
         binding.profileInfoCardView.visibility = VISIBLE
         binding.profileInfoCardView.bind(userInfo)
@@ -95,6 +107,21 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             findNavController().navigate(
                     SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
             )
+        }
+
+        // Connected with Proton
+        binding.connectWithProtonCardView.bind(userInfo.connectedProtonAddress)
+        binding.connectWithProtonCardView.setOnConnectButtonClickListener {
+            viewModel.getTemporaryToken { token ->
+                context?.let { context ->
+                    LoginWithProtonUtils.launchLinkWithProton(context, token)
+                }
+            }
+        }
+
+        binding.connectWithProtonCardView.setOnUnlinkButtonClickListener {
+            // TODO: Add confirmation dialog
+            viewModel.unlinkProtonAccount()
         }
     }
 
@@ -201,6 +228,12 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             if (updated) {
                 bind(viewModel.userSettings)
                 viewModel.onHandleUserSettingsUpdatedComplete()
+            }
+        }
+
+        viewModel.eventProtonAccountUnlinked.observe(viewLifecycleOwner) { updated ->
+            if (updated) {
+                Toast.makeText(requireContext(), R.string.your_proton_account_has_been_unlinked, Toast.LENGTH_SHORT).show()
             }
         }
     }

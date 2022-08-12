@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SimpleLogin</string>
+    <string name="simplelogin_scheme" translatable="false">auth.simplelogin</string>
     <string name="facebook_app_id">388804475105146</string>
     <string name="fb_login_protocol_scheme">fb388804475105146</string>
     <string name="google_web_client_id">1015607994815-spepahv667u0o9f17nie3f9vuddhgp1p.apps.googleusercontent.com</string>
@@ -53,4 +54,12 @@
     <string name="sender_address_format_explication">Configure how incoming emails are formatted</string>
     <string name="sender_address_format_example">John Doe who uses john.doe@example.com to send you an email, how would you like to format his email?</string>
     <string name="simple_login_logo">SimpleLogin logo</string>
+
+    <!-- Proton -->
+    <string name="proton_link_account">Unlink Proton account</string>
+    <string name="proton_unlink_account">Unlink Proton account</string>
+    <string name="your_proton_account_has_been_linked">Your Proton account has been successfully linked</string>
+    <string name="your_proton_account_has_been_unlinked">Your Proton account has been unlinked</string>
+    <string name="connect_with_proton_info_text">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\n\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>
+    <string name="currently_linked_proton_account">Your account is currently linked to the Proton account %s</string>
 </resources>

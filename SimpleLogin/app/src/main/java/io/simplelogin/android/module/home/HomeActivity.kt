@@ -22,8 +22,10 @@ import com.google.android.material.navigation.NavigationView
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.ActivityHomeBinding
 import io.simplelogin.android.module.about.AboutFragment
+import io.simplelogin.android.module.settings.SettingsFragment
 import io.simplelogin.android.module.settings.view.AvatarView
 import io.simplelogin.android.module.startup.StartupActivity
+import io.simplelogin.android.utils.SLApiService
 import io.simplelogin.android.utils.SLSharedPreferences
 import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.extension.getVersionName
@@ -67,6 +69,19 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         val userInfo = intent.getParcelableExtra(USER_INFO) as? UserInfo
             ?: throw IllegalStateException("UserInfo can not be null")
         viewModel.setUserInfo(userInfo)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // In case we received a new intent is because the Connect with Proton worked
+        // Refresh the user info
+        if (supportFragmentManager.fragments.size == 0) return
+        val navHostFragment = supportFragmentManager.fragments[0] as? NavHostFragment ?: return
+        val settingsFragment = navHostFragment.childFragmentManager.fragments.find { it is SettingsFragment }
+        if (settingsFragment != null) {
+            val casted = settingsFragment as SettingsFragment
+            casted.onNewIntent(intent)
+        }
     }
 
     override fun onBackPressed() {

@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.simplelogin.android.utils.SLApiService
+import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.UserInfo
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {

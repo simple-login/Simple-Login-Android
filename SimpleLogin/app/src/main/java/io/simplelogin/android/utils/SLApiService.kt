@@ -316,6 +316,41 @@ object SLApiService {
             }
         })
     }
+
+    fun getTemporaryToken(
+        apiKey: String,
+        completion: (Result<TemporaryToken>) -> Unit
+    ) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/user/cookie_token")
+            .header("Authentication", apiKey)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        val jsonString = response.body.string()
+                        val responseToken = Gson().fromJson(jsonString, TemporaryToken::class.java)
+                        if (responseToken != null) {
+                            completion(Result.success(responseToken))
+                        } else {
+                            completion(Result.failure(SLError.FailedToParse(TemporaryToken::class.java)))
+                        }
+                    }
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
 
     //region Alias
@@ -1154,6 +1189,33 @@ object SLApiService {
                         } else {
                             completion(Result.failure(SLError.NoData))
                         }
+                    }
+
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
+
+    fun unlinkProtonAccount(apiKey: String, completion: (Result<Unit>) -> Unit) {
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/setting/unlink_proton_account")
+            .header("Authentication", apiKey)
+            .delete()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> {
+                        completion(Result.success(Unit))
                     }
 
                     401 -> completion(Result.failure(SLError.InvalidApiKey))
