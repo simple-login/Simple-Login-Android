@@ -12,10 +12,10 @@ And many more features in active development.
 
 ********************************************************************************************
 
-<p><b>SimpleLogin</b> is an open source solution to protect your email inbox. It allows you to create quickly a random email address (aka alias). All emails sent to an alias is forwarded to your personal email address. You can use the alias when subscribing to a newsletter, signing up for a new account, giving your email to someone you don't trust. Not only an alias can receive emails, it can also send emails. An alias is a full-fledged email address. Later if you can simply block or delete an alias if it's too spammy.</p>
+<p><b>SimpleLogin</b> is an open source solution to protect your email inbox. It allows you to create quickly a random email address (aka alias). All emails sent to an alias are forwarded to your personal email address. You can use the alias when subscribing to a newsletter, signing up for a new account, giving your email to someone you don't trust. Not only an alias can receive emails, it can also send emails. An alias is a full-fledged email address. Later you can simply block or delete an alias if it's too spammy.</p>
 
 <b>Why SimpleLogin?</b>
-When you give away your personal email online, there is a good chance that your email address would end up with a spammer or a hacker. SimpleLogin acts as a firewall for to protect your personal email inbox.
+When you give away your personal email online, there is a good chance that your email address would end up with a spammer or a hacker. SimpleLogin acts as a firewall to protect your personal email inbox.
 
 <b>What distinguishes SimpleLogin:</b>
 
