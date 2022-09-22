@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.FragmentContactListBinding
 import io.simplelogin.android.module.home.HomeActivity
+import io.simplelogin.android.utils.LoadingFooterAdapter
 import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
@@ -39,9 +41,10 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     private lateinit var binding: FragmentContactListBinding
     private lateinit var alias: Alias
     private lateinit var viewModel: ContactListViewModel
-    private lateinit var adapter: ContactListAdapter
+    private lateinit var contactListAdapter: ContactListAdapter
     private lateinit var howToBottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var createContactBottomSheetBehavior: BottomSheetBehavior<View>
+    private val footerAdapter = LoadingFooterAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,8 +70,8 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     override fun onResume() {
         super.onResume()
         // On configuration change, force trigger refresh recyclerView
-        if (adapter.itemCount == 0 && viewModel.contacts.isNotEmpty()) {
-            adapter.submitList(viewModel.contacts)
+        if (contactListAdapter.itemCount == 0 && viewModel.contacts.isNotEmpty()) {
+            contactListAdapter.submitList(viewModel.contacts)
             updateUiBaseOnNumOfContacts()
         }
     }
@@ -79,6 +82,11 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.icebergImageView.visibility =
             if (loading) View.GONE else if (viewModel.contacts.isEmpty()) View.VISIBLE else View.GONE
         binding.instructionTextView.visibility = binding.icebergImageView.visibility
+    }
+
+    private fun showLoadingFooter(showing: Boolean) {
+        footerAdapter.isLoading = showing
+        footerAdapter.notifyDataSetChanged()
     }
 
     private fun updateUiBaseOnNumOfContacts() {
@@ -207,8 +215,9 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel.eventHaveNewContacts.observe(viewLifecycleOwner) { haveNewContacts ->
             activity?.runOnUiThread {
                 setLoading(false)
+                showLoadingFooter(false)
                 if (haveNewContacts) {
-                    adapter.submitList(viewModel.contacts)
+                    contactListAdapter.submitList(viewModel.contacts.toMutableList())
                 }
 
                 if (binding.swipeRefreshLayout.isRefreshing) {
@@ -269,19 +278,19 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         viewModel.eventFinishTogglingContact.observe(viewLifecycleOwner) { finishTogglingContact ->
             if (finishTogglingContact) {
                 setLoading(false)
-                adapter.notifyDataSetChanged()
+                contactListAdapter.notifyDataSetChanged()
                 viewModel.onHandleToggledContactComplete()
             }
         }
     }
 
     private fun setUpRecyclerView() {
-        adapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
+        contactListAdapter = ContactListAdapter(object : ContactListAdapter.ClickListener {
             override fun onClick(contact: Contact) {
                 alertContactOptions(contact)
             }
         })
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = ConcatAdapter(contactListAdapter, footerAdapter)
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
@@ -290,6 +299,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1
                 if (isPenultimateItem && viewModel.moreToLoad) {
+                    showLoadingFooter(true)
                     viewModel.fetchContacts()
                 }
             }
