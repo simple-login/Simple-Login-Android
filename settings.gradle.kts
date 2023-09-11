@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SimpleLogin"
 include(":app")
+include(":simplelogin:feature-login:impl")
