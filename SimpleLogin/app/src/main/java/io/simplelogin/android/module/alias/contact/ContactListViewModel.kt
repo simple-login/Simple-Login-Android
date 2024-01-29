@@ -77,16 +77,26 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
     }
 
     fun create(email: String) {
-        SLApiService.createContact(apiKey, alias, email) { result ->
-            _eventFinishCallingCreateContact.postValue(true)
-            result.onSuccess { contact ->
-                if (contact.existed) {
-                    _error.postValue(SLError.DuplicatedContact)
+        SLApiService.fetchUserInfo(apiKey) { userInfoResult ->
+            userInfoResult.onSuccess { userInfo ->
+                if (userInfo.canCreateReverseAlias) {
+                    SLApiService.createContact(apiKey, alias, email) { result ->
+                        _eventFinishCallingCreateContact.postValue(true)
+                        result.onSuccess { contact ->
+                            if (contact.existed) {
+                                _error.postValue(SLError.DuplicatedContact)
+                            } else {
+                                _eventCreatedContact.postValue(email)
+                            }
+                        }
+                        result.onFailure { _error.postValue(it as SLError) }
+                    }
                 } else {
-                    _eventCreatedContact.postValue(email)
+                    _error.postValue(SLError.CanNotCreateContacts)
                 }
             }
-            result.onFailure { _error.postValue(it as SLError) }
+
+            userInfoResult.onFailure { _error.postValue(it as SLError)  }
         }
     }
 
