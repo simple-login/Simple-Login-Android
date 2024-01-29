@@ -18,6 +18,7 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -47,6 +48,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var viewModel: SettingsViewModel
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -196,7 +198,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            intent?.let { startActivity(it) }
             activity?.finish()
         }
     }
@@ -320,6 +322,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         showLeftMenu()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == PHOTO_LIBRARY_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
@@ -330,6 +333,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {

@@ -47,8 +47,6 @@ class StartupActivity : BaseAppCompatActivity()  {
         }
     }
 
-    override fun onBackPressed() = Unit
-
     private fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, RC_LOGIN_ACTIVITY)
@@ -105,6 +103,7 @@ class StartupActivity : BaseAppCompatActivity()  {
         return null
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

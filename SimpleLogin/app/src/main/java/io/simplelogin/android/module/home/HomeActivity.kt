@@ -84,7 +84,9 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        super.onBackPressed()
         if (binding.mainDrawer.isDrawerOpen(binding.navigationView)) {
             // When navigationView is already open and user press back
             // finish this activity with RESULT_CANCELED so that StartupActivity can finish itself to exit app

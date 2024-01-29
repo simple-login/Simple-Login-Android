@@ -128,7 +128,9 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.root.setOnClickListener { dismissKeyboard() }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        super.onBackPressed()
         forgotPasswordBottomSheetBehavior.hide()
         apiKeyBottomSheetBehavior.hide()
         changeApiUrlBottomSheetBehavior.hide()
@@ -333,6 +335,7 @@ class LoginActivity : BaseAppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
