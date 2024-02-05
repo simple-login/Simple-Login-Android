@@ -1,0 +1,4 @@
+Dependency updates.
+Adapt some behaviours to match new plan rules.
+Bug fixes and security improvements.
+Update Android targetSdk.
