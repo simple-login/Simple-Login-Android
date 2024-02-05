@@ -433,6 +433,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
             .show()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == RC_CONTACTS_ACCESS) {
             val contactData = data?.data ?: return

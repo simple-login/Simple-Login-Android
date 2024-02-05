@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="YOUR CURRENT SUPERPOWERS"
+                    android:text="YOUR CURRENT PLAN"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textColor="@color/colorPrimary"
                     tools:ignore="HardcodedText" />
@@ -73,18 +73,6 @@
                     android:drawablePadding="5dp"
                     android:paddingTop="5dp"
                     android:text="Unlimited bandwidth"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="@color/colorDarkGray"
-                    app:drawableTint="@color/colorDarkGray"
-                    tools:ignore="HardcodedText"
-                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="5dp"
-                    android:paddingTop="5dp"
-                    android:text="Unlimited reply/send from alias"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorDarkGray"
                     app:drawableTint="@color/colorDarkGray"
@@ -119,6 +107,18 @@
                     android:drawablePadding="5dp"
                     android:paddingTop="10dp"
                     android:text="Unlimited aliases"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="@color/colorText"
+                    app:drawableTint="@color/colorPrimary"
+                    tools:ignore="HardcodedText"
+                    app:drawableStartCompat="@drawable/ic_check_mark_16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:paddingTop="5dp"
+                    android:text="Unlimited reply/send from alias"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/colorText"
                     app:drawableTint="@color/colorPrimary"
