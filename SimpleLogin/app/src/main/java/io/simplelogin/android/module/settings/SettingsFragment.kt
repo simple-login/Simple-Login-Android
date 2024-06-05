@@ -18,6 +18,8 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.activityViewModels
@@ -39,10 +41,6 @@ import io.simplelogin.android.utils.model.UserSettings
 import java.io.ByteArrayOutputStream
 
 class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
-    companion object {
-        private const val PICK_PHOTO_REQUEST_CODE = 1000
-        private const val PHOTO_LIBRARY_PERMISSION_REQUEST_CODE = 1001
-    }
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var viewModel: SettingsViewModel
@@ -262,7 +260,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         arrayOf("Upload new photo", "Remove profile photo")
                 ) { _, itemIndex ->
                     when (itemIndex) {
-                        0 -> askForPhotoLibraryPermission()
+                        0 -> openPhotoPicker()
                         1 -> viewModel.removeProfilePhoto()
                     }
                 }
@@ -278,23 +276,19 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             .show()
     }
 
-    private fun askForPhotoLibraryPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
-            if (requireActivity().checkSelfPermission(readPermission) == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(readPermission), PHOTO_LIBRARY_PERMISSION_REQUEST_CODE)
-            } else {
-                openPhotoPicker()
-            }
-        } else {
-            openPhotoPicker()
-        }
-    }
-
     private fun openPhotoPicker() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
+        // Launch the photo picker and let the user choose only images.
+        pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+    }
+    
+    private fun onPhotoSelected(uri: Uri) {
+        val input = activity?.contentResolver?.openInputStream(uri)
+        val image = BitmapFactory.decodeStream(input)
+        val baos = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val byteArray = baos.toByteArray()
+        val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        viewModel.updateProfilePhoto(base64String)
     }
 
     private fun alertModifyDisplayName() {
@@ -321,33 +315,13 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     override fun onBackPressed() {
         showLeftMenu()
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == PHOTO_LIBRARY_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-                openPhotoPicker()
-            } else {
-                requireContext().toastShortly("Permission denied")
-            }
-        }
+    
+    // Registers a photo picker activity launcher in single-select mode.
+    private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        uri?.let { onPhotoSelected(it) } ?:
+        Toast.makeText(requireContext(), "No media selected", Toast.LENGTH_SHORT).show()
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_PHOTO_REQUEST_CODE ->
-                    data?.data?.let { uri ->
-                        val input = activity?.contentResolver?.openInputStream(uri)
-                        val image = BitmapFactory.decodeStream(input)
-                        val baos = ByteArrayOutputStream()
-                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                        val byteArray = baos.toByteArray()
-                        val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                        viewModel.updateProfilePhoto(base64String)
-                    }
-            }
-        }
-    }
+    
 }
