@@ -60,6 +60,8 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
         binding.noteTextView.text = alias.note
         binding.noteTextView.visibility = if (alias.note.isNullOrEmpty()) View.GONE else View.VISIBLE
 
+        binding.aliasPinnedImageView.visibility = if (alias.pinned) View.VISIBLE else View.GONE
+
         // Add click events
         binding.rootRelativeLayout.setOnClickListener { clickListener.onClick(alias) }
         binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, bindingAdapterPosition)  }

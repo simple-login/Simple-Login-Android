@@ -63,6 +63,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         if (viewModel.filteredAliases.isEmpty()) {
             viewModel.fetchAliases()
         }
+
         activity?.intent?.let { viewModel.getMailToEmail(it) }
 
         return binding.root
@@ -90,6 +91,9 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
 
             viewModel.onHandleShowPricingComplete()
         }
+
+        // Do not fetch more aliases on configuration changed
+        viewModel.refreshAliases()
     }
 
     private fun setLoading(loading: Boolean) {

@@ -737,6 +737,38 @@ object SLApiService {
             }
         })
     }
+
+    fun changeAliasPinStatus(
+        apiKey: String,
+        alias: Alias,
+        pinned: Boolean,
+        completion: (Result<Unit>) -> Unit
+    ) {
+        val requestBody = mapOf("pinned" to pinned).toRequestBody()
+
+        val request = Request.Builder()
+            .url("${BASE_URL}/api/aliases/${alias.id}")
+            .header("Authentication", apiKey)
+            .put(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                completion(Result.failure(SLError.UnknownError(e.notNullLocalizedMessage())))
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                when (response.code) {
+                    200 -> completion(Result.success(Unit))
+                    400 -> completion(Result.failure(SLError.from(response.body?.string())))
+                    401 -> completion(Result.failure(SLError.InvalidApiKey))
+                    500 -> completion(Result.failure(SLError.InternalServerError))
+                    502 -> completion(Result.failure(SLError.BadGateway))
+                    else -> completion(Result.failure(SLError.ResponseError(response.code)))
+                }
+            }
+        })
+    }
     //endregion
 
     //region Contact

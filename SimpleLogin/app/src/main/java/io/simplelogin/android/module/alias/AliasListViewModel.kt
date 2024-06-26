@@ -67,6 +67,7 @@ class AliasListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun refreshAliases() {
+        if (_isFetchingAliases) return
         currentPage = -1
         moreAliasesToLoad = true
         _aliases = mutableListOf()

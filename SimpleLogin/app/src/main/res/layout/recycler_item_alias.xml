@@ -34,15 +34,34 @@
                     android:layout_toStartOf="@+id/arrowImageView"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/emailTextView"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_4"
-                        android:textAppearance="?attr/textAppearanceSubtitle2"
-                        android:textColor="@color/colorText"
-                        tools:text="yautiden@gmail.com"
-                        android:textSize="16sp"/>
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/aliasPinnedImageView"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:visibility="gone"
+                            android:paddingEnd="8dp"
+                            android:src="@drawable/ic_pinned_24dp"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="Pinned alias" />
+
+
+                        <TextView
+                            android:id="@+id/emailTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_4"
+                            android:layout_toEndOf="@id/aliasPinnedImageView"
+                            android:layout_centerVertical="true"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="@color/colorText"
+                            tools:text="yautiden@gmail.com"
+                            android:textSize="16sp"/>
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/creationDateTextView"
