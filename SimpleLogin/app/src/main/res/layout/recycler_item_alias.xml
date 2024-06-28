@@ -45,6 +45,7 @@
                             android:visibility="gone"
                             android:paddingEnd="8dp"
                             android:src="@drawable/ic_pinned_24dp"
+                            app:tint="@color/colorPrimary"
                             android:layout_centerVertical="true"
                             android:contentDescription="Pinned alias" />
 

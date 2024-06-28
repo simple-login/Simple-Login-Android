@@ -3,14 +3,11 @@ package io.simplelogin.android.module.alias.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -294,7 +291,11 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                 binding.swipeRefreshLayout.isRefreshing = false
                 aliasListViewModel.updateAlias(viewModel.alias.copy(pinned = newValue))
 
-                result.onSuccess { refreshAlias() }
+                result.onSuccess {
+                    refreshAlias()
+                    val status = if (newValue) "pinned" else "unpinned"
+                    context?.toastShortly("Alias is $status")
+                }
 
                 result.onFailure(requireContext()::toastThrowable)
             }

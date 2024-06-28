@@ -6,6 +6,7 @@
         android:id="@+id/pinAliasMenuItem"
         android:icon="@drawable/ic_pinned_24dp"
         android:title="Pin alias"
+        app:iconTint="@color/colorPrimary"
         app:showAsAction="always"
         tools:ignore="HardcodedText" />
 </menu>
