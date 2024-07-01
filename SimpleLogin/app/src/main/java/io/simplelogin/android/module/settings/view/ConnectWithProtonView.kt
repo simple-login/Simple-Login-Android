@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import io.simplelogin.android.R
 import io.simplelogin.android.databinding.LayoutConnectWithProtonViewBinding
 
-class ConnectWithProtonView: RelativeLayout {
+class ConnectWithProtonView : RelativeLayout {
     // Initializer
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

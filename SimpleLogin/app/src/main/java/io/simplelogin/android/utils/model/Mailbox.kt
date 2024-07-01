@@ -3,7 +3,7 @@ package io.simplelogin.android.utils.model
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.utils.SLDateTimeFormatter
 
-data class Mailbox (
+data class Mailbox(
     @SerializedName("id") val id: Int,
     @SerializedName("email") val email: String,
     @SerializedName("default") val isDefault: Boolean,

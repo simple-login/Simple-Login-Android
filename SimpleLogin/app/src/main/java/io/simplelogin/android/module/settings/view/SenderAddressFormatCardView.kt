@@ -40,7 +40,12 @@ class SenderAddressFormatCardView : RelativeLayout {
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) = Unit
 
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     val selectedSenderFormat = senderAddressFormatSpinnerAdapter.getItem(position) as SenderFormat
                     listener(selectedSenderFormat)
                 }
@@ -56,7 +61,11 @@ class SenderAddressFormatSpinnerAdapter(
     override fun getItem(position: Int) = senderFormats[position]
     override fun getItemId(position: Int) = position.toLong()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup?
+    ): View {
         val view: View
         val binding: SpinnerRowTextOnlyBinding
         if (convertView == null) {

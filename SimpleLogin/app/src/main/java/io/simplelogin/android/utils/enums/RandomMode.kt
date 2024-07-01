@@ -15,12 +15,11 @@ enum class RandomMode(val parameterName: String, val position: Int) {
         }
 
     companion object {
-        fun fromPosition(position: Int) =
-            when {
-                UUID.position == position -> UUID
-                WORD.position == position -> WORD
-                else -> UUID
-            }
+        fun fromPosition(position: Int) = when {
+            UUID.position == position -> UUID
+            WORD.position == position -> WORD
+            else -> UUID
+        }
     }
 }
 
@@ -29,9 +28,8 @@ class RandomModeDeserializer : JsonDeserializer<RandomMode> {
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): RandomMode =
-        when (json?.asString) {
-            "word" -> RandomMode.WORD
-            else -> RandomMode.UUID
-        }
+    ): RandomMode = when (json?.asString) {
+        "word" -> RandomMode.WORD
+        else -> RandomMode.UUID
+    }
 }

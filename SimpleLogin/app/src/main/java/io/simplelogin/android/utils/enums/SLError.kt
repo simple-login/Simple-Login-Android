@@ -26,7 +26,7 @@ sealed class SLError(val description: String) : Throwable(description) {
     companion object {
         @Suppress("ReturnCount")
         // Required JSON syntax: { "error": "error message" }
-        fun from(errorJsonString: String?) : SLError {
+        fun from(errorJsonString: String?): SLError {
             if (errorJsonString == null) return NoData
 
             val errorMessage = Gson().fromJson(errorJsonString, ErrorMessage::class.java)

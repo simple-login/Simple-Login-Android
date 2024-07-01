@@ -18,7 +18,7 @@ buildscript {
 }
 
 plugins {
-    id("io.gitlab.arturbosch.detekt").version("1.14.2")
+    id("io.gitlab.arturbosch.detekt").version("1.23.6")
 }
 
 repositories {
@@ -27,10 +27,12 @@ repositories {
 }
 
 detekt {
-    toolVersion = "1.14.2"
+    toolVersion = "1.23.6"
     input = files(rootProject.rootDir)
     config = files("config/detekt/detekt.yml")
+    baseline = file("config/detekt/baseline.xml")
     buildUponDefaultConfig = true
+    autoCorrect = true
 
     reports {
         html {
@@ -50,4 +52,8 @@ allprojects {
 
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
 }

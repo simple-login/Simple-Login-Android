@@ -9,8 +9,7 @@ class LoadingFooterAdapter : RecyclerView.Adapter<LoadingViewHolder>() {
 
     override fun getItemCount() = if (isLoading) 1 else 0
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        LoadingViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LoadingViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: LoadingViewHolder, position: Int) = Unit
 }

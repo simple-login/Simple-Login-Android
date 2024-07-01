@@ -7,6 +7,5 @@ class AliasActivityDiffCallback : DiffUtil.ItemCallback<AliasActivity>() {
     override fun areItemsTheSame(oldItem: AliasActivity, newItem: AliasActivity): Boolean =
         oldItem.timestamp == newItem.timestamp
 
-    override fun areContentsTheSame(oldItem: AliasActivity, newItem: AliasActivity): Boolean =
-        oldItem == newItem
+    override fun areContentsTheSame(oldItem: AliasActivity, newItem: AliasActivity): Boolean = oldItem == newItem
 }

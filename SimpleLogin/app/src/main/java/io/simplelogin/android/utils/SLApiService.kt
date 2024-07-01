@@ -31,7 +31,7 @@ private fun Exception.notNullLocalizedMessage(): String {
 
 private val client = OkHttpClient()
 
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "TooManyFunctions")
 object SLApiService {
     private var BASE_URL: String = "https://app.simplelogin.io"
 
@@ -138,7 +138,11 @@ object SLApiService {
         })
     }
 
-    fun signUp(email: String, password: String, completion: (Result<Unit>) -> Unit) {
+    fun signUp(
+        email: String,
+        password: String,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf(
             "email" to email,
             "password" to password
@@ -167,7 +171,11 @@ object SLApiService {
         })
     }
 
-    fun verifyEmail(email: Email, code: String, completion: (Result<Unit>) -> Unit) {
+    fun verifyEmail(
+        email: Email,
+        code: String,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf(
             "email" to email.value,
             "code" to code
@@ -277,10 +285,7 @@ object SLApiService {
         })
     }
 
-    fun fetchUserOptions(
-        apiKey: String,
-        completion: (Result<UserOptions>) -> Unit
-    ) {
+    fun fetchUserOptions(apiKey: String, completion: (Result<UserOptions>) -> Unit) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/v5/alias/options")
             .header("Authentication", apiKey)
@@ -317,10 +322,7 @@ object SLApiService {
         })
     }
 
-    fun getTemporaryToken(
-        apiKey: String,
-        completion: (Result<TemporaryToken>) -> Unit
-    ) {
+    fun getTemporaryToken(apiKey: String, completion: (Result<TemporaryToken>) -> Unit) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/user/cookie_token")
             .header("Authentication", apiKey)
@@ -533,8 +535,8 @@ object SLApiService {
                         val jsonString = response.body?.string()
 
                         if (jsonString != null) {
-                            //val aliasListType = object : TypeToken<List<Alias>>() {}.type
-                            //val aliases = Gson().fromJson<List<Alias>>(jsonString, aliasListType)
+                            // val aliasListType = object : TypeToken<List<Alias>>() {}.type
+                            // val aliases = Gson().fromJson<List<Alias>>(jsonString, aliasListType)
                             val aliasArray = Gson().fromJson(jsonString, AliasArray::class.java)
                             if (aliasArray != null) {
                                 completion(Result.success(aliasArray.aliases))
@@ -556,7 +558,11 @@ object SLApiService {
         })
     }
 
-    fun toggleAlias(apiKey: String, alias: Alias, completion: (Result<Enabled>) -> Unit) {
+    fun toggleAlias(
+        apiKey: String,
+        alias: Alias,
+        completion: (Result<Enabled>) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/aliases/${alias.id}/toggle")
             .header("Authentication", apiKey)
@@ -594,7 +600,11 @@ object SLApiService {
         })
     }
 
-    fun deleteAlias(apiKey: String, alias: Alias, completion: (Result<Unit>) -> Unit) {
+    fun deleteAlias(
+        apiKey: String,
+        alias: Alias,
+        completion: (Result<Unit>) -> Unit
+    ) {
         delete(apiKey, "${BASE_URL}/api/aliases/${alias.id}", completion)
     }
 
@@ -860,7 +870,11 @@ object SLApiService {
         })
     }
 
-    fun deleteContact(apiKey: String, contact: Contact, completion: (Result<Unit>) -> Unit) {
+    fun deleteContact(
+        apiKey: String,
+        contact: Contact,
+        completion: (Result<Unit>) -> Unit
+    ) {
         delete(apiKey, "${BASE_URL}/api/contacts/${contact.id}", completion)
     }
 
@@ -945,7 +959,11 @@ object SLApiService {
         })
     }
 
-    fun createMailbox(apiKey: String, email: String, completion: (Result<Unit>) -> Unit) {
+    fun createMailbox(
+        apiKey: String,
+        email: String,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf("email" to email).toRequestBody()
         val request = Request.Builder()
             .url("${BASE_URL}/api/mailboxes")
@@ -971,11 +989,19 @@ object SLApiService {
         })
     }
 
-    fun deleteMailbox(apiKey: String, mailbox: Mailbox, completion: (Result<Unit>) -> Unit) {
+    fun deleteMailbox(
+        apiKey: String,
+        mailbox: Mailbox,
+        completion: (Result<Unit>) -> Unit
+    ) {
         delete(apiKey, "${BASE_URL}/api/mailboxes/${mailbox.id}", completion)
     }
 
-    fun makeDefaultMailbox(apiKey: String, mailbox: Mailbox, completion: (Result<Unit>) -> Unit) {
+    fun makeDefaultMailbox(
+        apiKey: String,
+        mailbox: Mailbox,
+        completion: (Result<Unit>) -> Unit
+    ) {
         val requestBody = mapOf("default" to true).toRequestBody()
 
         val request = Request.Builder()
@@ -1101,10 +1127,7 @@ object SLApiService {
         })
     }
 
-    private fun deserializeUserSettings(
-        jsonString: String,
-        completion: (Result<UserSettings>) -> Unit
-    ) {
+    private fun deserializeUserSettings(jsonString: String, completion: (Result<UserSettings>) -> Unit) {
         val gson = GsonBuilder()
             .registerTypeAdapter(RandomMode::class.java, RandomModeDeserializer())
             .registerTypeAdapter(SenderFormat::class.java, SenderFormatDeserializer())
@@ -1156,7 +1179,11 @@ object SLApiService {
         })
     }
 
-    fun updateName(apiKey: String, name: String?, completion: (Result<UserInfo>) -> Unit) {
+    fun updateName(
+        apiKey: String,
+        name: String?,
+        completion: (Result<UserInfo>) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/user_info")
             .header("Authentication", apiKey)
@@ -1194,7 +1221,11 @@ object SLApiService {
         })
     }
 
-    fun updateProfilePhoto(apiKey: String, base64String: String?, completion: (Result<UserInfo>) -> Unit) {
+    fun updateProfilePhoto(
+        apiKey: String,
+        base64String: String?,
+        completion: (Result<UserInfo>) -> Unit
+    ) {
         val request = Request.Builder()
             .url("${BASE_URL}/api/user_info")
             .header("Authentication", apiKey)

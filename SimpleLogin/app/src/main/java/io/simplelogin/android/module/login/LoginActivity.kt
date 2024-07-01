@@ -55,10 +55,19 @@ class LoginActivity : BaseAppCompatActivity() {
         // Login
         binding.emailTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 updateLoginButtonState()
             }
         })
@@ -69,10 +78,19 @@ class LoginActivity : BaseAppCompatActivity() {
 
         binding.passwordTextField.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 updateLoginButtonState()
             }
         })
@@ -136,7 +154,8 @@ class LoginActivity : BaseAppCompatActivity() {
         changeApiUrlBottomSheetBehavior.hide()
         if (forgotPasswordBottomSheetBehavior.isHidden() &&
             apiKeyBottomSheetBehavior.isHidden() &&
-            changeApiUrlBottomSheetBehavior.isHidden()) {
+            changeApiUrlBottomSheetBehavior.isHidden()
+        ) {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
@@ -196,10 +215,19 @@ class LoginActivity : BaseAppCompatActivity() {
         binding.forgotPasswordBottomSheet.emailTextField.editText?.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 if (s.toString().isValidEmail()) {
                     binding.forgotPasswordBottomSheet.resetButton.isEnabled = true
                     binding.forgotPasswordBottomSheet.emailTextField.error = null
@@ -336,7 +364,11 @@ class LoginActivity : BaseAppCompatActivity() {
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {

@@ -17,7 +17,7 @@ class ContactsAccessView : RelativeLayout {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val binding =
-            LayoutContactsAccessViewBinding.inflate(LayoutInflater.from(context), this, true)
+        LayoutContactsAccessViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
         background = ContextCompat.getDrawable(context, android.R.color.transparent)

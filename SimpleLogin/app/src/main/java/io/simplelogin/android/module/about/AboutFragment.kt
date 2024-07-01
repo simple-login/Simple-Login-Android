@@ -22,7 +22,7 @@ class AboutFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAboutBinding
     private var openFromLoginActivity = true
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "LongMethod")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

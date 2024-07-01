@@ -14,10 +14,10 @@ sealed class VerificationMode {
 @Suppress("ForbiddenComment")
 // TODO: Should be inline class
 @Parcelize
-class MfaKey(val value: String): Parcelable
+class MfaKey(val value: String) : Parcelable
 
 @Parcelize
-class Email(val value: String): Parcelable
+class Email(val value: String) : Parcelable
 
 @Parcelize
-class Password(val value: String): Parcelable
+class Password(val value: String) : Parcelable

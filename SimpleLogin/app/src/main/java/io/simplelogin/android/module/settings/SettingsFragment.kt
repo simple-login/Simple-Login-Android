@@ -49,9 +49,9 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { showLeftMenu() }
@@ -105,7 +105,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.profileInfoCardView.bind(userInfo)
         binding.profileInfoCardView.setOnUpgradeClickListener {
             findNavController().navigate(
-                    SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
+                SettingsFragmentDirections.actionSettingsFragmentToPremiumFragment()
             )
         }
 
@@ -138,9 +138,9 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Random mode & Default domain
         binding.randomAliasCardView.visibility = VISIBLE
         binding.randomAliasCardView.bind(
-                viewModel.userSettings.randomMode,
-                viewModel.userSettings.randomAliasDefaultDomain,
-                viewModel.domainLites
+            viewModel.userSettings.randomMode,
+            viewModel.userSettings.randomAliasDefaultDomain,
+            viewModel.domainLites
         )
 
         binding.randomAliasCardView.setRandomModeSpinnerSelectionListener { selectedRandomMode ->
@@ -172,7 +172,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.deleteAccountCardView.setDeleteAccountClickListener {
             val baseUrl = SLSharedPreferences.getApiUrl(requireContext())
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("${baseUrl}/dashboard/delete_account")
+            intent.data = Uri.parse("$baseUrl/dashboard/delete_account")
             startActivity(intent)
         }
     }
@@ -192,7 +192,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
             val intent: Intent? = context?.packageName?.let {
                 context?.packageManager
-                        ?.getLaunchIntentForPackage(it)
+                    ?.getLaunchIntentForPackage(it)
             }
             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -222,7 +222,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             }
         }
         val userInfo =
-                findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
+            findNavController().graph.arguments.getValue(HomeActivity.USER_INFO).defaultValue as UserInfo
         viewModel.setUserInfo(userInfo)
 
         viewModel.evenUserSettingsUpdated.observe(viewLifecycleOwner) { updated ->
@@ -241,30 +241,30 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
     private fun alertModificationOptions() {
         MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-                .setTitle("Modify profile")
-                .setItems(
-                        arrayOf("Modify profile photo", "Modify display name")
-                ) { _, itemIndex ->
-                    when (itemIndex) {
-                        0 -> alertProfilePhotoModificationOptions()
-                        1 -> alertModifyDisplayName()
-                    }
+            .setTitle("Modify profile")
+            .setItems(
+                arrayOf("Modify profile photo", "Modify display name")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> alertProfilePhotoModificationOptions()
+                    1 -> alertModifyDisplayName()
                 }
-                .show()
+            }
+            .show()
     }
 
     private fun alertProfilePhotoModificationOptions() {
         MaterialAlertDialogBuilder(requireContext(), R.style.SlAlertDialogTheme)
-                .setTitle("Modify profile photo")
-                .setItems(
-                        arrayOf("Upload new photo", "Remove profile photo")
-                ) { _, itemIndex ->
-                    when (itemIndex) {
-                        0 -> openPhotoPicker()
-                        1 -> viewModel.removeProfilePhoto()
-                    }
+            .setTitle("Modify profile photo")
+            .setItems(
+                arrayOf("Upload new photo", "Remove profile photo")
+            ) { _, itemIndex ->
+                when (itemIndex) {
+                    0 -> openPhotoPicker()
+                    1 -> viewModel.removeProfilePhoto()
                 }
-                .show()
+            }
+            .show()
     }
 
     private fun alertUnlinkProtonAccount(onConfirm: () -> Unit) {
@@ -272,7 +272,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
             .setTitle(R.string.proton_unlink_account_confirmation_title)
             .setMessage(R.string.proton_unlink_account_confirmation_content)
             .setNegativeButton(R.string.dialog_cancel_button, null)
-            .setPositiveButton(R.string.dialog_confirm_button) { _, _ -> onConfirm()}
+            .setPositiveButton(R.string.dialog_confirm_button) { _, _ -> onConfirm() }
             .show()
     }
 
@@ -280,7 +280,7 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
         // Launch the photo picker and let the user choose only images.
         pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
-    
+
     private fun onPhotoSelected(uri: Uri) {
         val input = activity?.contentResolver?.openInputStream(uri)
         val image = BitmapFactory.decodeStream(input)
@@ -294,16 +294,16 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     private fun alertModifyDisplayName() {
         val dialogTextViewBinding = DialogViewEditTextBinding.inflate(layoutInflater)
         MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Enter new display name")
-                .setView(dialogTextViewBinding.root)
-                .setNeutralButton("Cancel", null)
-                .setPositiveButton("Save") { _, _ ->
-                    setLoading(true)
-                    val text = dialogTextViewBinding.editText.text
-                    val name = if (text.isNullOrEmpty()) null else text.toString()
-                    viewModel.updateName(name)
-                }
-                .show()
+            .setTitle("Enter new display name")
+            .setView(dialogTextViewBinding.root)
+            .setNeutralButton("Cancel", null)
+            .setPositiveButton("Save") { _, _ ->
+                setLoading(true)
+                val text = dialogTextViewBinding.editText.text
+                val name = if (text.isNullOrEmpty()) null else text.toString()
+                viewModel.updateName(name)
+            }
+            .show()
     }
 
     private fun setLoading(loading: Boolean) {
@@ -315,13 +315,13 @@ class SettingsFragment : BaseFragment(), HomeActivity.OnBackPressed {
     override fun onBackPressed() {
         showLeftMenu()
     }
-    
+
     // Registers a photo picker activity launcher in single-select mode.
     private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
         // Callback is invoked after the user selects a media item or closes the
         // photo picker.
-        uri?.let { onPhotoSelected(it) } ?:
-        Toast.makeText(requireContext(), "No media selected", Toast.LENGTH_SHORT).show()
+        uri?.let { onPhotoSelected(it) }
+            ?: Toast.makeText(requireContext(), "No media selected", Toast.LENGTH_SHORT).show()
     }
-    
+
 }

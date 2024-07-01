@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 
 object SLDateTimeFormatter {
     private val preciseFormatter = SimpleDateFormat("d MMM yyyy 'at' HH:mm")
-    fun preciseCreationDateStringFrom(seconds: Long, prefix: String? = null) : String {
+    fun preciseCreationDateStringFrom(seconds: Long, prefix: String? = null): String {
         val preciseDateAndTimeString = preciseFormatter.format(Date(TimeUnit.SECONDS.toMillis(seconds)))
         val distance = distanceFromNow(seconds)
         return if (prefix != null) {
@@ -17,7 +17,7 @@ object SLDateTimeFormatter {
     }
 
     @Suppress("MagicNumber", "ReturnCount")
-    fun distanceFromNow(seconds: Long) : Pair<Int, String> {
+    fun distanceFromNow(seconds: Long): Pair<Int, String> {
         val nowSeconds = TimeUnit.MILLISECONDS.toSeconds(Date().time)
         val secondsGap = nowSeconds - seconds
 

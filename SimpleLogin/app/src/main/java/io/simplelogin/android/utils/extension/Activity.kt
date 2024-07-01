@@ -45,7 +45,11 @@ fun Activity.startSendEmailIntent(emailAddress: String) {
     }
 }
 
-fun Activity.getIntentChooser(intent: Intent, chooserTitle: CharSequence? = null, filteredPackageNames: List<String>): Intent? {
+fun Activity.getIntentChooser(
+    intent: Intent,
+    chooserTitle: CharSequence? = null,
+    filteredPackageNames: List<String>
+): Intent? {
     val resolveInfos = packageManager.queryIntentActivities(intent, 0)
     val excludedComponentNames = HashSet<ComponentName>()
     resolveInfos.forEach {
@@ -67,7 +71,8 @@ fun Activity.getIntentChooser(intent: Intent, chooserTitle: CharSequence? = null
             targetIntent.setPackage(activityInfo.packageName)
             targetIntent.component = ComponentName(activityInfo.packageName, activityInfo.name)
             // wrap with LabeledIntent to show correct name and icon
-            val labeledIntent = LabeledIntent(targetIntent, activityInfo.packageName, resolveInfo.labelRes, resolveInfo.icon)
+            val labeledIntent =
+                LabeledIntent(targetIntent, activityInfo.packageName, resolveInfo.labelRes, resolveInfo.icon)
             // add filtered intent to a list
             targetIntents.add(labeledIntent)
         }
@@ -141,8 +146,10 @@ fun Activity.showSelectMailboxesAlert(
             val aliasMailboxes = mutableListOf<AliasMailbox>()
             checkedItems.forEachIndexed { index, isChecked ->
                 if (isChecked) {
-                    aliasMailboxes.add(mailboxes.first { it.email == items[index] }
-                        .toAliasMailbox())
+                    aliasMailboxes.add(
+                        mailboxes.first { it.email == items[index] }
+                            .toAliasMailbox()
+                    )
                 }
             }
 

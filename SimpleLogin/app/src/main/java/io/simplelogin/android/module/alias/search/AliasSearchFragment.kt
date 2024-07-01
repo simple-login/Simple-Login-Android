@@ -146,48 +146,55 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
     }
 
     private fun setUpRecyclerView() {
-        adapter = AliasSearchAdapter(searchMode, object : AliasListAdapter.ClickListener {
-            override fun onClick(alias: Alias) {
-                when (searchMode) {
-                    AliasSearchMode.DEFAULT ->
-                        findNavController().navigate(
-                            AliasSearchFragmentDirections.actionAliasSearchFragmentToAliasActivityListFragment(
-                                alias
+        adapter = AliasSearchAdapter(
+            searchMode,
+            object : AliasListAdapter.ClickListener {
+                override fun onClick(alias: Alias) {
+                    when (searchMode) {
+                        AliasSearchMode.DEFAULT ->
+                            findNavController().navigate(
+                                AliasSearchFragmentDirections.actionAliasSearchFragmentToAliasActivityListFragment(
+                                    alias
+                                )
                             )
-                        )
-                    AliasSearchMode.CONTACT_CREATION -> {
-                        aliasListViewModel.setMailFromAlias(alias)
-                        findNavController().popBackStack(R.id.aliasListFragment, false)
+                        AliasSearchMode.CONTACT_CREATION -> {
+                            aliasListViewModel.setMailFromAlias(alias)
+                            findNavController().popBackStack(R.id.aliasListFragment, false)
+                        }
                     }
                 }
-            }
 
-            override fun onSwitch(alias: Alias, position: Int) {
-                setLoading(true)
-                viewModel.toggleAlias(alias, position)
-            }
+                override fun onSwitch(alias: Alias, position: Int) {
+                    setLoading(true)
+                    viewModel.toggleAlias(alias, position)
+                }
 
-            override fun onCopy(alias: Alias) {
-                val email = alias.email
-                copyToClipboard(email, email)
-                context?.toastShortly("Copied \"$email\"")
-            }
+                override fun onCopy(alias: Alias) {
+                    val email = alias.email
+                    copyToClipboard(email, email)
+                    context?.toastShortly("Copied \"$email\"")
+                }
 
-            override fun onSendEmail(alias: Alias) {
-                findNavController().navigate(
-                    AliasSearchFragmentDirections.actionAliasSearchFragmentToContactListFragment(
-                        alias
+                override fun onSendEmail(alias: Alias) {
+                    findNavController().navigate(
+                        AliasSearchFragmentDirections.actionAliasSearchFragmentToContactListFragment(
+                            alias
+                        )
                     )
-                )
+                }
             }
-        })
+        )
 
         binding.recyclerView.adapter = adapter
         val linearLayoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
                 activity?.dismissKeyboard()
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.aliases.size - 1
@@ -219,7 +226,8 @@ class AliasSearchFragment : BaseFragment(), HomeActivity.OnBackPressed {
                                     .setNeutralButton("Cancel", null)
                                     .show()
                             }
-                        })
+                        }
+                    )
                 )
             }
         })

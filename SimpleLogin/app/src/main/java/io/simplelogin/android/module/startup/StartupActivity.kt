@@ -16,7 +16,7 @@ import io.simplelogin.android.utils.baseclass.BaseAppCompatActivity
 import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.model.UserInfo
 
-class StartupActivity : BaseAppCompatActivity()  {
+class StartupActivity : BaseAppCompatActivity() {
     companion object {
         const val RC_LOGIN_ACTIVITY = 0
         const val RC_HOME_ACTIVITY = 1
@@ -104,7 +104,11 @@ class StartupActivity : BaseAppCompatActivity()  {
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {

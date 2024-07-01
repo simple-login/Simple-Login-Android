@@ -12,7 +12,11 @@ class AliasCreateSpinnerAdapter(private val context: Context, private val suffix
     override fun getItem(position: Int) = suffixes[position]
     override fun getItemId(position: Int) = position.toLong()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup?
+    ): View {
         val view: View
         val binding: SpinnerRowTextOnlyBinding
         if (convertView == null) {
