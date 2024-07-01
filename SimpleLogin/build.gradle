@@ -30,6 +30,7 @@ detekt {
     toolVersion = "1.23.6"
     input = files(rootProject.rootDir)
     config = files("config/detekt/detekt.yml")
+    baseline = file("config/detekt/baseline.xml")
     buildUponDefaultConfig = true
     autoCorrect = true
 
