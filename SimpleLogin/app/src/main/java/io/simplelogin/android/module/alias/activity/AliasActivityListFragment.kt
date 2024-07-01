@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.simplelogin.android.R
 import io.simplelogin.android.databinding.DialogViewEditTextBinding
 import io.simplelogin.android.databinding.FragmentAliasActivityBinding
 import io.simplelogin.android.module.alias.AliasListViewModel
@@ -44,8 +47,10 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         setUpViewModel()
 
         binding.toolbar.setNavigationOnClickListener { updateAliasListViewModelAndNavigateUp() }
+        binding.toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
         binding.toolbarTitleText.text = viewModel.alias.email
         binding.toolbarTitleText.isSelected = true // to trigger marquee animation
+        setPinIconMode(viewModel.alias.pinned)
 
         binding.scrollToTopButton.hide()
         binding.scrollToTopButton.setOnClickListener {
@@ -239,6 +244,7 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
 
                 result.onSuccess { alias ->
                     viewModel.alias = alias
+                    setPinIconMode(alias.pinned)
                     headerAdapter.notifyDataSetChanged()
                 }
 
@@ -255,5 +261,44 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
     // HomeActivity.OnBackPressed
     override fun onBackPressed() {
         updateAliasListViewModelAndNavigateUp()
+    }
+
+    // Pinning
+    private fun setPinIconMode(pinned: Boolean) {
+        val icon = if (pinned) R.drawable.ic_pinned_24dp else R.drawable.ic_pin_outline_24
+        binding.toolbar.menu.findItem(R.id.pinAliasMenuItem)?.setIcon(icon)
+    }
+
+    private fun onMenuItemClicked(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.pinAliasMenuItem -> {
+                if (!binding.swipeRefreshLayout.isRefreshing) {
+                    updatePinStatus()
+                }
+            }
+        }
+        return true
+    }
+
+    private fun updatePinStatus() {
+        binding.swipeRefreshLayout.isRefreshing = true
+        setLoading(true)
+
+        val newValue = !viewModel.alias.pinned
+        SLApiService.changeAliasPinStatus(viewModel.apiKey, viewModel.alias, newValue) { result ->
+            activity?.runOnUiThread {
+                setLoading(false)
+                binding.swipeRefreshLayout.isRefreshing = false
+                aliasListViewModel.updateAlias(viewModel.alias.copy(pinned = newValue))
+
+                result.onSuccess {
+                    refreshAlias()
+                    val status = if (newValue) "pinned" else "unpinned"
+                    context?.toastShortly("Alias is $status")
+                }
+
+                result.onFailure(requireContext()::toastThrowable)
+            }
+        }
     }
 }

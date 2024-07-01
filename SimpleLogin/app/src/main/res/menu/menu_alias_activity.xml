@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/pinAliasMenuItem"
+        android:icon="@drawable/ic_pinned_24dp"
+        android:title="Pin alias"
+        app:iconTint="@color/colorPrimary"
+        app:showAsAction="always"
+        tools:ignore="HardcodedText" />
+</menu>

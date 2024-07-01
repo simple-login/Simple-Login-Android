@@ -26,7 +26,8 @@ data class Alias(
     @SerializedName("nb_block") val blockCount: Int,
     @SerializedName("nb_forward") val forwardCount: Int,
     @SerializedName("nb_reply") val replyCount: Int,
-    @SerializedName("latest_activity") val latestActivity: LatestActivity?
+    @SerializedName("latest_activity") val latestActivity: LatestActivity?,
+    @SerializedName("pinned") val pinned: Boolean
 ) : Parcelable {
     // Expose enabled
     val enabled: Boolean

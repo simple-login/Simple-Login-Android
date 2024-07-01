@@ -17,6 +17,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_chevron_left_24dp"
             android:background="@color/colorItemBackground"
+            app:menu="@menu/menu_alias_activity"
             app:contentInsetStartWithNavigation="0dp">
 
             <TextView
