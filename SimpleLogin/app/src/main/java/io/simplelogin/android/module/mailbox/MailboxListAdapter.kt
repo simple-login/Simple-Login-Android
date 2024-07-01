@@ -10,6 +10,5 @@ class MailboxListAdapter : ListAdapter<Mailbox, MailboxViewHolder>(MailboxDiffCa
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MailboxViewHolder =
         MailboxViewHolder.from(parent)
 
-    override fun onBindViewHolder(holder: MailboxViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: MailboxViewHolder, position: Int) = holder.bind(getItem(position))
 }

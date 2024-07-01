@@ -41,10 +41,19 @@ class ShareActivity : BaseAppCompatActivity() {
         // Enable/disable createButton
         binding.prefixEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 binding.createButton.isEnabled = s?.toString()?.isValidEmailPrefix() ?: false
             }
         })
@@ -134,7 +143,7 @@ class ShareActivity : BaseAppCompatActivity() {
 
     private fun fillPrefix() {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-        val uri = try { URI(text) } catch (e: URISyntaxException) { null }
+        val uri = try { URI(text) } catch (_: URISyntaxException) { null }
         if (uri?.host != null) {
             binding.prefixEditText.setText(uri.host.extractWebsiteName())
         } else {

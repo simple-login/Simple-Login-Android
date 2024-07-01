@@ -9,4 +9,4 @@ data class LatestActivity(
     @SerializedName("action") val action: Action,
     @SerializedName("contact") val contact: ContactLite,
     @SerializedName("timestamp") val timestamp: Long
-): Parcelable
+) : Parcelable

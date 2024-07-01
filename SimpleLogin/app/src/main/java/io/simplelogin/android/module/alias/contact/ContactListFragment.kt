@@ -30,7 +30,9 @@ import io.simplelogin.android.utils.model.Alias
 import io.simplelogin.android.utils.model.Contact
 import io.simplelogin.android.utils.model.PickedEmail
 
-class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
+class ContactListFragment :
+    BaseFragment(),
+    HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
     companion object {
         private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
@@ -178,10 +180,19 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.createContactBottomSheet.contactEmailTextField.editText?.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
-                Unit
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 if (s.toString().isValidEmail()) {
                     binding.createContactBottomSheet.createButton.isEnabled = true
                     binding.createContactBottomSheet.contactEmailTextField.error = null
@@ -203,6 +214,7 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         }
     }
 
+    @Suppress("LongMethod")
     private fun setUpViewModel() {
         val tempViewModel: ContactListViewModel by viewModels {
             context?.let {
@@ -295,7 +307,11 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.contacts.size - 1
                 if (isPenultimateItem && viewModel.moreToLoad) {
@@ -327,7 +343,8 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                                     }
                                     .show()
                             }
-                        })
+                        }
+                    )
                 )
             }
         })
@@ -434,7 +451,11 @@ class ContactListFragment : BaseFragment(), HomeActivity.OnBackPressed,
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
         if (resultCode == Activity.RESULT_OK && requestCode == RC_CONTACTS_ACCESS) {
             val contactData = data?.data ?: return
             val contentResolver = activity?.contentResolver ?: return

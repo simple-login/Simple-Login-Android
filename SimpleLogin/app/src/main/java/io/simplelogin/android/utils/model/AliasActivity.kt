@@ -32,8 +32,11 @@ data class AliasActivity(
 
 enum class Action {
     @SerializedName("reply") REPLY,
+
     @SerializedName("block") BLOCK,
+
     @SerializedName("forward") FORWARD,
+
     @SerializedName("bounced") BOUNCED
 }
 

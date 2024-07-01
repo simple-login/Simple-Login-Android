@@ -18,8 +18,10 @@ open class BaseAppCompatActivity : AppCompatActivity() {
     }
 
     private fun applyDarkModeIfApplicable() {
-        val currentNightMode = (resources.configuration.uiMode
-                and Configuration.UI_MODE_NIGHT_MASK)
+        val currentNightMode = (
+            resources.configuration.uiMode
+                and Configuration.UI_MODE_NIGHT_MASK
+            )
 
         // Check if force dark mode is enabled:
         if (SLSharedPreferences.getShouldForceDarkMode(this)) {
@@ -33,14 +35,14 @@ open class BaseAppCompatActivity : AppCompatActivity() {
                 Configuration.UI_MODE_NIGHT_NO ->
                     // Night mode is not active, we're using the light theme
                     view.systemUiVisibility = view.systemUiVisibility or
-                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
-                            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+                        View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 
                 Configuration.UI_MODE_NIGHT_YES ->
                     // Night mode is active, we're using dark theme
                     view.systemUiVisibility = view.systemUiVisibility and
-                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv() and
-                            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv() and
+                        View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
             }
         }
     }

@@ -59,7 +59,7 @@ class LocalAuthActivity : BaseAppCompatActivity() {
             .show()
     }
 
-    private fun resetSettingsAndRestartApp(){
+    private fun resetSettingsAndRestartApp() {
         SLSharedPreferences.reset(this)
         val intent = Intent(this, StartupActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

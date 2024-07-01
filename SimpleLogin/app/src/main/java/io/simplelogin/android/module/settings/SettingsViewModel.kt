@@ -117,10 +117,7 @@ class SettingsViewModel(val context: Context) : BaseViewModel(context) {
         }
     }
 
-    fun refreshUserInfo(
-        ignoreIsFetching: Boolean = false,
-        onCompletion: () -> Unit = {}
-    ) {
+    fun refreshUserInfo(ignoreIsFetching: Boolean = false, onCompletion: () -> Unit = {}) {
         if (!ignoreIsFetching) {
             if (_isFetching.value == true) return
             _isFetching.postValue(true)

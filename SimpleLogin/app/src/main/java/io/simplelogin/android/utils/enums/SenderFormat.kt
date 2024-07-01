@@ -20,9 +20,8 @@ class SenderFormatDeserializer : JsonDeserializer<SenderFormat> {
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): SenderFormat =
-        when (json?.asString) {
-            "AT" -> SenderFormat.AT
-            else -> SenderFormat.A
-        }
+    ): SenderFormat = when (json?.asString) {
+        "AT" -> SenderFormat.AT
+        else -> SenderFormat.A
+    }
 }

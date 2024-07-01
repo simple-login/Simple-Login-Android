@@ -96,7 +96,7 @@ class ContactListViewModel(context: Context, private val alias: Alias) : BaseVie
                 }
             }
 
-            userInfoResult.onFailure { _error.postValue(it as SLError)  }
+            userInfoResult.onFailure { _error.postValue(it as SLError) }
         }
     }
 

@@ -19,7 +19,9 @@ import io.simplelogin.android.utils.SwipeHelper
 import io.simplelogin.android.utils.baseclass.BaseFragment
 import io.simplelogin.android.utils.extension.*
 
-class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
+class MailboxListFragment :
+    BaseFragment(),
+    HomeActivity.OnBackPressed,
     Toolbar.OnMenuItemClickListener {
     companion object {
         private const val BOTTOM_SHEET_HEIGHT_PERCENTAGE_TO_SCREEN_HEIGHT = 90.0f / 100
@@ -156,7 +158,8 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                                 override fun onClick() {
                                     confirmDelete(position)
                                 }
-                            })
+                            }
+                        )
 
                         val setAsDefaultButton = UnderlayButton(
                             requireContext(),
@@ -167,7 +170,8 @@ class MailboxListFragment : BaseFragment(), HomeActivity.OnBackPressed,
                                 override fun onClick() {
                                     confirmSetAsDefault(position)
                                 }
-                            })
+                            }
+                        )
 
                         return listOf(deleteButton, setAsDefaultButton)
                     }

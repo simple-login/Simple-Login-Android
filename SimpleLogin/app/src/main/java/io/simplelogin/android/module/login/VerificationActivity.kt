@@ -110,7 +110,7 @@ class VerificationActivity : BaseAppCompatActivity(), Window.Callback {
     }
 
     @Suppress("MagicNumber", "ReturnCount")
-    private fun getCodeFromClipboard() : String? {
+    private fun getCodeFromClipboard(): String? {
         val clipboardManager =
             (getSystemService(Context.CLIPBOARD_SERVICE) ?: return null) as ClipboardManager
         val clip = clipboardManager.primaryClip ?: return null

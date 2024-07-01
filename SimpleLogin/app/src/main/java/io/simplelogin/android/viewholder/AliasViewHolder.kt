@@ -25,7 +25,11 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
     private val context: Context by lazy { binding.root.context }
 
-    fun bind(alias: Alias, searchMode: AliasSearchMode, clickListener: AliasListAdapter.ClickListener) {
+    fun bind(
+        alias: Alias,
+        searchMode: AliasSearchMode,
+        clickListener: AliasListAdapter.ClickListener
+    ) {
         binding.emailTextView.text = alias.email
         binding.countsTextView.setText(alias.getCountSpannableString(context), TextView.BufferType.SPANNABLE)
 
@@ -64,7 +68,7 @@ class AliasViewHolder(val binding: RecyclerItemAliasBinding) : RecyclerView.View
 
         // Add click events
         binding.rootRelativeLayout.setOnClickListener { clickListener.onClick(alias) }
-        binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, bindingAdapterPosition)  }
+        binding.enabledSwitch.setOnClickListener { clickListener.onSwitch(alias, bindingAdapterPosition) }
         binding.copyButton.setOnClickListener { clickListener.onCopy(alias) }
         binding.sendEmailButton.setOnClickListener { clickListener.onSendEmail(alias) }
 

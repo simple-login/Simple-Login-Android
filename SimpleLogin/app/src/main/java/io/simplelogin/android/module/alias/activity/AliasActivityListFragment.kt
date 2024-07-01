@@ -180,7 +180,8 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
                         }
                         .show()
                 }
-            })
+            }
+        )
 
         activityAdapter = AliasActivityListAdapter(object : AliasActivityListAdapter.ClickListener {
             override fun onClick(aliasActivity: AliasActivity) {
@@ -193,7 +194,11 @@ class AliasActivityListFragment : BaseFragment(), HomeActivity.OnBackPressed {
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
                 val isLastItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.activities.size
                 if (isLastItem && viewModel.moreToLoad) {

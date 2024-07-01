@@ -96,10 +96,14 @@ class AliasPickerFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Too
         binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshAliases() }
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1
-                if (isPenultimateItem  && viewModel.moreAliasesToLoad) {
+                if (isPenultimateItem && viewModel.moreAliasesToLoad) {
                     showLoadingFooter(true)
                     viewModel.fetchAliases()
                 }

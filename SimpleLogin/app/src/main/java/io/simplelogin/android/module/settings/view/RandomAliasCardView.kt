@@ -28,7 +28,11 @@ class RandomAliasCardView : RelativeLayout {
     }
 
     // Functions
-    fun bind(randomMode: RandomMode, defaultDomain: String, domainLites: List<DomainLite>) {
+    fun bind(
+        randomMode: RandomMode,
+        defaultDomain: String,
+        domainLites: List<DomainLite>
+    ) {
         binding.randomModeSpinner.adapter = RandomModeSpinnerAdapter(context)
         binding.randomModeSpinner.setSelection(randomMode.position)
         binding.defaultDomainSpinner.adapter = DefaultDomainSpinnerAdapter(context, domainLites)
@@ -40,7 +44,12 @@ class RandomAliasCardView : RelativeLayout {
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) = Unit
 
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     val selectedMode = RandomMode.fromPosition(position)
                     listener(selectedMode)
                 }
@@ -53,7 +62,12 @@ class RandomAliasCardView : RelativeLayout {
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) = Unit
 
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     val selectedDomainLite = defaultDomainSpinnerAdapter.getItem(position) as DomainLite
                     listener(selectedDomainLite)
                 }
@@ -66,7 +80,11 @@ class RandomModeSpinnerAdapter(private val context: Context) : BaseAdapter() {
     override fun getItem(position: Int) = RandomMode.fromPosition(position)
     override fun getItemId(position: Int) = position.toLong()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup?
+    ): View {
         val view: View
         val binding: SpinnerRowTextOnlyBinding
         if (convertView == null) {
@@ -90,7 +108,11 @@ class DefaultDomainSpinnerAdapter(
     override fun getItem(position: Int) = domainLites[position]
     override fun getItemId(position: Int) = position.toLong()
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup?
+    ): View {
         val view: View
         val binding: SpinnerRowDomainLiteBinding
         if (convertView == null) {

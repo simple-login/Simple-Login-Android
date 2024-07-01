@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.simplelogin.android.databinding.RecyclerItemMailboxBinding
 import io.simplelogin.android.utils.model.Mailbox
 
-class MailboxViewHolder(private val binding: RecyclerItemMailboxBinding): RecyclerView.ViewHolder(binding.root) {
+class MailboxViewHolder(private val binding: RecyclerItemMailboxBinding) : RecyclerView.ViewHolder(binding.root) {
     companion object {
         fun from(parent: ViewGroup): MailboxViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

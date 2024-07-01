@@ -16,10 +16,7 @@ class AliasActivityListHeaderAdapter(
 
     override fun getItemCount() = 1
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AliasActivityHeaderViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AliasActivityHeaderViewHolder =
         AliasActivityHeaderViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: AliasActivityHeaderViewHolder, position: Int) =

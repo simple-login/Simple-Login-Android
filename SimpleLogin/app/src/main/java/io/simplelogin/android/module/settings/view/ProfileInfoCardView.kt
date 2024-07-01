@@ -28,7 +28,7 @@ class ProfileInfoCardView : RelativeLayout {
         binding.displayNameTextView.text = userInfo.name
         binding.emailTextView.text = userInfo.email
         binding.avatarView.setAvatar(userInfo.profilePhotoUrl)
-        
+
         val subscriptionStatus: String
         val subscriptionStatusColorResId: Int
         when {

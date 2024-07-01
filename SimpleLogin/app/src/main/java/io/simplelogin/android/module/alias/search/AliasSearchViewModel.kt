@@ -120,7 +120,7 @@ class AliasSearchViewModel(context: Context) : BaseViewModel(context) {
                 _toggledAliasIndex.postValue(index)
             }
 
-            result.onFailure {  _error.postValue(it as SLError) }
+            result.onFailure { _error.postValue(it as SLError) }
         }
     }
 }

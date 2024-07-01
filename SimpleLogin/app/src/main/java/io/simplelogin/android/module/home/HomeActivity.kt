@@ -159,7 +159,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
                 try {
                     SLSharedPreferences.setRated(this, true)
                     startActivity(goToMarketIntent)
-                } catch (e: ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     val intent = Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/details?id=$packageName")
@@ -181,7 +181,7 @@ class HomeActivity : BaseAppCompatActivity(), NavigationView.OnNavigationItemSel
         return true
     }
 
-    private fun resetSettingsAndRestartApp(){
+    private fun resetSettingsAndRestartApp() {
         SLSharedPreferences.reset(this)
         val intent = Intent(this, StartupActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

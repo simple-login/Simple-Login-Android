@@ -16,8 +16,7 @@ class AliasListAdapter(private val clickListener: ClickListener) :
         fun onSendEmail(alias: Alias)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AliasViewHolder =
-        AliasViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AliasViewHolder = AliasViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: AliasViewHolder, position: Int) =
         holder.bind(getItem(position), AliasSearchMode.DEFAULT, clickListener)

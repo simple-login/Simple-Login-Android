@@ -126,19 +126,18 @@ data class Alias(
 
     @IgnoredOnParcel
     private var _latestActivityString: String? = null
-    fun getLatestActivityString(): String? =
-        when (latestActivity) {
-            null -> null
-            else -> {
-                if (_latestActivityString == null) {
-                    val distance = SLDateTimeFormatter.distanceFromNow(latestActivity.timestamp)
-                    _latestActivityString =
-                        "${latestActivity.contact.email} • ${distance.first} ${distance.second} ago"
-                }
-
-                _latestActivityString!!
+    fun getLatestActivityString(): String? = when (latestActivity) {
+        null -> null
+        else -> {
+            if (_latestActivityString == null) {
+                val distance = SLDateTimeFormatter.distanceFromNow(latestActivity.timestamp)
+                _latestActivityString =
+                    "${latestActivity.contact.email} • ${distance.first} ${distance.second} ago"
             }
+
+            _latestActivityString!!
         }
+    }
 }
 
 data class AliasArray(

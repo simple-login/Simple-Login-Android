@@ -28,8 +28,11 @@ import io.simplelogin.android.utils.enums.SLError
 import io.simplelogin.android.utils.extension.*
 import io.simplelogin.android.utils.model.Alias
 
-class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
-    TabLayout.OnTabSelectedListener, HomeActivity.OnBackPressed {
+class AliasListFragment :
+    BaseFragment(),
+    Toolbar.OnMenuItemClickListener,
+    TabLayout.OnTabSelectedListener,
+    HomeActivity.OnBackPressed {
     private lateinit var binding: FragmentAliasListBinding
     private val viewModel: AliasListViewModel by activityViewModels()
     private lateinit var aliasListAdapter: AliasListAdapter
@@ -106,7 +109,7 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         footerAdapter.notifyDataSetChanged()
     }
 
-    @Suppress("MaxLineLength")
+    @Suppress("MaxLineLength", "LongMethod")
     private fun setUpViewModel() {
         viewModel.eventUpdateAliases.observe(
             viewLifecycleOwner
@@ -235,7 +238,11 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
         binding.recyclerView.layoutManager = linearLayoutManager
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int
+            ) {
                 val isPenultimateItem =
                     linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.filteredAliases.size - 1
                 if (isPenultimateItem && viewModel.moreAliasesToLoad) {
@@ -273,7 +280,8 @@ class AliasListFragment : BaseFragment(), Toolbar.OnMenuItemClickListener,
                                     .setNeutralButton("Cancel", null)
                                     .show()
                             }
-                        })
+                        }
+                    )
                 )
             }
         })
