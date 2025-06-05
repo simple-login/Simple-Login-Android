@@ -56,6 +56,10 @@ data class NoteBody(
     val note: String?
 )
 
+data class PasswordBody(
+    val password: String
+)
+
 data class TransferAliasesBody(
     @SerializedName("transfer_aliases_to") val mailboxId: Int = -1 // -1 is equal to passing nothing
 )

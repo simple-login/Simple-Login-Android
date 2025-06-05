@@ -14,12 +14,16 @@ import io.simplelogin.android.data.models.DeletedAliases
 import io.simplelogin.android.data.models.Mailbox
 import io.simplelogin.android.data.models.Mailboxes
 import io.simplelogin.android.data.models.Stats
+import io.simplelogin.android.data.models.Token
 import io.simplelogin.android.data.models.UpdateAliasOptions
 import io.simplelogin.android.data.models.UpdateCustomDomainOptions
 import io.simplelogin.android.data.models.UpdateCustomDomainResponse
 import io.simplelogin.android.data.models.UpdateMailboxOptions
+import io.simplelogin.android.data.models.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.UsableDomain
 import io.simplelogin.android.data.models.UserInfo
 import io.simplelogin.android.data.models.UserLogin
+import io.simplelogin.android.data.models.UserSettings
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -42,6 +46,7 @@ data class DeletedResponse(@SerializedName("deleted") val value: Boolean)
 data class EnabledResponse(@SerializedName("enabled") val value: Boolean)
 data class UpdateResponse(@SerializedName("updated") val value: Boolean)
 
+// https://github.com/simple-login/app/blob/master/docs/api.md
 interface ApiService {
     // Account
     @POST("api/auth/activate")
@@ -209,4 +214,33 @@ interface ApiService {
         @Path(PATH_ID) mailboxId: Int,
         @Body body: UpdateMailboxOptions
     ): Response<UpdateResponse>
+
+    // Misc
+    @DELETE("api/user")
+    suspend fun deleteUser(@Header(AUTH_HEADER) apiKey: String): Response<OkResponse>
+
+    @PATCH("api/sudo")
+    suspend fun enterSudoMode(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Body body: PasswordBody
+    ): Response<OkResponse>
+
+    @GET("api/user/cookie_token")
+    suspend fun getCookieToken(@Header(AUTH_HEADER) apiKey: String): Response<Token>
+
+    // Settings
+    @GET("api/v2/setting/domains")
+    suspend fun getUsableDomains(@Header(AUTH_HEADER) apiKey: String): Response<List<UsableDomain>>
+
+    @GET("api/setting")
+    suspend fun getUserSettings(@Header(AUTH_HEADER) apiKey: String): Response<UserSettings>
+
+    @DELETE("api/setting/unlink_proton_account")
+    suspend fun unlinkProtonAccount(@Header(AUTH_HEADER) apiKey: String): Response<OkResponse>
+
+    @PATCH("api/setting")
+    suspend fun updateUserSettings(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Body body: UpdateUserSettingsOptions
+    ): Response<UserSettings>
 }
