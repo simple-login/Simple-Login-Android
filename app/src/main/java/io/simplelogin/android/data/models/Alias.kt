@@ -2,10 +2,8 @@ package io.simplelogin.android.data.models
 
 import kotlinx.serialization.SerialName
 
-typealias AliasID = Int
-
 data class Alias(
-    @SerialName("id") val id: AliasID,
+    @SerialName("id") val id: Int,
     @SerialName("email") val email: String,
     @SerialName("name") val name: String?,
     @SerialName("enabled") val enabled: Boolean,

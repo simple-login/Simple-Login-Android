@@ -3,14 +3,18 @@ package io.simplelogin.android.data.remote
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.data.models.Alias
 import io.simplelogin.android.data.models.AliasActivities
-import io.simplelogin.android.data.models.AliasID
 import io.simplelogin.android.data.models.AliasOptions
 import io.simplelogin.android.data.models.Aliases
 import io.simplelogin.android.data.models.ApiKey
+import io.simplelogin.android.data.models.BlockForward
 import io.simplelogin.android.data.models.Contact
 import io.simplelogin.android.data.models.Contacts
+import io.simplelogin.android.data.models.CustomDomains
+import io.simplelogin.android.data.models.DeletedAliases
 import io.simplelogin.android.data.models.Stats
 import io.simplelogin.android.data.models.UpdateAliasOptions
+import io.simplelogin.android.data.models.UpdateCustomDomainOptions
+import io.simplelogin.android.data.models.UpdateCustomDomainResponse
 import io.simplelogin.android.data.models.UserInfo
 import io.simplelogin.android.data.models.UserLogin
 import retrofit2.Response
@@ -26,6 +30,8 @@ import retrofit2.http.QueryMap
 
 private const val AUTH_HEADER = "Authentication"
 private const val ALIAS_ID = "alias_id"
+private const val CONTACT_ID = "contact_id"
+private const val CUSTOM_DOMAIN_ID = "custom_domain_id"
 private const val PAGE_ID = "page_id"
 
 data class MessageResponse(@SerializedName("msg") val value: String)
@@ -76,25 +82,25 @@ interface ApiService {
     @POST("api/aliases/${ALIAS_ID}/contacts")
     suspend fun createContact(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID,
+        @Path(ALIAS_ID) aliasId: Int,
         @Body body: CreateContactBody
         ): Response<Contact>
 
     @DELETE("api/aliases/${ALIAS_ID}")
     suspend fun deleteAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID
+        @Path(ALIAS_ID) aliasId: Int
     ): Response<DeletedResponse>
 
     @GET("api/aliases/${ALIAS_ID}/activities")
     suspend fun getAliasActivities(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID,
+        @Path(ALIAS_ID) aliasId: Int,
         @Query(PAGE_ID) pageId: Int
     ): Response<AliasActivities>
 
     @GET("api/aliases/${ALIAS_ID}")
-    suspend fun getAlias(@Path(ALIAS_ID) aliasId: AliasID): Response<Alias>
+    suspend fun getAlias(@Path(ALIAS_ID) aliasId: Int): Response<Alias>
 
     @GET("api/v2/aliases")
     suspend fun getAliases(
@@ -122,7 +128,7 @@ interface ApiService {
     @GET("api/aliases/${ALIAS_ID}/contacts")
     suspend fun getContacts(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID,
+        @Path(ALIAS_ID) aliasId: Int,
         @Query(PAGE_ID) pageId: Int
     ): Response<Contacts>
 
@@ -137,13 +143,43 @@ interface ApiService {
     @POST("api/aliases/${ALIAS_ID}/toggle")
     suspend fun toggleAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID
+        @Path(ALIAS_ID) aliasId: Int
     ): Response<EnabledResponse>
 
     @PATCH("api/aliases/${ALIAS_ID}")
     suspend fun updateAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(ALIAS_ID) aliasId: AliasID,
+        @Path(ALIAS_ID) aliasId: Int,
         @Body body: UpdateAliasOptions
     ): Response<OkResponse>
+
+    // Contact
+    @DELETE("api/contacts/${CONTACT_ID}")
+    suspend fun deleteContact(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Path(CONTACT_ID) contactId: Int
+    ): Response<DeletedResponse>
+
+    @POST("api/contacts/${CONTACT_ID}/toggle")
+    suspend fun toggleContact(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Path(CONTACT_ID) contactId: Int
+    ): Response<BlockForward>
+
+    // Custom domains
+    @GET("api/custom_domains")
+    suspend fun getCustomDomains(@Header(AUTH_HEADER) apiKey: String): Response<CustomDomains>
+
+    @GET("api/custom_domains/${CUSTOM_DOMAIN_ID}/trash")
+    suspend fun getDeletedAliases(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Path(CUSTOM_DOMAIN_ID) domainId: Int
+    ): Response<DeletedAliases>
+
+    @PATCH("api/custom_domains/${CUSTOM_DOMAIN_ID}")
+    suspend fun updateCustomDomain(
+        @Header(AUTH_HEADER) apiKey: String,
+        @Path(CUSTOM_DOMAIN_ID) domainId: Int,
+        @Body body: UpdateCustomDomainOptions
+    ): Response<UpdateCustomDomainResponse>
 }
