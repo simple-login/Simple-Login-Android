@@ -14,11 +14,6 @@ data class CustomDomain(
     @SerializedName("catch_all") val catchAll: Boolean
 )
 
-data class MailboxLite(
-    val id: Int,
-    val email: String
-)
-
 data class CustomDomains(
     @SerializedName("custom_domains") val value: List<CustomDomain>
 )

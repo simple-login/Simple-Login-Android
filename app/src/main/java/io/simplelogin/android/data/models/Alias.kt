@@ -14,15 +14,10 @@ data class Alias(
     @SerialName("note") val note: String?,
     @SerialName("support_pgp") val pgpSupported: Boolean,
     @SerialName("disable_pgp") val pgpDisabled: Boolean,
-    @SerialName("mailboxes") val mailboxes: List<Mailbox>,
+    @SerialName("mailboxes") val mailboxes: List<MailboxLite>,
     @SerialName("latest_activity") val latestActivity: LatestActivity?,
     @SerialName("pinned") val pinned: Boolean
 ) {
-    data class Mailbox(
-        val id: Int,
-        val email: String,
-    )
-
     data class LatestActivity(
         val action: ActivityAction,
         val contact: Contact,
