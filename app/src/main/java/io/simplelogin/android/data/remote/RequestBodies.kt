@@ -35,3 +35,23 @@ data class UpdateProfilePictureBody(
 data class UpdateNameBody(
     val name: String
 )
+
+data class CreateAliasBody(
+    @SerializedName("alias_prefix") val prefix: String,
+    @SerializedName("signed_suffix") val signedSuffix: String,
+    @SerializedName("mailbox_ids") val mailboxIds: List<Int>,
+    @SerializedName("note") val note: String?,
+    @SerializedName("name") val name: String?
+)
+
+data class CreateContactBody(
+    val contact: String
+)
+
+data class SearchBody(
+    val query: String
+)
+
+data class NoteBody(
+    val note: String?
+)
