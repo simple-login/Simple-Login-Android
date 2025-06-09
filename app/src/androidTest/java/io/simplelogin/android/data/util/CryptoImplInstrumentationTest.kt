@@ -1,8 +1,6 @@
 package io.simplelogin.android.data.util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.simplelogin.android.domain.util.Crypto
-import io.simplelogin.android.domain.util.CryptoImpl
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

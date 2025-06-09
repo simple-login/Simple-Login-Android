@@ -9,13 +9,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.simplelogin.android.domain.util.Crypto
-import io.simplelogin.android.domain.util.CryptoImpl
-import io.simplelogin.android.domain.datastore.UserSessionPreferences
-import io.simplelogin.android.domain.datastore.UserSessionPreferencesSerializer
-import io.simplelogin.android.domain.util.Constants
+import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.data.util.Crypto
+import io.simplelogin.android.data.util.CryptoImpl
+import io.simplelogin.android.data.util.EncryptingSerializer
 import java.io.File
 import javax.inject.Singleton
+
+private typealias UserSessionPreferencesSerializer = EncryptingSerializer<UserSessionPreferences>
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,17 +28,21 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideUserSessionPreferencesSerializer(crypto: Crypto) =
-        UserSessionPreferencesSerializer(crypto)
+    fun provideUserSessionPreferencesSerializer(crypto: Crypto): UserSessionPreferencesSerializer =
+        EncryptingSerializer(
+            crypto,
+            UserSessionPreferences.serializer(),
+            UserSessionPreferences()
+            )
 
     @Provides
     @Singleton
     fun provideUserSessionPreferencesDataStore(
         @ApplicationContext context: Context,
-        userSessionPreferencesSerializer: UserSessionPreferencesSerializer
+        serializer: UserSessionPreferencesSerializer
     ): DataStore<UserSessionPreferences> =
         DataStoreFactory.create(
-            serializer = userSessionPreferencesSerializer,
+            serializer = serializer,
             produceFile = {
                 File(context.filesDir, Constants.USER_SESSION_PREFS_FILE_NAME)
             },

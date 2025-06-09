@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.models
+package io.simplelogin.android.data.models.api
 
 import com.google.gson.annotations.SerializedName
 

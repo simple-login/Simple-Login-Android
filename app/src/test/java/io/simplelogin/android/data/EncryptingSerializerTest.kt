@@ -1,8 +1,8 @@
 package io.simplelogin.android.data
 
-import io.simplelogin.android.domain.datastore.UserSessionPreferences
-import io.simplelogin.android.domain.datastore.UserSessionPreferencesSerializer
-import io.simplelogin.android.domain.util.Crypto
+import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.data.util.Crypto
+import io.simplelogin.android.data.util.EncryptingSerializer
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -13,8 +13,12 @@ class MockCrypto: Crypto {
     override fun decrypt(bytes: ByteArray) = bytes.reversedArray()
 }
 
-class UserSessionPreferencesSerializerTest {
-    private val sut = UserSessionPreferencesSerializer(MockCrypto())
+class EncryptingSerializerTest {
+    private val sut = EncryptingSerializer<UserSessionPreferences>(
+        MockCrypto(),
+        UserSessionPreferences.serializer(),
+        UserSessionPreferences()
+        )
 
     @Test
     fun serialize() = runTest {

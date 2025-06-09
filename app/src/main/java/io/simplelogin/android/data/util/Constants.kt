@@ -1,4 +1,4 @@
-package io.simplelogin.android.domain.util
+package io.simplelogin.android.data.util
 
 object Constants {
     val DEFAULT_BASE_URL = "https://app.simplelogin.io"
