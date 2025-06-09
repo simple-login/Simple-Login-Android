@@ -1,8 +1,8 @@
-package io.simplelogin.android.data.datastore
+package io.simplelogin.android.domain.datastore
 
 import androidx.datastore.core.Serializer
-import io.simplelogin.android.data.util.Crypto
-import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.domain.util.Crypto
+import io.simplelogin.android.domain.util.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable

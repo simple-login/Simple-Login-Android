@@ -1,8 +1,8 @@
 package io.simplelogin.android.data
 
-import io.simplelogin.android.data.datastore.UserSessionPreferences
-import io.simplelogin.android.data.datastore.UserSessionPreferencesSerializer
-import io.simplelogin.android.data.util.Crypto
+import io.simplelogin.android.domain.datastore.UserSessionPreferences
+import io.simplelogin.android.domain.datastore.UserSessionPreferencesSerializer
+import io.simplelogin.android.domain.util.Crypto
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.ByteArrayInputStream
