@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "io.simplelogin.android"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.simplelogin.android"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "2.0.0"
 
@@ -89,4 +89,9 @@ dependencies {
     // Datastore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
+
+    // Nav 3
+    implementation(libs.nav3.runtime)
+    implementation(libs.nav3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.nav3)
 }

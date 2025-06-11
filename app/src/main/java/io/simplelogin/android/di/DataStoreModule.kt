@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.di
+package io.simplelogin.android.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -51,3 +51,4 @@ object DataStoreModule {
             }
         )
 }
+

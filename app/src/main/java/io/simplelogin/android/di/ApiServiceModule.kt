@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.di
+package io.simplelogin.android.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -8,6 +8,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.remote.BaseUrlProvider
+import io.simplelogin.android.data.remote.BaseUrlProviderImpl
+import io.simplelogin.android.data.remote.DynamicBaseUrlInterceptor
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,18 +23,18 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Provides
     @Singleton
-    fun provideGson() = GsonBuilder().setStrictness(Strictness.LENIENT).create()
+    fun provideGson(): Gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
 
     @Provides
     @Singleton
-    fun provideHttpLoggingInterceptor() =
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
     @Provides
     @Singleton
-    fun provideHeaderInterceptor() =
+    fun provideHeaderInterceptor(): Interceptor =
         Interceptor { chain ->
             val originalRequest = chain.request()
             val requestBuilder = originalRequest.newBuilder()
@@ -43,18 +46,30 @@ object ApiServiceModule {
 
     @Provides
     @Singleton
+    fun provideBaseUrlProvider(): BaseUrlProvider =
+        BaseUrlProviderImpl
+
+    @Provides
+    @Singleton
+    fun provideDynamicBaseUrlInterceptor(baseUrlProvider: BaseUrlProvider): DynamicBaseUrlInterceptor =
+        DynamicBaseUrlInterceptor(baseUrlProvider)
+
+    @Provides
+    @Singleton
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: Interceptor,
-        ) =
+        dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
+        ): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(headerInterceptor)
+            .addInterceptor(dynamicBaseUrlInterceptor)
             .build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient) =
+    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://app.simplelogin.io")
             .client(okHttpClient)
@@ -65,5 +80,4 @@ object ApiServiceModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
-
 }
