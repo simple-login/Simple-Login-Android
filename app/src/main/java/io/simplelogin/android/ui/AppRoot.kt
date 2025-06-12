@@ -1,6 +1,5 @@
 package io.simplelogin.android.ui
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -18,7 +17,9 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LaunchScreen
+import io.simplelogin.android.ui.login.LoginScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -61,13 +62,20 @@ fun AppRoot(modifier: Modifier = Modifier,
 
                     AppRootDestination.LogIn -> {
                         NavEntry(navKey) {
-                            Text("Login")
+                            LoginScreen(
+                                modifier = modifier,
+                                onLoginClick = viewModel::logIn
+                            )
                         }
                     }
 
                     is AppRootDestination.Home -> {
                         NavEntry(navKey) {
-                            Text("Home ${navKey.apiKey}")
+                            HomeScreen(
+                                modifier = modifier,
+                                apiKey = navKey.apiKey,
+                                onLogOutClick = viewModel::logOut,
+                            )
                         }
                     }
                 }
@@ -80,7 +88,7 @@ fun AppRoot(modifier: Modifier = Modifier,
 
 @HiltViewModel
 class AppRootViewModel @Inject constructor(
-    userSessionPreferences: DataStore<UserSessionPreferences>
+    private val userSessionPreferences: DataStore<UserSessionPreferences>
 ): ViewModel() {
     private var _navBackStack: NavBackStack? = null
 
@@ -93,9 +101,9 @@ class AppRootViewModel @Inject constructor(
                         clear()
                         val apiKey = it.apiKey
                         if (apiKey != null) {
-                            _navBackStack?.add(AppRootDestination.Home(apiKey))
+                            add(AppRootDestination.Home(apiKey))
                         } else {
-                            _navBackStack?.add(AppRootDestination.LogIn)
+                            add(AppRootDestination.LogIn)
                         }
                     }
                 }
@@ -104,5 +112,21 @@ class AppRootViewModel @Inject constructor(
 
     fun setNavBackStack(navBackStack: NavBackStack) {
         _navBackStack = navBackStack
+    }
+
+    fun logIn() {
+        viewModelScope.launch {
+            userSessionPreferences.updateData {
+                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = "Some API key")
+            }
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            userSessionPreferences.updateData {
+                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = null)
+            }
+        }
     }
 }
