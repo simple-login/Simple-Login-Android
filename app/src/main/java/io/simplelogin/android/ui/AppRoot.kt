@@ -2,6 +2,8 @@ package io.simplelogin.android.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,9 +19,13 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LaunchScreen
 import io.simplelogin.android.ui.login.LoginScreen
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -38,6 +44,7 @@ fun AppRoot(modifier: Modifier = Modifier,
             viewModel: AppRootViewModel = hiltViewModel()
 ) {
     val backStack = rememberNavBackStack(AppRootDestination.Launching)
+    val baseUrl by viewModel.baseUrl.collectAsState()
 
     LaunchedEffect(backStack) {
         viewModel.setNavBackStack(backStack)
@@ -64,7 +71,9 @@ fun AppRoot(modifier: Modifier = Modifier,
                         NavEntry(navKey) {
                             LoginScreen(
                                 modifier = modifier,
-                                onLoginClick = viewModel::logIn
+                                baseUrl = baseUrl,
+                                onLoginClick = viewModel::logIn,
+                                onBaseUrlChange = viewModel::updateBaseUrl
                             )
                         }
                     }
@@ -91,11 +100,14 @@ class AppRootViewModel @Inject constructor(
     private val userSessionPreferences: DataStore<UserSessionPreferences>
 ): ViewModel() {
     private var _navBackStack: NavBackStack? = null
+    private var _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
+    val baseUrl = _baseUrl.asStateFlow()
 
     init {
         viewModelScope.launch {
             userSessionPreferences.data
                 .collect {
+                    _baseUrl.emit(it.baseUrl)
                     assert(_navBackStack != null) { "NavBackStack is not set" }
                     _navBackStack?.apply {
                         clear()
@@ -115,17 +127,25 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun logIn() {
+        updateApiKey("Some API key")
+    }
+
+    fun logOut() {
+        updateApiKey(null)
+    }
+
+    fun updateBaseUrl(newBaseUrl: String) {
         viewModelScope.launch {
             userSessionPreferences.updateData {
-                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = "Some API key")
+                UserSessionPreferences(baseUrl = newBaseUrl, apiKey = it.apiKey)
             }
         }
     }
 
-    fun logOut() {
+    private fun updateApiKey(apiKey: String?) {
         viewModelScope.launch {
             userSessionPreferences.updateData {
-                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = null)
+                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = apiKey)
             }
         }
     }
