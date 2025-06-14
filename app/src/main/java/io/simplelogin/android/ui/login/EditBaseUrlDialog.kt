@@ -38,7 +38,7 @@ fun EditBaseUrlDialog(
                 TextField(
                     value = updatedBaseUrl,
                     onValueChange = { updatedBaseUrl = it },
-                    label = { Text(stringResource(R.string.api_url)) },
+                    placeholder = { Text(stringResource(R.string.api_url)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
                 )
