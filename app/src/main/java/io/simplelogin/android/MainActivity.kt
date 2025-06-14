@@ -1,5 +1,6 @@
 package io.simplelogin.android
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +21,6 @@ import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.ui.AppRoot
 import io.simplelogin.android.ui.AppRootViewModel
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,8 +31,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { !appRootViewModel.isAppReady.value }
+        viewModel.observe()
+        setUpSplashScreen()
+        applyOrientationRestrictions()
         enableEdgeToEdge()
         setContent {
             SimpleLoginTheme {
@@ -45,19 +46,32 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun setUpSplashScreen() {
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { !appRootViewModel.isAppReady.value }
+    }
+
+    private fun applyOrientationRestrictions() {
+        val configuration = resources.configuration
+        val isTablet = configuration.smallestScreenWidthDp >= 600
+        requestedOrientation = if (isTablet) {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
 }
 
 // TODO: Convert to a use case
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    baseUrlProvider: BaseUrlProvider,
-    userSessionPreferences: DataStore<UserSessionPreferences>
+    private val baseUrlProvider: BaseUrlProvider,
+    private val userSessionPreferences: DataStore<UserSessionPreferences>
 ): ViewModel() {
-    init {
+    fun observe() {
         viewModelScope.launch {
             userSessionPreferences.data
-                // Only listen to baseUrl changes
-                .distinctUntilChanged { old, new -> old.baseUrl == new.baseUrl }
                 .collect {
                     baseUrlProvider.updateBaseUrl(it.baseUrl)
                 }
