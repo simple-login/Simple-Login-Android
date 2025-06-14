@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,10 +24,13 @@ import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
-fun LoginScreen(modifier: Modifier,
-                baseUrl: String,
-                onLoginClick: () -> Unit,
-                onBaseUrlChange: (String) -> Unit) {
+fun LoginScreen(
+    modifier: Modifier,
+    appVersion: String,
+    baseUrl: String,
+    onLoginClick: () -> Unit,
+    onBaseUrlChange: (String) -> Unit
+) {
     var showEditBaseUrlDialog by remember { mutableStateOf(false) }
 
     Box(
@@ -39,6 +43,14 @@ fun LoginScreen(modifier: Modifier,
                 Text("Login")
             }
         }
+
+        Text(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = Spacing.regular),
+            text = appVersion,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         IconButton(
             onClick = { showEditBaseUrlDialog = true },

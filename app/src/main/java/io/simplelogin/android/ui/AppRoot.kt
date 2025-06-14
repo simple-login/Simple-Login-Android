@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.BuildConfig
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.home.HomeScreen
@@ -69,6 +70,7 @@ fun AppRoot(modifier: Modifier = Modifier,
                         NavEntry(navKey) {
                             LoginScreen(
                                 modifier = modifier,
+                                appVersion = viewModel.appVersion,
                                 baseUrl = baseUrl,
                                 onLoginClick = viewModel::logIn,
                                 onBaseUrlChange = viewModel::updateBaseUrl
@@ -103,6 +105,8 @@ class AppRootViewModel @Inject constructor(
     private var _navBackStack: NavBackStack? = null
     private val _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
     val baseUrl = _baseUrl.asStateFlow()
+
+    val appVersion = "v${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}"
 
     init {
         viewModelScope.launch {
