@@ -6,7 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -21,18 +20,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.home.HomeScreen
-import io.simplelogin.android.ui.login.LaunchScreen
 import io.simplelogin.android.ui.login.LoginScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 sealed class AppRootDestination: NavKey {
     @Serializable
-    object Launching: AppRootDestination()
+    object Initialization: AppRootDestination()
     @Serializable
     object LogIn: AppRootDestination()
     @Serializable
@@ -41,9 +38,9 @@ sealed class AppRootDestination: NavKey {
 
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
-            viewModel: AppRootViewModel = hiltViewModel()
+            viewModel: AppRootViewModel
 ) {
-    val backStack = rememberNavBackStack(AppRootDestination.Launching)
+    val backStack = rememberNavBackStack(AppRootDestination.Initialization)
     val baseUrl by viewModel.baseUrl.collectAsState()
 
     LaunchedEffect(backStack) {
@@ -61,9 +58,10 @@ fun AppRoot(modifier: Modifier = Modifier,
         entryProvider = { navKey ->
             if (navKey is AppRootDestination) {
                 return@NavDisplay when(navKey) {
-                    AppRootDestination.Launching -> {
+                    AppRootDestination.Initialization -> {
                         NavEntry(navKey) {
-                            LaunchScreen(modifier)
+                            // Dummy empty screen while deciding if the user is logged in or not
+                            // Rely on splash screen and show nothing here
                         }
                     }
 
@@ -99,15 +97,19 @@ fun AppRoot(modifier: Modifier = Modifier,
 class AppRootViewModel @Inject constructor(
     private val userSessionPreferences: DataStore<UserSessionPreferences>
 ): ViewModel() {
+    private val _isAppReady = MutableStateFlow(false)
+    val isAppReady = _isAppReady.asStateFlow()
+
     private var _navBackStack: NavBackStack? = null
-    private var _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
+    private val _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
     val baseUrl = _baseUrl.asStateFlow()
 
     init {
         viewModelScope.launch {
             userSessionPreferences.data
                 .collect {
-                    _baseUrl.emit(it.baseUrl)
+                    _isAppReady.value = true
+                    _baseUrl.value = it.baseUrl
                     assert(_navBackStack != null) { "NavBackStack is not set" }
                     _navBackStack?.apply {
                         clear()
