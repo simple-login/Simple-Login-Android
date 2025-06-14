@@ -1,8 +1,6 @@
 package io.simplelogin.android.ui.login
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -17,29 +15,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import io.simplelogin.android.R
 
-// TODO: Localize strings here
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditBaseUrlDialog(
     baseUrl: String,
     onDismiss: () -> Unit,
-    onReset: () -> Unit,
-    onSave: (String) -> Unit
+    onSave: (String) -> Unit,
+    onUseDefault: () -> Unit
 ) {
     var updatedBaseUrl by remember { mutableStateOf(baseUrl) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Change API URL") },
+        title = { Text(stringResource(R.string.api_url)) },
         text = {
             Column {
-                Text("Only change API URL if you're hosting SimpleLogin on your own")
+                Text(stringResource(R.string.change_api_url_explanation))
                 TextField(
                     value = updatedBaseUrl,
                     onValueChange = { updatedBaseUrl = it },
-                    label = { Text("API URL") },
+                    label = { Text(stringResource(R.string.api_url)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
                 )
@@ -48,20 +47,16 @@ fun EditBaseUrlDialog(
         confirmButton = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.End
             ) {
                 TextButton(
                     onClick = { onSave(updatedBaseUrl) }
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
 
-                TextButton(onClick = onReset) {
-                    Text("Reset to default value")
-                }
-
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
+                TextButton(onClick = onUseDefault) {
+                    Text(stringResource(R.string.use_default_api_url))
                 }
             }
         }

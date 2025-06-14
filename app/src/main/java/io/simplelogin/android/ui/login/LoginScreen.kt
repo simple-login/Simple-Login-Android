@@ -17,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import io.simplelogin.android.R
 import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
 fun LoginScreen(modifier: Modifier,
@@ -42,12 +44,11 @@ fun LoginScreen(modifier: Modifier,
             onClick = { showEditBaseUrlDialog = true },
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .padding(end = Spacing.regular)
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,
-                // TODO: Localize description
-                contentDescription = null
+                contentDescription = stringResource(R.string.settings)
             )
         }
     }
@@ -56,14 +57,14 @@ fun LoginScreen(modifier: Modifier,
         EditBaseUrlDialog(
             baseUrl = baseUrl,
             onDismiss = { showEditBaseUrlDialog = false },
-            onReset = {
+            onSave = {
+                onBaseUrlChange(it)
+                showEditBaseUrlDialog = false
+            },
+            onUseDefault = {
                 if (baseUrl != Constants.DEFAULT_BASE_URL) {
                     onBaseUrlChange(Constants.DEFAULT_BASE_URL)
                 }
-                showEditBaseUrlDialog = false
-            },
-            onSave = {
-                onBaseUrlChange(it)
                 showEditBaseUrlDialog = false
             }
         )

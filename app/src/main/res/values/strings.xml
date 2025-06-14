@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SimpleLogin</string>
+    <string name="settings">Settings</string>
+    <string name="api_url">API URL</string>
+    <string name="change_api_url_explanation">Only change API URL if you\'re hosting SimpleLogin on your own. Default API URL is \"https://app.simplelogin.io\".</string>
+    <string name="save">Save</string>
+    <string name="use_default_api_url">Use default API URL</string>
 </resources>
