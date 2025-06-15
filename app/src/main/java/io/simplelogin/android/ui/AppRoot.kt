@@ -73,6 +73,7 @@ fun AppRoot(modifier: Modifier = Modifier,
                                 appVersion = viewModel.appVersion,
                                 baseUrl = baseUrl,
                                 onLoginClick = viewModel::logIn,
+                                onLoginWithProtonClick = viewModel::logInWithProton,
                                 onBaseUrlChange = viewModel::updateBaseUrl
                             )
                         }
@@ -135,6 +136,8 @@ class AppRootViewModel @Inject constructor(
     fun logIn() {
         updateApiKey("Some API key")
     }
+
+    fun logInWithProton() = Unit
 
     fun logOut() {
         updateApiKey(null)
