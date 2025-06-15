@@ -1,10 +1,12 @@
 package io.simplelogin.android.ui
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,12 +20,14 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.BuildConfig
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -39,13 +43,25 @@ sealed class AppRootDestination: NavKey {
 
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
+            snackbarHostState: SnackbarHostState,
             viewModel: AppRootViewModel
 ) {
+    val context = LocalContext.current
     val backStack = rememberNavBackStack(AppRootDestination.Initialization)
     val baseUrl by viewModel.baseUrl.collectAsState()
 
     LaunchedEffect(backStack) {
         viewModel.setNavBackStack(backStack)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.resetPasswordEmail.collectLatest { email ->
+            if (email != null) {
+                snackbarHostState.showSnackbar(
+                    message = context.getString(R.string.reset_password_confirmation, email)
+                )
+            }
+        }
     }
 
     NavDisplay(
@@ -75,7 +91,8 @@ fun AppRoot(modifier: Modifier = Modifier,
                                 onBaseUrlChange = viewModel::updateBaseUrl,
                                 onLoginClick = viewModel::logIn,
                                 onLoginWithProtonClick = viewModel::logInWithProton,
-                                onLoginWithApiKeyClick = { viewModel.updateApiKey(it) }
+                                onLoginWithApiKeyClick = viewModel::updateApiKey,
+                                onForgotPassword = viewModel::resetPassword
                             )
                         }
                     }
@@ -107,6 +124,9 @@ class AppRootViewModel @Inject constructor(
     private var _navBackStack: NavBackStack? = null
     private val _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
     val baseUrl = _baseUrl.asStateFlow()
+
+    private var _resetPasswordEmail = MutableStateFlow<String?>(null)
+    val resetPasswordEmail = _resetPasswordEmail.asStateFlow()
 
     val appVersion = "v${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}"
 
@@ -157,6 +177,12 @@ class AppRootViewModel @Inject constructor(
             userSessionPreferences.updateData {
                 UserSessionPreferences(baseUrl = it.baseUrl, apiKey = apiKey)
             }
+        }
+    }
+
+    fun resetPassword(emailAddress: String) {
+        viewModelScope.launch {
+            _resetPasswordEmail.emit(emailAddress)
         }
     }
 }

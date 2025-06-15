@@ -63,7 +63,8 @@ fun LoginScreen(
     onBaseUrlChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onLoginWithProtonClick: () -> Unit,
-    onLoginWithApiKeyClick: (String) -> Unit
+    onLoginWithApiKeyClick: (String) -> Unit,
+    onForgotPassword: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showEditBaseUrlDialog by remember { mutableStateOf(false) }
@@ -135,6 +136,16 @@ fun LoginScreen(
             onSet = {
                 showSignInWithApiKeyDialog = false
                 onLoginWithApiKeyClick(it)
+            }
+        )
+    }
+
+    if (showForgotPasswordDialog) {
+        ForgotPasswordDialog(
+            onDismiss = { showForgotPasswordDialog = false },
+            onReset = {
+                showForgotPasswordDialog = false
+                onForgotPassword(it)
             }
         )
     }
@@ -276,8 +287,8 @@ private fun LoginColumn(
         AnimatedVisibility(showMoreOptions) {
             Column(
                 modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Spacing.regular),
+                    .fillMaxWidth()
+                    .padding(top = Spacing.regular),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlinedButton(
