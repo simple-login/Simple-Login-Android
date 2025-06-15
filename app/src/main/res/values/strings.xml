@@ -17,7 +17,7 @@
     <string name="forgot_password">Forgot password</string>
     <string name="forgot_password_instruction">Enter your email address to reset your password</string>
     <string name="reset_password">Reset password</string>
-    <string name="reset_password_confirmation">Password reset instructions sent to %s</string>
+    <string name="reset_password_confirmation">Password reset instructions sent to \"%s\"</string>
     <string name="sign_up">Sign up</string>
     <string name="api_key">API key</string>
     <string name="enter_api_key">Enter API key</string>

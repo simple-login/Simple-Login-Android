@@ -1,12 +1,14 @@
 package io.simplelogin.android.ui
 
+import android.content.Context
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,15 +21,17 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.BuildConfig
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
+import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -46,22 +50,12 @@ fun AppRoot(modifier: Modifier = Modifier,
             snackbarHostState: SnackbarHostState,
             viewModel: AppRootViewModel
 ) {
-    val context = LocalContext.current
     val backStack = rememberNavBackStack(AppRootDestination.Initialization)
     val baseUrl by viewModel.baseUrl.collectAsState()
 
-    LaunchedEffect(backStack) {
-        viewModel.setNavBackStack(backStack)
-    }
-
     LaunchedEffect(Unit) {
-        viewModel.resetPasswordEmail.collectLatest { email ->
-            if (email != null) {
-                snackbarHostState.showSnackbar(
-                    message = context.getString(R.string.reset_password_confirmation, email)
-                )
-            }
-        }
+        viewModel.setNavBackStack(backStack)
+        viewModel.setSnackbarHostState(snackbarHostState)
     }
 
     NavDisplay(
@@ -116,7 +110,9 @@ fun AppRoot(modifier: Modifier = Modifier,
 
 @HiltViewModel
 class AppRootViewModel @Inject constructor(
-    private val userSessionPreferences: DataStore<UserSessionPreferences>
+    @ApplicationContext private val context: Context,
+    private val userSessionPreferences: DataStore<UserSessionPreferences>,
+    private val snackbarManager: SnackbarManager
 ): ViewModel() {
     private val _isAppReady = MutableStateFlow(false)
     val isAppReady = _isAppReady.asStateFlow()
@@ -125,8 +121,7 @@ class AppRootViewModel @Inject constructor(
     private val _baseUrl = MutableStateFlow<String>(Constants.DEFAULT_BASE_URL)
     val baseUrl = _baseUrl.asStateFlow()
 
-    private var _resetPasswordEmail = MutableStateFlow<String?>(null)
-    val resetPasswordEmail = _resetPasswordEmail.asStateFlow()
+    private var _snackbarHostState: SnackbarHostState? = null
 
     val appVersion = "v${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}"
 
@@ -148,10 +143,35 @@ class AppRootViewModel @Inject constructor(
                     }
                 }
         }
+
+        viewModelScope.launch {
+            snackbarManager.configuration
+                .collect { configuration ->
+                    assert(_snackbarHostState != null) { "SnackbarHostState is not set" }
+                    val result = _snackbarHostState?.showSnackbar(
+                        message = configuration.message,
+                        actionLabel = configuration.action?.label,
+                        withDismissAction = configuration.duration == SnackbarDuration.Indefinite,
+                        duration = configuration.duration
+                    )
+
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            configuration.action?.action?.let { it() }
+                        }
+
+                        else -> Unit
+                    }
+                }
+        }
     }
 
     fun setNavBackStack(navBackStack: NavBackStack) {
         _navBackStack = navBackStack
+    }
+
+    fun setSnackbarHostState(snackbarHostState: SnackbarHostState) {
+        _snackbarHostState = snackbarHostState
     }
 
     fun logIn() {
@@ -182,7 +202,8 @@ class AppRootViewModel @Inject constructor(
 
     fun resetPassword(emailAddress: String) {
         viewModelScope.launch {
-            _resetPasswordEmail.emit(emailAddress)
+            val message = context.getString(R.string.reset_password_confirmation, emailAddress)
+            snackbarManager.showSnackbar(SnackbarConfiguration(message))
         }
     }
 }
