@@ -24,7 +24,7 @@ import io.simplelogin.android.R
 
 @Composable
 fun EmailTextField(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit
 ) {
@@ -49,9 +49,11 @@ fun EmailTextField(
 
 @Composable
 fun PasswordTextField(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     var showPassword by remember { mutableStateOf(false) }
     OutlinedTextField(
@@ -77,5 +79,7 @@ fun PasswordTextField(
             }
         },
         onValueChange = onValueChange,
+        isError = isError,
+        supportingText = supportingText
     )
 }

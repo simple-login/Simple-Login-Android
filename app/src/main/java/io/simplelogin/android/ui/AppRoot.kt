@@ -86,7 +86,8 @@ fun AppRoot(modifier: Modifier = Modifier,
                                 onLoginClick = viewModel::logIn,
                                 onLoginWithProtonClick = viewModel::logInWithProton,
                                 onLoginWithApiKeyClick = viewModel::updateApiKey,
-                                onForgotPassword = viewModel::resetPassword
+                                onForgotPassword = viewModel::resetPassword,
+                                onSignUp = viewModel::createAccount
                             )
                         }
                     }
@@ -183,6 +184,8 @@ class AppRootViewModel @Inject constructor(
     fun logOut() {
         updateApiKey(null)
     }
+
+    fun createAccount(email: String, password: String) = Unit
 
     fun updateBaseUrl(newBaseUrl: String) {
         viewModelScope.launch {
