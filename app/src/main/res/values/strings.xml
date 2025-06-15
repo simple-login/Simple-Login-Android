@@ -13,4 +13,7 @@
     <string name="sign_in_with_api_key">Sign in with API key</string>
     <string name="or">or</string>
     <string name="log_in_with_proton">Log in with Proton</string>
+    <string name="more">More</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="sign_up">Sign up</string>
 </resources>

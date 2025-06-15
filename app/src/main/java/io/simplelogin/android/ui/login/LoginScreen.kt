@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.login
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,12 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +30,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -62,6 +65,8 @@ fun LoginScreen(
 ) {
     val focusManager = LocalFocusManager.current
     var showEditBaseUrlDialog by remember { mutableStateOf(false) }
+    var showForgotPasswordDialog by remember { mutableStateOf(false) }
+    var showSignUpDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -77,7 +82,9 @@ fun LoginScreen(
         LoginColumn(
             modifier = Modifier.width(280.dp),
             onLoginClick = onLoginClick,
-            onLoginWithProtonClick = onLoginWithProtonClick
+            onLoginWithProtonClick = onLoginWithProtonClick,
+            onForgotPasswordClick = { showForgotPasswordDialog = true },
+            onSignUpClick = { showSignUpDialog = true }
         )
 
         Text(
@@ -125,10 +132,13 @@ private fun LoginColumn(
     modifier: Modifier,
     onLoginClick: () -> Unit,
     onLoginWithProtonClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
     var emailAddress by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+    var showMoreOptions by remember { mutableStateOf(false) }
     var showSignInWithApiKeyDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -187,15 +197,10 @@ private fun LoginColumn(
             Text(stringResource(R.string.sign_in))
         }
 
-        OutlinedButton(
-            modifier = Modifier.fillMaxWidth(),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-            onClick = { showSignInWithApiKeyDialog = true }
-        ) {
-            Text(stringResource(R.string.sign_in_with_api_key))
-        }
-
-        Text(stringResource(R.string.or))
+        Text(
+            text = stringResource(R.string.or),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         CompositionLocalProvider(LocalRippleConfiguration provides RippleConfiguration(
             color = ProtonPurple,
@@ -206,8 +211,13 @@ private fun LoginColumn(
                 border = BorderStroke(1.dp, ProtonPurple),
                 onClick = onLoginWithProtonClick
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_proton),
                             tint = Color.Unspecified,
@@ -223,6 +233,53 @@ private fun LoginColumn(
                         textAlign = TextAlign.Center,
                         color = ProtonPurple
                     )
+                }
+            }
+        }
+
+        AnimatedVisibility(!showMoreOptions) {
+            TextButton(
+                colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                onClick = { showMoreOptions = true }
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.more),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(showMoreOptions) {
+            Column(
+                modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.regular),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    onClick = { showSignInWithApiKeyDialog = true }
+                ) {
+                    Text(stringResource(R.string.sign_in_with_api_key))
+                }
+
+                TextButton(onClick = onForgotPasswordClick) {
+                    Text(stringResource(R.string.forgot_password))
+                }
+
+                TextButton(onClick = onSignUpClick) {
+                    Text(stringResource(R.string.sign_up))
                 }
             }
         }
