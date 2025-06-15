@@ -16,4 +16,10 @@
     <string name="more">More</string>
     <string name="forgot_password">Forgot password</string>
     <string name="sign_up">Sign up</string>
+    <string name="api_key">API key</string>
+    <string name="enter_api_key">Enter API key</string>
+    <string name="get_api_key_instructions">To get your API key, you must sign in into SimpleLogin by using a browser. Navigate to "API key" menu, create one if not already then copy and paste the key here.</string>
+    <string name="confirm">Confirm</string>
+    <string name="paste_from_clipboard">Paste from clipboard</string>
+    <string name="enter_manually">Enter manually</string>
 </resources>

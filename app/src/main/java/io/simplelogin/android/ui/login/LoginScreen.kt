@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalRippleConfiguration
@@ -59,12 +60,14 @@ fun LoginScreen(
     modifier: Modifier,
     appVersion: String,
     baseUrl: String,
+    onBaseUrlChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onLoginWithProtonClick: () -> Unit,
-    onBaseUrlChange: (String) -> Unit
+    onLoginWithApiKeyClick: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showEditBaseUrlDialog by remember { mutableStateOf(false) }
+    var showSignInWithApiKeyDialog by remember { mutableStateOf(false) }
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
     var showSignUpDialog by remember { mutableStateOf(false) }
 
@@ -83,6 +86,7 @@ fun LoginScreen(
             modifier = Modifier.width(280.dp),
             onLoginClick = onLoginClick,
             onLoginWithProtonClick = onLoginWithProtonClick,
+            onSignInWithApiKeyClick = { showSignInWithApiKeyDialog = true },
             onForgotPasswordClick = { showForgotPasswordDialog = true },
             onSignUpClick = { showSignUpDialog = true }
         )
@@ -124,6 +128,16 @@ fun LoginScreen(
             }
         )
     }
+
+    if (showSignInWithApiKeyDialog) {
+        SetApiKeyDialog(
+            onDismiss = { showSignInWithApiKeyDialog = false },
+            onSet = {
+                showSignInWithApiKeyDialog = false
+                onLoginWithApiKeyClick(it)
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -132,6 +146,7 @@ private fun LoginColumn(
     modifier: Modifier,
     onLoginClick: () -> Unit,
     onLoginWithProtonClick: () -> Unit,
+    onSignInWithApiKeyClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
@@ -139,7 +154,6 @@ private fun LoginColumn(
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
     var showMoreOptions by remember { mutableStateOf(false) }
-    var showSignInWithApiKeyDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -269,7 +283,7 @@ private fun LoginColumn(
                 OutlinedButton(
                     modifier = Modifier.fillMaxWidth(),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                    onClick = { showSignInWithApiKeyDialog = true }
+                    onClick = onSignInWithApiKeyClick
                 ) {
                     Text(stringResource(R.string.sign_in_with_api_key))
                 }
@@ -277,6 +291,8 @@ private fun LoginColumn(
                 TextButton(onClick = onForgotPasswordClick) {
                     Text(stringResource(R.string.forgot_password))
                 }
+
+                HorizontalDivider()
 
                 TextButton(onClick = onSignUpClick) {
                     Text(stringResource(R.string.sign_up))

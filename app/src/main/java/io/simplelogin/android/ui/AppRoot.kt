@@ -72,9 +72,10 @@ fun AppRoot(modifier: Modifier = Modifier,
                                 modifier = modifier,
                                 appVersion = viewModel.appVersion,
                                 baseUrl = baseUrl,
+                                onBaseUrlChange = viewModel::updateBaseUrl,
                                 onLoginClick = viewModel::logIn,
                                 onLoginWithProtonClick = viewModel::logInWithProton,
-                                onBaseUrlChange = viewModel::updateBaseUrl
+                                onLoginWithApiKeyClick = { viewModel.updateApiKey(it) }
                             )
                         }
                     }
@@ -151,7 +152,7 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    private fun updateApiKey(apiKey: String?) {
+    fun updateApiKey(apiKey: String?) {
         viewModelScope.launch {
             userSessionPreferences.updateData {
                 UserSessionPreferences(baseUrl = it.baseUrl, apiKey = apiKey)
