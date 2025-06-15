@@ -163,56 +163,24 @@ private fun LoginColumn(
 ) {
     var emailAddress by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
     var showMoreOptions by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
+        EmailTextField(
             modifier = Modifier.fillMaxWidth(),
             value = emailAddress,
-            label = { Text(stringResource(R.string.email_address)) },
-            placeholder = { Text(stringResource(R.string.email_address)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            trailingIcon = {
-                IconButton(onClick = { emailAddress = "" }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Cancel,
-                        contentDescription = stringResource(R.string.clear_email_address)
-                    )
-                }
-            },
-            onValueChange = { emailAddress = it },
+            onValueChange = { emailAddress = it }
         )
 
-        OutlinedTextField(
+        PasswordTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = Spacing.large)
-                .onFocusChanged {
-                    // Automatically hide password when password text field loses focus
-                    if (showPassword && !it.isFocused) {
-                        showPassword = false
-                    }
-                },
+                .padding(bottom = Spacing.large),
             value = password,
-            label = { Text(stringResource(R.string.password)) },
-            placeholder = { Text(stringResource(R.string.password)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { showPassword = !showPassword }) {
-                    Icon(
-                        imageVector = if (showPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = stringResource(R.string.show_or_hide_password)
-                    )
-                }
-            },
-            onValueChange = { password = it },
+            onValueChange = { password = it }
         )
 
         Button(

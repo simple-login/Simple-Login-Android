@@ -1,11 +1,9 @@
 package io.simplelogin.android.ui.login
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import io.simplelogin.android.R
 
 @Composable
@@ -36,12 +33,10 @@ fun ForgotPasswordDialog(
             }
             Column {
                 Text(stringResource(R.string.forgot_password_instruction))
-                TextField(
+                EmailTextField(
                     modifier = Modifier.focusRequester(focusRequester),
                     value = emailAddress,
-                    placeholder = { Text(stringResource(R.string.email_address)) },
-                    onValueChange = { emailAddress = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    onValueChange = { emailAddress = it }
                 )
             }
         },
