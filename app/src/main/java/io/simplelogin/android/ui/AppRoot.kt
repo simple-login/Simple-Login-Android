@@ -87,7 +87,8 @@ fun AppRoot(modifier: Modifier = Modifier,
                                 onLoginWithProtonClick = viewModel::logInWithProton,
                                 onLoginWithApiKeyClick = viewModel::updateApiKey,
                                 onForgotPassword = viewModel::resetPassword,
-                                onSignUp = viewModel::createAccount
+                                onSignUp = viewModel::createAccount,
+                                onResendActivationCode = viewModel::resendActivationCode
                             )
                         }
                     }
@@ -209,4 +210,6 @@ class AppRootViewModel @Inject constructor(
             snackbarManager.showSnackbar(SnackbarConfiguration(message))
         }
     }
+
+    fun resendActivationCode(emailAddress: String) = Unit
 }

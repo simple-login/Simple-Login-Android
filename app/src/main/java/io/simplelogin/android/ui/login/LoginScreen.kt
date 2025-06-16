@@ -56,7 +56,8 @@ fun LoginScreen(
     onLoginWithProtonClick: () -> Unit,
     onLoginWithApiKeyClick: (String) -> Unit,
     onForgotPassword: (String) -> Unit,
-    onSignUp: (email: String, password: String) -> Unit
+    onSignUp: (email: String, password: String) -> Unit,
+    onResendActivationCode: (email: String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showEditBaseUrlDialog by remember { mutableStateOf(false) }

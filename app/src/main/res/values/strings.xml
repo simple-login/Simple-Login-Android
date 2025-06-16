@@ -28,4 +28,10 @@
     <string name="paste_from_clipboard">Paste from clipboard</string>
     <string name="enter_manually">Enter manually</string>
     <string name="password_length_error">Password must have at least 8 characters</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="enter_otp_description">Enter the time-sensitive code from the authenticator app linked to your account</string>
+    <string name="enter_activation_code">Enter activation code</string>
+    <string name="enter_activation_code_description">We\'ve sent an activation code to your email address. Please enter it to activate your account.</string>
+    <string name="resend_activation_code">Resend activation code</string>
+    <string name="delete">Delete</string>
 </resources>
