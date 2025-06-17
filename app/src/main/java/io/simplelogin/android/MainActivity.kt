@@ -41,13 +41,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             SimpleLoginTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
+                appRootViewModel.setSnackbarHostState(snackbarHostState)
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(snackbarHostState) }
                 ) { innerPadding ->
                     AppRoot(
                         modifier = Modifier.padding(innerPadding),
-                        snackbarHostState = snackbarHostState,
                         viewModel = appRootViewModel
                     )
                 }
