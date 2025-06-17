@@ -7,12 +7,19 @@ import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.BuildConfig
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.SnackbarManagerImpl
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class AppVersion
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class LoadingState
+
+typealias LoadingStateFlow = MutableStateFlow<Boolean>
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,4 +33,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAppVersion() = "v${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}"
+
+    @LoadingState
+    @Provides
+    @Singleton
+    fun provideLoadingState(): LoadingStateFlow = MutableStateFlow(false)
 }

@@ -25,10 +25,13 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.di.AppVersion
+import io.simplelogin.android.di.LoadingState
+import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -93,7 +96,8 @@ class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
     @ApplicationContext private val context: Context,
     private val userSessionPreferences: DataStore<UserSessionPreferences>,
-    private val snackbarManager: SnackbarManager
+    private val snackbarManager: SnackbarManager,
+    @LoadingState private val loadingState: LoadingStateFlow,
 ): ViewModel() {
     private val _isAppReady = MutableStateFlow(false)
     val isAppReady = _isAppReady.asStateFlow()
@@ -149,7 +153,13 @@ class AppRootViewModel @Inject constructor(
         updateApiKey("Some API key")
     }
 
-    fun logInWithProton() = Unit
+    fun logInWithProton() {
+        viewModelScope.launch {
+            loadingState.emit(true)
+            delay(2000)
+            loadingState.emit(false)
+        }
+    }
 
     fun logOut() {
         updateApiKey(null)

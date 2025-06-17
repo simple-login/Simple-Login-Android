@@ -6,13 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
@@ -21,9 +33,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.remote.BaseUrlProvider
+import io.simplelogin.android.di.LoadingState
+import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.ui.AppRoot
 import io.simplelogin.android.ui.AppRootViewModel
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,14 +57,42 @@ class MainActivity : ComponentActivity() {
             SimpleLoginTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
                 appRootViewModel.setSnackbarHostState(snackbarHostState)
+
+                val isLoading by viewModel.showLoadingIndicator.collectAsState()
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     snackbarHost = { SnackbarHost(snackbarHostState) }
                 ) { innerPadding ->
-                    AppRoot(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = appRootViewModel
-                    )
+                    Box(
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        AppRoot(
+                            modifier = Modifier.fillMaxSize(),
+                            viewModel = appRootViewModel
+                        )
+
+                        AnimatedVisibility(
+                            visible = isLoading,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.LightGray.copy(alpha = 0.5f))
+                                    // Intercept all click events to disable click while loading
+                                    .clickable(
+                                        onClick = {},
+                                        indication = null,
+                                        interactionSource = remember { MutableInteractionSource() }
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -74,9 +117,12 @@ class MainActivity : ComponentActivity() {
 // TODO: Convert to a use case
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    @LoadingState private val loadingState: LoadingStateFlow,
     private val baseUrlProvider: BaseUrlProvider,
     private val userSessionPreferences: DataStore<UserSessionPreferences>
 ): ViewModel() {
+    val showLoadingIndicator = loadingState.asStateFlow()
+
     fun observe() {
         viewModelScope.launch {
             userSessionPreferences.data
