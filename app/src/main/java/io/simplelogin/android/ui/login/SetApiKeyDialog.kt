@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +30,9 @@ fun SetApiKeyDialog(
 ) {
     val scope = rememberCoroutineScope()
     val clipboard = LocalClipboard.current
-    var showTextField by remember { mutableStateOf(false) }
+    var showTextField by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
-    var apiKey by remember { mutableStateOf("") }
+    var apiKey by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,

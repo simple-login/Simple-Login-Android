@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Settings
@@ -32,6 +34,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,10 +63,10 @@ fun LoginScreen(
     onResendActivationCode: (email: String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    var showEditBaseUrlDialog by remember { mutableStateOf(false) }
-    var showSignInWithApiKeyDialog by remember { mutableStateOf(false) }
-    var showForgotPasswordDialog by remember { mutableStateOf(false) }
-    var showSignUpDialog by remember { mutableStateOf(false) }
+    var showEditBaseUrlDialog by rememberSaveable { mutableStateOf(false) }
+    var showSignInWithApiKeyDialog by rememberSaveable { mutableStateOf(false) }
+    var showForgotPasswordDialog by rememberSaveable { mutableStateOf(false) }
+    var showSignUpDialog by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -164,12 +167,13 @@ private fun LoginColumn(
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
-    var emailAddress by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showMoreOptions by remember { mutableStateOf(false) }
+    var emailAddress by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var showMoreOptions by rememberSaveable { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmailTextField(

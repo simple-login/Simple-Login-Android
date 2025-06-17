@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,14 +60,14 @@ fun VerificationDialog(
     onResend: (email: String) -> Unit
 ) {
     var resentCode by remember { mutableStateOf(false) }
-    var manualEnter by remember { mutableStateOf(false) }
-    var digit1 by remember { mutableStateOf<Int?>(null) }
-    var digit2 by remember { mutableStateOf<Int?>(null) }
-    var digit3 by remember { mutableStateOf<Int?>(null) }
-    var digit4 by remember { mutableStateOf<Int?>(null) }
-    var digit5 by remember { mutableStateOf<Int?>(null) }
-    var digit6 by remember { mutableStateOf<Int?>(null) }
-    var ableToConfirm by remember { mutableStateOf(false) }
+    var manualEnter by rememberSaveable { mutableStateOf(false) }
+    var digit1 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var digit2 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var digit3 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var digit4 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var digit5 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var digit6 by rememberSaveable { mutableStateOf<Int?>(null) }
+    var ableToConfirm by rememberSaveable { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
