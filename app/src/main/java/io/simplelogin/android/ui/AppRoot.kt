@@ -55,7 +55,8 @@ data class AliasDetail(val aliasId: String): NavKey
 
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
-            viewModel: AppRootViewModel
+            viewModel: AppRootViewModel,
+            onOpenDrawer: () -> Unit
 ) {
     val baseUrl by viewModel.baseUrl.collectAsState()
     val backStack by viewModel.navBackStack.collectAsState()
@@ -93,6 +94,7 @@ fun AppRoot(modifier: Modifier = Modifier,
                 HomeScreen(
                     modifier = modifier,
                     apiKey = key.apiKey,
+                    onOpenDrawer = onOpenDrawer,
                     onAliasClick = viewModel::viewAliasDetail,
                     onLogOutClick = viewModel::logOut,
                 )

@@ -16,15 +16,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
@@ -54,47 +64,25 @@ class MainActivity : ComponentActivity() {
         applyOrientationRestrictions()
         enableEdgeToEdge()
         setContent {
-            SimpleLoginTheme {
-                val snackbarHostState = remember { SnackbarHostState() }
-                appRootViewModel.setSnackbarHostState(snackbarHostState)
-
-                val isLoading by viewModel.showLoadingIndicator.collectAsState()
-
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(snackbarHostState) }
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier.padding(innerPadding)
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet(
+                        drawerShape = RectangleShape
                     ) {
-                        AppRoot(
-                            modifier = Modifier.fillMaxSize(),
-                            viewModel = appRootViewModel
-                        )
-
-                        AnimatedVisibility(
-                            visible = isLoading,
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(Color.LightGray.copy(alpha = 0.5f))
-                                    // Intercept all click events to disable click while loading
-                                    .clickable(
-                                        onClick = {},
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
+                        Text("Menu option 1")
+                        HorizontalDivider()
                     }
+                },
+                content = {
+                    MainUi(
+                        drawerState = drawerState,
+                        viewModel = viewModel,
+                        appRootViewModel = appRootViewModel
+                    )
                 }
-            }
+            )
         }
     }
 
@@ -129,6 +117,62 @@ class MainViewModel @Inject constructor(
                 .collect {
                     baseUrlProvider.updateBaseUrl(it.baseUrl)
                 }
+        }
+    }
+}
+
+@Composable
+private fun MainUi(
+    drawerState: DrawerState,
+    viewModel: MainViewModel,
+    appRootViewModel: AppRootViewModel
+) {
+    val scope = rememberCoroutineScope()
+
+    SimpleLoginTheme {
+        val snackbarHostState = remember { SnackbarHostState() }
+        appRootViewModel.setSnackbarHostState(snackbarHostState)
+
+        val isLoading by viewModel.showLoadingIndicator.collectAsState()
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                AppRoot(
+                    modifier = Modifier.fillMaxSize(),
+                    viewModel = appRootViewModel,
+                    onOpenDrawer = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    }
+                )
+
+                AnimatedVisibility(
+                    visible = isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.LightGray.copy(alpha = 0.5f))
+                            // Intercept all click events to disable click while loading
+                            .clickable(
+                                onClick = {},
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
         }
     }
 }
