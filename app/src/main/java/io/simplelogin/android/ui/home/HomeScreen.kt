@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 fun HomeScreen(modifier: Modifier,
                apiKey: String,
                onOpenDrawer: () -> Unit,
-               onAliasClick: (String) -> Unit,
-               onLogOutClick: () -> Unit
+               onAliasClick: (String) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -22,9 +21,6 @@ fun HomeScreen(modifier: Modifier,
     ) {
         Column {
             Text("API key $apiKey")
-            Button(onClick = onLogOutClick) {
-                Text("Log out")
-            }
 
             Button(onClick = onOpenDrawer) {
                 Text("Open drawer")

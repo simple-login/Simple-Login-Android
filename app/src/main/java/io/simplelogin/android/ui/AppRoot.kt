@@ -1,15 +1,18 @@
 package io.simplelogin.android.ui
 
 import android.content.Context
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,6 +63,7 @@ fun AppRoot(modifier: Modifier = Modifier,
 ) {
     val baseUrl by viewModel.baseUrl.collectAsState()
     val backStack by viewModel.navBackStack.collectAsState()
+    val showLogOutDialog by viewModel.showLogOutDialog.collectAsState()
 
     NavDisplay(
         modifier = modifier,
@@ -95,8 +99,7 @@ fun AppRoot(modifier: Modifier = Modifier,
                     modifier = modifier,
                     apiKey = key.apiKey,
                     onOpenDrawer = onOpenDrawer,
-                    onAliasClick = viewModel::viewAliasDetail,
-                    onLogOutClick = viewModel::logOut,
+                    onAliasClick = viewModel::viewAliasDetail
                 )
             }
 
@@ -110,6 +113,28 @@ fun AppRoot(modifier: Modifier = Modifier,
             }
         }
     )
+
+    if (showLogOutDialog) {
+        AlertDialog(
+            onDismissRequest = viewModel::dismissLogOutDialog,
+            title = { Text(stringResource(R.string.sign_out)) },
+            text = { Text(stringResource(R.string.sign_out_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.logOut()
+                    }
+                ) {
+                    Text(stringResource(R.string.sign_out))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = viewModel::dismissLogOutDialog) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
 }
 
 @HiltViewModel
@@ -128,6 +153,8 @@ class AppRootViewModel @Inject constructor(
 
     private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
     val navBackStack = _navBackStack.asStateFlow()
+
+    var showLogOutDialog = MutableStateFlow(false)
 
     init {
         viewModelScope.launch {
@@ -182,7 +209,16 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
+    fun showLogOutDialog() {
+        showLogOutDialog.value = true
+    }
+
+    fun dismissLogOutDialog() {
+        showLogOutDialog.value = false
+    }
+
     fun logOut() {
+        showLogOutDialog.value = false
         updateApiKey(null)
     }
 
