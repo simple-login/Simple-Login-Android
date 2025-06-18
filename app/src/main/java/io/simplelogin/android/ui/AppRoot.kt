@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +32,8 @@ import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginScreen
+import io.simplelogin.android.ui.nav.TwoPaneScene
+import io.simplelogin.android.ui.nav.TwoPaneSceneStrategy
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,6 +50,9 @@ data object LogInDestination: NavKey
 @Serializable
 data class HomeDestination(val apiKey: String): NavKey
 
+@Serializable
+data class AliasDetail(val aliasId: String): NavKey
+
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
             viewModel: AppRootViewModel
@@ -57,6 +63,7 @@ fun AppRoot(modifier: Modifier = Modifier,
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
+        sceneStrategy = TwoPaneSceneStrategy(),
         entryDecorators = listOf(
             rememberSavedStateNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
@@ -80,11 +87,23 @@ fun AppRoot(modifier: Modifier = Modifier,
                 )
             }
 
-            entry<HomeDestination> { key ->
+            entry<HomeDestination>(
+                metadata = TwoPaneScene.twoPane()
+            ) { key ->
                 HomeScreen(
                     modifier = modifier,
                     apiKey = key.apiKey,
+                    onAliasClick = viewModel::viewAliasDetail,
                     onLogOutClick = viewModel::logOut,
+                )
+            }
+
+            entry<AliasDetail>(
+                metadata = TwoPaneScene.twoPane()
+            ) { key ->
+                Text(
+                    modifier = modifier,
+                    text = "Alias detail ${key.aliasId}"
                 )
             }
         }
@@ -191,4 +210,13 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun resendActivationCode(emailAddress: String) = Unit
+
+    fun viewAliasDetail(aliasId: String) {
+        _navBackStack.value.apply {
+            // Workaround crashes by clearing the backStack
+            clear()
+            add(HomeDestination("Some API Key"))
+            add(AliasDetail(aliasId))
+        }
+    }
 }

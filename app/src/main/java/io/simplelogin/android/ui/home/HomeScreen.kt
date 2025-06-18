@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun HomeScreen(modifier: Modifier,
                apiKey: String,
+               onAliasClick: (String) -> Unit,
                onLogOutClick: () -> Unit
 ) {
     Box(
@@ -22,6 +23,10 @@ fun HomeScreen(modifier: Modifier,
             Text("API key $apiKey")
             Button(onClick = onLogOutClick) {
                 Text("Log out")
+            }
+
+            Button(onClick = { onAliasClick("Some random alias ID")  }) {
+                Text("Alias detail")
             }
         }
     }
