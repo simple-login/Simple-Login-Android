@@ -1,6 +1,8 @@
 package io.simplelogin.android.ui
 
 import android.content.Context
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -58,6 +60,7 @@ data class AliasDetail(val aliasId: String): NavKey
 
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
+            innerPadding: PaddingValues,
             viewModel: AppRootViewModel,
             onOpenDrawer: () -> Unit
 ) {
@@ -79,7 +82,7 @@ fun AppRoot(modifier: Modifier = Modifier,
 
             entry<LogInDestination> {
                 LoginScreen(
-                    modifier = modifier,
+                    modifier = modifier.padding(innerPadding),
                     appVersion = viewModel.appVersion,
                     baseUrl = baseUrl,
                     onBaseUrlChange = viewModel::updateBaseUrl,

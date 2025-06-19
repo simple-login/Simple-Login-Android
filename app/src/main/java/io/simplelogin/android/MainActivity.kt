@@ -152,10 +152,11 @@ private fun MainUi(
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { innerPadding ->
             Box(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.fillMaxSize()
             ) {
                 AppRoot(
                     modifier = Modifier.fillMaxSize(),
+                    innerPadding = innerPadding,
                     viewModel = appRootViewModel,
                     onOpenDrawer = {
                         scope.launch {
