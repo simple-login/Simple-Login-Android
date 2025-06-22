@@ -43,4 +43,7 @@
     <string name="search">Search</string>
     <string name="exit_search">Exit search</string>
     <string name="filter_options">Filter options</string>
+    <string name="device_settings">Device settings</string>
+    <string name="close">Close</string>
+    <string name="security">Security</string>
 </resources>

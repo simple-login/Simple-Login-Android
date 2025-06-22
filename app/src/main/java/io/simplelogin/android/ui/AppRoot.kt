@@ -35,6 +35,7 @@ import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.ui.home.DeviceSettingsDialog
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
@@ -66,6 +67,8 @@ fun AppRoot(modifier: Modifier = Modifier,
 ) {
     val baseUrl by viewModel.baseUrl.collectAsState()
     val backStack by viewModel.navBackStack.collectAsState()
+
+    val showDeviceSettingsDialog by viewModel.showDeviceSettingsDialog.collectAsState()
     val showLogOutDialog by viewModel.showLogOutDialog.collectAsState()
 
     NavDisplay(
@@ -138,6 +141,12 @@ fun AppRoot(modifier: Modifier = Modifier,
             }
         )
     }
+
+    if (showDeviceSettingsDialog) {
+        DeviceSettingsDialog(
+            onDismiss = {viewModel.showDeviceSettingsDialog.value = false }
+        )
+    }
 }
 
 @HiltViewModel
@@ -157,8 +166,10 @@ class AppRootViewModel @Inject constructor(
     private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
     val navBackStack = _navBackStack.asStateFlow()
 
+    var showDeviceSettingsDialog = MutableStateFlow(false)
     var showLogOutDialog = MutableStateFlow(false)
 
+    //region Setup
     init {
         viewModelScope.launch {
             userSessionPreferences.data
@@ -199,7 +210,9 @@ class AppRootViewModel @Inject constructor(
                 }
         }
     }
+    //endregion
 
+    //region Log in/sign up
     fun logIn() {
         updateApiKey("Some API key")
     }
@@ -210,19 +223,6 @@ class AppRootViewModel @Inject constructor(
             delay(2000)
             loadingState.emit(false)
         }
-    }
-
-    fun showLogOutDialog() {
-        showLogOutDialog.value = true
-    }
-
-    fun dismissLogOutDialog() {
-        showLogOutDialog.value = false
-    }
-
-    fun logOut() {
-        showLogOutDialog.value = false
-        updateApiKey(null)
     }
 
     fun createAccount(email: String, password: String) = Unit
@@ -251,7 +251,28 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun resendActivationCode(emailAddress: String) = Unit
+    //endregion
 
+    //region Drawer
+    fun showLogOutDialog() {
+        showLogOutDialog.value = true
+    }
+
+    fun dismissLogOutDialog() {
+        showLogOutDialog.value = false
+    }
+
+    fun logOut() {
+        showLogOutDialog.value = false
+        updateApiKey(null)
+    }
+
+    fun showDeviceSettingsDialog() {
+        showDeviceSettingsDialog.value = true
+    }
+    //endregion
+
+    //region Home
     fun viewAliasDetail(aliasId: String) {
         _navBackStack.value.apply {
             // Workaround crashes by clearing the backStack
@@ -260,4 +281,5 @@ class AppRootViewModel @Inject constructor(
             add(AliasDetail(aliasId))
         }
     }
+    //endregion
 }

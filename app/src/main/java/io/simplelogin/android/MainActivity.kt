@@ -13,12 +13,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
@@ -37,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
@@ -68,24 +73,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
+
+            fun closeDrawerAndExecute(task: () -> Unit) {
+                scope.launch {
+                    drawerState.close()
+                    task()
+                }
+            }
+
             ModalNavigationDrawer(
                 drawerState = drawerState,
                 drawerContent = {
-                    ModalDrawerSheet(
-                        drawerShape = RectangleShape
-                    ) {
-                        NavigationDrawerItem(
-                            label = { Text(stringResource(R.string.sign_out)) },
-                            shape = RectangleShape,
-                            selected = false,
-                            onClick = {
-                                scope.launch {
-                                    drawerState.close()
-                                    appRootViewModel.showLogOutDialog()
-                                }
-                            }
-                        )
-                    }
+                    Drawer(
+                        appVersion = appRootViewModel.appVersion,
+                        onDeviceSettingsClick = {
+                            closeDrawerAndExecute(appRootViewModel::showDeviceSettingsDialog)
+                        },
+                        onSignOutClick = {
+                            closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
+                        }
+                    )
                 },
                 content = {
                     MainUi(
@@ -187,5 +194,41 @@ private fun MainUi(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Drawer(
+    appVersion: String,
+    onDeviceSettingsClick: () -> Unit,
+    onSignOutClick: () -> Unit
+) {
+    ModalDrawerSheet(
+        drawerShape = RectangleShape
+    ) {
+        NavigationDrawerItem(
+            label = { Text(stringResource(R.string.device_settings)) },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onDeviceSettingsClick
+        )
+
+        HorizontalDivider()
+
+        NavigationDrawerItem(
+            label = { Text(stringResource(R.string.sign_out)) },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onSignOutClick
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = appVersion,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
     }
 }
