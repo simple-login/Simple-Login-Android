@@ -28,6 +28,7 @@ import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.di.AppVersion
@@ -238,7 +239,17 @@ class AppRootViewModel @Inject constructor(
     fun updateApiKey(apiKey: String?) {
         viewModelScope.launch {
             userSessionPreferences.updateData {
-                UserSessionPreferences(baseUrl = it.baseUrl, apiKey = apiKey)
+                if (apiKey == null) {
+                    // Log out, remove API key and reset lock settings
+                    it.copy(
+                        apiKey = null,
+                        lockEnabled = false,
+                        lockTimeOut = LockTimeOut.DEFAULT
+                    )
+                } else {
+                    // Log in
+                    it.copy(apiKey = apiKey)
+                }
             }
         }
     }
