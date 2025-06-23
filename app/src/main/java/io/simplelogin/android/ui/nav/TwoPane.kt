@@ -24,13 +24,13 @@ class TwoPaneScene<T: NavKey>(
     override val content: @Composable (() -> Unit) = {
         Row(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.weight(0.4f)) {
-                firstEntry.content.invoke(firstEntry.key)
+                firstEntry.Content()
             }
 
             VerticalDivider()
 
             Column(modifier = Modifier.weight(0.6f)) {
-                secondEntry.content.invoke(secondEntry.key)
+                secondEntry.Content()
             }
         }
     }
@@ -62,7 +62,7 @@ class TwoPaneSceneStrategy<T: NavKey>: SceneStrategy<T> {
                 val secondEntry = last2Entries.last()
 
                 // The scene key must uniquely represent the state of the scene.
-                val sceneKey = Pair(firstEntry.key, secondEntry.key)
+                val sceneKey = Pair(firstEntry.contentKey, secondEntry.contentKey)
 
                 TwoPaneScene(
                     key = sceneKey,
