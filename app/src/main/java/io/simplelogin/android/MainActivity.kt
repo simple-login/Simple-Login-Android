@@ -50,8 +50,8 @@ import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.ui.AppRoot
-import io.simplelogin.android.ui.AppRootViewModel
+import io.simplelogin.android.ui.root.AppRoot
+import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -105,7 +105,7 @@ class MainActivity : ComponentActivity() {
 
     private fun setUpSplashScreen() {
         val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { !appRootViewModel.isAppReady.value }
+        splashScreen.setKeepOnScreenCondition { !appRootViewModel.stateFlow.value.isReady }
     }
 
     private fun applyOrientationRestrictions() {

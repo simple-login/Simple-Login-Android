@@ -36,6 +36,7 @@ fun EditBaseUrlDialog(
             Column {
                 Text(stringResource(R.string.change_api_url_explanation))
                 TextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = updatedBaseUrl,
                     onValueChange = { updatedBaseUrl = it },
                     placeholder = { Text(stringResource(R.string.api_url)) },

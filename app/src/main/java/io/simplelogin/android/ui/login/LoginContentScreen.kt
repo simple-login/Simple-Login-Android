@@ -45,28 +45,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
-fun LoginScreen(
+fun LoginContentScreen(
     modifier: Modifier,
     appVersion: String,
-    baseUrl: String,
-    onBaseUrlChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
+    onLoginClick: (email: String, password: String) -> Unit,
     onLoginWithProtonClick: () -> Unit,
-    onLoginWithApiKeyClick: (String) -> Unit,
-    onForgotPassword: (String) -> Unit,
-    onSignUp: (email: String, password: String) -> Unit,
-    onResendActivationCode: (email: String) -> Unit
+    onSettingsClick: () -> Unit,
+    onSignInWithApiKeyClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    var showEditBaseUrlDialog by rememberSaveable { mutableStateOf(false) }
-    var showSignInWithApiKeyDialog by rememberSaveable { mutableStateOf(false) }
-    var showForgotPasswordDialog by rememberSaveable { mutableStateOf(false) }
-    var showSignUpDialog by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -83,9 +76,9 @@ fun LoginScreen(
             modifier = Modifier.width(280.dp),
             onLoginClick = onLoginClick,
             onLoginWithProtonClick = onLoginWithProtonClick,
-            onSignInWithApiKeyClick = { showSignInWithApiKeyDialog = true },
-            onForgotPasswordClick = { showForgotPasswordDialog = true },
-            onSignUpClick = { showSignUpDialog = true }
+            onSignInWithApiKeyClick = onSignInWithApiKeyClick,
+            onForgotPasswordClick = onForgotPasswordClick,
+            onSignUpClick = onSignUpClick
         )
 
         Text(
@@ -97,7 +90,7 @@ fun LoginScreen(
         )
 
         IconButton(
-            onClick = { showEditBaseUrlDialog = true },
+            onClick = onSettingsClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(end = Spacing.regular)
@@ -108,60 +101,13 @@ fun LoginScreen(
             )
         }
     }
-
-    if (showEditBaseUrlDialog) {
-        EditBaseUrlDialog(
-            baseUrl = baseUrl,
-            onDismiss = { showEditBaseUrlDialog = false },
-            onSave = {
-                onBaseUrlChange(it)
-                showEditBaseUrlDialog = false
-            },
-            onUseDefault = {
-                if (baseUrl != Constants.DEFAULT_BASE_URL) {
-                    onBaseUrlChange(Constants.DEFAULT_BASE_URL)
-                }
-                showEditBaseUrlDialog = false
-            }
-        )
-    }
-
-    if (showSignInWithApiKeyDialog) {
-        SetApiKeyDialog(
-            onDismiss = { showSignInWithApiKeyDialog = false },
-            onSet = {
-                showSignInWithApiKeyDialog = false
-                onLoginWithApiKeyClick(it)
-            }
-        )
-    }
-
-    if (showForgotPasswordDialog) {
-        ForgotPasswordDialog(
-            onDismiss = { showForgotPasswordDialog = false },
-            onReset = {
-                showForgotPasswordDialog = false
-                onForgotPassword(it)
-            }
-        )
-    }
-
-    if (showSignUpDialog) {
-        SignUpDialog(
-            onDismiss = { showSignUpDialog = false },
-            onSignUp = { email, password ->
-                showSignUpDialog = false
-                onSignUp(email, password)
-            }
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginColumn(
     modifier: Modifier,
-    onLoginClick: () -> Unit,
+    onLoginClick: (email: String, password: String) -> Unit,
     onLoginWithProtonClick: () -> Unit,
     onSignInWithApiKeyClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -192,7 +138,7 @@ private fun LoginColumn(
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClick
+            onClick = { onLoginClick(emailAddress, password) }
         ) {
             Text(stringResource(R.string.sign_in))
         }
@@ -240,8 +186,8 @@ private fun LoginColumn(
         AnimatedVisibility(!showMoreOptions) {
             TextButton(
                 colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
                 onClick = { showMoreOptions = true }
             ) {
                 Row(
