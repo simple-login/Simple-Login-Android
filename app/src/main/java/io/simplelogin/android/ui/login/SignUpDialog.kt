@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.util.validPassword
 
 @Composable
 fun SignUpDialog(
@@ -42,13 +43,7 @@ fun SignUpDialog(
 
                 PasswordTextField(
                     value = password,
-                    onValueChange = { password = it },
-                    isError = !password.validPassword(),
-                    supportingText = {
-                        if (!password.validPassword()) {
-                            Text(stringResource(R.string.password_length_error))
-                        }
-                    }
+                    onValueChange = { password = it }
                 )
             }
         },
@@ -62,5 +57,3 @@ fun SignUpDialog(
         }
     )
 }
-
-private fun String.validPassword() = isEmpty() || count() >= 8

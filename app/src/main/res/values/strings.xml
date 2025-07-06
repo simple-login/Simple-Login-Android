@@ -29,6 +29,7 @@
     <string name="paste_from_clipboard">Paste from clipboard</string>
     <string name="enter_manually">Enter manually</string>
     <string name="password_length_error">Password must have at least 8 characters</string>
+    <string name="invalid_email_error">Invalid email address</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="enter_otp_description">Enter the time-sensitive code from the authenticator app linked to your account</string>
     <string name="enter_activation_code">Enter activation code</string>

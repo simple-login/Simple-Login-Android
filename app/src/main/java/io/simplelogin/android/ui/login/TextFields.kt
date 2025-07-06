@@ -21,6 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import io.simplelogin.android.R
+import io.simplelogin.android.util.validEmail
+import io.simplelogin.android.util.validPassword
 
 @Composable
 fun EmailTextField(
@@ -44,6 +46,12 @@ fun EmailTextField(
             }
         },
         onValueChange = onValueChange,
+        isError = !value.isEmpty() && !value.validEmail(),
+        supportingText = {
+            if (!value.isEmpty() && !value.validEmail()) {
+                Text(stringResource(R.string.invalid_email_error))
+            }
+        }
     )
 }
 
@@ -51,9 +59,7 @@ fun EmailTextField(
 fun PasswordTextField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChange: (String) -> Unit,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
+    onValueChange: (String) -> Unit
 ) {
     var showPassword by rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
@@ -79,7 +85,11 @@ fun PasswordTextField(
             }
         },
         onValueChange = onValueChange,
-        isError = isError,
-        supportingText = supportingText
+        isError = !value.isEmpty() && !value.validPassword(),
+        supportingText = {
+            if (!value.isEmpty() && !value.validPassword()) {
+                Text(stringResource(R.string.password_length_error))
+            }
+        }
     )
 }
