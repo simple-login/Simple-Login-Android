@@ -12,8 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
-import io.simplelogin.android.di.LoadingState
-import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
@@ -32,8 +30,7 @@ class AppRootViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     observeSessionSettingsUseCase: ObserveSessionSettingsUseCase,
     private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase,
-    private val snackbarManager: SnackbarManager,
-    @LoadingState private val loadingState: LoadingStateFlow,
+    private val snackbarManager: SnackbarManager
 ): ViewModel() {
 
     private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))

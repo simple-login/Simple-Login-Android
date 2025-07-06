@@ -1,14 +1,20 @@
 package io.simplelogin.android.ui.login
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.android.R
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
+import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -18,10 +24,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginMasterScreenViewModel @Inject constructor(
-    @AppVersion val appVersion: String,
+    @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
-    observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val updateSessionSettings: UpdateSessionSettingsUseCase
+    private val snackbarManager: SnackbarManager,
+    private val updateSessionSettings: UpdateSessionSettingsUseCase,
+    @AppVersion val appVersion: String,
+    observeSessionSettings: ObserveSessionSettingsUseCase
 ) : ViewModel() {
     val baseUrlState: StateFlow<String> = observeSessionSettings()
         .map { it.baseUrl }
@@ -42,7 +50,11 @@ class LoginMasterScreenViewModel @Inject constructor(
     }
 
     fun login(apiKey: String) {
-        print(apiKey)
+        viewModelScope.launch {
+            loadingState.emit(true)
+            delay(2_000)
+            loadingState.emit(false)
+        }
     }
 
     fun signUp(email: String, password: String) {
@@ -62,6 +74,9 @@ class LoginMasterScreenViewModel @Inject constructor(
             updateSessionSettings.invoke {
                 it.copy(baseUrl = baseUrl)
             }
+            snackbarManager.showSnackbar(SnackbarConfiguration(
+                message = context.getString(R.string.api_url_updated)
+            ))
         }
     }
 }

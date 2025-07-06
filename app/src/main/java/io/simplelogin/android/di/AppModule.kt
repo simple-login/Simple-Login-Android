@@ -21,21 +21,14 @@ annotation class LoadingState
 
 typealias LoadingStateFlow = MutableStateFlow<Boolean>
 
-@Module
-@InstallIn(SingletonComponent::class)
+@[Module InstallIn(SingletonComponent::class)]
 object AppModule {
-    @Provides
-    @Singleton
-    fun provideSnackbarManager(): SnackbarManager =
-        SnackbarManagerImpl()
+    @[Provides Singleton]
+    fun bindSnackbarManager(): SnackbarManager = SnackbarManagerImpl()
 
-    @AppVersion
-    @Provides
-    @Singleton
+    @[AppVersion Provides Singleton]
     fun provideAppVersion() = "v${BuildConfig.VERSION_NAME}-${BuildConfig.FLAVOR}"
 
-    @LoadingState
-    @Provides
-    @Singleton
+    @[LoadingState Provides Singleton]
     fun provideLoadingState(): LoadingStateFlow = MutableStateFlow(false)
 }
