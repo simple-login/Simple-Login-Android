@@ -48,4 +48,9 @@
     <string name="device_settings">Device settings</string>
     <string name="close">Close</string>
     <string name="security">Security</string>
+    <string name="client_error">Client error (%1$d)</string>
+    <string name="internal_server_error">Internal server error (%1$d)</string>
+    <string name="unknown_http_error">Unknown HTTP error (%1$d)</string>
+    <string name="generic_error">An error occurred (%s)</string>
+    <string name="incorrect_email_or_password">Incorrect email or password</string>
 </resources>
