@@ -9,6 +9,7 @@ sealed class ApiError {
 
     fun description(context: Context): String = when (this) {
         is HttpError -> when (this.code) {
+            429 -> context.getString(R.string.too_many_requests)
             in 400..499 -> context.getString(R.string.client_error, this.code)
             in 500..599 -> context.getString(R.string.internal_server_error, this.code)
             else -> context.getString(R.string.unknown_http_error, this.code)

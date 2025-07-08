@@ -1,9 +1,6 @@
 package io.simplelogin.android.ui.root
 
 import android.content.Context
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
-import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +25,7 @@ class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
     @ApplicationContext private val context: Context,
     observeSessionSettingsUseCase: ObserveSessionSettingsUseCase,
-    private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase,
-    private val snackbarManager: SnackbarManager
+    private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase
 ): ViewModel() {
 
     private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
@@ -65,28 +60,6 @@ class AppRootViewModel @Inject constructor(
                         } else {
                             add(LogInDestination)
                         }
-                    }
-                }
-        }
-    }
-
-    fun setSnackbarHostState(snackbarHostState: SnackbarHostState) {
-        viewModelScope.launch {
-            snackbarManager.configuration
-                .collect { configuration ->
-                    val result = snackbarHostState.showSnackbar(
-                        message = configuration.message,
-                        actionLabel = configuration.action?.label,
-                        withDismissAction = configuration.duration == SnackbarDuration.Indefinite,
-                        duration = configuration.duration
-                    )
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            configuration.action?.action?.let { it() }
-                        }
-
-                        else -> Unit
                     }
                 }
         }

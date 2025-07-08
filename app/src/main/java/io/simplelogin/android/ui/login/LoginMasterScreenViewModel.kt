@@ -1,7 +1,6 @@
 package io.simplelogin.android.ui.login
 
 import android.content.Context
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,8 +46,7 @@ class LoginMasterScreenViewModel @Inject constructor(
     fun login(email: String, password: String) {
         viewModelScope.launch {
             loadingState.emit(true)
-            val deviceName = "${Build.MANUFACTURER} ${Build.MODEL} ${Build.DEVICE}"
-            val result = logIn.invoke(email = email, password = password, deviceName = deviceName)
+            val result = logIn.invoke(email = email, password = password)
             loadingState.emit(false)
             when (result) {
                 is Result.Success -> {

@@ -25,15 +25,20 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,9 +55,11 @@ import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -124,7 +131,8 @@ class MainActivity : ComponentActivity() {
 class MainViewModel @Inject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val baseUrlProvider: BaseUrlProvider,
-    private val userSessionPreferences: DataStore<UserSessionPreferences>
+    private val userSessionPreferences: DataStore<UserSessionPreferences>,
+    val snackbarManager: SnackbarManager
 ): ViewModel() {
     val showLoadingIndicator = loadingState.asStateFlow()
 
@@ -148,9 +156,31 @@ private fun MainUi(
 
     SimpleLoginTheme {
         val snackbarHostState = remember { SnackbarHostState() }
-        appRootViewModel.setSnackbarHostState(snackbarHostState)
 
         val isLoading by viewModel.showLoadingIndicator.collectAsState()
+        var currentSnackbarJob by remember { mutableStateOf<Job?>(null) }
+
+        LaunchedEffect(Unit) {
+            viewModel.snackbarManager.configuration.collect { configuration ->
+                currentSnackbarJob?.cancel()
+                currentSnackbarJob = scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = configuration.message,
+                        actionLabel = configuration.action?.label,
+                        withDismissAction = configuration.duration == SnackbarDuration.Indefinite,
+                        duration = configuration.duration
+                    )
+
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            configuration.action?.action?.let { it() }
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
