@@ -5,13 +5,16 @@ import io.simplelogin.android.data.models.api.UserLogin
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody
 import io.simplelogin.android.data.remote.LoginBody
+import io.simplelogin.android.data.remote.MessageResponse
 import io.simplelogin.android.data.remote.OkResponse
+import io.simplelogin.android.data.remote.RegisterBody
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface LogInSignUpRemoteDatasource {
     suspend fun logIn(email: String, password: String, deviceName: String): Result<UserLogin, ApiError>
     suspend fun forgotPassword(email: String): Result<OkResponse, ApiError>
+    suspend fun signUp(email: String, password: String): Result<MessageResponse, ApiError>
 }
 
 class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -32,5 +35,13 @@ class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService
     override suspend fun forgotPassword(email: String): Result<OkResponse, ApiError> {
         val body = EmailBody(email)
         return safeApiCall { apiService.forgotPassword(body) }
+    }
+
+    override suspend fun signUp(
+        email: String,
+        password: String
+    ): Result<MessageResponse, ApiError> {
+        val body = RegisterBody(email = email, password = password)
+        return safeApiCall { apiService.register(body) }
     }
 }

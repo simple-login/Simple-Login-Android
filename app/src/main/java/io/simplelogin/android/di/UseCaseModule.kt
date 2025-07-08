@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.LogInUseCaseImpl
+import io.simplelogin.android.usecases.login.SignUpUseCase
+import io.simplelogin.android.usecases.login.SignUpUseCaseImpl
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCaseImpl
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
@@ -24,4 +26,7 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindLogInUseCase(impl: LogInUseCaseImpl): LogInUseCase
+
+    @[Binds Singleton]
+    abstract fun signUpUseCase(impl: SignUpUseCaseImpl): SignUpUseCase
 }
