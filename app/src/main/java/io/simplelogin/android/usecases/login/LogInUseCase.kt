@@ -27,7 +27,7 @@ interface LogInUseCase {
     suspend fun invoke(email: String, password: String): Result<UserLogin, LogInError>
 }
 
-class LogInUseCaseImpl @Inject constructor(val datasource: LogInSignUpRemoteDatasource) :
+class LogInUseCaseImpl @Inject constructor(private val datasource: LogInSignUpRemoteDatasource) :
     LogInUseCase {
     override suspend fun invoke(email: String, password: String): Result<UserLogin, LogInError> {
         val deviceName = "${Build.MANUFACTURER} ${Build.MODEL} ${Build.DEVICE}"

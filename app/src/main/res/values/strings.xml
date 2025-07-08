@@ -54,4 +54,5 @@
     <string name="unknown_http_error">Unknown HTTP error (%1$d)</string>
     <string name="generic_error">An error occurred (%s)</string>
     <string name="incorrect_email_or_password">Incorrect email or password</string>
+    <string name="password_reset_instructions_sent">We\'ve sent password reset instructions to %s</string>
 </resources>
