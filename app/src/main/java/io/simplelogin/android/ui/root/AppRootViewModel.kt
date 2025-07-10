@@ -1,12 +1,10 @@
 package io.simplelogin.android.ui.root
 
-import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -23,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
-    @ApplicationContext private val context: Context,
     observeSessionSettingsUseCase: ObserveSessionSettingsUseCase,
     private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase
 ): ViewModel() {
@@ -54,6 +51,11 @@ class AppRootViewModel @Inject constructor(
                 .collect {
                     _navBackStack.value.apply {
                         clear()
+                        if (!it.isReady) {
+                            add(InitializationDestination)
+                            return@collect
+                        }
+
                         val apiKey = it.apiKey
                         if (apiKey != null) {
                             add(HomeDestination(apiKey))

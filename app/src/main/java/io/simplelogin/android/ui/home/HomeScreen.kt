@@ -1,8 +1,12 @@
 package io.simplelogin.android.ui.home
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -12,13 +16,13 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -30,6 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.ui.theme.Spacing
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +48,16 @@ fun HomeScreen(modifier: Modifier,
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    BackHandler {
+        if (isSearching) {
+            isSearching = false
+        } else {
+            backDispatcher?.onBackPressed()
+        }
+    }
 
     Scaffold(
         modifier = modifier
@@ -60,12 +77,25 @@ fun HomeScreen(modifier: Modifier,
                 )
             }
         }
-    ) { _ ->
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             items(100) {
-                TextButton(onClick = { onAliasClick("$it") }) {
-                    Text("Alias $it")
-                }
+                AliasCell(
+                    modifier = Modifier.padding(horizontal = Spacing.regular),
+                    email = "email$it@test.com",
+                    mailboxes = listOf("mailbox1-$it@test.com", "mailbox2-$it@test.com"),
+                    note = "Note for alias $it",
+                    forward = Random.nextInt(0..3),
+                    reply = Random.nextInt(0..3),
+                    block = Random.nextInt(0..3),
+                    isActive = Random.nextBoolean(),
+                    onClick = { onAliasClick("$it") }
+                )
+                HorizontalDivider()
             }
         }
     }
