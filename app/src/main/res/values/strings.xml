@@ -74,4 +74,6 @@
     <string name="delete_alias_dialog_content">You\'re about to delete \"%s\", if you don\'t want to receive any emails from this alias, you could also disable instead deleting.</string>
     <string name="disable_this_alias">Disable this alias</string>
     <string name="delete_this_alias">Delete this alias</string>
+    <string name="alias_address_label">Alias address</string>
+    <string name="alias_address_copied">Copied \"%s\" to clipboard</string>
 </resources>

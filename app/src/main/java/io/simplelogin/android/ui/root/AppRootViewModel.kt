@@ -107,12 +107,21 @@ class AppRootViewModel @Inject constructor(
     //endregion
 
     //region Home
-    fun viewAliasDetail(aliasId: String) {
+    fun viewAliasDetails(aliasId: Int) {
         _navBackStack.value.apply {
             // Workaround crashes by clearing the backStack
             clear()
             add(HomeDestination)
-            add(AliasDetail(aliasId))
+            add(AliasDetails(aliasId))
+        }
+    }
+
+    fun viewAliasContacts(aliasId: Int) {
+        _navBackStack.value.apply {
+            // Workaround crashes by clearing the backStack
+            clear()
+            add(HomeDestination)
+            add(AliasContacts(aliasId))
         }
     }
     //endregion

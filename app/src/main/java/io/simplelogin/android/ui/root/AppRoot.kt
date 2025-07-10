@@ -35,7 +35,10 @@ data object LogInDestination: NavKey
 data object HomeDestination: NavKey
 
 @Serializable
-data class AliasDetail(val aliasId: String): NavKey
+data class AliasDetails(val aliasId: Int): NavKey
+
+@Serializable
+data class AliasContacts(val aliasId: Int): NavKey
 
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
@@ -70,16 +73,26 @@ fun AppRoot(modifier: Modifier = Modifier,
                 HomeScreen(
                     modifier = modifier,
                     onOpenDrawer = onOpenDrawer,
-                    onAliasClick = viewModel::viewAliasDetail
+                    onViewDetails = viewModel::viewAliasDetails,
+                    onViewContacts = viewModel::viewAliasContacts
                 )
             }
 
-            entry<AliasDetail>(
+            entry<AliasDetails>(
                 metadata = TwoPaneScene.twoPane()
             ) { key ->
                 Text(
                     modifier = modifier,
                     text = "Alias detail ${key.aliasId}"
+                )
+            }
+
+            entry<AliasContacts>(
+                metadata = TwoPaneScene.twoPane()
+            ) { key ->
+                Text(
+                    modifier = modifier,
+                    text = "Alias contacts ${key.aliasId}"
                 )
             }
         }

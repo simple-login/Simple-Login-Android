@@ -43,7 +43,8 @@ import kotlin.random.nextInt
 fun HomeScreen(
     modifier: Modifier,
     onOpenDrawer: () -> Unit,
-    onAliasClick: (String) -> Unit
+    onViewDetails: (Int) -> Unit,
+    onViewContacts: (Int) -> Unit
 ) = with(hiltViewModel<HomeViewModel>()) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
@@ -81,7 +82,28 @@ fun HomeScreen(
         AliasesList(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            onAction = {
+                when (it) {
+                    is AliasCellAction.ViewDetails -> onViewDetails(it.id)
+
+                    is AliasCellAction.ViewContacts -> onViewContacts(it.id)
+
+                    is AliasCellAction.CopyAliasAddress -> copyAliasAddress(it.email)
+
+                    is AliasCellAction.DisableAlias -> {
+
+                    }
+
+                    is AliasCellAction.EnableAlias -> {
+
+                    }
+
+                    is AliasCellAction.DeleteAlias -> {
+
+                    }
+                }
+            }
         )
     }
 }
@@ -169,7 +191,8 @@ private fun SearchTopAppBar(
 
 @Composable
 private fun AliasesList(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAction: (AliasCellAction) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -185,7 +208,7 @@ private fun AliasesList(
                 reply = Random.nextInt(0..3),
                 block = Random.nextInt(0..3),
                 isActive = Random.nextBoolean(),
-                onAction = {}
+                onAction = onAction
             )
             HorizontalDivider()
         }
