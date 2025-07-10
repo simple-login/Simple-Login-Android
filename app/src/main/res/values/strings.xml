@@ -60,4 +60,5 @@
     <string name="incorrect_email_or_password">Incorrect email or password</string>
     <string name="password_reset_instructions_sent">We\'ve sent password reset instructions to %s</string>
     <string name="confirm_email_instructions_sent">We\'ve sent an activation link to %s</string>
+    <string name="resend_activation_code_done">We\'ve sent a new activation code to %s</string>
 </resources>

@@ -16,6 +16,7 @@ import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
 import io.simplelogin.android.usecases.login.LogInError
 import io.simplelogin.android.usecases.login.LogInUseCase
+import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
 import io.simplelogin.android.usecases.login.SignUpUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
@@ -37,6 +38,7 @@ class LoginMasterScreenViewModel @Inject constructor(
     private val logInUseCase: LogInUseCase,
     private val forgotPasswordUseCase: ForgotPasswordUseCase,
     private val signUpUseCase: SignUpUseCase,
+    private val resendActivationCodeUseCase: ResendActivationCodeUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     @AppVersion val appVersion: String,
     observeSessionSettings: ObserveSessionSettingsUseCase
@@ -119,7 +121,17 @@ class LoginMasterScreenViewModel @Inject constructor(
     }
 
     fun resentActivationCode(email: String) {
-        print(email)
+        launchLoading(doWork = {
+            resendActivationCodeUseCase.invoke(email)
+        }, handleResult = {
+            val message = when (it) {
+                is Result.Success ->
+                    context.getString(R.string.resend_activation_code_done, email)
+
+                is Result.Failure -> it.error.description(context)
+            }
+            showSnackbar(message)
+        })
     }
 
     fun updateBaseUrl(baseUrl: String) {

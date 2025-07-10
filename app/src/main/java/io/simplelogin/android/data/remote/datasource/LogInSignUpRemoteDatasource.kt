@@ -15,6 +15,7 @@ interface LogInSignUpRemoteDatasource {
     suspend fun logIn(email: String, password: String, deviceName: String): Result<UserLogin, ApiError>
     suspend fun forgotPassword(email: String): Result<OkResponse, ApiError>
     suspend fun signUp(email: String, password: String): Result<MessageResponse, ApiError>
+    suspend fun reactivate(email: String): Result<MessageResponse, ApiError>
 }
 
 class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -43,5 +44,10 @@ class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService
     ): Result<MessageResponse, ApiError> {
         val body = RegisterBody(email = email, password = password)
         return safeApiCall { apiService.register(body) }
+    }
+
+    override suspend fun reactivate(email: String): Result<MessageResponse, ApiError> {
+        val body = EmailBody(email)
+        return safeApiCall { apiService.reactivate(body) }
     }
 }
