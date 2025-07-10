@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import io.simplelogin.android.R
-import io.simplelogin.android.util.validEmail
-import io.simplelogin.android.util.validPassword
+import io.simplelogin.android.util.isValidEmail
+import io.simplelogin.android.util.isValidPassword
 
 @Composable
 fun EmailTextField(
@@ -46,9 +46,9 @@ fun EmailTextField(
             }
         },
         onValueChange = onValueChange,
-        isError = !value.isEmpty() && !value.validEmail(),
+        isError = !value.isEmpty() && !value.isValidEmail(),
         supportingText = {
-            if (!value.isEmpty() && !value.validEmail()) {
+            if (!value.isEmpty() && !value.isValidEmail()) {
                 Text(stringResource(R.string.invalid_email_error))
             }
         }
@@ -85,9 +85,9 @@ fun PasswordTextField(
             }
         },
         onValueChange = onValueChange,
-        isError = !value.isEmpty() && !value.validPassword(),
+        isError = !value.isEmpty() && !value.isValidPassword(),
         supportingText = {
-            if (!value.isEmpty() && !value.validPassword()) {
+            if (!value.isEmpty() && !value.isValidPassword()) {
                 Text(stringResource(R.string.password_length_error))
             }
         }

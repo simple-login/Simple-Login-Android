@@ -16,7 +16,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.util.validPassword
+import io.simplelogin.android.util.isValidEmail
+import io.simplelogin.android.util.isValidPassword
 
 @Composable
 fun SignUpDialog(
@@ -49,7 +50,7 @@ fun SignUpDialog(
         },
         confirmButton = {
             TextButton(
-                enabled = email.isNotEmpty() && password.isNotEmpty() && password.validPassword(),
+                enabled = email.isValidEmail() && password.isValidPassword(),
                 onClick = { onSignUp(email, password) }
             ) {
                 Text(stringResource(R.string.create_account))

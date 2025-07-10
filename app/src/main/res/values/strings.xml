@@ -53,6 +53,8 @@
     <string name="internal_server_error">Internal server error (%1$d)</string>
     <string name="unknown_http_error">Unknown HTTP error (%1$d)</string>
     <string name="generic_error">An error occurred (%s)</string>
+    <string name="enter_valid_email">Please enter a valid email</string>
+    <string name="enter_valid_password">Please enter a valid password</string>
     <string name="incorrect_email_or_password">Incorrect email or password</string>
     <string name="password_reset_instructions_sent">We\'ve sent password reset instructions to %s</string>
     <string name="confirm_email_instructions_sent">We\'ve sent an activation link to %s</string>

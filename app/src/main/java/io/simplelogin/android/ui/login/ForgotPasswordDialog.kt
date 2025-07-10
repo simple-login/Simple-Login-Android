@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.util.isValidEmail
 
 @Composable
 fun ForgotPasswordDialog(
@@ -43,7 +44,7 @@ fun ForgotPasswordDialog(
         },
         confirmButton = {
             TextButton(
-                enabled = emailAddress.isNotEmpty(),
+                enabled = emailAddress.isValidEmail(),
                 onClick = { onReset(emailAddress) }
             ) {
                 Text(stringResource(R.string.reset_password))

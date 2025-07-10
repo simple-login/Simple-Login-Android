@@ -19,6 +19,8 @@ import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.SignUpUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import io.simplelogin.android.util.isValidEmail
+import io.simplelogin.android.util.isValidPassword
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +50,18 @@ class LoginMasterScreenViewModel @Inject constructor(
         )
 
     fun login(email: String, password: String) {
+        if (!email.isValidEmail()) {
+            val message = context.getString(R.string.enter_valid_email)
+            showSnackbar(message)
+            return
+        }
+
+        if (!password.isValidPassword()) {
+            val message = context.getString(R.string.enter_valid_password)
+            showSnackbar(message)
+            return
+        }
+
         launchLoading(doWork = {
             logInUseCase.invoke(email = email, password = password)
         }, handleResult = {
@@ -83,7 +97,7 @@ class LoginMasterScreenViewModel @Inject constructor(
                 is Result.Success -> context.getString(R.string.confirm_email_instructions_sent, email)
                 is Result.Failure -> it.error.description(context)
             }
-            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+            showSnackbar(message)
         })
     }
 
@@ -95,7 +109,7 @@ class LoginMasterScreenViewModel @Inject constructor(
                 is Result.Success -> context.getString(R.string.password_reset_instructions_sent, email)
                 is Result.Failure -> it.error.description(context)
             }
-            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+            showSnackbar(message)
         })
     }
 
@@ -120,6 +134,12 @@ class LoginMasterScreenViewModel @Inject constructor(
             val result = doWork()
             loadingState.emit(false)
             handleResult(result)
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        viewModelScope.launch {
+            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
         }
     }
 }
