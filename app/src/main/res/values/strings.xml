@@ -9,6 +9,7 @@
     <string name="sign_in">Sign in</string>
     <string name="email_address">Email address</string>
     <string name="clear_email_address">Clear email address</string>
+    <string name="clear_api_url">Clear API URL</string>
     <string name="password">Password</string>
     <string name="show_or_hide_password">Show or hide password</string>
     <string name="sign_in_with_api_key">Sign in with API key</string>
@@ -30,6 +31,7 @@
     <string name="enter_manually">Enter manually</string>
     <string name="password_length_error">Password must have at least 8 characters</string>
     <string name="invalid_email_error">Invalid email address</string>
+    <string name="invalid_url_error">Invalid URL</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="enter_otp_description">Enter the time-sensitive code from the authenticator app linked to your account</string>
     <string name="enter_activation_code">Enter activation code</string>
