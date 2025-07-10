@@ -3,7 +3,6 @@ package io.simplelogin.android.ui.home
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.Spacing
 import kotlin.random.Random
@@ -40,11 +40,11 @@ import kotlin.random.nextInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier,
-               apiKey: String,
-               onOpenDrawer: () -> Unit,
-               onAliasClick: (String) -> Unit
-) {
+fun HomeScreen(
+    modifier: Modifier,
+    onOpenDrawer: () -> Unit,
+    onAliasClick: (String) -> Unit
+) = with(hiltViewModel<HomeViewModel>()) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }

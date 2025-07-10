@@ -9,6 +9,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.ui.login.dialog.EditBaseUrlDialog
+import io.simplelogin.android.ui.login.dialog.ForgotPasswordDialog
+import io.simplelogin.android.ui.login.dialog.SetApiKeyDialog
+import io.simplelogin.android.ui.login.dialog.SignUpDialog
 
 @Composable
 fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreenViewModel>()) {

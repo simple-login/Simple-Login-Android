@@ -32,7 +32,7 @@ data object InitializationDestination: NavKey
 data object LogInDestination: NavKey
 
 @Serializable
-data class HomeDestination(val apiKey: String): NavKey
+data object HomeDestination: NavKey
 
 @Serializable
 data class AliasDetail(val aliasId: String): NavKey
@@ -60,16 +60,15 @@ fun AppRoot(modifier: Modifier = Modifier,
         entryProvider = entryProvider {
             entry<InitializationDestination> {}
 
-            entry<LogInDestination> { key ->
+            entry<LogInDestination> {
                 LoginMasterScreen(modifier = modifier.padding(innerPadding))
             }
 
             entry<HomeDestination>(
                 metadata = TwoPaneScene.twoPane()
-            ) { key ->
+            ) {
                 HomeScreen(
                     modifier = modifier,
-                    apiKey = key.apiKey,
                     onOpenDrawer = onOpenDrawer,
                     onAliasClick = viewModel::viewAliasDetail
                 )

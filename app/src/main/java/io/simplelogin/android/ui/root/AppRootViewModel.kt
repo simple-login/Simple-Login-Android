@@ -56,9 +56,8 @@ class AppRootViewModel @Inject constructor(
                             return@collect
                         }
 
-                        val apiKey = it.apiKey
-                        if (apiKey != null) {
-                            add(HomeDestination(apiKey))
+                        if (it.apiKey != null) {
+                            add(HomeDestination)
                         } else {
                             add(LogInDestination)
                         }
@@ -112,7 +111,7 @@ class AppRootViewModel @Inject constructor(
         _navBackStack.value.apply {
             // Workaround crashes by clearing the backStack
             clear()
-            add(HomeDestination("Some API Key"))
+            add(HomeDestination)
             add(AliasDetail(aliasId))
         }
     }

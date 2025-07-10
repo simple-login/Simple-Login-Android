@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.login
+package io.simplelogin.android.ui.login.dialog
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState

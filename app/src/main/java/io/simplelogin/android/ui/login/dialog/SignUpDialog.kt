@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.login
+package io.simplelogin.android.ui.login.dialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
@@ -16,38 +16,46 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.ui.login.EmailTextField
+import io.simplelogin.android.ui.login.PasswordTextField
 import io.simplelogin.android.util.isValidEmail
+import io.simplelogin.android.util.isValidPassword
 
 @Composable
-fun ForgotPasswordDialog(
+fun SignUpDialog(
     onDismiss: () -> Unit,
-    onReset: (String) -> Unit
+    onSignUp: (email: String, password: String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
-    var emailAddress by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.forgot_password)) },
+        title = { Text(stringResource(R.string.sign_up_for_sl)) },
         text = {
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
             }
             Column {
-                Text(stringResource(R.string.forgot_password_instruction))
                 EmailTextField(
                     modifier = Modifier.focusRequester(focusRequester),
-                    value = emailAddress,
-                    onValueChange = { emailAddress = it }
+                    value = email,
+                    onValueChange = { email = it }
+                )
+
+                PasswordTextField(
+                    value = password,
+                    onValueChange = { password = it }
                 )
             }
         },
         confirmButton = {
             TextButton(
-                enabled = emailAddress.isValidEmail(),
-                onClick = { onReset(emailAddress) }
+                enabled = email.isValidEmail() && password.isValidPassword(),
+                onClick = { onSignUp(email, password) }
             ) {
-                Text(stringResource(R.string.reset_password))
+                Text(stringResource(R.string.create_account))
             }
         }
     )
