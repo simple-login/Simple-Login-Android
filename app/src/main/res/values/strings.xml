@@ -64,4 +64,14 @@
     <string name="forward">Forward</string>
     <string name="reply">Reply</string>
     <string name="block">Block</string>
+    <string name="alias_options">Alias options</string>
+    <string name="view_details">View details</string>
+    <string name="view_contacts">View contacts</string>
+    <string name="copy_alias_address">Copy alias address</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="delete_alias_dialog_title">Delete alias?</string>
+    <string name="delete_alias_dialog_content">You\'re about to delete \"%s\", if you don\'t want to receive any emails from this alias, you could also disable instead deleting.</string>
+    <string name="disable_this_alias">Disable this alias</string>
+    <string name="delete_this_alias">Delete this alias</string>
 </resources>

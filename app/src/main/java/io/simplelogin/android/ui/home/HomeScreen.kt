@@ -78,26 +78,11 @@ fun HomeScreen(modifier: Modifier,
             }
         }
     ) { innerPadding ->
-        LazyColumn(
+        AliasesList(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        ) {
-            items(100) {
-                AliasCell(
-                    modifier = Modifier.padding(horizontal = Spacing.regular),
-                    email = "email$it@test.com",
-                    mailboxes = listOf("mailbox1-$it@test.com", "mailbox2-$it@test.com"),
-                    note = "Note for alias $it",
-                    forward = Random.nextInt(0..3),
-                    reply = Random.nextInt(0..3),
-                    block = Random.nextInt(0..3),
-                    isActive = Random.nextBoolean(),
-                    onClick = { onAliasClick("$it") }
-                )
-                HorizontalDivider()
-            }
-        }
+        )
     }
 }
 
@@ -180,4 +165,29 @@ private fun SearchTopAppBar(
             Column {  }
         }
     )
+}
+
+@Composable
+private fun AliasesList(
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        items(100) {
+            AliasCell(
+                modifier = Modifier.padding(horizontal = Spacing.regular),
+                id = it,
+                email = "email$it@test.com",
+                mailboxes = listOf("mailbox1-$it@test.com", "mailbox2-$it@test.com"),
+                note = "Note for alias $it",
+                forward = Random.nextInt(0..3),
+                reply = Random.nextInt(0..3),
+                block = Random.nextInt(0..3),
+                isActive = Random.nextBoolean(),
+                onAction = {}
+            )
+            HorizontalDivider()
+        }
+    }
 }
