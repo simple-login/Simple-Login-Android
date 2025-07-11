@@ -123,10 +123,6 @@ fun AliasCell(
     if (showDeleteDialog) {
         DeleteAliasDialog(
             aliasEmail = email,
-            onDisableClick = {
-                showDeleteDialog = false
-                closeMenuAndSendAction(AliasCellAction.DisableAlias(id))
-            },
             onDeleteClick = {
                 showDeleteDialog = false
                 closeMenuAndSendAction(AliasCellAction.DeleteAlias(id))
