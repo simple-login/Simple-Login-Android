@@ -13,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
@@ -87,6 +88,30 @@ fun AliasCellDropdownMenu(
                 },
                 text = { Text(text = stringResource(R.string.enable)) },
                 onClick = { onAction(AliasAction.Enable(alias.id)) }
+            )
+        }
+
+        if (alias.pinned) {
+            DropdownMenuItem(
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_keep_off),
+                        contentDescription = null
+                    )
+                },
+                text = { Text(text = stringResource(R.string.unpin)) },
+                onClick = { onAction(AliasAction.Unpin(alias.id)) }
+            )
+        } else {
+            DropdownMenuItem(
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_keep),
+                        contentDescription = null
+                    )
+                },
+                text = { Text(text = stringResource(R.string.pin)) },
+                onClick = { onAction(AliasAction.Pin(alias.id)) }
             )
         }
 

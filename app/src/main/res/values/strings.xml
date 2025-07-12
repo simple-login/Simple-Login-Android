@@ -80,4 +80,6 @@
     <string name="blocked">Blocked</string>
     <string name="all_time">All time</string>
     <string name="last_14_days">Last 14 days</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
 </resources>
