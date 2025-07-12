@@ -40,6 +40,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.generateRandomAlias
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,6 +102,14 @@ fun HomeScreen(
                     }
 
                     is AliasAction.Enable -> {
+
+                    }
+
+                    is AliasAction.Pin -> {
+
+                    }
+
+                    is AliasAction.Unpin -> {
 
                     }
 

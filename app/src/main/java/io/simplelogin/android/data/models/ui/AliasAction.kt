@@ -6,5 +6,7 @@ sealed class AliasAction {
     data class CopyEmailAddress(val email: String): AliasAction()
     data class Enable(val id: Int): AliasAction()
     data class Disable(val id: Int): AliasAction()
+    data class Pin(val id: Int): AliasAction()
+    data class Unpin(val id: Int): AliasAction()
     data class Delete(val id: Int): AliasAction()
 }
