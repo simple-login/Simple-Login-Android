@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
                 label = context.getString(R.string.alias_address_label),
                 content = email
             )
-            val message = context.getString(R.string.alias_address_copied)
+            val message = context.getString(R.string.alias_address_copied, email)
             snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
         }
     }
