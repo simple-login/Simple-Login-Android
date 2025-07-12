@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.generateRandomAlias
+import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.theme.Spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,21 +90,21 @@ fun HomeScreen(
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
             onAction = {
                 when (it) {
-                    is AliasCellAction.ViewDetails -> onViewDetails(it.id)
+                    is AliasAction.ViewDetails -> onViewDetails(it.id)
 
-                    is AliasCellAction.ViewContacts -> onViewContacts(it.id)
+                    is AliasAction.ViewContacts -> onViewContacts(it.id)
 
-                    is AliasCellAction.CopyAliasAddress -> copyAliasAddress(it.email)
+                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.email)
 
-                    is AliasCellAction.DisableAlias -> {
-
-                    }
-
-                    is AliasCellAction.EnableAlias -> {
+                    is AliasAction.Disable -> {
 
                     }
 
-                    is AliasCellAction.DeleteAlias -> {
+                    is AliasAction.Enable -> {
+
+                    }
+
+                    is AliasAction.Delete -> {
 
                     }
                 }
@@ -198,7 +199,7 @@ private fun SearchTopAppBar(
 private fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
-    onAction: (AliasCellAction) -> Unit
+    onAction: (AliasAction) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,

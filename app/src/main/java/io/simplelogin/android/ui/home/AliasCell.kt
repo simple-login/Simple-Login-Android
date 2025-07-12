@@ -32,31 +32,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-sealed class AliasCellAction {
-    data class ViewDetails(val id: Int): AliasCellAction()
-    data class ViewContacts(val id: Int): AliasCellAction()
-    data class CopyAliasAddress(val email: String): AliasCellAction()
-    data class EnableAlias(val id: Int): AliasCellAction()
-    data class DisableAlias(val id: Int): AliasCellAction()
-    data class DeleteAlias(val id: Int): AliasCellAction()
-}
 
 @Composable
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
-    onAction: (AliasCellAction) -> Unit
+    onAction: (AliasAction) -> Unit
 ) {
     val mailboxes = alias.mailboxes.joinToString(separator = ", ") { it.email }
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val closeMenuAndSendAction: (AliasCellAction) -> Unit = {
+    val closeMenuAndSendAction: (AliasAction) -> Unit = {
         scope.launch {
             delay(150L) // Wait for ripple animation to finish
             showMenu = false
@@ -96,7 +88,7 @@ fun AliasCell(
                 alias = alias,
                 onAction = { action ->
                     when (action) {
-                        is AliasCellAction.DeleteAlias -> {
+                        is AliasAction.Delete -> {
                             showMenu = false
                             showDeleteDialog = true
                         }
@@ -116,7 +108,7 @@ fun AliasCell(
             aliasEmail = alias.email,
             onDeleteClick = {
                 showDeleteDialog = false
-                closeMenuAndSendAction(AliasCellAction.DeleteAlias(alias.id))
+                closeMenuAndSendAction(AliasAction.Delete(alias.id))
             },
             onCancelClick = { showDeleteDialog = false }
         )
@@ -175,7 +167,7 @@ private fun AliasCellActivityColumn(
 private fun AliasCellDropdownMenu(
     showMenu: Boolean,
     alias: Alias,
-    onAction: (AliasCellAction) -> Unit,
+    onAction: (AliasAction) -> Unit,
     onDismiss: () -> Unit
 ) {
     DropdownMenu(
@@ -190,7 +182,7 @@ private fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_details)) },
-            onClick = { onAction(AliasCellAction.ViewDetails(alias.id)) }
+            onClick = { onAction(AliasAction.ViewDetails(alias.id)) }
         )
 
         DropdownMenuItem(
@@ -201,7 +193,7 @@ private fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_contacts)) },
-            onClick = { onAction(AliasCellAction.ViewContacts(alias.id)) }
+            onClick = { onAction(AliasAction.ViewContacts(alias.id)) }
         )
 
         HorizontalDivider()
@@ -214,7 +206,7 @@ private fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.copy_alias_address)) },
-            onClick = { onAction(AliasCellAction.CopyAliasAddress(alias.email)) }
+            onClick = { onAction(AliasAction.CopyEmailAddress(alias.email)) }
         )
 
         HorizontalDivider()
@@ -228,7 +220,7 @@ private fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.disable)) },
-                onClick = { onAction(AliasCellAction.DisableAlias(alias.id)) }
+                onClick = { onAction(AliasAction.Disable(alias.id)) }
             )
         } else {
             DropdownMenuItem(
@@ -239,7 +231,7 @@ private fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.enable)) },
-                onClick = { onAction(AliasCellAction.EnableAlias(alias.id)) }
+                onClick = { onAction(AliasAction.Enable(alias.id)) }
             )
         }
 
@@ -253,7 +245,7 @@ private fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.delete)) },
-            onClick = { onAction(AliasCellAction.DeleteAlias(alias.id)) }
+            onClick = { onAction(AliasAction.Delete(alias.id)) }
         )
     }
 }
