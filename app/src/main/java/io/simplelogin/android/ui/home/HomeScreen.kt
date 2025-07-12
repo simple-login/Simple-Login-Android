@@ -3,6 +3,7 @@ package io.simplelogin.android.ui.home
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,9 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
+import io.simplelogin.android.data.models.api.generateRandomAlias
 import io.simplelogin.android.ui.theme.Spacing
-import kotlin.random.Random
-import kotlin.random.nextInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,13 +182,14 @@ private fun SearchTopAppBar(
                     IconButton(onClick = onExitSearch) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.exit_search))
+                            contentDescription = stringResource(R.string.exit_search)
+                        )
                     }
                 }
             )
         },
         content = {
-            Column {  }
+            Column { }
         }
     )
 }
@@ -199,12 +200,12 @@ private fun AliasesList(
     stats: Stats,
     onAction: (AliasCellAction) -> Unit
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = Spacing.regular)
+    ) {
         item {
-            StatsGrid(
-                modifier = Modifier.padding(horizontal = Spacing.regular),
-                stats = stats
-            )
+            StatsGrid(stats = stats)
         }
 
         item {
@@ -213,15 +214,7 @@ private fun AliasesList(
 
         items(100) {
             AliasCell(
-                modifier = Modifier.padding(horizontal = Spacing.regular),
-                id = it,
-                email = "email$it@test.com",
-                mailboxes = listOf("mailbox1-$it@test.com", "mailbox2-$it@test.com"),
-                note = "Note for alias $it",
-                forward = Random.nextInt(0..3),
-                reply = Random.nextInt(0..3),
-                block = Random.nextInt(0..3),
-                isActive = Random.nextBoolean(),
+                alias = generateRandomAlias(),
                 onAction = onAction
             )
             HorizontalDivider()
