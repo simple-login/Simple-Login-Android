@@ -3,8 +3,10 @@ package io.simplelogin.android.ui.home
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,6 +36,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.ui.theme.Spacing
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -83,6 +86,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+            stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
             onAction = {
                 when (it) {
                     is AliasCellAction.ViewDetails -> onViewDetails(it.id)
@@ -192,11 +196,21 @@ private fun SearchTopAppBar(
 @Composable
 private fun AliasesList(
     modifier: Modifier = Modifier,
+    stats: Stats,
     onAction: (AliasCellAction) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-    ) {
+    LazyColumn(modifier = modifier) {
+        item {
+            StatsGrid(
+                modifier = Modifier.padding(horizontal = Spacing.regular),
+                stats = stats
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(Spacing.regular))
+        }
+
         items(100) {
             AliasCell(
                 modifier = Modifier.padding(horizontal = Spacing.regular),
