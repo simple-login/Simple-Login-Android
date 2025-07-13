@@ -25,6 +25,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.TextWithInlineIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -51,18 +52,27 @@ fun AliasCell(
         modifier = modifier.padding(vertical = Spacing.medium)
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Row {
-                if (alias.pinned) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_keep_filled),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
+            if (alias.pinned) {
+                TextWithInlineIcon(
+                    text = alias.breakableEmail,
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.titleLarge,
+                    icon = painterResource(R.drawable.ic_keep_filled),
+                    iconSize = MaterialTheme.typography.titleLarge.fontSize,
+                    iconTint = MaterialTheme.colorScheme.primary
+                )
+            } else {
                 Text(
-                    text = alias.email,
+                    text = alias.breakableEmail,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            alias.note?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 

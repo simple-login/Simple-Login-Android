@@ -33,6 +33,9 @@ data class Alias(
     }
 
     val hasActivities: Boolean = (forwardCount + replyCount + blockCount) > 0
+
+    // Break just before "@" to make multi-lines emails more readable
+    val breakableEmail = email.replace("@", "\u200B@")
 }
 
 data class Aliases(
