@@ -2,6 +2,7 @@ package io.simplelogin.android.ui.home
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.generateRandomAlias
+import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
@@ -54,6 +57,7 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    val deviceSettings by deviceSettings.collectAsState()
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
@@ -89,6 +93,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
+            aliasCellSelection = deviceSettings.aliasCellSelection,
             onAction = {
                 when (it) {
                     is AliasAction.ViewDetails -> onViewDetails(it.id)
@@ -208,6 +213,7 @@ private fun SearchTopAppBar(
 private fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
+    aliasCellSelection: AliasCellSelection,
     onAction: (AliasAction) -> Unit
 ) {
     LazyColumn(
@@ -223,8 +229,15 @@ private fun AliasesList(
         }
 
         items(100) {
+            val alias = generateRandomAlias()
             AliasCell(
-                alias = generateRandomAlias(),
+                modifier = Modifier.clickable {
+                    when (aliasCellSelection) {
+                        AliasCellSelection.VIEW_DETAILS -> onAction(AliasAction.ViewDetails(alias.id))
+                        AliasCellSelection.COPY_EMAIL -> onAction(AliasAction.CopyEmailAddress(alias.email))
+                    }
+                },
+                alias = alias,
                 onAction = onAction
             )
             HorizontalDivider()
