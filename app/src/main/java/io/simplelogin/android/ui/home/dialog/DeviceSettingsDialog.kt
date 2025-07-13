@@ -19,6 +19,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
+import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 
@@ -51,9 +52,16 @@ fun DeviceSettingsDialog(
 
                 SecuritySection()
 
-                UntitledSection(
+                AliasCellSelectionSection(
                     selected = settings.aliasCellSelection,
                     onSelect = ::updateAliasCellSelection
+                )
+
+                SwipeActionSelection(
+                    selectedLeftToRight = settings.swipeFromLeftToRightAction,
+                    onSelectLeftToRight = ::updateSwipeFromLeftToRight,
+                    selectedRightToLeft = settings.swipeFromRightToLeftAction,
+                    onSelectRightToLeft = ::updateSwipeFromRightToLeft
                 )
             }
         }
@@ -68,7 +76,7 @@ private fun SecuritySection() {
 }
 
 @Composable
-private fun UntitledSection(
+private fun AliasCellSelectionSection(
     selected: AliasCellSelection,
     onSelect: (AliasCellSelection) -> Unit
 ) {
@@ -77,5 +85,27 @@ private fun UntitledSection(
         options = AliasCellSelection.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect
+    )
+}
+
+@Composable
+private fun SwipeActionSelection(
+    selectedLeftToRight: SwipeAction,
+    onSelectLeftToRight: (SwipeAction) -> Unit,
+    selectedRightToLeft: SwipeAction,
+    onSelectRightToLeft: (SwipeAction) -> Unit
+) {
+    OptionRow(
+        title = stringResource(R.string.swipe_from_left_to_right),
+        options = SwipeAction.entries.toTypedArray(),
+        selected = selectedLeftToRight,
+        onSelect = onSelectLeftToRight
+    )
+
+    OptionRow(
+        title = stringResource(R.string.swipe_from_right_to_left),
+        options = SwipeAction.entries.toTypedArray(),
+        selected = selectedRightToLeft,
+        onSelect = onSelectRightToLeft
     )
 }

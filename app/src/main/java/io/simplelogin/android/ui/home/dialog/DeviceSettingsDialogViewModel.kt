@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,6 +29,34 @@ class DeviceSettingsDialogViewModel @Inject constructor(
         viewModelScope.launch {
             updateDeviceSettingsUseCase.invoke {
                 it.copy(aliasCellSelection = selection)
+            }
+        }
+    }
+
+    fun updateSwipeFromLeftToRight(action: SwipeAction) {
+        viewModelScope.launch {
+            val oldSwipeFromLeftToRight = deviceSettings.value.swipeFromLeftToRightAction
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(swipeFromLeftToRightAction = action)
+            }
+            if (action == deviceSettings.value.swipeFromRightToLeftAction) {
+                updateDeviceSettingsUseCase.invoke {
+                    it.copy(swipeFromRightToLeftAction = oldSwipeFromLeftToRight)
+                }
+            }
+        }
+    }
+
+    fun updateSwipeFromRightToLeft(action: SwipeAction) {
+        viewModelScope.launch {
+            val oldSwipeFromRightToLeft = deviceSettings.value.swipeFromRightToLeftAction
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(swipeFromRightToLeftAction = action)
+            }
+            if (action == deviceSettings.value.swipeFromLeftToRightAction) {
+                updateDeviceSettingsUseCase.invoke {
+                    it.copy(swipeFromLeftToRightAction = oldSwipeFromRightToLeft)
+                }
             }
         }
     }

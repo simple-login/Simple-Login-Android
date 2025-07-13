@@ -83,4 +83,8 @@
     <string name="pin">Pin</string>
     <string name="unpin">Unpin</string>
     <string name="select_alias_action">Select alias action</string>
+    <string name="swipe_from_left_to_right">Swipe from left to right</string>
+    <string name="swipe_from_right_to_left">Swipe from right to left</string>
+    <string name="disable_enable">Disable/Enable</string>
+    <string name="pin_unpin">Pin/Unpin</string>
 </resources>
