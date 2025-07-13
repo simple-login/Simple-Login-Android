@@ -82,4 +82,5 @@
     <string name="last_14_days">Last 14 days</string>
     <string name="pin">Pin</string>
     <string name="unpin">Unpin</string>
+    <string name="select_alias_action">Select alias action</string>
 </resources>

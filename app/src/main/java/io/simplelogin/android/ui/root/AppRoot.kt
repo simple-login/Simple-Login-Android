@@ -18,7 +18,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.home.DeviceSettingsDialog
+import io.simplelogin.android.ui.home.dialog.DeviceSettingsDialog
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
