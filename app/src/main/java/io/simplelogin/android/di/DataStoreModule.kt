@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Crypto
@@ -18,16 +19,14 @@ import java.io.File
 import javax.inject.Singleton
 
 private typealias UserSessionPreferencesSerializer = EncryptingSerializer<UserSessionPreferences>
+private typealias DevicePreferencesSerializer = EncryptingSerializer<DevicePreferences>
 
-@Module
-@InstallIn(SingletonComponent::class)
+@[Module InstallIn(SingletonComponent::class)]
 object DataStoreModule {
-    @Provides
-    @Singleton
+    @[Provides Singleton]
     fun provideCrypto(): Crypto = CryptoImpl
 
-    @Provides
-    @Singleton
+    @[Provides Singleton]
     fun provideUserSessionPreferencesSerializer(crypto: Crypto): UserSessionPreferencesSerializer =
         EncryptingSerializer(
             crypto,
@@ -35,8 +34,7 @@ object DataStoreModule {
             UserSessionPreferences()
             )
 
-    @Provides
-    @Singleton
+    @[Provides Singleton]
     fun provideUserSessionPreferencesDataStore(
         @ApplicationContext context: Context,
         serializer: UserSessionPreferencesSerializer
@@ -48,6 +46,29 @@ object DataStoreModule {
             },
             corruptionHandler = ReplaceFileCorruptionHandler {
                 UserSessionPreferences()
+            }
+        )
+
+    @[Provides Singleton]
+    fun provideDevicePreferencesSerializer(crypto: Crypto): DevicePreferencesSerializer =
+        EncryptingSerializer(
+            crypto,
+            DevicePreferences.serializer(),
+            DevicePreferences()
+        )
+
+    @[Provides Singleton]
+    fun provideDevicePreferencesDataStore(
+        @ApplicationContext context: Context,
+        serializer: DevicePreferencesSerializer
+    ): DataStore<DevicePreferences> =
+        DataStoreFactory.create(
+            serializer = serializer,
+            produceFile = {
+                File(context.filesDir, Constants.DEVICE_PREFS_FILE_NAME)
+            },
+            corruptionHandler = ReplaceFileCorruptionHandler {
+                DevicePreferences()
             }
         )
 }

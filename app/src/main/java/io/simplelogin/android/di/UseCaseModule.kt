@@ -16,6 +16,10 @@ import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCaseImpl
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCaseImpl
+import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
+import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCaseImpl
+import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
+import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCaseImpl
 import javax.inject.Singleton
 
 @[Module InstallIn(SingletonComponent::class)]
@@ -37,4 +41,10 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindCopyToClipboardUseCase(impl: CopyToClipboardUseCaseImpl): CopyToClipboardUseCase
+
+    @[Binds Singleton]
+    abstract fun bindObserveDeviceSettingsUseCase(impl: ObserveDeviceSettingsUseCaseImpl): ObserveDeviceSettingsUseCase
+
+    @[Binds Singleton]
+    abstract fun bindUpdateDeviceSettingsUseCase(impl: UpdateDeviceSettingsUseCaseImpl): UpdateDeviceSettingsUseCase
 }
