@@ -9,7 +9,9 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,10 +37,52 @@ fun AliasCell(
     alias: Alias,
     onAction: (AliasAction) -> Unit
 ) {
-    val mailboxes = alias.mailboxes.joinToString(separator = ", ") { it.email }
-    var showMenu by remember { mutableStateOf(false) }
-    var showDeleteDialog by remember { mutableStateOf(false) }
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            false
+        }
+    )
+
+    SwipeToDismissBox(
+        modifier = modifier.padding(vertical = Spacing.medium),
+        state = dismissState,
+        backgroundContent = {
+
+        },
+        content = {
+            AliasCellContent(
+                alias = alias,
+                onAction = { action ->
+                    when (action) {
+                        is AliasAction.Delete -> showDeleteDialog = true
+                        else -> onAction(action)
+                    }
+                }
+            )
+        }
+    )
+
+    if (showDeleteDialog) {
+        DeleteAliasDialog(
+            aliasEmail = alias.email,
+            onDeleteClick = {
+                showDeleteDialog = false
+                onAction(AliasAction.Delete(alias.id))
+            },
+            onCancelClick = { showDeleteDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun AliasCellContent(
+    alias: Alias,
+    onAction: (AliasAction) -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+    val mailboxes = alias.mailboxes.joinToString(separator = ", ") { it.email }
     val scope = rememberCoroutineScope()
     val closeMenuAndSendAction: (AliasAction) -> Unit = {
         scope.launch {
@@ -47,10 +91,7 @@ fun AliasCell(
             onAction(it)
         }
     }
-
-    Row(
-        modifier = modifier.padding(vertical = Spacing.medium)
-    ) {
+    Row {
         Column(modifier = Modifier.weight(1f)) {
             if (alias.pinned) {
                 TextWithInlineIcon(
@@ -98,32 +139,9 @@ fun AliasCell(
             AliasCellDropdownMenu(
                 showMenu = showMenu,
                 alias = alias,
-                onAction = { action ->
-                    when (action) {
-                        is AliasAction.Delete -> {
-                            showMenu = false
-                            showDeleteDialog = true
-                        }
-
-                        else -> {
-                            closeMenuAndSendAction(action)
-                        }
-                    }
-
-                },
+                onAction = closeMenuAndSendAction,
                 onDismiss = { showMenu = false }
             )
         }
-    }
-
-    if (showDeleteDialog) {
-        DeleteAliasDialog(
-            aliasEmail = alias.email,
-            onDeleteClick = {
-                showDeleteDialog = false
-                closeMenuAndSendAction(AliasAction.Delete(alias.id))
-            },
-            onCancelClick = { showDeleteDialog = false }
-        )
     }
 }
