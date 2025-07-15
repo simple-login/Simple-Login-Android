@@ -21,15 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.OptionUiModel
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
-fun <T: OptionUiModel> OptionRow(
+fun <T> OptionRow(
     title: String,
+    description: @Composable (T) -> String,
     options: Array<T>,
     selected: T,
     onSelect: (T) -> Unit,
@@ -56,7 +55,7 @@ fun <T: OptionUiModel> OptionRow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(selected.titleResId()),
+                    text = description(selected),
                     color = color,
                     style = style
                 )
@@ -81,7 +80,7 @@ fun <T: OptionUiModel> OptionRow(
                                 )
                             }
                         },
-                        text = { Text(text = stringResource(option.titleResId())) },
+                        text = { Text(text = description(option)) },
                         onClick = {
                             onSelect(option)
                             expanded = false

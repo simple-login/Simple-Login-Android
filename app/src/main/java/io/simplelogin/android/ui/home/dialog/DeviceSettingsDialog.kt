@@ -82,6 +82,12 @@ private fun AliasCellSelectionSection(
 ) {
     OptionRow(
         title = stringResource(R.string.select_alias_action),
+        description = {
+            when (it) {
+                AliasCellSelection.VIEW_DETAILS -> stringResource(R.string.view_details)
+                AliasCellSelection.COPY_EMAIL -> stringResource(R.string.copy_alias_address)
+            }
+        },
         options = AliasCellSelection.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect
@@ -95,8 +101,17 @@ private fun SwipeActionSelection(
     selectedRightToLeft: SwipeAction,
     onSelectRightToLeft: (SwipeAction) -> Unit
 ) {
+    val description: @Composable (SwipeAction) -> String = {
+        when (it) {
+            SwipeAction.DISABLE_ENABLE -> stringResource(R.string.disable_enable)
+            SwipeAction.PIN_UNPIN -> stringResource(R.string.pin_unpin)
+            SwipeAction.DELETE -> stringResource(R.string.delete)
+        }
+    }
+
     OptionRow(
         title = stringResource(R.string.swipe_from_left_to_right),
+        description = description,
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedLeftToRight,
         onSelect = onSelectLeftToRight
@@ -104,6 +119,7 @@ private fun SwipeActionSelection(
 
     OptionRow(
         title = stringResource(R.string.swipe_from_right_to_left),
+        description = description,
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedRightToLeft,
         onSelect = onSelectRightToLeft
