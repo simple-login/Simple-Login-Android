@@ -42,6 +42,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.generateRandomAlias
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
+import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
@@ -94,6 +95,8 @@ fun HomeScreen(
                 .padding(innerPadding),
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
             aliasCellSelection = deviceSettings.aliasCellSelection,
+            swipeFromLeftToRightAction = deviceSettings.swipeFromLeftToRightAction,
+            swipeFromRightToLeftAction = deviceSettings.swipeFromRightToLeftAction,
             onAction = {
                 when (it) {
                     is AliasAction.ViewDetails -> onViewDetails(it.id)
@@ -214,6 +217,8 @@ private fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
     aliasCellSelection: AliasCellSelection,
+    swipeFromLeftToRightAction: SwipeAction,
+    swipeFromRightToLeftAction: SwipeAction,
     onAction: (AliasAction) -> Unit
 ) {
     LazyColumn(
@@ -238,6 +243,8 @@ private fun AliasesList(
                     }
                 },
                 alias = alias,
+                swipeFromLeftToRightAction = swipeFromLeftToRightAction,
+                swipeFromRightToLeftAction = swipeFromRightToLeftAction,
                 onAction = onAction
             )
             HorizontalDivider()
