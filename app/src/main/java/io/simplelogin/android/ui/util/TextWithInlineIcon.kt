@@ -26,13 +26,14 @@ enum class IconPosition { LEADING, TRAILING }
 @Composable
 fun TextWithInlineIcon(
     text: String,
+    textColor: Color,
     icon: Painter,
     modifier: Modifier = Modifier,
     iconSize: TextUnit = 16.sp,
     iconTint: Color = LocalContentColor.current,
     iconPosition: IconPosition = IconPosition.LEADING,
     fontWeight: FontWeight? = null,
-    style: TextStyle = LocalTextStyle.current,
+    style: TextStyle = LocalTextStyle.current
 ) {
     val iconId = "icon_id"
     val annotatedText = buildAnnotatedString {
@@ -73,6 +74,7 @@ fun TextWithInlineIcon(
         fontWeight = fontWeight,
         inlineContent = inlineContent,
         modifier = modifier,
-        style = style
+        style = style,
+        color = textColor
     )
 }

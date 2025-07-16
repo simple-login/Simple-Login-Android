@@ -13,4 +13,9 @@ sealed class Result<out T, out E> {
         is Success -> this
         is Failure -> Failure(transform(error))
     }
+
+    suspend fun <R> fold(onSuccess: suspend (T) -> R, onFailure: suspend (E) -> R): R = when (this) {
+        is Success -> onSuccess(value)
+        is Failure -> onFailure(error)
+    }
 }

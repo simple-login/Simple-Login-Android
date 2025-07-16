@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoNotDisturbOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -189,9 +190,12 @@ private fun AliasCellContent(
     }
     Row(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
+            val emailColor =
+                if (alias.enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
             if (alias.pinned) {
                 TextWithInlineIcon(
-                    text = alias.breakableEmail,
+                    text = alias.displayedEmail,
+                    textColor = emailColor,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.titleLarge,
                     icon = painterResource(R.drawable.ic_keep_filled),
@@ -200,7 +204,8 @@ private fun AliasCellContent(
                 )
             } else {
                 Text(
-                    text = alias.breakableEmail,
+                    text = alias.displayedEmail,
+                    color = emailColor,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.titleLarge
                 )
