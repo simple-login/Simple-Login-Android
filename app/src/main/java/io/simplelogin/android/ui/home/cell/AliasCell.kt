@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,13 +51,40 @@ import kotlinx.coroutines.launch
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
-    swipeFromLeftToRightAction: SwipeAction,
-    swipeFromRightToLeftAction: SwipeAction,
+    swipeFromStartToEndAction: SwipeAction,
+    swipeFromEndToStartAction: SwipeAction,
     onAction: (AliasAction) -> Unit
-) {
+) = key(swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+
     val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
+        confirmValueChange = { value ->
+            val action = when (value) {
+                SwipeToDismissBoxValue.StartToEnd -> swipeFromStartToEndAction
+                SwipeToDismissBoxValue.EndToStart -> swipeFromEndToStartAction
+                else -> null
+            }
+
+            when (action) {
+                SwipeAction.DISABLE_ENABLE ->
+                    if (alias.enabled) {
+                        onAction(AliasAction.Disable(alias.id))
+                    } else {
+                        onAction(AliasAction.Enable(alias.id))
+                    }
+
+                SwipeAction.PIN_UNPIN ->
+                    if (alias.pinned) {
+                        onAction(AliasAction.Unpin(alias.id))
+                    } else {
+                        onAction(AliasAction.Pin(alias.id))
+                    }
+
+                SwipeAction.DELETE ->
+                    showDeleteDialog = true
+
+                else -> Unit
+            }
             false
         }
     )
@@ -73,8 +101,8 @@ fun AliasCell(
             }
 
             val backgroundColor = when (direction) {
-                SwipeToDismissBoxValue.StartToEnd -> swipeFromRightToLeftAction.color(alias)
-                SwipeToDismissBoxValue.EndToStart -> swipeFromLeftToRightAction.color(alias)
+                SwipeToDismissBoxValue.StartToEnd -> swipeFromStartToEndAction.color(alias)
+                SwipeToDismissBoxValue.EndToStart -> swipeFromEndToStartAction.color(alias)
                 else -> Color.Transparent
             }
 
@@ -101,13 +129,13 @@ fun AliasCell(
                 )
                 when (direction) {
                     SwipeToDismissBoxValue.StartToEnd ->
-                        swipeFromRightToLeftAction.Label(
+                        swipeFromStartToEndAction.Label(
                             isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
                             alias = alias
                         )
 
                     SwipeToDismissBoxValue.EndToStart ->
-                        swipeFromLeftToRightAction.Label(
+                        swipeFromEndToStartAction.Label(
                             isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
                             alias = alias
                         )

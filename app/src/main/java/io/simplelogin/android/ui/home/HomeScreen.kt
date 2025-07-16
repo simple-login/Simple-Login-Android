@@ -95,8 +95,8 @@ fun HomeScreen(
                 .padding(innerPadding),
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
             aliasCellSelection = deviceSettings.aliasCellSelection,
-            swipeFromLeftToRightAction = deviceSettings.swipeFromLeftToRightAction,
-            swipeFromRightToLeftAction = deviceSettings.swipeFromRightToLeftAction,
+            swipeFromStartToEndAction = deviceSettings.swipeFromLeftToRightAction,
+            swipeFromEndToStartAction = deviceSettings.swipeFromRightToLeftAction,
             onAction = {
                 when (it) {
                     is AliasAction.ViewDetails -> onViewDetails(it.id)
@@ -217,8 +217,8 @@ private fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
     aliasCellSelection: AliasCellSelection,
-    swipeFromLeftToRightAction: SwipeAction,
-    swipeFromRightToLeftAction: SwipeAction,
+    swipeFromStartToEndAction: SwipeAction,
+    swipeFromEndToStartAction: SwipeAction,
     onAction: (AliasAction) -> Unit
 ) {
     LazyColumn(
@@ -243,8 +243,8 @@ private fun AliasesList(
                     }
                 },
                 alias = alias,
-                swipeFromLeftToRightAction = swipeFromLeftToRightAction,
-                swipeFromRightToLeftAction = swipeFromRightToLeftAction,
+                swipeFromStartToEndAction = swipeFromStartToEndAction,
+                swipeFromEndToStartAction = swipeFromEndToStartAction,
                 onAction = onAction
             )
             HorizontalDivider()
