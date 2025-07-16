@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,7 +62,7 @@ fun AliasCell(
     )
 
     SwipeToDismissBox(
-        modifier = modifier.padding(vertical = Spacing.medium),
+        modifier = modifier,
         state = dismissState,
         backgroundContent = {
             val direction = dismissState.dismissDirection
@@ -72,8 +73,8 @@ fun AliasCell(
             }
 
             val backgroundColor = when (direction) {
-                SwipeToDismissBoxValue.StartToEnd -> swipeFromRightToLeftAction.color
-                SwipeToDismissBoxValue.EndToStart -> swipeFromLeftToRightAction.color
+                SwipeToDismissBoxValue.StartToEnd -> swipeFromRightToLeftAction.color(alias)
+                SwipeToDismissBoxValue.EndToStart -> swipeFromLeftToRightAction.color(alias)
                 else -> Color.Transparent
             }
 
@@ -99,14 +100,26 @@ fun AliasCell(
                         .background(backgroundColor)
                 )
                 when (direction) {
-                    SwipeToDismissBoxValue.StartToEnd -> swipeFromRightToLeftAction.Label(alias)
-                    SwipeToDismissBoxValue.EndToStart -> swipeFromLeftToRightAction.Label(alias)
+                    SwipeToDismissBoxValue.StartToEnd ->
+                        swipeFromRightToLeftAction.Label(
+                            isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
+                            alias = alias
+                        )
+
+                    SwipeToDismissBoxValue.EndToStart ->
+                        swipeFromLeftToRightAction.Label(
+                            isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
+                            alias = alias
+                        )
+
                     else -> Color.Transparent
+
                 }
             }
         },
         content = {
             AliasCellContent(
+                modifier = Modifier.padding(vertical = Spacing.medium),
                 alias = alias,
                 onAction = { action ->
                     when (action) {
@@ -132,6 +145,7 @@ fun AliasCell(
 
 @Composable
 private fun AliasCellContent(
+    modifier: Modifier = Modifier,
     alias: Alias,
     onAction: (AliasAction) -> Unit
 ) {
@@ -145,7 +159,7 @@ private fun AliasCellContent(
             onAction(it)
         }
     }
-    Row {
+    Row(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
             if (alias.pinned) {
                 TextWithInlineIcon(
@@ -200,24 +214,30 @@ private fun AliasCellContent(
     }
 }
 
-private val SwipeAction.color: Color
-    get() = when (this) {
-        SwipeAction.DISABLE_ENABLE -> Color.Gray
-        SwipeAction.PIN_UNPIN -> Color.Cyan
-        SwipeAction.DELETE -> SlColor.Red
+@Composable
+private fun SwipeAction.color(alias: Alias): Color =
+    when (this) {
+        SwipeAction.PIN_UNPIN -> if (alias.pinned) SlColor.Amber else MaterialTheme.colorScheme.primary
+        SwipeAction.DISABLE_ENABLE -> if (alias.enabled) Color.Gray else SlColor.Green
+        SwipeAction.DELETE -> Color.Red
     }
 
 @Composable
-private fun SwipeAction.Label(alias: Alias) {
+private fun SwipeAction.Label(
+    isVisible: Boolean,
+    alias: Alias
+) {
     when (this) {
         SwipeAction.DISABLE_ENABLE ->
             if (alias.enabled) {
                 SwipeActionLabel(
+                    isVisible = isVisible,
                     title = stringResource(R.string.disable),
                     icon = IconContent.ImageVectorContent(Icons.Outlined.DoNotDisturbOn)
                 )
             } else {
                 SwipeActionLabel(
+                    isVisible = isVisible,
                     title = stringResource(R.string.enable),
                     icon = IconContent.ImageVectorContent(Icons.Outlined.CheckCircleOutline)
                 )
@@ -226,17 +246,20 @@ private fun SwipeAction.Label(alias: Alias) {
         SwipeAction.PIN_UNPIN ->
             if (alias.pinned) {
                 SwipeActionLabel(
+                    isVisible = isVisible,
                     title = stringResource(R.string.unpin),
                     icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep_off))
                 )
             } else {
                 SwipeActionLabel(
+                    isVisible = isVisible,
                     title = stringResource(R.string.pin),
                     icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep))
                 )
             }
         SwipeAction.DELETE ->
             SwipeActionLabel(
+                isVisible = isVisible,
                 title = stringResource(R.string.delete),
                 icon = IconContent.ImageVectorContent(Icons.Outlined.Delete)
             )
@@ -245,20 +268,35 @@ private fun SwipeAction.Label(alias: Alias) {
 
 @Composable
 fun SwipeActionLabel(
-    modifier: Modifier = Modifier,
+    isVisible: Boolean,
     title: String,
     icon: IconContent
 ) {
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .padding(horizontal = Spacing.extraLarge)
+            .alpha(if (isVisible) 1f else 0f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (icon) {
             is IconContent.ImageVectorContent ->
-                Icon(imageVector = icon.vector, contentDescription = icon.contentDescription)
+                Icon(
+                    imageVector = icon.vector,
+                    contentDescription = icon.contentDescription,
+                    tint = Color.White
+                )
+
             is IconContent.PainterContent ->
-                Icon(painter = icon.painter, contentDescription = icon.contentDescription)
+                Icon(
+                    painter = icon.painter,
+                    contentDescription = icon.contentDescription,
+                    tint = Color.White
+                )
         }
-        Text(text = title)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.White
+        )
     }
 }

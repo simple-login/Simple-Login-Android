@@ -16,4 +16,5 @@ object SlColor {
     val Red = Color(0xFFEB3D7B)
     val Green = Color(0xFF5FC88F)
     val Blue = Color(0xFF4989FF)
+    val Amber = Color(0xFFFFC107)
 }
