@@ -8,27 +8,34 @@ import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface AliasesRemoteDatasource {
-    suspend fun filterAliases(apiKey: String, filterMode: AliasFilterMode, pageId: Int): Result<Aliases, ApiError>
+    suspend fun fetchAliases(apiKey: String, filterMode: AliasFilterMode, pageId: Int): Result<Aliases, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
     BaseRemoteDatasource(), AliasesRemoteDatasource {
-    override suspend fun filterAliases(
+    override suspend fun fetchAliases(
         apiKey: String,
         filterMode: AliasFilterMode,
         pageId: Int
     ): Result<Aliases, ApiError> {
-        val params: Map<String?, String> = when (filterMode) {
-            AliasFilterMode.ALL -> mapOf()
+        val params: Map<String?, String>? = when (filterMode) {
+            AliasFilterMode.ALL -> null
             AliasFilterMode.ENABLED -> mapOf("enabled" to "true")
             AliasFilterMode.DISABLED -> mapOf("disabled" to "true")
         }
-        return safeApiCall {
-            apiService.filterAliases(
-                apiKey = apiKey,
-                pageId = pageId,
-                params = params
-            )
+
+        return if (params != null) {
+            safeApiCall {
+                apiService.filterAliases(
+                    apiKey = apiKey,
+                    pageId = pageId,
+                    params = params
+                )
+            }
+        } else {
+            safeApiCall {
+                apiService.getAliases(apiKey = apiKey, pageId = pageId)
+            }
         }
     }
 }

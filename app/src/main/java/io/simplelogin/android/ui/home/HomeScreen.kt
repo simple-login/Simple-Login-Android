@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.Stats
-import io.simplelogin.android.data.models.api.generateRandomAlias
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
@@ -46,6 +48,10 @@ fun HomeScreen(
     val state by stateFlow.collectAsState()
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    LaunchedEffect(Unit) {
+        setUpAliasListManager()
+    }
 
     BackHandler {
         if (isSearching) {
@@ -81,6 +87,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
+            aliases = state.aliases,
             aliasCellSelection = state.deviceSettings.aliasCellSelection,
             swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
             swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
@@ -121,6 +128,7 @@ fun HomeScreen(
 private fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
+    aliases: List<Alias>,
     aliasCellSelection: AliasCellSelection,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
@@ -138,8 +146,7 @@ private fun AliasesList(
             Spacer(modifier = Modifier.height(Spacing.regular))
         }
 
-        items(100) {
-            val alias = generateRandomAlias()
+        items(aliases) { alias ->
             AliasCell(
                 modifier = Modifier.clickable {
                     when (aliasCellSelection) {

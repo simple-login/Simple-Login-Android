@@ -88,7 +88,7 @@ class LoginMasterScreenViewModel @Inject constructor(
         launchLoading(doWork = {
             delay(1_000)
         }, handleResult = {
-            updateSessionSettings.invoke { it.copy(apiKey = "Some API Key") }
+            updateSessionSettings.invoke { it.copy(apiKey = apiKey) }
         })
     }
 
