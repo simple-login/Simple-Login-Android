@@ -27,7 +27,6 @@ import io.simplelogin.android.data.models.api.generateRandomAlias
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
@@ -44,8 +43,7 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    val deviceSettings by deviceSettings.collectAsState()
-    var selectedAliasFilterMode by rememberSaveable { mutableStateOf(AliasFilterMode.ALL) }
+    val state by stateFlow.collectAsState()
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
@@ -69,11 +67,11 @@ fun HomeScreen(
                 )
             } else {
                 NormalTopAppBar(
-                    selectedAliasFilterMode = selectedAliasFilterMode,
+                    selectedAliasFilterMode = state.aliasFilterMode,
                     scrollBehavior = scrollBehavior,
                     onOpenDrawer = onOpenDrawer,
                     onSearchClick = { isSearching = true },
-                    onSelectAliasFilterMode = { selectedAliasFilterMode = it }
+                    onSelectAliasFilterMode = ::updateAliasFilterMode
                 )
             }
         }
@@ -83,9 +81,9 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
-            aliasCellSelection = deviceSettings.aliasCellSelection,
-            swipeFromStartToEndAction = deviceSettings.swipeFromLeftToRightAction,
-            swipeFromEndToStartAction = deviceSettings.swipeFromRightToLeftAction,
+            aliasCellSelection = state.deviceSettings.aliasCellSelection,
+            swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
+            swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
             onAction = {
                 when (it) {
                     is AliasAction.ViewDetails -> onViewDetails(it.id)

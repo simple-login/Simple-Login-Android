@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,13 +26,22 @@ class HomeViewModel @Inject constructor(
     private val copyToClipboardUseCase: CopyToClipboardUseCase,
     observeSessionSettings: ObserveSessionSettingsUseCase,
     observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase
-): ViewModel() {
-    val deviceSettings = observeDeviceSettingsUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = DevicePreferences.Default
+) : ViewModel() {
+    private val aliasFilterModeFlow = MutableStateFlow<AliasFilterMode>(AliasFilterMode.ALL)
+
+    val stateFlow = combine(
+        observeDeviceSettingsUseCase(),
+        aliasFilterModeFlow
+    ) { deviceSettings, aliasFilterMode ->
+        HomeScreenState(
+            deviceSettings = deviceSettings,
+            aliasFilterMode = aliasFilterMode
         )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = HomeScreenState.Default
+    )
 
     fun copyAliasAddress(email: String) {
         viewModelScope.launch {
@@ -40,6 +51,14 @@ class HomeViewModel @Inject constructor(
             )
             val message = context.getString(R.string.alias_address_copied, email)
             snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+        }
+    }
+
+    fun updateAliasFilterMode(newMode: AliasFilterMode) {
+        viewModelScope.launch {
+            if (aliasFilterModeFlow.value != newMode) {
+                aliasFilterModeFlow.emit(newMode)
+            }
         }
     }
 }
