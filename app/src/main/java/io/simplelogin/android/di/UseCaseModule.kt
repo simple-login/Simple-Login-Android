@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.CopyToClipboardUseCaseImpl
+import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
+import io.simplelogin.android.usecases.login.ForgotPasswordUseCaseImpl
 import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.LogInUseCaseImpl
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
@@ -32,6 +34,9 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindLogInUseCase(impl: LogInUseCaseImpl): LogInUseCase
+
+    @[Binds Singleton]
+    abstract fun bindForgotPassword(impl: ForgotPasswordUseCaseImpl): ForgotPasswordUseCase
 
     @[Binds Singleton]
     abstract fun bindSignUpUseCase(impl: SignUpUseCaseImpl): SignUpUseCase

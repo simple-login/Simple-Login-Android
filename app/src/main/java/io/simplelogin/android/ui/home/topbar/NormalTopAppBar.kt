@@ -37,7 +37,7 @@ fun NormalTopAppBar(
     var showFilterOptions by rememberSaveable { mutableStateOf(false) }
     MediumTopAppBar(
         title = {
-            Text(stringResource(R.string.all_aliases))
+            Text(selectedAliasFilterMode.title(context))
         },
         navigationIcon = {
             IconButton(onClick = onOpenDrawer) {
