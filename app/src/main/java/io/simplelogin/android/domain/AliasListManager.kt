@@ -48,6 +48,7 @@ interface AliasListManager {
     suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError>
     suspend fun pin(aliasId: Int): Result<Unit, ApiError>
     suspend fun unpin(aliasId: Int): Result<Unit, ApiError>
+    suspend fun delete(aliasId: Int): Result<Unit, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -211,6 +212,23 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 if (index != -1) {
                     aliases[index] = aliases[index].copy(pinned = false)
                 }
+
+                this.aliases.value = aliases
+                isModifying.value = false
+                Result.Success(Unit)
+            }, onFailure = {
+                isModifying.value = false
+                Result.Failure(it)
+            })
+    }
+
+    override suspend fun delete(aliasId: Int): Result<Unit, ApiError> {
+        val apiKey = requireNotNull(apiKey) { "API key is not set" }
+        isModifying.value = true
+        return datasource.delete(apiKey = apiKey, aliasId = aliasId)
+            .fold(onSuccess = {
+                val aliases = aliases.value.toMutableList()
+                aliases.removeAll { it.id == aliasId }
 
                 this.aliases.value = aliases
                 isModifying.value = false

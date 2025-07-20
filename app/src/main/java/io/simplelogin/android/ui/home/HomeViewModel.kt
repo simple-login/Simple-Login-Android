@@ -158,7 +158,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handle(error: ApiError) {
-        print(error)
+    fun delete(alias: Alias) {
+        viewModelScope.launch {
+            aliasListManager.delete(aliasId = alias.id)
+                .fold(onSuccess = {
+                    val config = SnackbarConfiguration(
+                        message = context.getString(R.string.alias_is_deleted, alias.email)
+                    )
+                    snackbarManager.showSnackbar(config)
+                }, onFailure = ::handle)
+        }
+    }
+
+    private suspend fun handle(error: ApiError) {
+        val config = SnackbarConfiguration(
+            message = error.description(context),
+            type = SnackbarType.FAILURE
+        )
+        snackbarManager.showSnackbar(config)
     }
 }

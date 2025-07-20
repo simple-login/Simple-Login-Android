@@ -16,6 +16,7 @@ interface AliasesRemoteDatasource {
     suspend fun toggle(apiKey: String, aliasId: Int): Result<EnabledResponse, ApiError>
     suspend fun pin(apiKey: String, aliasId: Int): Result<Unit, ApiError>
     suspend fun unpin(apiKey: String, aliasId: Int): Result<Unit, ApiError>
+    suspend fun delete(apiKey: String, aliasId: Int): Result<Unit, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -69,5 +70,10 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
                 aliasId = aliasId,
                 body = UpdateAliasOptions(pinned = false)
             )
+        }.mapValue {}
+
+    override suspend fun delete(apiKey: String, aliasId: Int): Result<Unit, ApiError> =
+        safeApiCall {
+            apiService.deleteAlias(apiKey = apiKey, aliasId = aliasId)
         }.mapValue {}
 }

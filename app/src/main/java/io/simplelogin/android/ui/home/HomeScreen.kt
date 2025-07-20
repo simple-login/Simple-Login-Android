@@ -91,9 +91,7 @@ fun HomeScreen(
 
                     is AliasAction.Unpin -> unpin(it.alias)
 
-                    is AliasAction.Delete -> {
-
-                    }
+                    is AliasAction.Delete -> delete(it.alias)
                 }
             },
             onFetchMore = ::fetchMoreAliases,
