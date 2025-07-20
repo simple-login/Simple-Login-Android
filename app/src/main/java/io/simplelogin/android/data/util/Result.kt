@@ -18,4 +18,20 @@ sealed class Result<out T, out E> {
         is Success -> onSuccess(value)
         is Failure -> onFailure(error)
     }
+
+    suspend fun onSuccess(action: suspend (T) -> Unit): Result<T, E> = when (this) {
+        is Success -> {
+            action(value)
+            this
+        }
+        is Failure -> this
+    }
+
+    suspend fun onFailure(action: suspend (E) -> Unit): Result<T, E> = when (this) {
+        is Success -> this
+        is Failure -> {
+            action(error)
+            this
+        }
+    }
 }

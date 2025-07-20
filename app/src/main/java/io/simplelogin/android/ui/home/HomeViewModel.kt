@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
                 if (it.apiKey != null) {
                     aliasListManager.setApiKey(it.apiKey)
                     aliasListManager.setFilterModeAndRefresh(aliasFilterModeFlow.value)
-                        .fold(onSuccess = {}, onFailure = ::handle)
+                        .onFailure(::handle)
                 }
             }
         }
@@ -78,7 +78,7 @@ class HomeViewModel @Inject constructor(
             if (aliasFilterModeFlow.value != newMode) {
                 aliasFilterModeFlow.emit(newMode)
                 aliasListManager.setFilterModeAndRefresh(newMode)
-                    .fold(onSuccess = {}, onFailure = ::handle)
+                    .onFailure(::handle)
             }
         }
     }
