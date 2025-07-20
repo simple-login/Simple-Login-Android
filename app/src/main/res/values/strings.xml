@@ -42,6 +42,7 @@
     <string name="sign_out_message">Are you sure you want to sign out of your account?</string>
     <string name="cancel">Cancel</string>
     <string name="all_aliases">All aliases</string>
+    <string name="pinned_aliases">Pinned aliases</string>
     <string name="active_aliases">Active aliases</string>
     <string name="disabled_aliases">Disabled aliases</string>
     <string name="search_all_aliases">Search all aliases</string>

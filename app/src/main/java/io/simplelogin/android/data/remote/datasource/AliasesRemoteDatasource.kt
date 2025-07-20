@@ -30,6 +30,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
     ): Result<Aliases, ApiError> {
         val params: Map<String?, String>? = when (filterMode) {
             AliasFilterMode.ALL -> null
+            AliasFilterMode.PINNED -> mapOf("pinned" to "true")
             AliasFilterMode.ENABLED -> mapOf("enabled" to "true")
             AliasFilterMode.DISABLED -> mapOf("disabled" to "true")
         }
