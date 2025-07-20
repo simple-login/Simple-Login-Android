@@ -55,7 +55,7 @@ fun AliasCell(
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
     onAction: (AliasAction) -> Unit
-) = key(swipeFromStartToEndAction, swipeFromEndToStartAction) {
+) = key(alias, swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val dismissState = rememberSwipeToDismissBoxState(

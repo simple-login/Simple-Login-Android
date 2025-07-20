@@ -121,6 +121,32 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun pin(alias: Alias) {
+        viewModelScope.launch {
+            aliasListManager.pin(aliasId = alias.id)
+                .fold(onSuccess = {
+                    val config = SnackbarConfiguration(
+                        message = context.getString(R.string.alias_is_pinned, alias.email),
+                        type = SnackbarType.SUCCESS
+                    )
+                    snackbarManager.showSnackbar(config)
+                }, onFailure = ::handle)
+        }
+    }
+
+    fun unpin(alias: Alias) {
+        viewModelScope.launch {
+            aliasListManager.unpin(aliasId = alias.id)
+                .fold(onSuccess = {
+                    val config = SnackbarConfiguration(
+                        message = context.getString(R.string.alias_is_unpinned, alias.email),
+                        type = SnackbarType.INFORMATION
+                    )
+                    snackbarManager.showSnackbar(config)
+                }, onFailure = ::handle)
+        }
+    }
+
     private fun handle(error: ApiError) {
         print(error)
     }

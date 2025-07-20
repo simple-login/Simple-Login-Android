@@ -36,6 +36,8 @@ interface AliasListManager {
     suspend fun refresh(apiKey: String? = null, filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
     suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError>
+    suspend fun pin(aliasId: Int): Result<Unit, ApiError>
+    suspend fun unpin(aliasId: Int): Result<Unit, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -125,7 +127,50 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 }
 
                 _state.value = _state.value.copy(aliases = aliases)
+                _state.value = _state.value.copy(isModifying = false)
                 Result.Success(enabled)
+            }, onFailure = {
+                _state.value = _state.value.copy(isModifying = false)
+                Result.Failure(it)
+            })
+    }
+
+    override suspend fun pin(aliasId: Int): Result<Unit, ApiError> {
+        val apiKey = requireNotNull(apiKey) { "API key is not set" }
+        _state.value = _state.value.copy(isModifying = true)
+        return datasource.pin(apiKey = apiKey, aliasId = aliasId)
+            .fold(onSuccess = {
+                val aliases = _state.value.aliases.toMutableList()
+                val index = aliases.indexOfFirst { it.id == aliasId }
+
+                assert(index != -1) { "Alias with id $aliasId not found" }
+                if (index != -1) {
+                    aliases[index] = aliases[index].copy(pinned = true)
+                }
+
+                _state.value = _state.value.copy(aliases = aliases, isModifying = false)
+                Result.Success(Unit)
+            }, onFailure = {
+                _state.value = _state.value.copy(isModifying = false)
+                Result.Failure(it)
+            })
+    }
+
+    override suspend fun unpin(aliasId: Int): Result<Unit, ApiError> {
+        val apiKey = requireNotNull(apiKey) { "API key is not set" }
+        _state.value = _state.value.copy(isModifying = true)
+        return datasource.unpin(apiKey = apiKey, aliasId = aliasId)
+            .fold(onSuccess = {
+                val aliases = _state.value.aliases.toMutableList()
+                val index = aliases.indexOfFirst { it.id == aliasId }
+
+                assert(index != -1) { "Alias with id $aliasId not found" }
+                if (index != -1) {
+                    aliases[index] = aliases[index].copy(pinned = false)
+                }
+
+                _state.value = _state.value.copy(aliases = aliases, isModifying = false)
+                Result.Success(Unit)
             }, onFailure = {
                 _state.value = _state.value.copy(isModifying = false)
                 Result.Failure(it)

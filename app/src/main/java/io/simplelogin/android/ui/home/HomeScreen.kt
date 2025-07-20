@@ -87,13 +87,9 @@ fun HomeScreen(
 
                     is AliasAction.Enable -> toggle(it.alias)
 
-                    is AliasAction.Pin -> {
+                    is AliasAction.Pin -> pin(it.alias)
 
-                    }
-
-                    is AliasAction.Unpin -> {
-
-                    }
+                    is AliasAction.Unpin -> unpin(it.alias)
 
                     is AliasAction.Delete -> {
 

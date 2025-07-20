@@ -91,4 +91,6 @@
     <string name="pin_unpin">Pin/Unpin</string>
     <string name="alias_is_enabled">\"%s\" is enabled</string>
     <string name="alias_is_disabled">\"%s\" is disabled</string>
+    <string name="alias_is_pinned">\"%s\ is pinned"</string>
+    <string name="alias_is_unpinned">\"%s\ is unpinned"</string>
 </resources>
