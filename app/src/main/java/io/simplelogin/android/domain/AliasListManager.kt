@@ -13,8 +13,7 @@ interface AliasListManager {
     val aliases: Flow<List<Alias>>
     val isFetching: Flow<Boolean>
 
-    fun setApiKey(apiKey: String)
-    suspend fun setFilterModeAndRefresh(filterMode: AliasFilterMode): Result<Unit, ApiError>
+    suspend fun refresh(apiKey: String, filterMode: AliasFilterMode): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
 }
 
@@ -31,11 +30,8 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
     private var currentPage = 0
     private var filterMode: AliasFilterMode? = null
 
-    override fun setApiKey(apiKey: String) {
+    override suspend fun refresh(apiKey: String, filterMode: AliasFilterMode): Result<Unit, ApiError> {
         this.apiKey = apiKey
-    }
-
-    override suspend fun setFilterModeAndRefresh(filterMode: AliasFilterMode): Result<Unit, ApiError> {
         this.filterMode = filterMode
         _aliases.value = listOf()
         canFetchMore = true
@@ -44,8 +40,8 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
     }
 
     override suspend fun fetchMore(): Result<Unit, ApiError> {
-        if (!canFetchMore) return Result.Success(Unit)
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
+        if (_isFetching.value || !canFetchMore) return Result.Success(Unit)
+        val apiKey = apiKey ?: return Result.Success(Unit)
         val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
         _isFetching.value = true
 
@@ -56,7 +52,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         ).fold(onSuccess = {
             _aliases.value = _aliases.value + it.aliases
             currentPage += 1
-            canFetchMore = it.aliases.size <= PAGE_SIZE
+            canFetchMore = it.aliases.isNotEmpty() && it.aliases.size <= PAGE_SIZE
             _isFetching.value = false
             Result.Success(Unit)
         }, onFailure = {

@@ -32,6 +32,23 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val aliasFilterModeFlow = MutableStateFlow<AliasFilterMode>(AliasFilterMode.ALL)
 
+    init {
+        viewModelScope.launch {
+            combine(
+                observeSessionSettings(),
+                aliasFilterModeFlow
+            ) { settings, filterMode ->
+                settings to filterMode
+            }
+                .collect { (settings, filterMode) ->
+                    settings.apiKey?.let {
+                        aliasListManager.refresh(apiKey = it, filterMode = filterMode)
+                            .onFailure(::handle)
+                    }
+                }
+        }
+    }
+
     val stateFlow = combine(
         observeDeviceSettingsUseCase(),
         aliasFilterModeFlow,
@@ -50,18 +67,6 @@ class HomeViewModel @Inject constructor(
         initialValue = HomeScreenState.Default
     )
 
-    fun setUpAliasListManager() {
-        viewModelScope.launch {
-            observeSessionSettings.invoke().collect {
-                if (it.apiKey != null) {
-                    aliasListManager.setApiKey(it.apiKey)
-                    aliasListManager.setFilterModeAndRefresh(aliasFilterModeFlow.value)
-                        .onFailure(::handle)
-                }
-            }
-        }
-    }
-
     fun copyAliasAddress(email: String) {
         viewModelScope.launch {
             copyToClipboardUseCase.invoke(
@@ -77,8 +82,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             if (aliasFilterModeFlow.value != newMode) {
                 aliasFilterModeFlow.emit(newMode)
-                aliasListManager.setFilterModeAndRefresh(newMode)
-                    .onFailure(::handle)
             }
         }
     }
@@ -86,6 +89,7 @@ class HomeViewModel @Inject constructor(
     fun fetchMoreAliases() {
         viewModelScope.launch {
             aliasListManager.fetchMore()
+                .onFailure(::handle)
         }
     }
 
