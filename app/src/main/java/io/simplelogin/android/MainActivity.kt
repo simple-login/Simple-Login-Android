@@ -25,7 +25,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -56,6 +57,7 @@ import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.domain.snackbar.colors
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
@@ -164,12 +166,7 @@ private fun MainUi(
             viewModel.snackbarManager.configuration.collect { configuration ->
                 currentSnackbarJob?.cancel()
                 currentSnackbarJob = scope.launch {
-                    val result = snackbarHostState.showSnackbar(
-                        message = configuration.message,
-                        actionLabel = configuration.action?.label,
-                        withDismissAction = configuration.duration == SnackbarDuration.Indefinite,
-                        duration = configuration.duration
-                    )
+                    val result = snackbarHostState.showSnackbar(visuals = configuration.toVisuals())
 
                     when (result) {
                         SnackbarResult.ActionPerformed -> {
@@ -184,7 +181,23 @@ private fun MainUi(
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            snackbarHost = { SnackbarHost(snackbarHostState) }
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    snackbar = { data ->
+                        val colors = data.visuals.colors()
+                        Snackbar(
+                            snackbarData = data,
+                            containerColor = colors.containerColor ?: SnackbarDefaults.color,
+                            contentColor = colors.contentColor ?: SnackbarDefaults.contentColor,
+                            actionColor = colors.actionColor ?: SnackbarDefaults.actionColor,
+                            actionContentColor = colors.actionContentColor
+                                ?: SnackbarDefaults.actionContentColor,
+                            dismissActionContentColor = colors.dismissActionContentColor
+                                ?: SnackbarDefaults.dismissActionContentColor,
+                        )
+                    })
+            }
         ) { innerPadding ->
             Box(
                 modifier = Modifier.fillMaxSize()

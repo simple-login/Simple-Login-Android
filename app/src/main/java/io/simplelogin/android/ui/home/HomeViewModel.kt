@@ -12,6 +12,7 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.domain.AliasListManager
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
@@ -111,7 +112,11 @@ class HomeViewModel @Inject constructor(
                     } else {
                         context.getString(R.string.alias_is_disabled, alias.email)
                     }
-                    snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                    val config = SnackbarConfiguration(
+                        message = message,
+                        type = if (enabled.value) SnackbarType.SUCCESS else SnackbarType.INFORMATION
+                    )
+                    snackbarManager.showSnackbar(config)
                 }, onFailure = ::handle)
         }
     }

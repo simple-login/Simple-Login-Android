@@ -1,5 +1,7 @@
 package io.simplelogin.android.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -17,4 +19,16 @@ object SlColor {
     val Green = Color(0xFF5FC88F)
     val Blue = Color(0xFF4989FF)
     val Amber = Color(0xFFFFC107)
+
+    @get:Composable
+    val textInverted: Color
+        get() = if (isSystemInDarkTheme()) Color(0xFF1C1B24) else Color(0xFFFFFFFF)
+
+    @get:Composable
+    val notificationSuccess: Color
+        get() = if (isSystemInDarkTheme()) Color(0xFF4AB89A) else Color(0xFF007B58)
+
+    @get:Composable
+    val notificationError: Color
+        get() = if (isSystemInDarkTheme()) Color(0xFFF08FA4) else Color(0xFFCC2D4F)
 }
