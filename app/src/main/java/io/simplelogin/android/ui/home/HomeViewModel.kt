@@ -9,6 +9,8 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.di.LoadingState
+import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.AliasListManager
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
@@ -26,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
     private val aliasListManager: AliasListManager,
     private val copyToClipboardUseCase: CopyToClipboardUseCase,
@@ -48,6 +51,14 @@ class HomeViewModel @Inject constructor(
                             .onFailure(::handle)
                     }
                 }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            aliasListManager.state.collect {
+                loadingState.value = it.isModifying
+            }
         }
     }
 
