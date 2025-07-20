@@ -83,13 +83,9 @@ fun HomeScreen(
 
                     is AliasAction.CopyEmailAddress -> copyAliasAddress(it.email)
 
-                    is AliasAction.Disable -> {
+                    is AliasAction.Disable -> toggle(it.id)
 
-                    }
-
-                    is AliasAction.Enable -> {
-
-                    }
+                    is AliasAction.Enable -> toggle(it.id)
 
                     is AliasAction.Pin -> {
 

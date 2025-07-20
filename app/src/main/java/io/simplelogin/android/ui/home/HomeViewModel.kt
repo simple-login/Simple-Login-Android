@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.domain.AliasListManager
@@ -97,6 +98,13 @@ class HomeViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             aliasListManager.refresh()
+                .onFailure(::handle)
+        }
+    }
+
+    fun toggle(aliasId: Int) {
+        viewModelScope.launch {
+            aliasListManager.toggle(aliasId)
                 .onFailure(::handle)
         }
     }

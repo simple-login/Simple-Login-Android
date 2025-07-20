@@ -16,14 +16,16 @@ data class AliasListState(
     val stats: Stats?,
     val aliases: List<Alias>,
     val isRefreshing: Boolean,
-    val isFetching: Boolean
+    val isFetching: Boolean,
+    val isModifying: Boolean
 ) {
     companion object {
         val Default = AliasListState(
             stats = null,
             aliases = emptyList(),
             isRefreshing = false,
-            isFetching = false
+            isFetching = false,
+            isModifying = false
         )
     }
 }
@@ -32,6 +34,7 @@ interface AliasListManager {
     val state: Flow<AliasListState>
     suspend fun refresh(apiKey: String? = null, filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
+    suspend fun toggle(aliasId: Int): Result<Unit, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -105,6 +108,27 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 }
             )
         }
+    }
+
+    override suspend fun toggle(aliasId: Int): Result<Unit, ApiError> {
+        val apiKey = apiKey ?: return Result.Success(Unit)
+        _state.value = _state.value.copy(isModifying = true)
+        return datasource.toggle(apiKey = apiKey, aliasId = aliasId)
+            .fold(onSuccess = { enabled ->
+                val aliases = _state.value.aliases.toMutableList()
+                val index = aliases.indexOfFirst { it.id == aliasId }
+
+                assert(index != -1) { "Alias with id $aliasId not found" }
+                if (index != -1) {
+                    aliases[index] = aliases[index].copy(enabled = enabled.value)
+                }
+
+                _state.value = _state.value.copy(aliases = aliases)
+                Result.Success(Unit)
+            }, onFailure = {
+                _state.value = _state.value.copy(isModifying = false)
+                Result.Failure(it)
+            })
     }
 
     private companion object {

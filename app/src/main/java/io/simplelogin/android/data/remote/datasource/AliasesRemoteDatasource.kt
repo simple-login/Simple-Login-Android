@@ -5,20 +5,20 @@ import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface AliasesRemoteDatasource {
     suspend fun fetchStats(apiKey: String): Result<Stats, ApiError>
     suspend fun fetchAliases(apiKey: String, filterMode: AliasFilterMode, pageId: Int): Result<Aliases, ApiError>
+    suspend fun toggle(apiKey: String, aliasId: Int): Result<EnabledResponse, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
     BaseRemoteDatasource(), AliasesRemoteDatasource {
     override suspend fun fetchStats(apiKey: String): Result<Stats, ApiError> =
-        safeApiCall {
-            apiService.getStats(apiKey = apiKey)
-        }
+        safeApiCall { apiService.getStats(apiKey = apiKey) }
 
     override suspend fun fetchAliases(
         apiKey: String,
@@ -45,4 +45,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             }
         }
     }
+
+    override suspend fun toggle(apiKey: String, aliasId: Int): Result<EnabledResponse, ApiError> =
+        safeApiCall { apiService.toggleAlias(apiKey = apiKey, aliasId = aliasId) }
 }

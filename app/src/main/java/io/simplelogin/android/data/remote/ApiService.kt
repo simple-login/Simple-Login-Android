@@ -37,7 +37,6 @@ import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 private const val AUTH_HEADER = "Authentication"
-private const val PATH_ID = "id"
 private const val PAGE_ID = "page_id"
 
 data class MessageResponse(@SerializedName("msg") val value: String)
@@ -87,28 +86,28 @@ interface ApiService {
         @Query("hostname") hostname: String?
         ): Response<Alias>
 
-    @POST("api/aliases/${PATH_ID}/contacts")
+    @POST("api/aliases/{id}/contacts")
     suspend fun createContact(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int,
+        @Path("id") aliasId: Int,
         @Body body: CreateContactBody
         ): Response<Contact>
 
-    @DELETE("api/aliases/${PATH_ID}")
+    @DELETE("api/aliases/{id}")
     suspend fun deleteAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int
+        @Path("id") aliasId: Int
     ): Response<DeletedResponse>
 
-    @GET("api/aliases/${PATH_ID}/activities")
+    @GET("api/aliases/{id}/activities")
     suspend fun getAliasActivities(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int,
+        @Path("id") aliasId: Int,
         @Query(PAGE_ID) pageId: Int
     ): Response<AliasActivities>
 
-    @GET("api/aliases/${PATH_ID}")
-    suspend fun getAlias(@Path(PATH_ID) aliasId: Int): Response<Alias>
+    @GET("api/aliases/{id}")
+    suspend fun getAlias(@Path("id") aliasId: Int): Response<Alias>
 
     @GET("api/v2/aliases")
     suspend fun getAliases(
@@ -133,10 +132,10 @@ interface ApiService {
     @GET("api/v5/alias/options")
     suspend fun getAliasOptions(@Header(AUTH_HEADER) apiKey: String): Response<AliasOptions>
 
-    @GET("api/aliases/${PATH_ID}/contacts")
+    @GET("api/aliases/{id}/contacts")
     suspend fun getContacts(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int,
+        @Path("id") aliasId: Int,
         @Query(PAGE_ID) pageId: Int
     ): Response<Contacts>
 
@@ -148,46 +147,46 @@ interface ApiService {
         @Body body: NoteBody
     ): Response<Alias>
 
-    @POST("api/aliases/${PATH_ID}/toggle")
+    @POST("api/aliases/{id}/toggle")
     suspend fun toggleAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int
+        @Path("id") aliasId: Int
     ): Response<EnabledResponse>
 
-    @PATCH("api/aliases/${PATH_ID}")
+    @PATCH("api/aliases/{id}")
     suspend fun updateAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) aliasId: Int,
+        @Path("id") aliasId: Int,
         @Body body: UpdateAliasOptions
     ): Response<OkResponse>
 
     // Contact
-    @DELETE("api/contacts/${PATH_ID}")
+    @DELETE("api/contacts/{id}")
     suspend fun deleteContact(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) contactId: Int
+        @Path("id") contactId: Int
     ): Response<DeletedResponse>
 
-    @POST("api/contacts/${PATH_ID}/toggle")
+    @POST("api/contacts/{id}/toggle")
     suspend fun toggleContact(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) contactId: Int
+        @Path("id") contactId: Int
     ): Response<BlockForward>
 
     // Custom domains
     @GET("api/custom_domains")
     suspend fun getCustomDomains(@Header(AUTH_HEADER) apiKey: String): Response<CustomDomains>
 
-    @GET("api/custom_domains/${PATH_ID}/trash")
+    @GET("api/custom_domains/{id}/trash")
     suspend fun getDeletedAliases(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) domainId: Int
+        @Path("id") domainId: Int
     ): Response<DeletedAliases>
 
-    @PATCH("api/custom_domains/${PATH_ID}")
+    @PATCH("api/custom_domains/{id}")
     suspend fun updateCustomDomain(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) domainId: Int,
+        @Path("id") domainId: Int,
         @Body body: UpdateCustomDomainOptions
     ): Response<UpdateCustomDomainResponse>
 
@@ -198,20 +197,20 @@ interface ApiService {
         @Body body: EmailBody
     ): Response<Mailbox>
 
-    @DELETE("api/mailboxes/${PATH_ID}")
+    @DELETE("api/mailboxes/{id}")
     suspend fun deleteMailbox(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) mailboxId: Int,
+        @Path("id") mailboxId: Int,
         @Body body: TransferAliasesBody
     ): Response<DeletedResponse>
 
     @GET("api/v2/mailboxes")
     suspend fun getMailboxes(@Header(AUTH_HEADER) apiKey: String): Response<Mailboxes>
 
-    @PUT("api/mailboxes/${PATH_ID}")
+    @PUT("api/mailboxes/{id}")
     suspend fun updateMailbox(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path(PATH_ID) mailboxId: Int,
+        @Path("id") mailboxId: Int,
         @Body body: UpdateMailboxOptions
     ): Response<UpdateResponse>
 
