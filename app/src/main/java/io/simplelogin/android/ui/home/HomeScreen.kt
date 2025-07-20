@@ -72,6 +72,7 @@ fun HomeScreen(
             stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
             aliases = state.aliases,
             isFetching = state.isFetching,
+            isRefreshing = state.isRefreshing,
             aliasCellSelection = state.deviceSettings.aliasCellSelection,
             swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
             swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
@@ -104,7 +105,8 @@ fun HomeScreen(
                     }
                 }
             },
-            onFetchMore = ::fetchMoreAliases
+            onFetchMore = ::fetchMoreAliases,
+            onRefresh = ::refresh
         )
     }
 }

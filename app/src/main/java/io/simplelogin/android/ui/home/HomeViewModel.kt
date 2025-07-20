@@ -52,14 +52,14 @@ class HomeViewModel @Inject constructor(
     val stateFlow = combine(
         observeDeviceSettingsUseCase(),
         aliasFilterModeFlow,
-        aliasListManager.aliases,
-        aliasListManager.isFetching
-    ) { deviceSettings, aliasFilterMode, aliases, isFetching ->
+        aliasListManager.state,
+    ) { deviceSettings, aliasFilterMode, aliasesListState ->
         HomeScreenState(
             deviceSettings = deviceSettings,
             aliasFilterMode = aliasFilterMode,
-            aliases = aliases,
-            isFetching = isFetching
+            aliases = aliasesListState.aliases,
+            isFetching = aliasesListState.isFetching,
+            isRefreshing = aliasesListState.isRefreshing
         )
     }.stateIn(
         scope = viewModelScope,
@@ -89,6 +89,13 @@ class HomeViewModel @Inject constructor(
     fun fetchMoreAliases() {
         viewModelScope.launch {
             aliasListManager.fetchMore()
+                .onFailure(::handle)
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            aliasListManager.refresh()
                 .onFailure(::handle)
         }
     }

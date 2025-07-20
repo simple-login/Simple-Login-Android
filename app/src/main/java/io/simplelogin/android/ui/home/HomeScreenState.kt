@@ -8,14 +8,16 @@ data class HomeScreenState(
     val deviceSettings: DevicePreferences,
     val aliasFilterMode: AliasFilterMode,
     val aliases: List<Alias>,
-    val isFetching: Boolean
+    val isFetching: Boolean,
+    val isRefreshing: Boolean
 ) {
     companion object {
         val Default = HomeScreenState(
             deviceSettings = DevicePreferences(),
             aliasFilterMode = AliasFilterMode.ALL,
             aliases = listOf(),
-            isFetching = false
+            isFetching = false,
+            isRefreshing = false
         )
     }
 }

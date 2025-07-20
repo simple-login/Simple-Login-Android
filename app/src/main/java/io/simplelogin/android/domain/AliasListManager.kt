@@ -9,54 +9,70 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-interface AliasListManager {
-    val aliases: Flow<List<Alias>>
-    val isFetching: Flow<Boolean>
+data class AliasListState(
+    val aliases: List<Alias>,
+    val isRefreshing: Boolean,
+    val isFetching: Boolean
+) {
+    companion object {
+        val Default = AliasListState(
+            aliases = emptyList(),
+            isRefreshing = false,
+            isFetching = false
+        )
+    }
+}
 
-    suspend fun refresh(apiKey: String, filterMode: AliasFilterMode): Result<Unit, ApiError>
+interface AliasListManager {
+    val state: Flow<AliasListState>
+    suspend fun refresh(apiKey: String? = null, filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
     AliasListManager {
-    private val _aliases = MutableStateFlow<List<Alias>>(emptyList())
-    override val aliases = _aliases
-
-    private val _isFetching = MutableStateFlow(false)
-    override val isFetching = _isFetching
+    private val _state = MutableStateFlow<AliasListState>(AliasListState.Default)
+    override val state = _state
 
     private var canFetchMore = true
     private var apiKey: String? = null
     private var currentPage = 0
     private var filterMode: AliasFilterMode? = null
 
-    override suspend fun refresh(apiKey: String, filterMode: AliasFilterMode): Result<Unit, ApiError> {
-        this.apiKey = apiKey
-        this.filterMode = filterMode
-        _aliases.value = listOf()
+    override suspend fun refresh(apiKey: String?, filterMode: AliasFilterMode?): Result<Unit, ApiError> {
+        apiKey?.let { this.apiKey = it }
+        filterMode?.let { this.filterMode = it }
+        _state.value = AliasListState.Default
         canFetchMore = true
         currentPage = 0
         return fetchMore()
     }
 
     override suspend fun fetchMore(): Result<Unit, ApiError> {
-        if (_isFetching.value || !canFetchMore) return Result.Success(Unit)
+        if (_state.value.isFetching || _state.value.isRefreshing || !canFetchMore) return Result.Success(Unit)
         val apiKey = apiKey ?: return Result.Success(Unit)
         val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
-        _isFetching.value = true
+
+        if (_state.value.aliases.isEmpty()) {
+            _state.value = _state.value.copy(isRefreshing = true)
+        }
+
+        _state.value = _state.value.copy(isFetching = true)
 
         return datasource.fetchAliases(
             apiKey = apiKey,
             pageId = currentPage,
             filterMode = filterMode
         ).fold(onSuccess = {
-            _aliases.value = _aliases.value + it.aliases
+            _state.value = _state.value.copy(aliases = _state.value.aliases + it.aliases)
             currentPage += 1
             canFetchMore = it.aliases.isNotEmpty() && it.aliases.size <= PAGE_SIZE
-            _isFetching.value = false
+            _state.value = _state.value.copy(isFetching = false)
+            _state.value = _state.value.copy(isRefreshing = false)
             Result.Success(Unit)
         }, onFailure = {
-            _isFetching.value = false
+            _state.value = _state.value.copy(isFetching = false)
+            _state.value = _state.value.copy(isRefreshing = false)
             Result.Failure(it)
         })
     }

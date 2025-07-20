@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
@@ -29,17 +31,20 @@ import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import kotlinx.coroutines.flow.distinctUntilChanged
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats,
     aliases: List<Alias>,
     isFetching: Boolean,
+    isRefreshing: Boolean,
     aliasCellSelection: AliasCellSelection,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
     onAction: (AliasAction) -> Unit,
-    onFetchMore: () -> Unit
+    onFetchMore: () -> Unit,
+    onRefresh: () -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -57,47 +62,52 @@ fun AliasesList(
             }
     }
 
-    LazyColumn(
+    PullToRefreshBox(
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = Spacing.regular),
-        state = listState
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh
     ) {
-        item {
-            StatsGrid(stats = stats)
-        }
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = Spacing.regular),
+            state = listState
+        ) {
+            item {
+                StatsGrid(stats = stats)
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(Spacing.regular))
-        }
+            item {
+                Spacer(modifier = Modifier.height(Spacing.regular))
+            }
 
-        items(aliases) { alias ->
-            AliasCell(
-                modifier = Modifier.clickable {
-                    when (aliasCellSelection) {
-                        AliasCellSelection.VIEW_DETAILS -> onAction(AliasAction.ViewDetails(alias.id))
-                        AliasCellSelection.COPY_EMAIL -> onAction(AliasAction.CopyEmailAddress(alias.email))
-                    }
-                },
-                alias = alias,
-                swipeFromStartToEndAction = swipeFromStartToEndAction,
-                swipeFromEndToStartAction = swipeFromEndToStartAction,
-                onAction = onAction
-            )
-            HorizontalDivider()
-        }
+            items(aliases) { alias ->
+                AliasCell(
+                    modifier = Modifier.clickable {
+                        when (aliasCellSelection) {
+                            AliasCellSelection.VIEW_DETAILS -> onAction(AliasAction.ViewDetails(alias.id))
+                            AliasCellSelection.COPY_EMAIL -> onAction(AliasAction.CopyEmailAddress(alias.email))
+                        }
+                    },
+                    alias = alias,
+                    swipeFromStartToEndAction = swipeFromStartToEndAction,
+                    swipeFromEndToStartAction = swipeFromEndToStartAction,
+                    onAction = onAction
+                )
+                HorizontalDivider()
+            }
 
-        item {
-            AnimatedVisibility(
-                visible = isFetching,
-                enter = EnterTransition.None,
-                exit = fadeOut()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.Center)
+            item {
+                AnimatedVisibility(
+                    visible = isFetching && !isRefreshing,
+                    enter = EnterTransition.None,
+                    exit = fadeOut()
                 ) {
-                    CircularProgressIndicator()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center)
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
