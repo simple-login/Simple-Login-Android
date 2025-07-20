@@ -56,7 +56,7 @@ interface ApiService {
     suspend fun forgotPassword(@Body body: EmailBody): Response<OkResponse>
 
     @GET("api/stats")
-    suspend fun getStats(): Response<Stats>
+    suspend fun getStats(@Header(AUTH_HEADER) apiKey: String): Response<Stats>
 
     @GET("api/user_info")
     suspend fun getUserInfo(): Response<UserInfo>

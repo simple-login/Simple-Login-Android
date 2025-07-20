@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
@@ -69,7 +68,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            stats = Stats(aliasCount = 123, blockCount = 44, forwardCount = 13, replyCount = 83),
+            stats = state.stats,
             aliases = state.aliases,
             isFetching = state.isFetching,
             isRefreshing = state.isRefreshing,

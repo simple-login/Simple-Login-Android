@@ -57,6 +57,7 @@ class HomeViewModel @Inject constructor(
         HomeScreenState(
             deviceSettings = deviceSettings,
             aliasFilterMode = aliasFilterMode,
+            stats = aliasesListState.stats,
             aliases = aliasesListState.aliases,
             isFetching = aliasesListState.isFetching,
             isRefreshing = aliasesListState.isRefreshing

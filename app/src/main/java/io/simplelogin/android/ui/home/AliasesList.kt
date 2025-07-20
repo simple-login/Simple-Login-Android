@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun AliasesList(
     modifier: Modifier = Modifier,
-    stats: Stats,
+    stats: Stats?,
     aliases: List<Alias>,
     isFetching: Boolean,
     isRefreshing: Boolean,
@@ -72,7 +72,9 @@ fun AliasesList(
             state = listState
         ) {
             item {
-                StatsGrid(stats = stats)
+                stats?.let {
+                    StatsGrid(stats = it)
+                }
             }
 
             item {

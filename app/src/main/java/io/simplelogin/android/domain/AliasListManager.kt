@@ -2,20 +2,25 @@ package io.simplelogin.android.domain
 
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.util.Result
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 data class AliasListState(
+    val stats: Stats?,
     val aliases: List<Alias>,
     val isRefreshing: Boolean,
     val isFetching: Boolean
 ) {
     companion object {
         val Default = AliasListState(
+            stats = null,
             aliases = emptyList(),
             isRefreshing = false,
             isFetching = false
@@ -53,28 +58,53 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         val apiKey = apiKey ?: return Result.Success(Unit)
         val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
 
-        if (_state.value.aliases.isEmpty()) {
-            _state.value = _state.value.copy(isRefreshing = true)
+        _state.value = _state.value.copy(
+            isFetching = true,
+            isRefreshing = _state.value.aliases.isEmpty()
+        )
+
+        return coroutineScope {
+            val statsDeferred = if (_state.value.stats == null) {
+                async { datasource.fetchStats(apiKey) }
+            } else {
+                null
+            }
+
+            val aliasesDeferred = async {
+                datasource.fetchAliases(
+                    apiKey = apiKey,
+                    pageId = currentPage,
+                    filterMode = filterMode
+                )
+            }
+
+            val statsResult = statsDeferred?.await()
+            val aliasesResult = aliasesDeferred.await()
+
+            _state.value = _state.value.copy(isFetching = false, isRefreshing = false)
+
+            aliasesResult.fold(
+                onSuccess = {
+                    if (statsResult is Result.Failure) {
+                        return@fold statsResult
+                    }
+
+                    if (statsResult is Result.Success) {
+                        _state.value = _state.value.copy(stats = statsResult.value)
+                    }
+
+                    _state.value = _state.value.copy(aliases = _state.value.aliases + it.aliases)
+
+                    currentPage += 1
+                    canFetchMore = it.aliases.isNotEmpty() && it.aliases.size <= PAGE_SIZE
+
+                    Result.Success(Unit)
+                },
+                onFailure = {
+                    Result.Failure(it)
+                }
+            )
         }
-
-        _state.value = _state.value.copy(isFetching = true)
-
-        return datasource.fetchAliases(
-            apiKey = apiKey,
-            pageId = currentPage,
-            filterMode = filterMode
-        ).fold(onSuccess = {
-            _state.value = _state.value.copy(aliases = _state.value.aliases + it.aliases)
-            currentPage += 1
-            canFetchMore = it.aliases.isNotEmpty() && it.aliases.size <= PAGE_SIZE
-            _state.value = _state.value.copy(isFetching = false)
-            _state.value = _state.value.copy(isRefreshing = false)
-            Result.Success(Unit)
-        }, onFailure = {
-            _state.value = _state.value.copy(isFetching = false)
-            _state.value = _state.value.copy(isRefreshing = false)
-            Result.Failure(it)
-        })
     }
 
     private companion object {
