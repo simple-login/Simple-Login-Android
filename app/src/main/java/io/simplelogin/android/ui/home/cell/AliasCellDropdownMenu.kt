@@ -38,7 +38,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_details)) },
-            onClick = { onAction(AliasAction.ViewDetails(alias.id)) }
+            onClick = { onAction(AliasAction.ViewDetails(alias)) }
         )
 
         DropdownMenuItem(
@@ -49,7 +49,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_contacts)) },
-            onClick = { onAction(AliasAction.ViewContacts(alias.id)) }
+            onClick = { onAction(AliasAction.ViewContacts(alias)) }
         )
 
         HorizontalDivider()
@@ -62,7 +62,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.copy_alias_address)) },
-            onClick = { onAction(AliasAction.CopyEmailAddress(alias.email)) }
+            onClick = { onAction(AliasAction.CopyEmailAddress(alias)) }
         )
 
         HorizontalDivider()
@@ -76,7 +76,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.disable)) },
-                onClick = { onAction(AliasAction.Disable(alias.id)) }
+                onClick = { onAction(AliasAction.Disable(alias)) }
             )
         } else {
             DropdownMenuItem(
@@ -87,7 +87,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.enable)) },
-                onClick = { onAction(AliasAction.Enable(alias.id)) }
+                onClick = { onAction(AliasAction.Enable(alias)) }
             )
         }
 
@@ -100,7 +100,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.unpin)) },
-                onClick = { onAction(AliasAction.Unpin(alias.id)) }
+                onClick = { onAction(AliasAction.Unpin(alias)) }
             )
         } else {
             DropdownMenuItem(
@@ -111,7 +111,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.pin)) },
-                onClick = { onAction(AliasAction.Pin(alias.id)) }
+                onClick = { onAction(AliasAction.Pin(alias)) }
             )
         }
 
@@ -125,7 +125,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.delete)) },
-            onClick = { onAction(AliasAction.Delete(alias.id)) }
+            onClick = { onAction(AliasAction.Delete(alias)) }
         )
     }
 }

@@ -102,10 +102,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun toggle(aliasId: Int) {
+    fun toggle(alias: Alias) {
         viewModelScope.launch {
-            aliasListManager.toggle(aliasId)
-                .onFailure(::handle)
+            aliasListManager.toggle(aliasId = alias.id)
+                .fold(onSuccess = { enabled ->
+                    val message = if (enabled.value) {
+                        context.getString(R.string.alias_is_enabled, alias.email)
+                    } else {
+                        context.getString(R.string.alias_is_disabled, alias.email)
+                    }
+                    snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                }, onFailure = ::handle)
         }
     }
 

@@ -69,16 +69,16 @@ fun AliasCell(
             when (action) {
                 SwipeAction.DISABLE_ENABLE ->
                     if (alias.enabled) {
-                        onAction(AliasAction.Disable(alias.id))
+                        onAction(AliasAction.Disable(alias))
                     } else {
-                        onAction(AliasAction.Enable(alias.id))
+                        onAction(AliasAction.Enable(alias))
                     }
 
                 SwipeAction.PIN_UNPIN ->
                     if (alias.pinned) {
-                        onAction(AliasAction.Unpin(alias.id))
+                        onAction(AliasAction.Unpin(alias))
                     } else {
-                        onAction(AliasAction.Pin(alias.id))
+                        onAction(AliasAction.Pin(alias))
                     }
 
                 SwipeAction.DELETE ->
@@ -165,7 +165,7 @@ fun AliasCell(
             aliasEmail = alias.email,
             onDeleteClick = {
                 showDeleteDialog = false
-                onAction(AliasAction.Delete(alias.id))
+                onAction(AliasAction.Delete(alias))
             },
             onCancelClick = { showDeleteDialog = false }
         )

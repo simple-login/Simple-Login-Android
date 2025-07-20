@@ -85,8 +85,8 @@ fun AliasesList(
                 AliasCell(
                     modifier = Modifier.clickable {
                         when (aliasCellSelection) {
-                            AliasCellSelection.VIEW_DETAILS -> onAction(AliasAction.ViewDetails(alias.id))
-                            AliasCellSelection.COPY_EMAIL -> onAction(AliasAction.CopyEmailAddress(alias.email))
+                            AliasCellSelection.VIEW_DETAILS -> onAction(AliasAction.ViewDetails(alias))
+                            AliasCellSelection.COPY_EMAIL -> onAction(AliasAction.CopyEmailAddress(alias))
                         }
                     },
                     alias = alias,

@@ -4,6 +4,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import kotlinx.coroutines.async
@@ -34,7 +35,7 @@ interface AliasListManager {
     val state: Flow<AliasListState>
     suspend fun refresh(apiKey: String? = null, filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
-    suspend fun toggle(aliasId: Int): Result<Unit, ApiError>
+    suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -110,8 +111,8 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         }
     }
 
-    override suspend fun toggle(aliasId: Int): Result<Unit, ApiError> {
-        val apiKey = apiKey ?: return Result.Success(Unit)
+    override suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError> {
+        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         _state.value = _state.value.copy(isModifying = true)
         return datasource.toggle(apiKey = apiKey, aliasId = aliasId)
             .fold(onSuccess = { enabled ->
@@ -124,7 +125,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 }
 
                 _state.value = _state.value.copy(aliases = aliases)
-                Result.Success(Unit)
+                Result.Success(enabled)
             }, onFailure = {
                 _state.value = _state.value.copy(isModifying = false)
                 Result.Failure(it)

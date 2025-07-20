@@ -1,12 +1,14 @@
 package io.simplelogin.android.data.models.ui
 
-sealed class AliasAction {
-    data class ViewDetails(val id: Int): AliasAction()
-    data class ViewContacts(val id: Int): AliasAction()
-    data class CopyEmailAddress(val email: String): AliasAction()
-    data class Enable(val id: Int): AliasAction()
-    data class Disable(val id: Int): AliasAction()
-    data class Pin(val id: Int): AliasAction()
-    data class Unpin(val id: Int): AliasAction()
-    data class Delete(val id: Int): AliasAction()
+import io.simplelogin.android.data.models.api.Alias
+
+sealed class AliasAction(open val alias: Alias) {
+    data class ViewDetails(override val alias: Alias): AliasAction(alias)
+    data class ViewContacts(override val alias: Alias): AliasAction(alias)
+    data class CopyEmailAddress(override val alias: Alias): AliasAction(alias)
+    data class Enable(override val alias: Alias): AliasAction(alias)
+    data class Disable(override val alias: Alias): AliasAction(alias)
+    data class Pin(override val alias: Alias): AliasAction(alias)
+    data class Unpin(override val alias: Alias): AliasAction(alias)
+    data class Delete(override val alias: Alias): AliasAction(alias)
 }

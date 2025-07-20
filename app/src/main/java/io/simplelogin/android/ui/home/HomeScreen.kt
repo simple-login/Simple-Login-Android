@@ -77,15 +77,15 @@ fun HomeScreen(
             swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
             onAction = {
                 when (it) {
-                    is AliasAction.ViewDetails -> onViewDetails(it.id)
+                    is AliasAction.ViewDetails -> onViewDetails(it.alias.id)
 
-                    is AliasAction.ViewContacts -> onViewContacts(it.id)
+                    is AliasAction.ViewContacts -> onViewContacts(it.alias.id)
 
-                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.email)
+                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
 
-                    is AliasAction.Disable -> toggle(it.id)
+                    is AliasAction.Disable -> toggle(it.alias)
 
-                    is AliasAction.Enable -> toggle(it.id)
+                    is AliasAction.Enable -> toggle(it.alias)
 
                     is AliasAction.Pin -> {
 

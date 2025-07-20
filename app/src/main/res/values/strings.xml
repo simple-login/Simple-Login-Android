@@ -89,4 +89,6 @@
     <string name="swipe_from_right_to_left">Swipe from right to left</string>
     <string name="disable_enable">Disable/Enable</string>
     <string name="pin_unpin">Pin/Unpin</string>
+    <string name="alias_is_enabled">\"%s\" is enabled</string>
+    <string name="alias_is_disabled">\"%s\" is disabled</string>
 </resources>
