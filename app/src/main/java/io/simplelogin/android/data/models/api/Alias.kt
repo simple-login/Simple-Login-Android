@@ -1,5 +1,6 @@
 package io.simplelogin.android.data.models.api
 
+import android.text.format.DateUtils
 import com.google.gson.annotations.SerializedName
 
 data class Alias(
@@ -28,9 +29,18 @@ data class Alias(
             @SerializedName("name") val name: String?,
             @SerializedName("reverse_alias") val reverseAlias: String
         )
+
+        val relativeTime: String?
+            get() = DateUtils.getRelativeTimeSpanString(
+                (timestamp * 1_000).toLong(),
+                System.currentTimeMillis(),
+                DateUtils.MINUTE_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_RELATIVE
+            )?.toString()
     }
 
-    val hasActivities: Boolean = (forwardCount + replyCount + blockCount) > 0
+    val hasActivities: Boolean
+        get() = (forwardCount + replyCount + blockCount) > 0
 
     val displayedEmail: String
         get() {

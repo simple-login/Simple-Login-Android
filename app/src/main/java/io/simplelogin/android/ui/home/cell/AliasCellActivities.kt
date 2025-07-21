@@ -1,12 +1,11 @@
 package io.simplelogin.android.ui.home.cell
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -67,8 +66,9 @@ private fun AliasCellActivityColumn(
         Text(
             text = title,
             color = titleColor,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            style = MaterialTheme.typography.bodySmall
         )
-        Text(text = "$value")
+        Text(text = "$value", fontWeight = FontWeight.Bold)
     }
 }

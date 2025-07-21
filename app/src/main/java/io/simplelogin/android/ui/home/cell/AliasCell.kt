@@ -211,6 +211,10 @@ private fun AliasCellContent(
                 )
             }
 
+            alias.latestActivity?.let {
+                AliasLatestActivity(it)
+            }
+
             alias.note?.let {
                 Text(
                     text = it,
