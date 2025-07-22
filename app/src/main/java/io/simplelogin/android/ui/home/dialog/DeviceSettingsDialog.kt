@@ -8,6 +8,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -18,10 +21,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.ActivityAction
+import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
+import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.SwipeAction
+import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +73,13 @@ fun DeviceSettingsDialog(
                     onSelectLeftToRight = ::updateSwipeFromLeftToRight,
                     selectedRightToLeft = settings.swipeFromRightToLeftAction,
                     onSelectRightToLeft = ::updateSwipeFromRightToLeft
+                )
+
+                AliasDisplayModeSection(
+                    selectedMode = settings.aliasDisplayMode,
+                    onSelectMode = ::updateAliasDisplayMode,
+                    swipeFromStartToEndAction = settings.swipeFromLeftToRightAction,
+                    swipeFromEndToStartAction = settings.swipeFromRightToLeftAction
                 )
             }
         }
@@ -125,3 +143,71 @@ private fun SwipeActionSelection(
         onSelect = onSelectRightToLeft
     )
 }
+
+@Composable
+private fun AliasDisplayModeSection(
+    selectedMode: AliasDisplayMode,
+    onSelectMode: (AliasDisplayMode) -> Unit,
+    swipeFromStartToEndAction: SwipeAction,
+    swipeFromEndToStartAction: SwipeAction
+) {
+    val description: @Composable (AliasDisplayMode) -> String = {
+        when (it) {
+            AliasDisplayMode.DEFAULT -> stringResource(R.string.alias_display_mode_default)
+            AliasDisplayMode.COMFORTABLE -> stringResource(R.string.alias_display_mode_comfortable)
+            AliasDisplayMode.COMPACT -> stringResource(R.string.alias_display_mode_compact)
+        }
+    }
+
+    SingleChoiceSegmentedButtonRow {
+        AliasDisplayMode.entries.toTypedArray().forEachIndexed { index, mode ->
+            SegmentedButton(
+                selected = selectedMode == mode,
+                onClick = { onSelectMode(mode) },
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = AliasDisplayMode.entries.toTypedArray().size
+                )
+            ) {
+                Text(description(mode))
+            }
+        }
+    }
+
+    AliasCell(
+        alias = Alias.sample,
+        swipeFromStartToEndAction = swipeFromStartToEndAction,
+        swipeFromEndToStartAction = swipeFromEndToStartAction,
+        onAction = null
+    )
+}
+
+@OptIn(ExperimentalTime::class)
+private val Alias.Companion.sample: Alias
+    get() = Alias(
+        id = 0,
+        email = "news.fejha@simplelogin.io",
+        name = null,
+        enabled = true,
+        creationTimestamp = 0.toDouble(),
+        blockCount = 56,
+        forwardCount = 90,
+        replyCount = 15,
+        note = "Tech newsletter",
+        pgpSupported = false,
+        pgpDisabled = false,
+        mailboxes = listOf(
+            MailboxLite(id = 0, email = "john.doe@protonmail.com"),
+            MailboxLite(id = 1, email = "jane.doe@pm.me")
+        ),
+        latestActivity = Alias.LatestActivity(
+            action = ActivityAction.REPLY,
+            contact = Alias.LatestActivity.Contact(
+                email = "eric.norbert@proton.me",
+                name = null,
+                reverseAlias = ""
+            ),
+            timestamp = Clock.System.now().minus(5.minutes).epochSeconds.toDouble()
+        ),
+        pinned = true
+    )

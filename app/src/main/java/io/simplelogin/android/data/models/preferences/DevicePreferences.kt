@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class DevicePreferences(
     val aliasCellSelection: AliasCellSelection = AliasCellSelection.Default,
     val swipeFromLeftToRightAction: SwipeAction = SwipeAction.DISABLE_ENABLE,
-    val swipeFromRightToLeftAction: SwipeAction = SwipeAction.PIN_UNPIN
+    val swipeFromRightToLeftAction: SwipeAction = SwipeAction.PIN_UNPIN,
+    val aliasDisplayMode: AliasDisplayMode = AliasDisplayMode.DEFAULT
 ) {
     companion object {
         val Default = DevicePreferences()
@@ -23,4 +24,8 @@ enum class AliasCellSelection {
 
 enum class SwipeAction {
     DISABLE_ENABLE, PIN_UNPIN, DELETE
+}
+
+enum class AliasDisplayMode {
+    DEFAULT, COMFORTABLE, COMPACT
 }

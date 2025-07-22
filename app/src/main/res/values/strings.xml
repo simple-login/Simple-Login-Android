@@ -95,4 +95,7 @@
     <string name="alias_is_pinned">\"%s\" is pinned</string>
     <string name="alias_is_unpinned">\"%s\" is unpinned</string>
     <string name="alias_is_deleted">\"%s\" is deleted</string>
+    <string name="alias_display_mode_default">Default</string>
+    <string name="alias_display_mode_comfortable">Comfortable</string>
+    <string name="alias_display_mode_compact">Compact</string>
 </resources>

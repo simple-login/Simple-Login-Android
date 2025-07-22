@@ -49,6 +49,8 @@ data class Alias(
             // Break just before "@" to make multi-lines emails more readable
             return email.replace("@", "\u200B@")
         }
+
+    companion object
 }
 
 data class Aliases(

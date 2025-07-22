@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
+import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
@@ -57,6 +58,14 @@ class DeviceSettingsDialogViewModel @Inject constructor(
                 updateDeviceSettingsUseCase.invoke {
                     it.copy(swipeFromLeftToRightAction = oldSwipeFromRightToLeft)
                 }
+            }
+        }
+    }
+
+    fun updateAliasDisplayMode(mode: AliasDisplayMode) {
+        viewModelScope.launch {
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(aliasDisplayMode = mode)
             }
         }
     }

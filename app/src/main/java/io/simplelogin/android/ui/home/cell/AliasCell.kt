@@ -54,7 +54,7 @@ fun AliasCell(
     alias: Alias,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
-    onAction: (AliasAction) -> Unit
+    onAction: ((AliasAction) -> Unit)? // null when previewing
 ) = key(alias, swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -69,20 +69,20 @@ fun AliasCell(
             when (action) {
                 SwipeAction.DISABLE_ENABLE ->
                     if (alias.enabled) {
-                        onAction(AliasAction.Disable(alias))
+                        onAction?.invoke(AliasAction.Disable(alias))
                     } else {
-                        onAction(AliasAction.Enable(alias))
+                        onAction?.invoke(AliasAction.Enable(alias))
                     }
 
                 SwipeAction.PIN_UNPIN ->
                     if (alias.pinned) {
-                        onAction(AliasAction.Unpin(alias))
+                        onAction?.invoke(AliasAction.Unpin(alias))
                     } else {
-                        onAction(AliasAction.Pin(alias))
+                        onAction?.invoke(AliasAction.Pin(alias))
                     }
 
                 SwipeAction.DELETE ->
-                    showDeleteDialog = true
+                    showDeleteDialog = onAction != null
 
                 else -> Unit
             }
@@ -153,7 +153,7 @@ fun AliasCell(
                 onAction = { action ->
                     when (action) {
                         is AliasAction.Delete -> showDeleteDialog = true
-                        else -> onAction(action)
+                        else -> onAction?.invoke(action)
                     }
                 }
             )
@@ -165,7 +165,7 @@ fun AliasCell(
             aliasEmail = alias.email,
             onDeleteClick = {
                 showDeleteDialog = false
-                onAction(AliasAction.Delete(alias))
+                onAction?.invoke(AliasAction.Delete(alias))
             },
             onCancelClick = { showDeleteDialog = false }
         )
