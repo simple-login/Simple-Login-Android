@@ -9,9 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -28,6 +25,7 @@ import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
+import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -55,7 +53,11 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(modifier =
+            Modifier
+                .padding(horizontal = Spacing.regular)
+                .padding(innerPadding)
+        ) {
             SecuritySection()
 
             AliasCellSelectionSection(
@@ -67,14 +69,9 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
                 selectedLeftToRight = settings.swipeFromLeftToRightAction,
                 onSelectLeftToRight = ::updateSwipeFromLeftToRight,
                 selectedRightToLeft = settings.swipeFromRightToLeftAction,
-                onSelectRightToLeft = ::updateSwipeFromRightToLeft
-            )
-
-            AliasDisplayModeSection(
-                selectedMode = settings.aliasDisplayMode,
-                onSelectMode = ::updateAliasDisplayMode,
-                swipeFromStartToEndAction = settings.swipeFromLeftToRightAction,
-                swipeFromEndToStartAction = settings.swipeFromRightToLeftAction
+                onSelectRightToLeft = ::updateSwipeFromRightToLeft,
+                selectedAliasDisplayMode = settings.aliasDisplayMode,
+                onSelectAliasDisplayMode = ::updateAliasDisplayMode
             )
         }
     }
@@ -111,7 +108,9 @@ private fun SwipeActionSelection(
     selectedLeftToRight: SwipeAction,
     onSelectLeftToRight: (SwipeAction) -> Unit,
     selectedRightToLeft: SwipeAction,
-    onSelectRightToLeft: (SwipeAction) -> Unit
+    onSelectRightToLeft: (SwipeAction) -> Unit,
+    selectedAliasDisplayMode: AliasDisplayMode,
+    onSelectAliasDisplayMode: (AliasDisplayMode) -> Unit,
 ) {
     val description: @Composable (SwipeAction) -> String = {
         when (it) {
@@ -136,42 +135,25 @@ private fun SwipeActionSelection(
         selected = selectedRightToLeft,
         onSelect = onSelectRightToLeft
     )
-}
 
-@Composable
-private fun AliasDisplayModeSection(
-    selectedMode: AliasDisplayMode,
-    onSelectMode: (AliasDisplayMode) -> Unit,
-    swipeFromStartToEndAction: SwipeAction,
-    swipeFromEndToStartAction: SwipeAction
-) {
-    val description: @Composable (AliasDisplayMode) -> String = {
-        when (it) {
-            AliasDisplayMode.DEFAULT -> stringResource(R.string.alias_display_mode_default)
-            AliasDisplayMode.COMFORTABLE -> stringResource(R.string.alias_display_mode_comfortable)
-            AliasDisplayMode.COMPACT -> stringResource(R.string.alias_display_mode_compact)
-        }
-    }
-
-    SingleChoiceSegmentedButtonRow {
-        AliasDisplayMode.entries.toTypedArray().forEachIndexed { index, mode ->
-            SegmentedButton(
-                selected = selectedMode == mode,
-                onClick = { onSelectMode(mode) },
-                shape = SegmentedButtonDefaults.itemShape(
-                    index = index,
-                    count = AliasDisplayMode.entries.toTypedArray().size
-                )
-            ) {
-                Text(description(mode))
+    OptionRow(
+        title = stringResource(R.string.alias_display_mode),
+        description = {
+            when (it) {
+                AliasDisplayMode.DEFAULT -> stringResource(R.string.alias_display_mode_default)
+                AliasDisplayMode.COMFORTABLE -> stringResource(R.string.alias_display_mode_comfortable)
+                AliasDisplayMode.COMPACT -> stringResource(R.string.alias_display_mode_compact)
             }
-        }
-    }
+        },
+        options = AliasDisplayMode.entries.toTypedArray(),
+        selected = selectedAliasDisplayMode,
+        onSelect = onSelectAliasDisplayMode
+    )
 
     AliasCell(
         alias = Alias.sample,
-        swipeFromStartToEndAction = swipeFromStartToEndAction,
-        swipeFromEndToStartAction = swipeFromEndToStartAction,
+        swipeFromStartToEndAction = selectedLeftToRight,
+        swipeFromEndToStartAction = selectedRightToLeft,
         onAction = null
     )
 }
