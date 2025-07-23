@@ -18,7 +18,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.home.dialog.DeviceSettingsDialog
+import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
@@ -40,16 +40,18 @@ data class AliasDetails(val aliasId: Int): NavKey
 @Serializable
 data class AliasContacts(val aliasId: Int): NavKey
 
+@Serializable
+data object DeviceSettingsDestination: NavKey
+
 @Composable
 fun AppRoot(modifier: Modifier = Modifier,
             innerPadding: PaddingValues,
             viewModel: AppRootViewModel,
             onOpenDrawer: () -> Unit
-) {
-    val backStack by viewModel.navBackStack.collectAsState()
+) = with(viewModel) {
+    val backStack by navBackStack.collectAsState()
 
-    val showDeviceSettingsDialog by viewModel.showDeviceSettingsDialog.collectAsState()
-    val showLogOutDialog by viewModel.showLogOutDialog.collectAsState()
+    val showLogOutDialog by showLogOutDialog.collectAsState()
 
     NavDisplay(
         modifier = modifier,
@@ -73,8 +75,8 @@ fun AppRoot(modifier: Modifier = Modifier,
                 HomeScreen(
                     modifier = modifier,
                     onOpenDrawer = onOpenDrawer,
-                    onViewDetails = viewModel::viewAliasDetails,
-                    onViewContacts = viewModel::viewAliasContacts
+                    onViewDetails = ::viewAliasDetails,
+                    onViewContacts = ::viewAliasContacts
                 )
             }
 
@@ -95,34 +97,28 @@ fun AppRoot(modifier: Modifier = Modifier,
                     text = "Alias contacts ${key.aliasId}"
                 )
             }
+
+            entry<DeviceSettingsDestination> {
+                DeviceSettingsScreen()
+            }
         }
     )
 
     if (showLogOutDialog) {
         AlertDialog(
-            onDismissRequest = viewModel::dismissLogOutDialog,
+            onDismissRequest = ::dismissLogOutDialog,
             title = { Text(stringResource(R.string.sign_out)) },
             text = { Text(stringResource(R.string.sign_out_message)) },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.logOut()
-                    }
-                ) {
+                TextButton(onClick = ::logOut) {
                     Text(stringResource(R.string.sign_out))
                 }
             },
             dismissButton = {
-                TextButton(onClick = viewModel::dismissLogOutDialog) {
+                TextButton(onClick = ::dismissLogOutDialog) {
                     Text(stringResource(R.string.cancel))
                 }
             }
-        )
-    }
-
-    if (showDeviceSettingsDialog) {
-        DeviceSettingsDialog(
-            onDismiss = {viewModel.showDeviceSettingsDialog.value = false }
         )
     }
 }

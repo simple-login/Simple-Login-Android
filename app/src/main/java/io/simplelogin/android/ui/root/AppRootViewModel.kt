@@ -28,7 +28,6 @@ class AppRootViewModel @Inject constructor(
     private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
     val navBackStack = _navBackStack.asStateFlow()
 
-    var showDeviceSettingsDialog = MutableStateFlow(false)
     var showLogOutDialog = MutableStateFlow(false)
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
@@ -102,7 +101,9 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun showDeviceSettingsDialog() {
-        showDeviceSettingsDialog.value = true
+        _navBackStack.value.apply {
+            add(DeviceSettingsDestination)
+        }
     }
     //endregion
 

@@ -1,13 +1,14 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.settings
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -16,9 +17,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ActivityAction
@@ -28,7 +28,6 @@ import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
-import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -36,52 +35,47 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceSettingsDialog(
-    onDismiss: () -> Unit
-) = with(hiltViewModel<DeviceSettingsDialogViewModel>()) {
+fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     val settings by deviceSettings.collectAsState()
 
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = true)
-    ) {
-        Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = Spacing.medium)
-        ) {
-            Column {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.device_settings)) },
-                    navigationIcon = {
-                        IconButton(onClick = onDismiss) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(R.string.close)
-                            )
-                        }
+    Scaffold(
+        modifier = Modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.device_settings)) },
+                navigationIcon = {
+                    IconButton(onClick = { backDispatcher?.onBackPressed() }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.close)
+                        )
                     }
-                )
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            SecuritySection()
 
-                SecuritySection()
+            AliasCellSelectionSection(
+                selected = settings.aliasCellSelection,
+                onSelect = ::updateAliasCellSelection
+            )
 
-                AliasCellSelectionSection(
-                    selected = settings.aliasCellSelection,
-                    onSelect = ::updateAliasCellSelection
-                )
+            SwipeActionSelection(
+                selectedLeftToRight = settings.swipeFromLeftToRightAction,
+                onSelectLeftToRight = ::updateSwipeFromLeftToRight,
+                selectedRightToLeft = settings.swipeFromRightToLeftAction,
+                onSelectRightToLeft = ::updateSwipeFromRightToLeft
+            )
 
-                SwipeActionSelection(
-                    selectedLeftToRight = settings.swipeFromLeftToRightAction,
-                    onSelectLeftToRight = ::updateSwipeFromLeftToRight,
-                    selectedRightToLeft = settings.swipeFromRightToLeftAction,
-                    onSelectRightToLeft = ::updateSwipeFromRightToLeft
-                )
-
-                AliasDisplayModeSection(
-                    selectedMode = settings.aliasDisplayMode,
-                    onSelectMode = ::updateAliasDisplayMode,
-                    swipeFromStartToEndAction = settings.swipeFromLeftToRightAction,
-                    swipeFromEndToStartAction = settings.swipeFromRightToLeftAction
-                )
-            }
+            AliasDisplayModeSection(
+                selectedMode = settings.aliasDisplayMode,
+                onSelectMode = ::updateAliasDisplayMode,
+                swipeFromStartToEndAction = settings.swipeFromLeftToRightAction,
+                swipeFromEndToStartAction = settings.swipeFromRightToLeftAction
+            )
         }
     }
 }

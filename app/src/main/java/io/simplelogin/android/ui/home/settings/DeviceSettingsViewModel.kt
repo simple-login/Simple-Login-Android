@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DeviceSettingsDialogViewModel @Inject constructor(
+class DeviceSettingsViewModel @Inject constructor(
     observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase,
     private val updateDeviceSettingsUseCase: UpdateDeviceSettingsUseCase
 ) : ViewModel() {
