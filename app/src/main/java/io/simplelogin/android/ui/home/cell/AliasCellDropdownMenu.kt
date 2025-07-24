@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.CheckCircleOutline
 import androidx.compose.material.icons.outlined.Contacts
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoNotDisturbOn
+import androidx.compose.material.icons.outlined.PhoneAndroid
 import androidx.compose.material.icons.outlined.RemoveRedEye
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -63,6 +64,17 @@ fun AliasCellDropdownMenu(
             },
             text = { Text(text = stringResource(R.string.copy_alias_address)) },
             onClick = { onAction(AliasAction.CopyEmailAddress(alias)) }
+        )
+
+        DropdownMenuItem(
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.PhoneAndroid,
+                    contentDescription = null
+                )
+            },
+            text = { Text(text = stringResource(R.string.enter_full_screen)) },
+            onClick = { onAction(AliasAction.EnterFullScreen(alias)) }
         )
 
         HorizontalDivider()

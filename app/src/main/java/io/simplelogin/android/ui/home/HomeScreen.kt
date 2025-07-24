@@ -16,7 +16,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 
@@ -31,6 +33,7 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
     val state by stateFlow.collectAsState()
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -83,6 +86,8 @@ fun HomeScreen(
 
                     is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
 
+                    is AliasAction.EnterFullScreen -> { fullScreenAlias = it.alias }
+
                     is AliasAction.Disable -> toggle(it.alias)
 
                     is AliasAction.Enable -> toggle(it.alias)
@@ -96,6 +101,13 @@ fun HomeScreen(
             },
             onFetchMore = ::fetchMoreAliases,
             onRefresh = ::refresh
+        )
+    }
+
+    fullScreenAlias?.let {
+        FullScreenDialog(
+            alias = it,
+            onDismiss = { fullScreenAlias = null }
         )
     }
 }

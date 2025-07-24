@@ -78,6 +78,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.google.zxing.core)
+
     // Dagger - Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
