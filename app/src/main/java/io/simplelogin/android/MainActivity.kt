@@ -88,27 +88,29 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    Drawer(
-                        appVersion = appRootViewModel.appVersion,
-                        onDeviceSettingsClick = {
-                            closeDrawerAndExecute(appRootViewModel::showDeviceSettingsDialog)
-                        },
-                        onSignOutClick = {
-                            closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
-                        }
-                    )
-                },
-                content = {
-                    MainUi(
-                        drawerState = drawerState,
-                        viewModel = viewModel,
-                        appRootViewModel = appRootViewModel
-                    )
-                }
-            )
+            SimpleLoginTheme {
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        Drawer(
+                            appVersion = appRootViewModel.appVersion,
+                            onDeviceSettingsClick = {
+                                closeDrawerAndExecute(appRootViewModel::showDeviceSettingsDialog)
+                            },
+                            onSignOutClick = {
+                                closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
+                            }
+                        )
+                    },
+                    content = {
+                        MainUi(
+                            drawerState = drawerState,
+                            viewModel = viewModel,
+                            appRootViewModel = appRootViewModel
+                        )
+                    }
+                )
+            }
         }
     }
 
@@ -155,83 +157,80 @@ private fun MainUi(
     appRootViewModel: AppRootViewModel
 ) {
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    SimpleLoginTheme {
-        val snackbarHostState = remember { SnackbarHostState() }
+    val isLoading by viewModel.showLoadingIndicator.collectAsState()
+    var currentSnackbarJob by remember { mutableStateOf<Job?>(null) }
 
-        val isLoading by viewModel.showLoadingIndicator.collectAsState()
-        var currentSnackbarJob by remember { mutableStateOf<Job?>(null) }
+    LaunchedEffect(Unit) {
+        viewModel.snackbarManager.configuration.collect { configuration ->
+            currentSnackbarJob?.cancel()
+            currentSnackbarJob = scope.launch {
+                val result = snackbarHostState.showSnackbar(visuals = configuration.toVisuals())
 
-        LaunchedEffect(Unit) {
-            viewModel.snackbarManager.configuration.collect { configuration ->
-                currentSnackbarJob?.cancel()
-                currentSnackbarJob = scope.launch {
-                    val result = snackbarHostState.showSnackbar(visuals = configuration.toVisuals())
-
-                    when (result) {
-                        SnackbarResult.ActionPerformed -> {
-                            configuration.action?.action?.let { it() }
-                        }
-
-                        else -> Unit
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        configuration.action?.action?.let { it() }
                     }
+
+                    else -> Unit
                 }
             }
         }
+    }
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    snackbar = { data ->
-                        val colors = data.visuals.colors()
-                        Snackbar(
-                            snackbarData = data,
-                            containerColor = colors.containerColor ?: SnackbarDefaults.color,
-                            contentColor = colors.contentColor ?: SnackbarDefaults.contentColor,
-                            actionColor = colors.actionColor ?: SnackbarDefaults.actionColor,
-                            actionContentColor = colors.actionContentColor
-                                ?: SnackbarDefaults.actionContentColor,
-                            dismissActionContentColor = colors.dismissActionContentColor
-                                ?: SnackbarDefaults.dismissActionContentColor,
-                        )
-                    })
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier.fillMaxSize()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { data ->
+                    val colors = data.visuals.colors()
+                    Snackbar(
+                        snackbarData = data,
+                        containerColor = colors.containerColor ?: SnackbarDefaults.color,
+                        contentColor = colors.contentColor ?: SnackbarDefaults.contentColor,
+                        actionColor = colors.actionColor ?: SnackbarDefaults.actionColor,
+                        actionContentColor = colors.actionContentColor
+                            ?: SnackbarDefaults.actionContentColor,
+                        dismissActionContentColor = colors.dismissActionContentColor
+                            ?: SnackbarDefaults.dismissActionContentColor,
+                    )
+                })
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AppRoot(
+                modifier = Modifier.fillMaxSize(),
+                innerPadding = innerPadding,
+                viewModel = appRootViewModel,
+                onOpenDrawer = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
+            )
+
+            AnimatedVisibility(
+                visible = isLoading,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                AppRoot(
-                    modifier = Modifier.fillMaxSize(),
-                    innerPadding = innerPadding,
-                    viewModel = appRootViewModel,
-                    onOpenDrawer = {
-                        scope.launch {
-                            drawerState.open()
-                        }
-                    }
-                )
-
-                AnimatedVisibility(
-                    visible = isLoading,
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.LightGray.copy(alpha = 0.5f))
+                        // Intercept all click events to disable click while loading
+                        .clickable(
+                            onClick = {},
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.LightGray.copy(alpha = 0.5f))
-                            // Intercept all click events to disable click while loading
-                            .clickable(
-                                onClick = {},
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgressIndicator()
                 }
             }
         }
