@@ -72,6 +72,7 @@ class HomeViewModel @Inject constructor(
             aliasFilterMode = aliasFilterMode,
             stats = aliasesListState.stats,
             aliases = aliasesListState.aliases,
+            fetchError = aliasesListState.fetchError,
             isFetching = aliasesListState.isFetching,
             isRefreshing = aliasesListState.isRefreshing
         )

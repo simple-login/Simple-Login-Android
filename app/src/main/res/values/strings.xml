@@ -102,4 +102,5 @@
     <string name="alias_display_mode_compact">Compact</string>
     <string name="full_screen_text_mode">Text mode</string>
     <string name="full_screen_qr_code_mode">QR code mode</string>
+    <string name="retry">Retry</string>
 </resources>

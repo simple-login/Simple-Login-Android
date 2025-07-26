@@ -23,12 +23,14 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.RetryButton
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,11 +39,13 @@ fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats?,
     aliases: List<Alias>,
+    fetchError: ApiError?,
     isFetching: Boolean,
     isRefreshing: Boolean,
     aliasCellSelection: AliasCellSelection,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
+    onRetry: () -> Unit,
     onAction: (AliasAction) -> Unit,
     onFetchMore: () -> Unit,
     onRefresh: () -> Unit
@@ -56,7 +60,7 @@ fun AliasesList(
         }
             .distinctUntilChanged()
             .collect { (lastVisible, total) ->
-                if (total > 0 && lastVisible >= total - 1 && !isFetching) {
+                if (total > 0 && lastVisible >= total - 1 && !isFetching && fetchError == null) {
                     onFetchMore()
                 }
             }
@@ -110,6 +114,12 @@ fun AliasesList(
                     ) {
                         CircularProgressIndicator()
                     }
+                }
+            }
+
+            if (fetchError != null) {
+                item {
+                    RetryButton(error = fetchError, onRetry = onRetry)
                 }
             }
         }

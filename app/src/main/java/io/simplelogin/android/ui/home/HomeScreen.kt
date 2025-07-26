@@ -73,6 +73,7 @@ fun HomeScreen(
                 .padding(innerPadding),
             stats = state.stats,
             aliases = state.aliases,
+            fetchError = state.fetchError,
             isFetching = state.isFetching,
             isRefreshing = state.isRefreshing,
             aliasCellSelection = state.deviceSettings.aliasCellSelection,
@@ -99,6 +100,7 @@ fun HomeScreen(
                     is AliasAction.Delete -> delete(it.alias)
                 }
             },
+            onRetry = ::fetchMoreAliases,
             onFetchMore = ::fetchMoreAliases,
             onRefresh = ::refresh
         )

@@ -7,6 +7,7 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.util.getAs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,6 +23,7 @@ import javax.inject.Inject
 data class AliasListState(
     val stats: Stats?,
     val aliases: List<Alias>,
+    val fetchError: ApiError?,
     val isRefreshing: Boolean,
     val isFetching: Boolean,
     val isModifying: Boolean
@@ -30,6 +32,7 @@ data class AliasListState(
         val Default = AliasListState(
             stats = null,
             aliases = emptyList(),
+            fetchError = null,
             isRefreshing = false,
             isFetching = false,
             isModifying = false
@@ -55,23 +58,28 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
     AliasListManager {
     private val stats = MutableStateFlow<Stats?>(null)
     private val aliases = MutableStateFlow<List<Alias>>(listOf())
+    private val fetchError = MutableStateFlow<ApiError?>(null)
     private val isFetching = MutableStateFlow(false)
     private val isRefreshing = MutableStateFlow(false)
     private val isModifying = MutableStateFlow(false)
 
     override val state = combine(
-        stats,
-        aliases,
-        isFetching,
-        isRefreshing,
-        isModifying
-    ) { stats, aliases, isFetching, isRefreshing, isModifying ->
+        listOf(
+            stats,
+            aliases,
+            fetchError,
+            isFetching,
+            isRefreshing,
+            isModifying
+        )
+    ) { values ->
         AliasListState(
-            stats = stats,
-            aliases = aliases,
-            isFetching = isFetching,
-            isRefreshing = isRefreshing,
-            isModifying = isModifying
+            stats = values.getAs(index = 0),
+            aliases = values.getAs(index = 1) ?: listOf(),
+            fetchError = values.getAs(index = 2),
+            isFetching = values.getAs(index = 3, default = false),
+            isRefreshing = values.getAs(index = 4, default = false),
+            isModifying = values.getAs(index = 5, default = false),
         )
     }
         .stateIn(
@@ -108,6 +116,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         val apiKey = apiKey ?: return Result.Success(Unit)
         val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
 
+        fetchError.value = null
         isFetching.value = true
         isRefreshing.value = aliases.value.isEmpty()
 
@@ -150,6 +159,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                     Result.Success(Unit)
                 },
                 onFailure = {
+                    fetchError.value = it
                     Result.Failure(it)
                 }
             )
