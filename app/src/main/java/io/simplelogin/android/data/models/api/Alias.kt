@@ -1,5 +1,6 @@
 package io.simplelogin.android.data.models.api
 
+import android.content.Context
 import android.text.format.DateUtils
 import com.google.gson.annotations.SerializedName
 
@@ -30,13 +31,7 @@ data class Alias(
             @SerializedName("reverse_alias") val reverseAlias: String
         )
 
-        val relativeTime: String?
-            get() = DateUtils.getRelativeTimeSpanString(
-                (timestamp * 1_000).toLong(),
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            )?.toString()
+        fun relativeTime(context: Context) = timestamp.relativeTime(context)
     }
 
     val hasActivities: Boolean
@@ -50,9 +45,24 @@ data class Alias(
             return email.replace("@", "\u200B@")
         }
 
+    fun relativeCreationTime(context: Context) = creationTimestamp.relativeTime(context)
+
     companion object
 }
 
 data class Aliases(
     @SerializedName("aliases") val aliases: List<Alias>
 )
+
+private fun Double.relativeTime(context: Context): String =
+    DateUtils.getRelativeDateTimeString(
+        context,
+        (this * 1_000).toLong(),
+        DateUtils.MINUTE_IN_MILLIS,
+        DateUtils.WEEK_IN_MILLIS,
+        DateUtils.FORMAT_SHOW_DATE or
+                DateUtils.FORMAT_SHOW_TIME or
+                DateUtils.FORMAT_SHOW_YEAR or
+                DateUtils.FORMAT_ABBREV_RELATIVE or
+                DateUtils.FORMAT_ABBREV_MONTH
+    ).toString()

@@ -33,11 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
@@ -52,10 +54,11 @@ import kotlinx.coroutines.launch
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
+    displayMode: AliasDisplayMode,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
     onAction: ((AliasAction) -> Unit)? // null when previewing
-) = key(alias, swipeFromStartToEndAction, swipeFromEndToStartAction) {
+) = key(alias, displayMode, swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val dismissState = rememberSwipeToDismissBoxState(
@@ -150,6 +153,9 @@ fun AliasCell(
             AliasCellContent(
                 modifier = Modifier.padding(vertical = Spacing.medium),
                 alias = alias,
+                showActivities = displayMode == AliasDisplayMode.DEFAULT,
+                showCreationDate = displayMode != AliasDisplayMode.COMPACT,
+                showMailboxes = displayMode != AliasDisplayMode.COMPACT,
                 onAction = { action ->
                     when (action) {
                         is AliasAction.Delete -> showDeleteDialog = true
@@ -176,6 +182,9 @@ fun AliasCell(
 private fun AliasCellContent(
     modifier: Modifier = Modifier,
     alias: Alias,
+    showActivities: Boolean,
+    showCreationDate: Boolean,
+    showMailboxes: Boolean,
     onAction: (AliasAction) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -211,8 +220,14 @@ private fun AliasCellContent(
                 )
             }
 
-            alias.latestActivity?.let {
-                AliasLatestActivity(it)
+            if (showCreationDate) {
+                Text(alias.relativeCreationTime(LocalContext.current))
+            }
+
+            if (showActivities) {
+                alias.latestActivity?.let {
+                    AliasLatestActivity(it)
+                }
             }
 
             alias.note?.let {
@@ -222,9 +237,11 @@ private fun AliasCellContent(
                 )
             }
 
-            Text(text = mailboxes)
+            if (showMailboxes) {
+                Text(text = mailboxes)
+            }
 
-            if (alias.hasActivities) {
+            if (showActivities && alias.hasActivities) {
                 AliasCellActivities(
                     forward = alias.forwardCount,
                     reply = alias.replyCount,

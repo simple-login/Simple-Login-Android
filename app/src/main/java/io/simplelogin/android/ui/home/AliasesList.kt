@@ -26,6 +26,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
+import io.simplelogin.android.data.models.preferences.AliasDisplayMode
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.cell.AliasCell
@@ -42,6 +43,7 @@ fun AliasesList(
     fetchError: ApiError?,
     isFetching: Boolean,
     isRefreshing: Boolean,
+    displayMode: AliasDisplayMode,
     aliasCellSelection: AliasCellSelection,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
@@ -94,6 +96,7 @@ fun AliasesList(
                         }
                     },
                     alias = alias,
+                    displayMode = displayMode,
                     swipeFromStartToEndAction = swipeFromStartToEndAction,
                     swipeFromEndToStartAction = swipeFromEndToStartAction,
                     onAction = onAction

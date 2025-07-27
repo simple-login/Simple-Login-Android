@@ -28,6 +28,7 @@ import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
@@ -152,6 +153,7 @@ private fun SwipeActionSelection(
 
     AliasCell(
         alias = Alias.sample,
+        displayMode = selectedAliasDisplayMode,
         swipeFromStartToEndAction = selectedLeftToRight,
         swipeFromEndToStartAction = selectedRightToLeft,
         onAction = null
@@ -165,7 +167,7 @@ private val Alias.Companion.sample: Alias
         email = "news.fejha@simplelogin.io",
         name = null,
         enabled = true,
-        creationTimestamp = 0.toDouble(),
+        creationTimestamp = Clock.System.now().minus(10.days).epochSeconds.toDouble(),
         blockCount = 56,
         forwardCount = 90,
         replyCount = 15,
