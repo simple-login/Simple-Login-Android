@@ -39,7 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
-import io.simplelogin.android.data.models.preferences.AliasDisplayMode
+import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
@@ -54,11 +54,11 @@ import kotlinx.coroutines.launch
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
-    displayMode: AliasDisplayMode,
+    displayInfos: List<AliasDisplayInfo>,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
     onAction: ((AliasAction) -> Unit)? // null when previewing
-) = key(alias, displayMode, swipeFromStartToEndAction, swipeFromEndToStartAction) {
+) = key(alias, displayInfos, swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val dismissState = rememberSwipeToDismissBoxState(
@@ -153,9 +153,7 @@ fun AliasCell(
             AliasCellContent(
                 modifier = Modifier.padding(vertical = Spacing.medium),
                 alias = alias,
-                showActivities = displayMode == AliasDisplayMode.DEFAULT,
-                showCreationDate = displayMode != AliasDisplayMode.COMPACT,
-                showMailboxes = displayMode != AliasDisplayMode.COMPACT,
+                displayInfos = displayInfos,
                 onAction = { action ->
                     when (action) {
                         is AliasAction.Delete -> showDeleteDialog = true
@@ -182,9 +180,7 @@ fun AliasCell(
 private fun AliasCellContent(
     modifier: Modifier = Modifier,
     alias: Alias,
-    showActivities: Boolean,
-    showCreationDate: Boolean,
-    showMailboxes: Boolean,
+    displayInfos: List<AliasDisplayInfo>,
     onAction: (AliasAction) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -197,7 +193,10 @@ private fun AliasCellContent(
             onAction(it)
         }
     }
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Column(modifier = Modifier.weight(1f)) {
             val emailColor =
                 if (alias.enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
@@ -220,28 +219,28 @@ private fun AliasCellContent(
                 )
             }
 
-            if (showCreationDate) {
+            if (displayInfos.contains(AliasDisplayInfo.CREATION_DATE)) {
                 Text(alias.relativeCreationTime(LocalContext.current))
             }
 
-            if (showActivities) {
+            if (displayInfos.contains(AliasDisplayInfo.LATEST_ACTIVITY)) {
                 alias.latestActivity?.let {
                     AliasLatestActivity(it)
                 }
             }
 
-            alias.note?.let {
+            if (displayInfos.contains(AliasDisplayInfo.NOTE) && alias.note != null) {
                 Text(
-                    text = it,
+                    text = alias.note,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            if (showMailboxes) {
+            if (displayInfos.contains(AliasDisplayInfo.MAILBOXES)) {
                 Text(text = mailboxes)
             }
 
-            if (showActivities && alias.hasActivities) {
+            if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
                 AliasCellActivities(
                     forward = alias.forwardCount,
                     reply = alias.replyCount,

@@ -76,7 +76,7 @@ fun HomeScreen(
             fetchError = state.fetchError,
             isFetching = state.isFetching,
             isRefreshing = state.isRefreshing,
-            displayMode = state.deviceSettings.aliasDisplayMode,
+            displayInfos = state.deviceSettings.aliasDisplayInfos,
             aliasCellSelection = state.deviceSettings.aliasCellSelection,
             swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
             swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,

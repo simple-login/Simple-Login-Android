@@ -10,10 +10,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +26,7 @@ import io.simplelogin.android.data.models.api.ActivityAction
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
-import io.simplelogin.android.data.models.preferences.AliasDisplayMode
+import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
@@ -71,8 +75,8 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
                 onSelectLeftToRight = ::updateSwipeFromLeftToRight,
                 selectedRightToLeft = settings.swipeFromRightToLeftAction,
                 onSelectRightToLeft = ::updateSwipeFromRightToLeft,
-                selectedAliasDisplayMode = settings.aliasDisplayMode,
-                onSelectAliasDisplayMode = ::updateAliasDisplayMode
+                selectedAliasDisplayInfos = settings.aliasDisplayInfos,
+                onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
             )
         }
     }
@@ -110,9 +114,10 @@ private fun SwipeActionSelection(
     onSelectLeftToRight: (SwipeAction) -> Unit,
     selectedRightToLeft: SwipeAction,
     onSelectRightToLeft: (SwipeAction) -> Unit,
-    selectedAliasDisplayMode: AliasDisplayMode,
-    onSelectAliasDisplayMode: (AliasDisplayMode) -> Unit,
+    selectedAliasDisplayInfos: List<AliasDisplayInfo>,
+    onSaveAliasDisplayInfos: (List<AliasDisplayInfo>) -> Unit,
 ) {
+    var showAliasDisplayInfosDialog by rememberSaveable { mutableStateOf(false) }
     val description: @Composable (SwipeAction) -> String = {
         when (it) {
             SwipeAction.DISABLE_ENABLE -> stringResource(R.string.disable_enable)
@@ -137,27 +142,28 @@ private fun SwipeActionSelection(
         onSelect = onSelectRightToLeft
     )
 
-    OptionRow(
-        title = stringResource(R.string.alias_display_mode),
-        description = {
-            when (it) {
-                AliasDisplayMode.DEFAULT -> stringResource(R.string.alias_display_mode_default)
-                AliasDisplayMode.COMFORTABLE -> stringResource(R.string.alias_display_mode_comfortable)
-                AliasDisplayMode.COMPACT -> stringResource(R.string.alias_display_mode_compact)
-            }
-        },
-        options = AliasDisplayMode.entries.toTypedArray(),
-        selected = selectedAliasDisplayMode,
-        onSelect = onSelectAliasDisplayMode
-    )
+    TextButton(onClick = { showAliasDisplayInfosDialog = true }) {
+        Text("Alias display infos")
+    }
 
     AliasCell(
         alias = Alias.sample,
-        displayMode = selectedAliasDisplayMode,
+        displayInfos = selectedAliasDisplayInfos,
         swipeFromStartToEndAction = selectedLeftToRight,
         swipeFromEndToStartAction = selectedRightToLeft,
         onAction = null
     )
+
+    if (showAliasDisplayInfosDialog) {
+        AliasDisplayInfosDialog(
+            selection = selectedAliasDisplayInfos,
+            onDismiss = { showAliasDisplayInfosDialog = false },
+            onSave = {
+                showAliasDisplayInfosDialog = false
+                onSaveAliasDisplayInfos(it)
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalTime::class)
