@@ -31,7 +31,8 @@ data class Alias(
             @SerializedName("reverse_alias") val reverseAlias: String
         )
 
-        fun relativeTime(context: Context) = timestamp.relativeTime(context)
+        val relativeTime: String
+            get() = timestamp.relativeTimeSpan()
     }
 
     val hasActivities: Boolean
@@ -45,7 +46,7 @@ data class Alias(
             return email.replace("@", "\u200B@")
         }
 
-    fun relativeCreationTime(context: Context) = creationTimestamp.relativeTime(context)
+    fun relativeCreationTime(context: Context) = creationTimestamp.relativeDateTime(context)
 
     companion object
 }
@@ -54,7 +55,7 @@ data class Aliases(
     @SerializedName("aliases") val aliases: List<Alias>
 )
 
-private fun Double.relativeTime(context: Context): String =
+private fun Double.relativeDateTime(context: Context): String =
     DateUtils.getRelativeDateTimeString(
         context,
         (this * 1_000).toLong(),
@@ -65,4 +66,11 @@ private fun Double.relativeTime(context: Context): String =
                 DateUtils.FORMAT_SHOW_YEAR or
                 DateUtils.FORMAT_ABBREV_RELATIVE or
                 DateUtils.FORMAT_ABBREV_MONTH
+    ).toString()
+
+private fun Double.relativeTimeSpan(): String =
+    DateUtils.getRelativeTimeSpanString(
+        (this * 1_000).toLong(),
+        System.currentTimeMillis(),
+        DateUtils.MINUTE_IN_MILLIS
     ).toString()

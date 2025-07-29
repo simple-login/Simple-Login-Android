@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.theme.Spacing
@@ -32,6 +31,6 @@ fun AliasLatestActivity(activity: Alias.LatestActivity) = key(activity) {
 
         Text(text = activity.contact.email)
 
-        Text(text = "(${activity.relativeTime(LocalContext.current)})")
+        Text(text = "(${activity.relativeTime})")
     }
 }

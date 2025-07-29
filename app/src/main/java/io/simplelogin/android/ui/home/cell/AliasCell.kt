@@ -193,15 +193,16 @@ private fun AliasCellContent(
             onAction(it)
         }
     }
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            val emailColor =
-                if (alias.enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
+    Column(modifier = modifier) {
+        val emailColor =
+            if (alias.enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             if (alias.pinned) {
                 TextWithInlineIcon(
+                    modifier = Modifier.weight(1f),
                     text = alias.displayedEmail,
                     textColor = emailColor,
                     fontWeight = FontWeight.Medium,
@@ -212,6 +213,7 @@ private fun AliasCellContent(
                 )
             } else {
                 Text(
+                    modifier = Modifier.weight(1f),
                     text = alias.displayedEmail,
                     color = emailColor,
                     fontWeight = FontWeight.Medium,
@@ -219,49 +221,49 @@ private fun AliasCellContent(
                 )
             }
 
-            if (displayInfos.contains(AliasDisplayInfo.CREATION_DATE)) {
-                Text(alias.relativeCreationTime(LocalContext.current))
-            }
-
-            if (displayInfos.contains(AliasDisplayInfo.LATEST_ACTIVITY)) {
-                alias.latestActivity?.let {
-                    AliasLatestActivity(it)
+            Box(modifier = modifier) {
+                IconButton(onClick = { showMenu = true }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.alias_options)
+                    )
                 }
-            }
 
-            if (displayInfos.contains(AliasDisplayInfo.NOTE) && alias.note != null) {
-                Text(
-                    text = alias.note,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            if (displayInfos.contains(AliasDisplayInfo.MAILBOXES)) {
-                Text(text = mailboxes)
-            }
-
-            if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
-                AliasCellActivities(
-                    forward = alias.forwardCount,
-                    reply = alias.replyCount,
-                    block = alias.blockCount
+                AliasCellDropdownMenu(
+                    showMenu = showMenu,
+                    alias = alias,
+                    onAction = closeMenuAndSendAction,
+                    onDismiss = { showMenu = false }
                 )
             }
         }
 
-        Box {
-            IconButton(onClick = { showMenu = true }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.alias_options)
-                )
-            }
+        if (displayInfos.contains(AliasDisplayInfo.CREATION_DATE)) {
+            Text(alias.relativeCreationTime(LocalContext.current))
+        }
 
-            AliasCellDropdownMenu(
-                showMenu = showMenu,
-                alias = alias,
-                onAction = closeMenuAndSendAction,
-                onDismiss = { showMenu = false }
+        if (displayInfos.contains(AliasDisplayInfo.LATEST_ACTIVITY)) {
+            alias.latestActivity?.let {
+                AliasLatestActivity(it)
+            }
+        }
+
+        if (displayInfos.contains(AliasDisplayInfo.NOTE) && alias.note != null && alias.note.isNotEmpty()) {
+            Text(
+                text = alias.note,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        if (displayInfos.contains(AliasDisplayInfo.MAILBOXES)) {
+            Text(text = mailboxes)
+        }
+
+        if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
+            AliasCellActivities(
+                forward = alias.forwardCount,
+                reply = alias.replyCount,
+                block = alias.blockCount
             )
         }
     }
