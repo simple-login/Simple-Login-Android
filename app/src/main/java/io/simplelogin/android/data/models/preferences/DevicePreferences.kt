@@ -1,5 +1,7 @@
 package io.simplelogin.android.data.models.preferences
 
+import android.content.Context
+import io.simplelogin.android.R
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,5 +29,13 @@ enum class SwipeAction {
 }
 
 enum class AliasDisplayInfo {
-    CREATION_DATE, LATEST_ACTIVITY, NOTE, MAILBOXES, LAST_14_DAYS
+    CREATION_DATE, LATEST_ACTIVITY, NOTE, MAILBOXES, LAST_14_DAYS;
+
+    fun title(context: Context) = when (this) {
+        CREATION_DATE -> context.getString(R.string.creation_date)
+        LATEST_ACTIVITY -> context.getString(R.string.latest_activity)
+        NOTE -> context.getString(R.string.note)
+        MAILBOXES -> context.getString(R.string.mailboxes)
+        LAST_14_DAYS -> context.getString(R.string.last_14_days)
+    }
 }

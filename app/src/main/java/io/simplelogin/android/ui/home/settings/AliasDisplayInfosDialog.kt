@@ -1,8 +1,9 @@
 package io.simplelogin.android.ui.home.settings
 
-import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
@@ -28,10 +30,21 @@ fun AliasDisplayInfosDialog(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.alias_display)) },
         text = {
             Column {
                 AliasDisplayInfo.entries.forEach { info ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                if (selection.contains(info)) {
+                                    selection.remove(info)
+                                } else {
+                                    selection.add(info)
+                                }
+                            },
+                        verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = selection.contains(info),
                             onCheckedChange = { checked ->
@@ -39,7 +52,7 @@ fun AliasDisplayInfosDialog(
                             }
                         )
 
-                        Text(text = info.title(context))
+                        Text(info.title(context))
                     }
                 }
             }
@@ -54,12 +67,4 @@ fun AliasDisplayInfosDialog(
             }
         }
     )
-}
-
-private fun AliasDisplayInfo.title(context: Context) = when (this) {
-    AliasDisplayInfo.CREATION_DATE -> context.getString(R.string.creation_date)
-    AliasDisplayInfo.LATEST_ACTIVITY -> context.getString(R.string.latest_activity)
-    AliasDisplayInfo.NOTE -> context.getString(R.string.note)
-    AliasDisplayInfo.MAILBOXES -> context.getString(R.string.mailboxes)
-    AliasDisplayInfo.LAST_14_DAYS -> context.getString(R.string.last_14_days)
 }
