@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.AppVersion
@@ -84,7 +85,7 @@ class LoginMasterScreenViewModel @Inject constructor(
         })
     }
 
-    fun login(apiKey: String) {
+    fun login(apiKey: ApiKey) {
         launchLoading(doWork = {
             delay(1_000)
         }, handleResult = {

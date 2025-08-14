@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.AliasId
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -68,7 +69,7 @@ class AppRootViewModel @Inject constructor(
     //endregion
 
     //region Log in/sign up
-    fun updateApiKey(apiKey: String?) {
+    fun updateApiKey(apiKey: ApiKey?) {
         viewModelScope.launch {
             updateSessionSettingsUseCase.invoke {
                 if (apiKey == null) {

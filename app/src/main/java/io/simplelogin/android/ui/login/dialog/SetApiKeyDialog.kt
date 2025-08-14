@@ -21,12 +21,13 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.ApiKey
 import kotlinx.coroutines.launch
 
 @Composable
 fun SetApiKeyDialog(
     onDismiss: () -> Unit,
-    onSet: (String) -> Unit
+    onSet: (ApiKey) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val clipboard = LocalClipboard.current
@@ -57,7 +58,7 @@ fun SetApiKeyDialog(
             AnimatedVisibility(showTextField) {
                 TextButton(
                     enabled = apiKey.isNotEmpty(),
-                    onClick = { onSet(apiKey) }
+                    onClick = { onSet(ApiKey(value = apiKey)) }
                 ) {
                     Text(stringResource(R.string.confirm))
                 }
@@ -74,7 +75,7 @@ fun SetApiKeyDialog(
                                     if (clipData.itemCount > 0) {
                                         val item = clipData.getItemAt(0)
                                         item.text?.let { text ->
-                                            onSet(text.toString())
+                                            onSet(ApiKey(value = text.toString()))
                                         }
                                     }
                                 }

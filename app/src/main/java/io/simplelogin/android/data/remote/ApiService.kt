@@ -56,7 +56,7 @@ interface ApiService {
     suspend fun forgotPassword(@Body body: EmailBody): Response<OkResponse>
 
     @GET("api/stats")
-    suspend fun getStats(@Header(AUTH_HEADER) apiKey: String): Response<Stats>
+    suspend fun getStats(@Header(AUTH_HEADER) apiKey: ApiKey): Response<Stats>
 
     @GET("api/user_info")
     suspend fun getUserInfo(): Response<UserInfo>
@@ -82,27 +82,27 @@ interface ApiService {
     // Alias
     @POST("api/v3/alias/custom/new")
     suspend fun createAlias(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Body body: CreateAliasBody,
         @Query("hostname") hostname: String?
         ): Response<Alias>
 
     @POST("api/aliases/{id}/contacts")
     suspend fun createContact(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
         @Body body: CreateContactBody
         ): Response<Contact>
 
     @DELETE("api/aliases/{id}")
     suspend fun deleteAlias(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId
     ): Response<DeletedResponse>
 
     @GET("api/aliases/{id}/activities")
     suspend fun getAliasActivities(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
         @Query(PAGE_ID) pageId: Int
     ): Response<AliasActivities>
@@ -112,20 +112,20 @@ interface ApiService {
 
     @GET("api/v2/aliases")
     suspend fun getAliases(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Query(PAGE_ID) pageId: Int
     ): Response<Aliases>
 
     @GET("api/v2/aliases")
     suspend fun filterAliases(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Query(PAGE_ID) pageId: Int,
         @QueryMap params: Map<String?, String>
     ): Response<Aliases>
 
     @POST("api/v2/aliases")
     suspend fun searchAliases(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Query(PAGE_ID) pageId: Int,
         @Body searchBody: SearchBody
     ): Response<Aliases>
@@ -135,14 +135,14 @@ interface ApiService {
 
     @GET("api/aliases/{id}/contacts")
     suspend fun getContacts(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
         @Query(PAGE_ID) pageId: Int
     ): Response<Contacts>
 
     @POST("api/alias/random/new")
     suspend fun randomAlias(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Query("mode") mode: String, // "uuid" or "word"
         @Query("hostname") hostname: String?,
         @Body body: NoteBody
@@ -150,13 +150,13 @@ interface ApiService {
 
     @POST("api/aliases/{id}/toggle")
     suspend fun toggleAlias(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId
     ): Response<EnabledResponse>
 
     @PATCH("api/aliases/{id}")
     suspend fun updateAlias(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
         @Body body: UpdateAliasOptions
     ): Response<OkResponse>
@@ -164,29 +164,29 @@ interface ApiService {
     // Contact
     @DELETE("api/contacts/{id}")
     suspend fun deleteContact(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") contactId: Int
     ): Response<DeletedResponse>
 
     @POST("api/contacts/{id}/toggle")
     suspend fun toggleContact(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") contactId: Int
     ): Response<BlockForward>
 
     // Custom domains
     @GET("api/custom_domains")
-    suspend fun getCustomDomains(@Header(AUTH_HEADER) apiKey: String): Response<CustomDomains>
+    suspend fun getCustomDomains(@Header(AUTH_HEADER) apiKey: ApiKey): Response<CustomDomains>
 
     @GET("api/custom_domains/{id}/trash")
     suspend fun getDeletedAliases(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") domainId: Int
     ): Response<DeletedAliases>
 
     @PATCH("api/custom_domains/{id}")
     suspend fun updateCustomDomain(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") domainId: Int,
         @Body body: UpdateCustomDomainOptions
     ): Response<UpdateCustomDomainResponse>
@@ -194,53 +194,53 @@ interface ApiService {
     // Mailbox
     @POST("api/mailboxes")
     suspend fun createMailbox(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Body body: EmailBody
     ): Response<Mailbox>
 
     @DELETE("api/mailboxes/{id}")
     suspend fun deleteMailbox(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") mailboxId: Int,
         @Body body: TransferAliasesBody
     ): Response<DeletedResponse>
 
     @GET("api/v2/mailboxes")
-    suspend fun getMailboxes(@Header(AUTH_HEADER) apiKey: String): Response<Mailboxes>
+    suspend fun getMailboxes(@Header(AUTH_HEADER) apiKey: ApiKey): Response<Mailboxes>
 
     @PUT("api/mailboxes/{id}")
     suspend fun updateMailbox(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") mailboxId: Int,
         @Body body: UpdateMailboxOptions
     ): Response<UpdateResponse>
 
     // Misc
     @DELETE("api/user")
-    suspend fun deleteUser(@Header(AUTH_HEADER) apiKey: String): Response<OkResponse>
+    suspend fun deleteUser(@Header(AUTH_HEADER) apiKey: ApiKey): Response<OkResponse>
 
     @PATCH("api/sudo")
     suspend fun enterSudoMode(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Body body: PasswordBody
     ): Response<OkResponse>
 
     @GET("api/user/cookie_token")
-    suspend fun getCookieToken(@Header(AUTH_HEADER) apiKey: String): Response<Token>
+    suspend fun getCookieToken(@Header(AUTH_HEADER) apiKey: ApiKey): Response<Token>
 
     // Settings
     @GET("api/v2/setting/domains")
-    suspend fun getUsableDomains(@Header(AUTH_HEADER) apiKey: String): Response<List<UsableDomain>>
+    suspend fun getUsableDomains(@Header(AUTH_HEADER) apiKey: ApiKey): Response<List<UsableDomain>>
 
     @GET("api/setting")
-    suspend fun getUserSettings(@Header(AUTH_HEADER) apiKey: String): Response<UserSettings>
+    suspend fun getUserSettings(@Header(AUTH_HEADER) apiKey: ApiKey): Response<UserSettings>
 
     @DELETE("api/setting/unlink_proton_account")
-    suspend fun unlinkProtonAccount(@Header(AUTH_HEADER) apiKey: String): Response<OkResponse>
+    suspend fun unlinkProtonAccount(@Header(AUTH_HEADER) apiKey: ApiKey): Response<OkResponse>
 
     @PATCH("api/setting")
     suspend fun updateUserSettings(
-        @Header(AUTH_HEADER) apiKey: String,
+        @Header(AUTH_HEADER) apiKey: ApiKey,
         @Body body: UpdateUserSettingsOptions
     ): Response<UserSettings>
 }

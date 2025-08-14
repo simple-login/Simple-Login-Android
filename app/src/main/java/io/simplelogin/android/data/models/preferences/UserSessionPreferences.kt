@@ -1,12 +1,13 @@
 package io.simplelogin.android.data.models.preferences
 
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.util.Constants
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserSessionPreferences(
     val baseUrl: String = Constants.DEFAULT_BASE_URL,
-    val apiKey: String? = null,
+    val apiKey: ApiKey? = null,
     val lockEnabled: Boolean = false,
     val lockTimeOut: LockTimeOut = LockTimeOut.DEFAULT,
 )

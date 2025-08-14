@@ -3,6 +3,7 @@ package io.simplelogin.android.domain
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.EnabledResponse
@@ -44,7 +45,7 @@ data class AliasListState(
 interface AliasListManager {
     val state: Flow<AliasListState>
     suspend fun refresh(
-        apiKey: String? = null,
+        apiKey: ApiKey? = null,
         filterMode: AliasFilterMode? = null
     ): Result<Unit, ApiError>
 
@@ -90,12 +91,12 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         )
 
     private var canFetchMore = true
-    private var apiKey: String? = null
+    private var apiKey: ApiKey? = null
     private var currentPage = 0
     private var filterMode: AliasFilterMode? = null
 
     override suspend fun refresh(
-        apiKey: String?,
+        apiKey: ApiKey?,
         filterMode: AliasFilterMode?
     ): Result<Unit, ApiError> {
         apiKey?.let { this.apiKey = it }
