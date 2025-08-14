@@ -3,9 +3,13 @@ package io.simplelogin.android.data.models.api
 import android.content.Context
 import android.text.format.DateUtils
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
+
+@[JvmInline Serializable]
+value class AliasId(val value: Int)
 
 data class Alias(
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: AliasId,
     @SerializedName("email") val email: String,
     @SerializedName("name") val name: String?,
     @SerializedName("enabled") val enabled: Boolean,

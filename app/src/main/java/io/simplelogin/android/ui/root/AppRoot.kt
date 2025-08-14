@@ -18,6 +18,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
@@ -35,10 +36,10 @@ data object LogInDestination: NavKey
 data object HomeDestination: NavKey
 
 @Serializable
-data class AliasDetails(val aliasId: Int): NavKey
+data class AliasDetails(val aliasId: AliasId): NavKey
 
 @Serializable
-data class AliasContacts(val aliasId: Int): NavKey
+data class AliasContacts(val aliasId: AliasId): NavKey
 
 @Serializable
 data object DeviceSettingsDestination: NavKey

@@ -3,6 +3,7 @@ package io.simplelogin.android.data.remote
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivities
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiKey
@@ -89,25 +90,25 @@ interface ApiService {
     @POST("api/aliases/{id}/contacts")
     suspend fun createContact(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int,
+        @Path("id") aliasId: AliasId,
         @Body body: CreateContactBody
         ): Response<Contact>
 
     @DELETE("api/aliases/{id}")
     suspend fun deleteAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int
+        @Path("id") aliasId: AliasId
     ): Response<DeletedResponse>
 
     @GET("api/aliases/{id}/activities")
     suspend fun getAliasActivities(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int,
+        @Path("id") aliasId: AliasId,
         @Query(PAGE_ID) pageId: Int
     ): Response<AliasActivities>
 
     @GET("api/aliases/{id}")
-    suspend fun getAlias(@Path("id") aliasId: Int): Response<Alias>
+    suspend fun getAlias(@Path("id") aliasId: AliasId): Response<Alias>
 
     @GET("api/v2/aliases")
     suspend fun getAliases(
@@ -135,7 +136,7 @@ interface ApiService {
     @GET("api/aliases/{id}/contacts")
     suspend fun getContacts(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int,
+        @Path("id") aliasId: AliasId,
         @Query(PAGE_ID) pageId: Int
     ): Response<Contacts>
 
@@ -150,13 +151,13 @@ interface ApiService {
     @POST("api/aliases/{id}/toggle")
     suspend fun toggleAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int
+        @Path("id") aliasId: AliasId
     ): Response<EnabledResponse>
 
     @PATCH("api/aliases/{id}")
     suspend fun updateAlias(
         @Header(AUTH_HEADER) apiKey: String,
-        @Path("id") aliasId: Int,
+        @Path("id") aliasId: AliasId,
         @Body body: UpdateAliasOptions
     ): Response<OkResponse>
 

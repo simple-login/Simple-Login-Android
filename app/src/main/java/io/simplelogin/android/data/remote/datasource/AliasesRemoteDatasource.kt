@@ -1,5 +1,6 @@
 package io.simplelogin.android.data.remote.datasource
 
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
@@ -13,10 +14,10 @@ import javax.inject.Inject
 interface AliasesRemoteDatasource {
     suspend fun fetchStats(apiKey: String): Result<Stats, ApiError>
     suspend fun fetchAliases(apiKey: String, filterMode: AliasFilterMode, pageId: Int): Result<Aliases, ApiError>
-    suspend fun toggle(apiKey: String, aliasId: Int): Result<EnabledResponse, ApiError>
-    suspend fun pin(apiKey: String, aliasId: Int): Result<Unit, ApiError>
-    suspend fun unpin(apiKey: String, aliasId: Int): Result<Unit, ApiError>
-    suspend fun delete(apiKey: String, aliasId: Int): Result<Unit, ApiError>
+    suspend fun toggle(apiKey: String, aliasId: AliasId): Result<EnabledResponse, ApiError>
+    suspend fun pin(apiKey: String, aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun unpin(apiKey: String, aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun delete(apiKey: String, aliasId: AliasId): Result<Unit, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -51,10 +52,10 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
         }
     }
 
-    override suspend fun toggle(apiKey: String, aliasId: Int): Result<EnabledResponse, ApiError> =
+    override suspend fun toggle(apiKey: String, aliasId: AliasId): Result<EnabledResponse, ApiError> =
         safeApiCall { apiService.toggleAlias(apiKey = apiKey, aliasId = aliasId) }
 
-    override suspend fun pin(apiKey: String, aliasId: Int): Result<Unit, ApiError> =
+    override suspend fun pin(apiKey: String, aliasId: AliasId): Result<Unit, ApiError> =
         safeApiCall {
             apiService.updateAlias(
                 apiKey = apiKey,
@@ -63,7 +64,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             )
         }.mapValue {}
 
-    override suspend fun unpin(apiKey: String, aliasId: Int): Result<Unit, ApiError> =
+    override suspend fun unpin(apiKey: String, aliasId: AliasId): Result<Unit, ApiError> =
         safeApiCall {
             apiService.updateAlias(
                 apiKey = apiKey,
@@ -72,7 +73,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             )
         }.mapValue {}
 
-    override suspend fun delete(apiKey: String, aliasId: Int): Result<Unit, ApiError> =
+    override suspend fun delete(apiKey: String, aliasId: AliasId): Result<Unit, ApiError> =
         safeApiCall {
             apiService.deleteAlias(apiKey = apiKey, aliasId = aliasId)
         }.mapValue {}

@@ -1,6 +1,7 @@
 package io.simplelogin.android.domain
 
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
@@ -48,10 +49,10 @@ interface AliasListManager {
     ): Result<Unit, ApiError>
 
     suspend fun fetchMore(): Result<Unit, ApiError>
-    suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError>
-    suspend fun pin(aliasId: Int): Result<Unit, ApiError>
-    suspend fun unpin(aliasId: Int): Result<Unit, ApiError>
-    suspend fun delete(aliasId: Int): Result<Unit, ApiError>
+    suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError>
+    suspend fun pin(aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun delete(aliasId: AliasId): Result<Unit, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -166,7 +167,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
         }
     }
 
-    override suspend fun toggle(aliasId: Int): Result<EnabledResponse, ApiError> {
+    override suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError> {
         val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return datasource.toggle(apiKey = apiKey, aliasId = aliasId)
@@ -188,7 +189,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
             })
     }
 
-    override suspend fun pin(aliasId: Int): Result<Unit, ApiError> {
+    override suspend fun pin(aliasId: AliasId): Result<Unit, ApiError> {
         val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return datasource.pin(apiKey = apiKey, aliasId = aliasId)
@@ -210,7 +211,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
             })
     }
 
-    override suspend fun unpin(aliasId: Int): Result<Unit, ApiError> {
+    override suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError> {
         val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return datasource.unpin(apiKey = apiKey, aliasId = aliasId)
@@ -232,7 +233,7 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
             })
     }
 
-    override suspend fun delete(aliasId: Int): Result<Unit, ApiError> {
+    override suspend fun delete(aliasId: AliasId): Result<Unit, ApiError> {
         val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return datasource.delete(apiKey = apiKey, aliasId = aliasId)

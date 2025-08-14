@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
@@ -27,8 +28,8 @@ import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 fun HomeScreen(
     modifier: Modifier,
     onOpenDrawer: () -> Unit,
-    onViewDetails: (Int) -> Unit,
-    onViewContacts: (Int) -> Unit
+    onViewDetails: (AliasId) -> Unit,
+    onViewContacts: (AliasId) -> Unit
 ) = with(hiltViewModel<HomeViewModel>()) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var isSearching by rememberSaveable { mutableStateOf(false) }

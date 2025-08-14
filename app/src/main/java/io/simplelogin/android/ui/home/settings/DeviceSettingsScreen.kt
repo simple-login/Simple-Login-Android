@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ActivityAction
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
@@ -189,7 +190,7 @@ private fun SwipeActionSelection(
 @OptIn(ExperimentalTime::class)
 private val Alias.Companion.sample: Alias
     get() = Alias(
-        id = 0,
+        id = AliasId(value = 0),
         email = "news.fejha@simplelogin.io",
         name = null,
         enabled = true,
