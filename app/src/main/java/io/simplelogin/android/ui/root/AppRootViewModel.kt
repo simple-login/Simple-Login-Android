@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.data.models.api.AliasId
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
@@ -110,15 +110,15 @@ class AppRootViewModel @Inject constructor(
     //endregion
 
     //region Home
-    fun viewAliasDetails(aliasId: AliasId) {
+    fun viewAliasDetails(alias: Alias) {
         _navBackStack.value.apply {
-            add(AliasDetails(aliasId))
+            add(AliasDetails(alias))
         }
     }
 
-    fun viewAliasContacts(aliasId: AliasId) {
+    fun viewAliasContacts(alias: Alias) {
         _navBackStack.value.apply {
-            add(AliasContacts(aliasId))
+            add(AliasContacts(alias))
         }
     }
     //endregion

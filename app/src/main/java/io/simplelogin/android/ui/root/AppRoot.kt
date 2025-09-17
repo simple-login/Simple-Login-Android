@@ -18,9 +18,10 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.AliasId
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
+import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
 import io.simplelogin.android.ui.nav.TwoPaneSceneStrategy
@@ -36,10 +37,10 @@ data object LogInDestination: NavKey
 data object HomeDestination: NavKey
 
 @Serializable
-data class AliasDetails(val aliasId: AliasId): NavKey
+data class AliasDetails(val alias: Alias): NavKey
 
 @Serializable
-data class AliasContacts(val aliasId: AliasId): NavKey
+data class AliasContacts(val alias: Alias): NavKey
 
 @Serializable
 data object DeviceSettingsDestination: NavKey
@@ -84,10 +85,7 @@ fun AppRoot(modifier: Modifier = Modifier,
             entry<AliasDetails>(
                 metadata = TwoPaneScene.twoPane()
             ) { key ->
-                Text(
-                    modifier = modifier,
-                    text = "Alias detail ${key.aliasId}"
-                )
+                AliasDetailScreen(alias = key.alias)
             }
 
             entry<AliasContacts>(
@@ -95,7 +93,7 @@ fun AppRoot(modifier: Modifier = Modifier,
             ) { key ->
                 Text(
                     modifier = modifier,
-                    text = "Alias contacts ${key.aliasId}"
+                    text = "Alias contacts ${key.alias.email}"
                 )
             }
 

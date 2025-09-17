@@ -1,6 +1,7 @@
 package io.simplelogin.android.data.models.api
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
 data class Mailbox(
     @SerializedName("id") val id: Int,
@@ -15,6 +16,7 @@ data class Mailboxes(
     @SerializedName("mailboxes") val value: List<Mailbox>
 )
 
+@Serializable
 data class MailboxLite(
     val id: Int,
     val email: String,

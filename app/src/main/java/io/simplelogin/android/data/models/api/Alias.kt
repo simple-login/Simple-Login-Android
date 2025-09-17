@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 @[JvmInline Serializable]
 value class AliasId(val value: Int)
 
+@Serializable
 data class Alias(
     @SerializedName("id") val id: AliasId,
     @SerializedName("email") val email: String,
@@ -24,11 +25,13 @@ data class Alias(
     @SerializedName("latest_activity") val latestActivity: LatestActivity?,
     @SerializedName("pinned") val pinned: Boolean
 ) {
+    @Serializable
     data class LatestActivity(
         val action: ActivityAction,
         val contact: Contact,
         val timestamp: Double
     ) {
+        @Serializable
         data class Contact(
             @SerializedName("email") val email: String,
             @SerializedName("name") val name: String?,
