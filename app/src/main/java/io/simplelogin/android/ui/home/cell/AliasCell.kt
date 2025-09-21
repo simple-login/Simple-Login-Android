@@ -43,6 +43,7 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
+import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
@@ -260,10 +261,11 @@ private fun AliasCellContent(
         }
 
         if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
-            AliasCellActivities(
+            ActivityStats(
                 forward = alias.forwardCount,
                 reply = alias.replyCount,
-                block = alias.blockCount
+                block = alias.blockCount,
+                textStyle = MaterialTheme.typography.bodySmall
             )
         }
     }

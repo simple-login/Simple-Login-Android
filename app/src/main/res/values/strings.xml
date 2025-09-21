@@ -52,6 +52,7 @@
     <string name="filter_options">Filter options</string>
     <string name="device_settings">Device settings</string>
     <string name="close">Close</string>
+    <string name="back">Back</string>
     <string name="security">Security</string>
     <string name="too_many_requests">Too many requests</string>
     <string name="client_error">Client error (%1$d)</string>
