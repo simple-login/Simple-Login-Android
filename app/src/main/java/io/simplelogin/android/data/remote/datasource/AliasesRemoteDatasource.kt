@@ -1,5 +1,6 @@
 package io.simplelogin.android.data.remote.datasource
 
+import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiError
@@ -14,11 +15,21 @@ import javax.inject.Inject
 
 interface AliasesRemoteDatasource {
     suspend fun fetchStats(apiKey: ApiKey): Result<Stats, ApiError>
-    suspend fun fetchAliases(apiKey: ApiKey, filterMode: AliasFilterMode, pageId: Int): Result<Aliases, ApiError>
+    suspend fun fetchAliases(
+        apiKey: ApiKey,
+        filterMode: AliasFilterMode,
+        pageId: Int
+    ): Result<Aliases, ApiError>
+
     suspend fun toggle(apiKey: ApiKey, aliasId: AliasId): Result<EnabledResponse, ApiError>
     suspend fun pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
     suspend fun unpin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
     suspend fun delete(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun getActivities(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        page: Int
+    ): Result<List<AliasActivity>, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -53,7 +64,10 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
         }
     }
 
-    override suspend fun toggle(apiKey: ApiKey, aliasId: AliasId): Result<EnabledResponse, ApiError> =
+    override suspend fun toggle(
+        apiKey: ApiKey,
+        aliasId: AliasId
+    ): Result<EnabledResponse, ApiError> =
         safeApiCall { apiService.toggleAlias(apiKey = apiKey, aliasId = aliasId) }
 
     override suspend fun pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
@@ -78,4 +92,13 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
         safeApiCall {
             apiService.deleteAlias(apiKey = apiKey, aliasId = aliasId)
         }.mapValue {}
+
+    override suspend fun getActivities(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        page: Int
+    ): Result<List<AliasActivity>, ApiError> =
+        safeApiCall {
+            apiService.getAliasActivities(apiKey = apiKey, aliasId = aliasId, pageId = page)
+        }.mapValue { it.activities }
 }
