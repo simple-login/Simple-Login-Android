@@ -107,4 +107,5 @@
     <string name="latest_activity">Latest activity</string>
     <string name="note">Note</string>
     <string name="mailboxes">Mailboxes</string>
+    <string name="edit_alias">Edit alias</string>
 </resources>

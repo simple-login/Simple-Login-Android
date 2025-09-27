@@ -16,7 +16,6 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoNotDisturbOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -36,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
@@ -44,10 +42,10 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
 import io.simplelogin.android.ui.home.shared.ActivityStats
+import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
-import io.simplelogin.android.ui.util.TextWithInlineIcon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -195,32 +193,14 @@ private fun AliasCellContent(
         }
     }
     Column(modifier = modifier) {
-        val emailColor =
-            if (alias.enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (alias.pinned) {
-                TextWithInlineIcon(
-                    modifier = Modifier.weight(1f),
-                    text = alias.displayedEmail,
-                    textColor = emailColor,
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.titleLarge,
-                    icon = painterResource(R.drawable.ic_keep_filled),
-                    iconSize = MaterialTheme.typography.titleLarge.fontSize,
-                    iconTint = MaterialTheme.colorScheme.primary
-                )
-            } else {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = alias.displayedEmail,
-                    color = emailColor,
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+            AliasEmailText(
+                modifier = Modifier.weight(1f),
+                alias = alias
+            )
 
             Box(modifier = modifier) {
                 IconButton(onClick = { showMenu = true }) {

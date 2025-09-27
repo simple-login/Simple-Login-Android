@@ -1,12 +1,12 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,11 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.shared.ActivityStats
+import io.simplelogin.android.ui.home.shared.AliasEmailText
+import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,16 +43,25 @@ fun AliasDetailScreen(
     }
 
     val state by viewModel.stateFlow.collectAsState()
+    var showEditAliasOptions by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(alias.email) },
+                title = { AliasEmailText(alias = alias) },
                 navigationIcon = {
                     IconButton(onClick = { backDispatcher?.onBackPressed() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showEditAliasOptions = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = stringResource(R.string.edit_alias)
                         )
                     }
                 }
@@ -79,5 +93,14 @@ fun AliasDetailScreen(
                 }
             }
         }
+    }
+
+    if (showEditAliasOptions) {
+        AliasOptionBottomSheet(
+            alias = alias,
+            aliasDetails = true,
+            onDismiss = { showEditAliasOptions = false },
+            onAction = {}
+        )
     }
 }
