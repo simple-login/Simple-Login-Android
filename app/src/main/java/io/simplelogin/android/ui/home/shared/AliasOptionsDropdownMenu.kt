@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.cell
+package io.simplelogin.android.ui.home.shared
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -12,21 +12,34 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun AliasCellDropdownMenu(
+fun AliasOptionsDropdownMenu(
     showMenu: Boolean,
     alias: Alias,
     onAction: (AliasAction) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val handleSelection: (AliasAction) -> Unit = {
+        scope.launch {
+            delay(150L) // Wait for ripple animation to finish
+            onAction(it)
+        }
+    }
+
     DropdownMenu(
         expanded = showMenu,
         onDismissRequest = onDismiss
@@ -39,7 +52,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_details)) },
-            onClick = { onAction(AliasAction.ViewDetails(alias)) }
+            onClick = { handleSelection(AliasAction.ViewDetails(alias)) }
         )
 
         DropdownMenuItem(
@@ -50,7 +63,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.view_contacts)) },
-            onClick = { onAction(AliasAction.ViewContacts(alias)) }
+            onClick = { handleSelection(AliasAction.ViewContacts(alias)) }
         )
 
         HorizontalDivider()
@@ -63,7 +76,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.copy_alias_address)) },
-            onClick = { onAction(AliasAction.CopyEmailAddress(alias)) }
+            onClick = { handleSelection(AliasAction.CopyEmailAddress(alias)) }
         )
 
         DropdownMenuItem(
@@ -74,7 +87,7 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.enter_full_screen)) },
-            onClick = { onAction(AliasAction.EnterFullScreen(alias)) }
+            onClick = { handleSelection(AliasAction.EnterFullScreen(alias)) }
         )
 
         HorizontalDivider()
@@ -88,7 +101,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.disable)) },
-                onClick = { onAction(AliasAction.Disable(alias)) }
+                onClick = { handleSelection(AliasAction.Disable(alias)) }
             )
         } else {
             DropdownMenuItem(
@@ -99,7 +112,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.enable)) },
-                onClick = { onAction(AliasAction.Enable(alias)) }
+                onClick = { handleSelection(AliasAction.Enable(alias)) }
             )
         }
 
@@ -112,7 +125,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.unpin)) },
-                onClick = { onAction(AliasAction.Unpin(alias)) }
+                onClick = { handleSelection(AliasAction.Unpin(alias)) }
             )
         } else {
             DropdownMenuItem(
@@ -123,7 +136,7 @@ fun AliasCellDropdownMenu(
                     )
                 },
                 text = { Text(text = stringResource(R.string.pin)) },
-                onClick = { onAction(AliasAction.Pin(alias)) }
+                onClick = { handleSelection(AliasAction.Pin(alias)) }
             )
         }
 
@@ -137,7 +150,10 @@ fun AliasCellDropdownMenu(
                 )
             },
             text = { Text(text = stringResource(R.string.delete)) },
-            onClick = { onAction(AliasAction.Delete(alias)) }
-        )
+            colors = MenuDefaults.itemColors(
+                leadingIconColor = Color.Red,
+                textColor = Color.Red
+            ),
+            onClick = { handleSelection(AliasAction.Delete(alias)) })
     }
 }

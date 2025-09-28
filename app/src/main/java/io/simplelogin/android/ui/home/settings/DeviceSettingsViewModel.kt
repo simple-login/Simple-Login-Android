@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
+import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
@@ -30,6 +31,14 @@ class DeviceSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             updateDeviceSettingsUseCase.invoke {
                 it.copy(aliasCellSelection = selection)
+            }
+        }
+    }
+
+    fun updateAliasOptionsDisplay(selection: AliasOptionsDisplay) {
+        viewModelScope.launch {
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(aliasOptionsDisplay = selection)
             }
         }
     }

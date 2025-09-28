@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,9 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
+import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +47,18 @@ fun AliasDetailScreen(
     }
 
     val state by viewModel.stateFlow.collectAsState()
-    var showEditAliasOptions by remember { mutableStateOf(false) }
+    var showAliasOptions by remember { mutableStateOf(false) }
+    val closeOptionsAndHandleAction: (AliasAction) -> Unit = {
+        showAliasOptions = false
+    }
+    val optionsIconButton: @Composable () -> Unit = {
+        IconButton(onClick = { showAliasOptions = true }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(R.string.edit_alias)
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -58,11 +73,20 @@ fun AliasDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { showEditAliasOptions = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = stringResource(R.string.edit_alias)
-                        )
+                    when (state.devicePreferences.aliasOptionsDisplay) {
+                        AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
+
+                        AliasOptionsDisplay.DROPDOWN_MENU -> {
+                            Box {
+                                optionsIconButton()
+                                AliasOptionsDropdownMenu(
+                                    showMenu = showAliasOptions,
+                                    alias = alias,
+                                    onDismiss = { showAliasOptions = false },
+                                    onAction = closeOptionsAndHandleAction
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -95,12 +119,12 @@ fun AliasDetailScreen(
         }
     }
 
-    if (showEditAliasOptions) {
+    if (showAliasOptions && state.devicePreferences.aliasOptionsDisplay == AliasOptionsDisplay.BOTTOM_SHEET) {
         AliasOptionBottomSheet(
             alias = alias,
             aliasDetails = true,
-            onDismiss = { showEditAliasOptions = false },
-            onAction = {}
+            onDismiss = { showAliasOptions = false },
+            onAction = closeOptionsAndHandleAction
         )
     }
 }

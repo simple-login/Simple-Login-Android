@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DevicePreferences(
     val aliasCellSelection: AliasCellSelection = AliasCellSelection.Default,
+    val aliasOptionsDisplay: AliasOptionsDisplay = AliasOptionsDisplay.Default,
     val swipeFromLeftToRightAction: SwipeAction = SwipeAction.DISABLE_ENABLE,
     val swipeFromRightToLeftAction: SwipeAction = SwipeAction.PIN_UNPIN,
     val aliasDisplayInfos: List<AliasDisplayInfo> = AliasDisplayInfo.entries.toTypedArray().toList()
@@ -22,10 +23,34 @@ enum class AliasCellSelection {
     companion object {
         val Default = COPY_EMAIL
     }
+
+    fun title(context: Context) = when (this) {
+        VIEW_DETAILS -> context.getString(R.string.view_details)
+        COPY_EMAIL -> context.getString(R.string.copy_alias_address)
+    }
+}
+
+enum class AliasOptionsDisplay {
+    BOTTOM_SHEET, DROPDOWN_MENU;
+
+    companion object {
+        val Default = BOTTOM_SHEET
+    }
+
+    fun title(context: Context) = when (this) {
+        BOTTOM_SHEET -> context.getString(R.string.bottom_sheet)
+        DROPDOWN_MENU -> context.getString(R.string.drop_down_menu)
+    }
 }
 
 enum class SwipeAction {
-    DISABLE_ENABLE, PIN_UNPIN, DELETE
+    DISABLE_ENABLE, PIN_UNPIN, DELETE;
+
+    fun title(context: Context) = when (this) {
+        DISABLE_ENABLE -> context.getString(R.string.disable_enable)
+        PIN_UNPIN -> context.getString(R.string.pin_unpin)
+        DELETE -> context.getString(R.string.delete)
+    }
 }
 
 enum class AliasDisplayInfo {

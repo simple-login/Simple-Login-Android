@@ -9,8 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 class AliasDetailViewModel @AssistedInject constructor(
     @Assisted val alias: Alias,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val remoteDatasource: AliasesRemoteDatasource
+    private val remoteDatasource: AliasesRemoteDatasource,
+    observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
@@ -28,8 +31,15 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     private val activitiesStateFlow =
         MutableStateFlow<AliasActivitiesState>(AliasActivitiesState.Loading)
-    val stateFlow = activitiesStateFlow.map { activities ->
-        AliasDetailScreenState(activitiesState = activities)
+
+    val stateFlow = combine(
+        observeDeviceSettingsUseCase(),
+        activitiesStateFlow
+    ) { deviceSettings, activities ->
+        AliasDetailScreenState(
+            devicePreferences = deviceSettings,
+            activitiesState = activities
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

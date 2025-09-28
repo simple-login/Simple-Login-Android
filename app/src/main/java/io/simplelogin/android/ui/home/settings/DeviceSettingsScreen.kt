@@ -31,6 +31,7 @@ import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
+import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
@@ -67,14 +68,18 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
                 .padding(horizontal = Spacing.regular)
                 .padding(innerPadding)
         ) {
-            SecuritySection()
-
             AliasCellSelectionSection(
                 selected = settings.aliasCellSelection,
                 onSelect = ::updateAliasCellSelection
             )
 
+            AliasOptionsDisplaySection(
+                selected = settings.aliasOptionsDisplay,
+                onSelect = ::updateAliasOptionsDisplay
+            )
+
             SwipeActionSelection(
+                selectedOptionsDisplay = settings.aliasOptionsDisplay,
                 selectedLeftToRight = settings.swipeFromLeftToRightAction,
                 onSelectLeftToRight = ::updateSwipeFromLeftToRight,
                 selectedRightToLeft = settings.swipeFromRightToLeftAction,
@@ -87,9 +92,16 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
 }
 
 @Composable
-private fun SecuritySection() {
-    Text(
-        text = stringResource(R.string.security)
+private fun AliasOptionsDisplaySection(
+    selected: AliasOptionsDisplay,
+    onSelect: (AliasOptionsDisplay) -> Unit
+) {
+    OptionRow(
+        title = stringResource(R.string.alias_options_display),
+        description = { it.title(LocalContext.current) },
+        options = AliasOptionsDisplay.entries.toTypedArray(),
+        selected = selected,
+        onSelect = onSelect
     )
 }
 
@@ -100,12 +112,7 @@ private fun AliasCellSelectionSection(
 ) {
     OptionRow(
         title = stringResource(R.string.select_alias_action),
-        description = {
-            when (it) {
-                AliasCellSelection.VIEW_DETAILS -> stringResource(R.string.view_details)
-                AliasCellSelection.COPY_EMAIL -> stringResource(R.string.copy_alias_address)
-            }
-        },
+        description = { it.title(LocalContext.current) },
         options = AliasCellSelection.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect
@@ -114,6 +121,7 @@ private fun AliasCellSelectionSection(
 
 @Composable
 private fun SwipeActionSelection(
+    selectedOptionsDisplay: AliasOptionsDisplay,
     selectedLeftToRight: SwipeAction,
     onSelectLeftToRight: (SwipeAction) -> Unit,
     selectedRightToLeft: SwipeAction,
@@ -123,17 +131,10 @@ private fun SwipeActionSelection(
 ) {
     val context = LocalContext.current
     var showAliasDisplayInfosDialog by rememberSaveable { mutableStateOf(false) }
-    val description: @Composable (SwipeAction) -> String = {
-        when (it) {
-            SwipeAction.DISABLE_ENABLE -> stringResource(R.string.disable_enable)
-            SwipeAction.PIN_UNPIN -> stringResource(R.string.pin_unpin)
-            SwipeAction.DELETE -> stringResource(R.string.delete)
-        }
-    }
 
     OptionRow(
         title = stringResource(R.string.swipe_from_left_to_right),
-        description = description,
+        description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedLeftToRight,
         onSelect = onSelectLeftToRight
@@ -141,7 +142,7 @@ private fun SwipeActionSelection(
 
     OptionRow(
         title = stringResource(R.string.swipe_from_right_to_left),
-        description = description,
+        description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedRightToLeft,
         onSelect = onSelectRightToLeft
@@ -169,6 +170,7 @@ private fun SwipeActionSelection(
 
     AliasCell(
         alias = Alias.sample,
+        optionsDisplay = selectedOptionsDisplay,
         displayInfos = selectedAliasDisplayInfos,
         swipeFromStartToEndAction = selectedLeftToRight,
         swipeFromEndToStartAction = selectedRightToLeft,

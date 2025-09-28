@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,21 +37,22 @@ import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
+import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
 import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
+import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
+import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 @Composable
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
+    optionsDisplay: AliasOptionsDisplay,
     displayInfos: List<AliasDisplayInfo>,
     swipeFromStartToEndAction: SwipeAction,
     swipeFromEndToStartAction: SwipeAction,
@@ -152,6 +152,7 @@ fun AliasCell(
             AliasCellContent(
                 modifier = Modifier.padding(vertical = Spacing.medium),
                 alias = alias,
+                optionsDisplay = optionsDisplay,
                 displayInfos = displayInfos,
                 onAction = { action ->
                     when (action) {
@@ -179,19 +180,26 @@ fun AliasCell(
 private fun AliasCellContent(
     modifier: Modifier = Modifier,
     alias: Alias,
+    optionsDisplay: AliasOptionsDisplay,
     displayInfos: List<AliasDisplayInfo>,
     onAction: (AliasAction) -> Unit
 ) {
-    var showMenu by remember { mutableStateOf(false) }
     val mailboxes = alias.mailboxes.joinToString(separator = ", ") { it.email }
-    val scope = rememberCoroutineScope()
-    val closeMenuAndSendAction: (AliasAction) -> Unit = {
-        scope.launch {
-            delay(150L) // Wait for ripple animation to finish
-            showMenu = false
-            onAction(it)
+    var showOptions by remember { mutableStateOf(false) }
+    val closeOptionsAndSendAction: (AliasAction) -> Unit = {
+        showOptions = false
+        onAction(it)
+    }
+
+    val optionsIconButton: @Composable () -> Unit = {
+        IconButton(onClick = { showOptions = true }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(R.string.alias_options)
+            )
         }
     }
+
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -202,20 +210,20 @@ private fun AliasCellContent(
                 alias = alias
             )
 
-            Box(modifier = modifier) {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.alias_options)
-                    )
-                }
+            when (optionsDisplay) {
+                AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
 
-                AliasCellDropdownMenu(
-                    showMenu = showMenu,
-                    alias = alias,
-                    onAction = closeMenuAndSendAction,
-                    onDismiss = { showMenu = false }
-                )
+                AliasOptionsDisplay.DROPDOWN_MENU -> {
+                    Box {
+                        optionsIconButton()
+                        AliasOptionsDropdownMenu(
+                            showMenu = showOptions,
+                            alias = alias,
+                            onDismiss = { showOptions = false },
+                            onAction = closeOptionsAndSendAction
+                        )
+                    }
+                }
             }
         }
 
@@ -248,6 +256,15 @@ private fun AliasCellContent(
                 textStyle = MaterialTheme.typography.bodySmall
             )
         }
+    }
+
+    if (showOptions && optionsDisplay == AliasOptionsDisplay.BOTTOM_SHEET) {
+        AliasOptionBottomSheet(
+            alias = alias,
+            aliasDetails = false,
+            onDismiss = { showOptions = false },
+            onAction = closeOptionsAndSendAction
+        )
     }
 }
 

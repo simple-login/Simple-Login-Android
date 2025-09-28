@@ -23,6 +23,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,8 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconResource
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,11 +47,19 @@ fun AliasOptionBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = false
+            skipPartiallyExpanded = true
         ),
         dragHandle = null
     ) {
         if (!aliasDetails) {
+            AliasEmailText(
+                modifier = Modifier.padding(
+                    horizontal = Spacing.large,
+                    vertical = Spacing.regular
+                ),
+                alias = alias
+            )
+
             AliasOptionRow(
                 icon = IconResource.ImageVector(Icons.Outlined.RemoveRedEye),
                 text = stringResource(R.string.view_details),
@@ -124,10 +135,16 @@ private fun AliasOptionRow(
     color: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = {
+                scope.launch {
+                    delay(150L) // Wait for ripple animation to finish
+                    onClick()
+                }
+            })
             .padding(
                 horizontal = Spacing.large,
                 vertical = Spacing.regular

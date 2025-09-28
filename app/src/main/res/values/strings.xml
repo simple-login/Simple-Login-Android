@@ -108,4 +108,7 @@
     <string name="note">Note</string>
     <string name="mailboxes">Mailboxes</string>
     <string name="edit_alias">Edit alias</string>
+    <string name="alias_options_display">Alias options display</string>
+    <string name="bottom_sheet">Bottom sheet</string>
+    <string name="drop_down_menu">Drop-down menu</string>
 </resources>
