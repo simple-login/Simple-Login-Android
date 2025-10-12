@@ -6,9 +6,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Abc
@@ -20,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -35,8 +40,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -56,6 +65,11 @@ private enum class FullScreenMode {
     TEXT, QR
 }
 
+private data class EmailQrCode(
+    val plain: Bitmap,
+    val mailto: Bitmap
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FullScreenDialog(
@@ -63,7 +77,7 @@ fun FullScreenDialog(
     onDismiss: () -> Unit
 ) {
     var mode by rememberSaveable { mutableStateOf(FullScreenMode.TEXT) }
-
+    var mailto by rememberSaveable { mutableStateOf(true) }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -114,9 +128,13 @@ fun FullScreenDialog(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                val bitmap by produceState<Bitmap?>(initialValue = null, key1 = alias) {
+                val emailQrCode by produceState<EmailQrCode?>(initialValue = null, key1 = alias) {
                     value = withContext(Dispatchers.Default) {
-                        generateQrCode(text = alias.email, size = widthPx * 2 / 3)
+                        val size = widthPx * 2 / 3
+                        EmailQrCode(
+                            plain = generateQrCode(text = alias.email, size = size),
+                            mailto = generateQrCode(text = alias.mailtoEmail, size = size)
+                        )
                     }
                 }
 
@@ -124,11 +142,12 @@ fun FullScreenDialog(
                     FullScreenMode.TEXT -> FullScreenEmail(email = alias.email)
 
                     FullScreenMode.QR ->
-                        bitmap?.let {
-                            Image(
-                                bitmap = it.asImageBitmap(),
-                                contentDescription = null
-                            )
+                        emailQrCode?.let {
+                            QrCodeEmail(
+                                alias = alias,
+                                code = it,
+                                mailto = mailto,
+                                onChangeMode = { mailto = it })
                         }
                 }
             }
@@ -166,6 +185,55 @@ private fun FullScreenEmail(email: String) {
                 .fillMaxWidth()
                 .padding(vertical = Spacing.regular)
         )
+    }
+}
+
+@Composable
+private fun QrCodeEmail(
+    alias: Alias,
+    code: EmailQrCode,
+    mailto: Boolean,
+    onChangeMode: (Boolean) -> Unit
+) {
+    val bitmap = if (mailto) code.mailto else code.plain
+    val text = if (mailto) alias.mailtoEmail else alias.email
+    var qrCodeSize by remember { mutableStateOf(IntSize.Zero) }
+    val density = LocalDensity.current
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.weight(weight = 1f))
+
+        Image(
+            modifier = Modifier.onSizeChanged { qrCodeSize = it },
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null
+        )
+
+        Spacer(modifier = Modifier.height(height = Spacing.small))
+
+        Text(
+            text = text,
+            textAlign = TextAlign.Center
+        )
+
+        Row(
+            modifier = Modifier
+                .width(with(density) { qrCodeSize.width.toDp() })
+                .padding(top = Spacing.large),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "mailto")
+            Spacer(modifier = Modifier.weight(weight = 1f))
+            Switch(
+                checked = mailto,
+                onCheckedChange = onChangeMode
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(weight = 1f))
     }
 }
 

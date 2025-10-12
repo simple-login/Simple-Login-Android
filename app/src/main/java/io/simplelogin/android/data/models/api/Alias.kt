@@ -45,6 +45,9 @@ data class Alias(
     val hasActivities: Boolean
         get() = (forwardCount + replyCount + blockCount) > 0
 
+    val mailtoEmail: String
+        get() = "mailto:${email}"
+
     val displayedEmail: String
         get() {
             // Add 🚫 prefix to disabled alias
