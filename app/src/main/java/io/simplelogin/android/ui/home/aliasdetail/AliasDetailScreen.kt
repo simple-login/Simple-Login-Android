@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +34,8 @@ import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
+import io.simplelogin.android.ui.util.RetryButton
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +43,7 @@ fun AliasDetailScreen(
     alias: Alias
 )  {
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    val scope = rememberCoroutineScope()
 
     // Must explicitly provide the type of viewModel
     // otherwise it will crash at runtime even though the compiler could infer the type
@@ -97,8 +102,22 @@ fun AliasDetailScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            alias.note?.let {
+                item {
+                    Text(text = it)
+                }
+            }
+
             item {
-                Text(stringResource(R.string.last_14_days))
+                Text(text = stringResource(R.string.mailboxes))
+
+                alias.mailboxes.forEach {
+                    Text(text = it.email)
+                }
+            }
+
+            item {
+                Text(text = stringResource(R.string.last_14_days))
 
                 ActivityStats(
                     forward = alias.forwardCount,
@@ -109,11 +128,14 @@ fun AliasDetailScreen(
 
                 when (state.activitiesState) {
                     is AliasActivitiesState.Loading ->
-                        Text("Loading")
+                        CircularProgressIndicator()
+
                     is AliasActivitiesState.Loaded ->
                         Text("Loaded ${(state.activitiesState as AliasActivitiesState.Loaded).activities.count()}")
-                    is  AliasActivitiesState.Error ->
-                        Text("Error")
+
+                    is AliasActivitiesState.Error ->
+                        RetryButton(error = (state.activitiesState as AliasActivitiesState.Error).error,
+                            onRetry = { scope.launch { viewModel.getActivities() } })
                 }
             }
         }
