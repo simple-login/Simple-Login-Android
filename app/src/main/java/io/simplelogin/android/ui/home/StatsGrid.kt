@@ -2,23 +2,32 @@ package io.simplelogin.android.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.IconContent
 
 @Composable
 fun StatsGrid(
@@ -26,8 +35,7 @@ fun StatsGrid(
     stats: Stats
 ) {
     Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
+        modifier = modifier, horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
     ) {
         Column(
             modifier = Modifier.weight(1f),
@@ -36,13 +44,15 @@ fun StatsGrid(
             StatsCell(
                 title = stringResource(R.string.all_aliases),
                 description = stringResource(R.string.all_time),
-                value = stats.aliasCount
+                value = stats.aliasCount,
+                icon = IconContent.ImageVectorContent(Icons.Default.AlternateEmail)
             )
 
             StatsCell(
                 title = stringResource(R.string.forward),
                 description = stringResource(R.string.last_14_days),
-                value = stats.forwardCount
+                value = stats.forwardCount,
+                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Send)
             )
         }
 
@@ -53,13 +63,15 @@ fun StatsGrid(
             StatsCell(
                 title = stringResource(R.string.replies_send),
                 description = stringResource(R.string.last_14_days),
-                value = stats.replyCount
+                value = stats.replyCount,
+                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Reply)
             )
 
             StatsCell(
                 title = stringResource(R.string.blocked),
                 description = stringResource(R.string.last_14_days),
-                value = stats.blockCount
+                value = stats.blockCount,
+                icon = IconContent.ImageVectorContent(Icons.Default.Block)
             )
         }
     }
@@ -70,41 +82,64 @@ private fun StatsCell(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    value: Int
+    value: Int,
+    icon: IconContent
 ) {
-    Column (
+    Box(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(Spacing.medium)
-                )
+            )
             .padding(Spacing.medium)
             .clip(RoundedCornerShape(Spacing.medium))
     ) {
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
-        ) {
-            Text(
-                text = title,
-                fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.bodySmall
+        val iconModifier = Modifier
+            .scale(2f)
+            .alpha(0.1f)
+            .align(Alignment.CenterEnd)
+            .padding(end = Spacing.medium)
+
+        val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
+
+        when (icon) {
+            is IconContent.ImageVectorContent -> Icon(
+                modifier = iconModifier,
+                imageVector = icon.vector,
+                contentDescription = icon.contentDescription,
+                tint = iconTint
             )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = description,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodySmall
+            is IconContent.PainterContent -> Icon(
+                modifier = iconModifier,
+                painter = icon.painter,
+                contentDescription = icon.contentDescription,
+                tint = iconTint
             )
         }
 
-        Text(
-            text = "$value",
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge
-        )
+        Column {
+            Row {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Text(
+                text = "$value",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 }
