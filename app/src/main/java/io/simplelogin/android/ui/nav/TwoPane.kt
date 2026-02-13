@@ -1,12 +1,18 @@
 package io.simplelogin.android.ui.nav
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -15,7 +21,7 @@ import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 import androidx.window.core.layout.WindowSizeClass
-import io.simplelogin.android.ui.util.isTwoPaneEligible
+import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 
 class TwoPaneScene<T : Any>(
     override val key: Any,
@@ -38,8 +44,18 @@ class TwoPaneScene<T : Any>(
 
             VerticalDivider()
 
-            Column(modifier = Modifier.weight(secondEntryWeight)) {
-                secondEntry.Content()
+            CompositionLocalProvider(LocalBackButtonVisible provides false) {
+                Column(modifier = Modifier.weight(secondEntryWeight)) {
+                    AnimatedContent(
+                        targetState = secondEntry,
+                        contentKey = { entry -> entry.contentKey },
+                        transitionSpec = {
+                            fadeIn() togetherWith fadeOut()
+                        }
+                    ) { entry ->
+                        entry.Content()
+                    }
+                }
             }
         }
     }
@@ -53,6 +69,8 @@ class TwoPaneScene<T : Any>(
     }
 }
 
+val LocalBackButtonVisible = compositionLocalOf { true }
+
 @Composable
 fun <T : Any> rememberTwoPaneSceneStrategy(): TwoPaneSceneStrategy<T> {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -64,7 +82,7 @@ fun <T : Any> rememberTwoPaneSceneStrategy(): TwoPaneSceneStrategy<T> {
 
 class TwoPaneSceneStrategy<T : Any>(val windowSizeClass: WindowSizeClass) : SceneStrategy<T> {
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
-        if (!windowSizeClass.isTwoPaneEligible()) {
+        if (!windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)) {
             return null
         }
 
@@ -73,9 +91,8 @@ class TwoPaneSceneStrategy<T : Any>(val windowSizeClass: WindowSizeClass) : Scen
         val lastDetailEntry =
             entries.lastOrNull { it.metadata.containsKey(TwoPaneScene.DETAIL_PANE_KEY) }
         return if (permanentEntry != null && lastDetailEntry != null) {
-            val sceneKey = Pair(permanentEntry.contentKey, lastDetailEntry.contentKey)
             TwoPaneScene(
-                key = sceneKey,
+                key = permanentEntry.contentKey,
                 previousEntries = entries.dropLast(1),
                 firstEntry = permanentEntry,
                 secondEntry = lastDetailEntry

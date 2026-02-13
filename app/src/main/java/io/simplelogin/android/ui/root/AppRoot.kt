@@ -17,6 +17,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
+import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
@@ -80,16 +81,17 @@ fun AppRoot(
             ) { key ->
                 AliasDetailScreen(
                     alias = key.alias,
-                    onGoBack = viewModel::goBack
+                    onGoBack = viewModel::goBack,
+                    onViewContacts = { viewModel.viewAliasContacts(key.alias) }
                 )
             }
 
             entry<AliasContacts>(
                 metadata = TwoPaneScene.detailPane()
             ) { key ->
-                Text(
-                    modifier = modifier,
-                    text = "Alias contacts ${key.alias.email}"
+                AliasContactsScreen(
+                    alias = key.alias,
+                    onGoBack = viewModel::goBack
                 )
             }
 

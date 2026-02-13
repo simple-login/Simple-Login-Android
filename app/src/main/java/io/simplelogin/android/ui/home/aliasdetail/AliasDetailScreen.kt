@@ -14,8 +14,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -34,15 +34,16 @@ import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
+import io.simplelogin.android.ui.nav.LocalBackButtonVisible
 import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.isTwoPaneEligible
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AliasDetailScreen(
     alias: Alias,
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    onViewContacts: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -66,14 +67,12 @@ fun AliasDetailScreen(
         }
     }
 
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { AliasEmailText(alias = alias) },
                 navigationIcon = {
-                    if (!windowSizeClass.isTwoPaneEligible()) {
+                    if (LocalBackButtonVisible.current) {
                         IconButton(onClick = onGoBack) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -110,6 +109,12 @@ fun AliasDetailScreen(
             alias.note?.let {
                 item {
                     Text(text = it)
+                }
+            }
+
+            item {
+                TextButton(onClick = onViewContacts) {
+                    Text(text = stringResource(R.string.contacts))
                 }
             }
 
