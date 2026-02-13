@@ -64,7 +64,7 @@ fun AppRoot(modifier: Modifier = Modifier,
             }
 
             entry<HomeDestination>(
-                metadata = TwoPaneScene.twoPane()
+                metadata = TwoPaneScene.permanentPane()
             ) {
                 HomeScreen(
                     modifier = modifier,
@@ -75,13 +75,13 @@ fun AppRoot(modifier: Modifier = Modifier,
             }
 
             entry<AliasDetails>(
-                metadata = TwoPaneScene.twoPane()
+                metadata = TwoPaneScene.detailPane()
             ) { key ->
                 AliasDetailScreen(alias = key.alias)
             }
 
             entry<AliasContacts>(
-                metadata = TwoPaneScene.twoPane()
+                metadata = TwoPaneScene.detailPane()
             ) { key ->
                 Text(
                     modifier = modifier,

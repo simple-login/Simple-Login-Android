@@ -14,12 +14,12 @@ import androidx.navigation3.scene.SceneStrategyScope
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 
-class TwoPaneScene<T: Any>(
+class TwoPaneScene<T : Any>(
     override val key: Any,
     override val previousEntries: List<NavEntry<T>>,
     val firstEntry: NavEntry<T>,
     val secondEntry: NavEntry<T>
-): Scene<T> {
+) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(firstEntry, secondEntry)
 
     override val content: @Composable (() -> Unit) = {
@@ -35,17 +35,19 @@ class TwoPaneScene<T: Any>(
     }
 
     companion object {
-        const val TWO_PANE_KEY = "TwoPane"
+        const val PERMANENT_PANE_KEY = "PermanentPane"
+        const val DETAIL_PANE_KEY = "DetailPane"
 
-        fun twoPane() = mapOf(TWO_PANE_KEY to true)
+        fun permanentPane() = mapOf(PERMANENT_PANE_KEY to true)
+        fun detailPane() = mapOf(DETAIL_PANE_KEY to true)
     }
 }
 
 @Composable
-fun <T: Any> rememberTwoPaneSceneStrategy() : TwoPaneSceneStrategy<T> {
+fun <T : Any> rememberTwoPaneSceneStrategy(): TwoPaneSceneStrategy<T> {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
-    return remember(windowSizeClass){
+    return remember(windowSizeClass) {
         TwoPaneSceneStrategy(windowSizeClass)
     }
 }
@@ -53,36 +55,23 @@ fun <T: Any> rememberTwoPaneSceneStrategy() : TwoPaneSceneStrategy<T> {
 class TwoPaneSceneStrategy<T : Any>(val windowSizeClass: WindowSizeClass) : SceneStrategy<T> {
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
 
-        // Condition 1: Only return a Scene if the window is sufficiently wide to render two panes.
+        // Only return a Scene if the window is sufficiently wide to render two panes.
         // We use isWidthAtLeastBreakpoint with WIDTH_DP_MEDIUM_LOWER_BOUND (600dp).
         if (!windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)) {
             return null
         }
 
-        val lastTwoEntries = entries.takeLast(2)
-
-        // Condition 2: Only return a Scene if there are two entries, and both have declared
-        // they can be displayed in a two pane scene.
-        return if (lastTwoEntries.size == 2
-            && lastTwoEntries.all { it.metadata.containsKey(TwoPaneScene.TWO_PANE_KEY) }
-        ) {
-            val firstEntry = lastTwoEntries.first()
-            val secondEntry = lastTwoEntries.last()
-
-            // The scene key must uniquely represent the state of the scene.
-            // A Pair of the first and second entry keys ensures uniqueness.
-            val sceneKey = Pair(firstEntry.contentKey, secondEntry.contentKey)
-
+        val permanentEntry =
+            entries.firstOrNull { it.metadata.containsKey(TwoPaneScene.PERMANENT_PANE_KEY) }
+        val lastDetailEntry =
+            entries.lastOrNull { it.metadata.containsKey(TwoPaneScene.DETAIL_PANE_KEY) }
+        return if (permanentEntry != null && lastDetailEntry != null) {
+            val sceneKey = Pair(permanentEntry.contentKey, lastDetailEntry.contentKey)
             TwoPaneScene(
                 key = sceneKey,
-                // Where we go back to is a UX decision. In this case, we only remove the top
-                // entry from the back stack, despite displaying two entries in this scene.
-                // This is because in this app we only ever add one entry to the
-                // back stack at a time. It would therefore be confusing to the user to add one
-                // when navigating forward, but remove two when navigating back.
                 previousEntries = entries.dropLast(1),
-                firstEntry = firstEntry,
-                secondEntry = secondEntry
+                firstEntry = permanentEntry,
+                secondEntry = lastDetailEntry
             )
         } else {
             null
