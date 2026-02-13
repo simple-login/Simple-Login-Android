@@ -25,9 +25,10 @@ class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
     observeSessionSettingsUseCase: ObserveSessionSettingsUseCase,
     private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase
-): ViewModel() {
+) : ViewModel() {
 
-    private val _navBackStack = MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
+    private val _navBackStack =
+        MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
     val navBackStack = _navBackStack.asStateFlow()
 
     var showLogOutDialog = MutableStateFlow(false)
@@ -67,6 +68,10 @@ class AppRootViewModel @Inject constructor(
         }
     }
     //endregion
+
+    fun goBack() {
+        _navBackStack.value.apply { removeAt(lastIndex) }
+    }
 
     //region Log in/sign up
     fun updateApiKey(apiKey: ApiKey?) {
@@ -112,6 +117,10 @@ class AppRootViewModel @Inject constructor(
     //region Home
     fun viewAliasDetails(alias: Alias) {
         _navBackStack.value.apply {
+            // When viewing details of an alias, we remove all previous details
+            // from navigation stack
+            removeIf { it is AliasDetails }
+            removeIf { it is AliasContacts }
             add(AliasDetails(alias))
         }
     }

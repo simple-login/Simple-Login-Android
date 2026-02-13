@@ -1,6 +1,5 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -35,14 +35,15 @@ import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.isTwoPaneEligible
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AliasDetailScreen(
-    alias: Alias
-)  {
-    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    alias: Alias,
+    onGoBack: () -> Unit
+) {
     val scope = rememberCoroutineScope()
 
     // Must explicitly provide the type of viewModel
@@ -65,16 +66,20 @@ fun AliasDetailScreen(
         }
     }
 
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { AliasEmailText(alias = alias) },
                 navigationIcon = {
-                    IconButton(onClick = { backDispatcher?.onBackPressed() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+                    if (!windowSizeClass.isTwoPaneEligible()) {
+                        IconButton(onClick = onGoBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -134,7 +139,8 @@ fun AliasDetailScreen(
                         Text("Loaded ${(state.activitiesState as AliasActivitiesState.Loaded).activities.count()}")
 
                     is AliasActivitiesState.Error ->
-                        RetryButton(error = (state.activitiesState as AliasActivitiesState.Error).error,
+                        RetryButton(
+                            error = (state.activitiesState as AliasActivitiesState.Error).error,
                             onRetry = { scope.launch { viewModel.getActivities() } })
                 }
             }

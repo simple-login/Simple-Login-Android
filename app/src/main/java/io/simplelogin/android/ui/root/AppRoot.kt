@@ -24,28 +24,29 @@ import io.simplelogin.android.ui.nav.rememberTwoPaneSceneStrategy
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object InitializationDestination: NavKey
+data object InitializationDestination : NavKey
 
 @Serializable
-data object LogInDestination: NavKey
+data object LogInDestination : NavKey
 
 @Serializable
-data object HomeDestination: NavKey
+data object HomeDestination : NavKey
 
 @Serializable
-data class AliasDetails(val alias: Alias): NavKey
+data class AliasDetails(val alias: Alias) : NavKey
 
 @Serializable
-data class AliasContacts(val alias: Alias): NavKey
+data class AliasContacts(val alias: Alias) : NavKey
 
 @Serializable
-data object DeviceSettingsDestination: NavKey
+data object DeviceSettingsDestination : NavKey
 
 @Composable
-fun AppRoot(modifier: Modifier = Modifier,
-            innerPadding: PaddingValues,
-            viewModel: AppRootViewModel,
-            onOpenDrawer: () -> Unit
+fun AppRoot(
+    modifier: Modifier = Modifier,
+    innerPadding: PaddingValues,
+    viewModel: AppRootViewModel,
+    onOpenDrawer: () -> Unit
 ) = with(viewModel) {
     val backStack by navBackStack.collectAsState()
 
@@ -77,7 +78,10 @@ fun AppRoot(modifier: Modifier = Modifier,
             entry<AliasDetails>(
                 metadata = TwoPaneScene.detailPane()
             ) { key ->
-                AliasDetailScreen(alias = key.alias)
+                AliasDetailScreen(
+                    alias = key.alias,
+                    onGoBack = viewModel::goBack
+                )
             }
 
             entry<AliasContacts>(
