@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.androidx.adaptive.android)
+    implementation(libs.androidx.adaptive.navigation3)
+    implementation(libs.androidx.compose.adaptive.navigation3)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)

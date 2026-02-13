@@ -1,27 +1,36 @@
 package io.simplelogin.android.ui.root
 
+import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
+import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
-import io.simplelogin.android.ui.nav.TwoPaneScene
-import io.simplelogin.android.ui.nav.rememberTwoPaneSceneStrategy
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -42,6 +51,8 @@ data class AliasContacts(val alias: Alias) : NavKey
 @Serializable
 data object DeviceSettingsDestination : NavKey
 
+@SuppressLint("ConfigurationScreenWidthHeight")
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun AppRoot(
     modifier: Modifier = Modifier,
@@ -52,12 +63,29 @@ fun AppRoot(
     val backStack by navBackStack.collectAsState()
 
     val showLogOutDialog by showLogOutDialog.collectAsState()
-    val twoPaneStrategy = rememberTwoPaneSceneStrategy<NavKey>()
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
+    val listPaneWidth = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        screenWidth * 0.4f
+    } else {
+        screenWidth * 0.5f
+    }
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+    val listDetailSceneStrategy = rememberListDetailSceneStrategy<NavKey>(
+        directive = calculatePaneScaffoldDirective(windowAdaptiveInfo).copy(
+            defaultPanePreferredWidth = listPaneWidth,
+            maxHorizontalPartitions = if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
+                    WIDTH_DP_MEDIUM_LOWER_BOUND
+                )
+            ) 2 else 1
+        )
+    )
 
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        sceneStrategy = twoPaneStrategy,
+        sceneStrategy = listDetailSceneStrategy,
         entryProvider = entryProvider {
             entry<InitializationDestination> {}
 
@@ -66,7 +94,7 @@ fun AppRoot(
             }
 
             entry<HomeDestination>(
-                metadata = TwoPaneScene.permanentPane()
+                metadata = ListDetailSceneStrategy.listPane(detailPlaceholder = { AliasDetailPlaceholderScreen() })
             ) {
                 HomeScreen(
                     modifier = modifier,
@@ -77,7 +105,7 @@ fun AppRoot(
             }
 
             entry<AliasDetails>(
-                metadata = TwoPaneScene.detailPane()
+                metadata = ListDetailSceneStrategy.detailPane()
             ) { key ->
                 AliasDetailScreen(
                     alias = key.alias,
@@ -87,7 +115,7 @@ fun AppRoot(
             }
 
             entry<AliasContacts>(
-                metadata = TwoPaneScene.detailPane()
+                metadata = ListDetailSceneStrategy.extraPane()
             ) { key ->
                 AliasContactsScreen(
                     alias = key.alias,

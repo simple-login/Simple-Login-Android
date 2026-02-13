@@ -34,7 +34,6 @@ import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
-import io.simplelogin.android.ui.nav.LocalBackButtonVisible
 import io.simplelogin.android.ui.util.RetryButton
 import kotlinx.coroutines.launch
 
@@ -72,13 +71,11 @@ fun AliasDetailScreen(
             TopAppBar(
                 title = { AliasEmailText(alias = alias) },
                 navigationIcon = {
-                    if (LocalBackButtonVisible.current) {
-                        IconButton(onClick = onGoBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
+                    IconButton(onClick = onGoBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 actions = {
