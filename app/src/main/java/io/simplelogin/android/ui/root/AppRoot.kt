@@ -10,13 +10,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.settings.DeviceSettingsScreen
@@ -24,7 +20,7 @@ import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import io.simplelogin.android.ui.nav.TwoPaneScene
-import io.simplelogin.android.ui.nav.TwoPaneSceneStrategy
+import io.simplelogin.android.ui.nav.rememberTwoPaneSceneStrategy
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -54,16 +50,12 @@ fun AppRoot(modifier: Modifier = Modifier,
     val backStack by navBackStack.collectAsState()
 
     val showLogOutDialog by showLogOutDialog.collectAsState()
+    val twoPaneStrategy = rememberTwoPaneSceneStrategy<NavKey>()
 
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        sceneStrategy = TwoPaneSceneStrategy(),
-        entryDecorators = listOf(
-            rememberSavedStateNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator(),
-            rememberSceneSetupNavEntryDecorator()
-        ),
+        sceneStrategy = twoPaneStrategy,
         entryProvider = entryProvider {
             entry<InitializationDestination> {}
 
