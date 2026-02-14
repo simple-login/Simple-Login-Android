@@ -48,6 +48,7 @@ import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
+
 @Composable
 fun AliasCell(
     modifier: Modifier = Modifier,
@@ -200,7 +201,7 @@ private fun AliasCellContent(
         }
     }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(start = Spacing.regular)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -311,6 +312,7 @@ private fun SwipeAction.Label(
                     icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep))
                 )
             }
+
         SwipeAction.DELETE ->
             SwipeActionLabel(
                 isVisible = isVisible,

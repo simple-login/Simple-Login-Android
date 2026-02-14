@@ -63,10 +63,11 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
             )
         }
     ) { innerPadding ->
-        Column(modifier =
-            Modifier
-                .padding(horizontal = Spacing.regular)
-                .padding(innerPadding)
+        Column(
+            modifier =
+                Modifier
+                    .padding(horizontal = Spacing.regular)
+                    .padding(innerPadding)
         ) {
             AliasCellSelectionSection(
                 selected = settings.aliasCellSelection,
