@@ -80,6 +80,7 @@ fun HomeScreen(
                     .padding(innerPadding),
                 stats = state.stats,
                 aliases = state.aliases,
+                selectedAliasFilterMode = state.aliasFilterMode,
                 fetchError = state.fetchError,
                 isFetching = state.isFetching,
                 isRefreshing = state.isRefreshing,
@@ -124,8 +125,4 @@ fun HomeScreen(
             onDismiss = { fullScreenAlias = null }
         )
     }
-}
-
-private fun HomeScreenScaffold() {
-
 }

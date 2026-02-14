@@ -13,4 +13,12 @@ enum class AliasFilterMode {
             ENABLED -> context.getString(R.string.active_aliases)
             DISABLED -> context.getString(R.string.disabled_aliases)
         }
+
+    fun noAliasesMessage(context: Context) =
+        when (this) {
+            ALL -> context.getString(R.string.no_aliases)
+            PINNED -> context.getString(R.string.no_pinned_aliases)
+            ENABLED -> context.getString(R.string.no_active_aliases)
+            DISABLED -> context.getString(R.string.no_disabled_aliases)
+        }
 }

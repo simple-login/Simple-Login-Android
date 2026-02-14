@@ -112,4 +112,8 @@
     <string name="bottom_sheet">Bottom sheet</string>
     <string name="drop_down_menu">Drop-down menu</string>
     <string name="contacts">Contacts</string>
+    <string name="no_aliases">No aliases</string>
+    <string name="no_pinned_aliases">No pinned aliases</string>
+    <string name="no_active_aliases">No active aliases</string>
+    <string name="no_disabled_aliases">No disabled aliases</string>
 </resources>

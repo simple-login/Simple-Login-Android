@@ -20,6 +20,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
@@ -35,6 +37,7 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
@@ -46,6 +49,7 @@ fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats?,
     aliases: List<Alias>,
+    selectedAliasFilterMode: AliasFilterMode,
     fetchError: ApiError?,
     isFetching: Boolean,
     isRefreshing: Boolean,
@@ -59,6 +63,7 @@ fun AliasesList(
     onFetchMore: () -> Unit,
     onRefresh: () -> Unit
 ) {
+    val context = LocalContext.current
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
@@ -85,13 +90,19 @@ fun AliasesList(
             state = listState
         ) {
             item {
-                stats?.let {
-                    StatsGrid(stats = it)
+                if (selectedAliasFilterMode == AliasFilterMode.ALL && stats != null) {
+                    StatsGrid(stats = stats)
                 }
             }
 
             item {
                 Spacer(modifier = Modifier.height(Spacing.regular))
+            }
+
+            item {
+                if (aliases.isEmpty() && !isFetching) {
+                    Text(selectedAliasFilterMode.noAliasesMessage(context))
+                }
             }
 
             item {
