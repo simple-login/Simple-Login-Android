@@ -1,9 +1,11 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +17,9 @@ import io.simplelogin.android.R
 @Composable
 fun AliasDetailPlaceholderScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceContainer),
         contentAlignment = Alignment.Center
     ) {
         Icon(

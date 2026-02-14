@@ -99,7 +99,7 @@ fun AliasesList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(Spacing.regular))
-                        .background(MaterialTheme.colorScheme.inverseOnSurface)
+                        .background(MaterialTheme.colorScheme.background)
                 ) {
                     Column {
                         aliases.forEachIndexed { index, alias ->

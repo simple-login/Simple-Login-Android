@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.Spacing
@@ -37,6 +38,9 @@ fun SearchTopAppBar(
             .padding(horizontal = Spacing.regular)
             .padding(bottom = Spacing.regular),
         shape = SearchBarDefaults.dockedShape,
+        colors = SearchBarDefaults.colors(
+            containerColor = Color.Transparent
+        ),
         expanded = expanded,
         onExpandedChange = {
             expanded = it

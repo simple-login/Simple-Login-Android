@@ -5,7 +5,9 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.data.models.api.Alias
@@ -46,66 +49,73 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
-        modifier = modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            if (isSearching) {
-                SearchTopAppBar(
-                    query = searchQuery,
-                    onQueryChange = { searchQuery = it },
-                    onExitSearch = { isSearching = false }
-                )
-            } else {
-                NormalTopAppBar(
-                    selectedAliasFilterMode = state.aliasFilterMode,
-                    scrollBehavior = scrollBehavior,
-                    onOpenDrawer = onOpenDrawer,
-                    onSearchClick = { isSearching = true },
-                    onSelectAliasFilterMode = ::updateAliasFilterMode
-                )
-            }
-        }
-    ) { innerPadding ->
-        AliasesList(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            stats = state.stats,
-            aliases = state.aliases,
-            fetchError = state.fetchError,
-            isFetching = state.isFetching,
-            isRefreshing = state.isRefreshing,
-            optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
-            displayInfos = state.deviceSettings.aliasDisplayInfos,
-            aliasCellSelection = state.deviceSettings.aliasCellSelection,
-            swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
-            swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
-            onAction = {
-                when (it) {
-                    is AliasAction.ViewDetails -> onViewDetails(it.alias)
-
-                    is AliasAction.ViewContacts -> onViewContacts(it.alias)
-
-                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
-
-                    is AliasAction.EnterFullScreen -> { fullScreenAlias = it.alias }
-
-                    is AliasAction.Disable -> toggle(it.alias)
-
-                    is AliasAction.Enable -> toggle(it.alias)
-
-                    is AliasAction.Pin -> pin(it.alias)
-
-                    is AliasAction.Unpin -> unpin(it.alias)
-
-                    is AliasAction.Delete -> delete(it.alias)
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surfaceContainer
+    ) {
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            containerColor = Color.Transparent,
+            topBar = {
+                if (isSearching) {
+                    SearchTopAppBar(
+                        query = searchQuery,
+                        onQueryChange = { searchQuery = it },
+                        onExitSearch = { isSearching = false }
+                    )
+                } else {
+                    NormalTopAppBar(
+                        selectedAliasFilterMode = state.aliasFilterMode,
+                        scrollBehavior = scrollBehavior,
+                        onOpenDrawer = onOpenDrawer,
+                        onSearchClick = { isSearching = true },
+                        onSelectAliasFilterMode = ::updateAliasFilterMode
+                    )
                 }
-            },
-            onRetry = ::fetchMoreAliases,
-            onFetchMore = ::fetchMoreAliases,
-            onRefresh = ::refresh
-        )
+            }
+        ) { innerPadding ->
+            AliasesList(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                stats = state.stats,
+                aliases = state.aliases,
+                fetchError = state.fetchError,
+                isFetching = state.isFetching,
+                isRefreshing = state.isRefreshing,
+                optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
+                displayInfos = state.deviceSettings.aliasDisplayInfos,
+                aliasCellSelection = state.deviceSettings.aliasCellSelection,
+                swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
+                swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
+                onAction = {
+                    when (it) {
+                        is AliasAction.ViewDetails -> onViewDetails(it.alias)
+
+                        is AliasAction.ViewContacts -> onViewContacts(it.alias)
+
+                        is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
+
+                        is AliasAction.EnterFullScreen -> {
+                            fullScreenAlias = it.alias
+                        }
+
+                        is AliasAction.Disable -> toggle(it.alias)
+
+                        is AliasAction.Enable -> toggle(it.alias)
+
+                        is AliasAction.Pin -> pin(it.alias)
+
+                        is AliasAction.Unpin -> unpin(it.alias)
+
+                        is AliasAction.Delete -> delete(it.alias)
+                    }
+                },
+                onRetry = ::fetchMoreAliases,
+                onFetchMore = ::fetchMoreAliases,
+                onRefresh = ::refresh
+            )
+        }
     }
 
     fullScreenAlias?.let {
@@ -114,4 +124,8 @@ fun HomeScreen(
             onDismiss = { fullScreenAlias = null }
         )
     }
+}
+
+private fun HomeScreenScaffold() {
+
 }

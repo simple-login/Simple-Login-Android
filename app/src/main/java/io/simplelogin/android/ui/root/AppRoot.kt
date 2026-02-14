@@ -78,7 +78,8 @@ fun AppRoot(
             maxHorizontalPartitions = if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
                     WIDTH_DP_MEDIUM_LOWER_BOUND
                 )
-            ) 2 else 1
+            ) 2 else 1,
+            horizontalPartitionSpacerSize = 0.dp
         )
     )
 

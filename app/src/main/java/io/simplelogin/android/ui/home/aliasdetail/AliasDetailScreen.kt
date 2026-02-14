@@ -13,9 +13,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
@@ -66,84 +69,88 @@ fun AliasDetailScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { AliasEmailText(alias = alias) },
-                navigationIcon = {
-                    IconButton(onClick = onGoBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                actions = {
-                    when (state.devicePreferences.aliasOptionsDisplay) {
-                        AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
+    Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopAppBar(
+                    title = { AliasEmailText(alias = alias) },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                    navigationIcon = {
+                        IconButton(onClick = onGoBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
+                    },
+                    actions = {
+                        when (state.devicePreferences.aliasOptionsDisplay) {
+                            AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
 
-                        AliasOptionsDisplay.DROPDOWN_MENU -> {
-                            Box {
-                                optionsIconButton()
-                                AliasOptionsDropdownMenu(
-                                    showMenu = showAliasOptions,
-                                    alias = alias,
-                                    onDismiss = { showAliasOptions = false },
-                                    onAction = closeOptionsAndHandleAction
-                                )
+                            AliasOptionsDisplay.DROPDOWN_MENU -> {
+                                Box {
+                                    optionsIconButton()
+                                    AliasOptionsDropdownMenu(
+                                        showMenu = showAliasOptions,
+                                        alias = alias,
+                                        onDismiss = { showAliasOptions = false },
+                                        onAction = closeOptionsAndHandleAction
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            )
-        }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            alias.note?.let {
-                item {
-                    Text(text = it)
-                }
-            }
-
-            item {
-                TextButton(onClick = onViewContacts) {
-                    Text(text = stringResource(R.string.contacts))
-                }
-            }
-
-            item {
-                Text(text = stringResource(R.string.mailboxes))
-
-                alias.mailboxes.forEach {
-                    Text(text = it.email)
-                }
-            }
-
-            item {
-                Text(text = stringResource(R.string.last_14_days))
-
-                ActivityStats(
-                    forward = alias.forwardCount,
-                    reply = alias.replyCount,
-                    block = alias.blockCount,
-                    textStyle = MaterialTheme.typography.bodyMedium
                 )
+            }
+        ) { innerPadding ->
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                alias.note?.let {
+                    item {
+                        Text(text = it)
+                    }
+                }
 
-                when (state.activitiesState) {
-                    is AliasActivitiesState.Loading ->
-                        CircularProgressIndicator()
+                item {
+                    TextButton(onClick = onViewContacts) {
+                        Text(text = stringResource(R.string.contacts))
+                    }
+                }
 
-                    is AliasActivitiesState.Loaded ->
-                        Text("Loaded ${(state.activitiesState as AliasActivitiesState.Loaded).activities.count()}")
+                item {
+                    Text(text = stringResource(R.string.mailboxes))
 
-                    is AliasActivitiesState.Error ->
-                        RetryButton(
-                            error = (state.activitiesState as AliasActivitiesState.Error).error,
-                            onRetry = { scope.launch { viewModel.getActivities() } })
+                    alias.mailboxes.forEach {
+                        Text(text = it.email)
+                    }
+                }
+
+                item {
+                    Text(text = stringResource(R.string.last_14_days))
+
+                    ActivityStats(
+                        forward = alias.forwardCount,
+                        reply = alias.replyCount,
+                        block = alias.blockCount,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    )
+
+                    when (state.activitiesState) {
+                        is AliasActivitiesState.Loading ->
+                            CircularProgressIndicator()
+
+                        is AliasActivitiesState.Loaded ->
+                            Text("Loaded ${(state.activitiesState as AliasActivitiesState.Loaded).activities.count()}")
+
+                        is AliasActivitiesState.Error ->
+                            RetryButton(
+                                error = (state.activitiesState as AliasActivitiesState.Error).error,
+                                onRetry = { scope.launch { viewModel.getActivities() } })
+                    }
                 }
             }
         }

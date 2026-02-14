@@ -7,11 +7,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
@@ -23,24 +27,28 @@ fun AliasContactsScreen(
     alias: Alias,
     onGoBack: () -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { AliasEmailText(alias = alias) },
-                navigationIcon = {
-                    IconButton(onClick = onGoBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+    Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { AliasEmailText(alias = alias) },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                    navigationIcon = {
+                        IconButton(onClick = onGoBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
+                )
+            },
+            containerColor = Color.Transparent
+        ) { innerPadding ->
+            LazyColumn(modifier = Modifier.padding(innerPadding)) {
+                item {
+                    Text(text = alias.email)
                 }
-            )
-        }
-    ) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
-            item {
-                Text(text = alias.email)
             }
         }
     }

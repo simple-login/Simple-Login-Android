@@ -88,7 +88,7 @@ private fun StatsCell(
     Box(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(Spacing.medium)
             )
             .padding(Spacing.medium)
