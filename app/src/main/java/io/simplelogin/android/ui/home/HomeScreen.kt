@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ import io.simplelogin.android.ui.home.dialog.CustomAliasDialog
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
+import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
 fun HomeScreen(
@@ -85,15 +87,12 @@ fun HomeScreen(
             fabExpanded = fabExpanded,
             onSearchClick = { isSearching = true },
             onExitSearch = { isSearching = false },
-            onFabClick = { fabExpanded = !fabExpanded },
+            onCollapseFAB = { fabExpanded = !fabExpanded },
             onOpenDrawer = onOpenDrawer,
             onViewDetails = onViewDetails,
             onViewContacts = onViewContacts,
             onEnterFullScreen = { fullScreenAlias = it },
-            onCustomAliasClick = {
-                fabExpanded = false
-                showCustomAliasDialog = true
-            }
+            onCustomAliasClick = { showCustomAliasDialog = true }
         )
     }
 
@@ -117,7 +116,7 @@ private fun HomeScreenScaffold(
     fabExpanded: Boolean,
     onSearchClick: () -> Unit,
     onExitSearch: () -> Unit,
-    onFabClick: () -> Unit,
+    onCollapseFAB: () -> Unit,
     onOpenDrawer: () -> Unit,
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
@@ -151,9 +150,15 @@ private fun HomeScreenScaffold(
         floatingActionButton = {
             HomeScreenFAB(
                 expanded = fabExpanded,
-                onClick = onFabClick,
-                onRandomAliasClick = ::randomAlias,
-                onCustomAliasClick = onCustomAliasClick
+                onClick = onCollapseFAB,
+                onRandomAliasClick = {
+                    onCollapseFAB()
+                    viewModel.randomAlias()
+                },
+                onCustomAliasClick = {
+                    onCollapseFAB()
+                    onCustomAliasClick()
+                }
             )
         }
     ) { innerPadding ->
@@ -205,7 +210,7 @@ private fun HomeScreenScaffold(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = onFabClick
+                        onClick = onCollapseFAB
                     )
             )
         }
@@ -236,55 +241,17 @@ private fun HomeScreenFAB(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Surface(
-                        shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shadowElevation = 2.dp
-                    ) {
-                        Text(
-                            text = stringResource(R.string.random_alias),
-                            modifier = Modifier.padding(
-                                horizontal = 12.dp,
-                                vertical = 8.dp
-                            )
-                        )
-                    }
-                    SmallFloatingActionButton(onClick = onRandomAliasClick) {
-                        Icon(
-                            imageVector = Icons.Default.Shuffle,
-                            contentDescription = stringResource(R.string.random_alias)
-                        )
-                    }
-                }
+                TitledFAB(
+                    title = stringResource(R.string.random_alias),
+                    imageVector = Icons.Default.Shuffle,
+                    onClick = onRandomAliasClick
+                )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Surface(
-                        shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shadowElevation = 2.dp
-                    ) {
-                        Text(
-                            text = stringResource(R.string.custom_alias),
-                            modifier = Modifier.padding(
-                                horizontal = 12.dp,
-                                vertical = 8.dp
-                            )
-                        )
-                    }
-                    SmallFloatingActionButton(onClick = onCustomAliasClick) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.custom_alias)
-                        )
-                    }
-                }
+                TitledFAB(
+                    title = stringResource(R.string.custom_alias),
+                    imageVector = Icons.Default.Edit,
+                    onClick = onCustomAliasClick
+                )
             }
         }
 
@@ -293,6 +260,38 @@ private fun HomeScreenFAB(
                 imageVector = Icons.Default.Add,
                 contentDescription = stringResource(R.string.create_new_alias),
                 modifier = Modifier.rotate(rotation)
+            )
+        }
+    }
+}
+
+@Composable
+fun TitledFAB(
+    title: String,
+    imageVector: ImageVector,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Spacing.mediumLarge)
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.small,
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            shadowElevation = 2.dp
+        ) {
+            Text(
+                text = title,
+                modifier = Modifier.padding(
+                    horizontal = Spacing.mediumLarge,
+                    vertical = Spacing.medium
+                )
+            )
+        }
+        SmallFloatingActionButton(onClick = onClick) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = title
             )
         }
     }
