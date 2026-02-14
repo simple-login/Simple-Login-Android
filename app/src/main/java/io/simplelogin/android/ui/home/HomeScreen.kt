@@ -3,6 +3,7 @@ package io.simplelogin.android.ui.home
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -46,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.ui.home.dialog.CustomAliasDialog
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
@@ -59,6 +61,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
+    var showCustomAliasDialog by rememberSaveable { mutableStateOf(false) }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -76,32 +79,22 @@ fun HomeScreen(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
-        Box {
-            HomeScreenScaffold(
-                viewModel = viewModel,
-                isSearching = isSearching,
-                fabExpanded = fabExpanded,
-                onSearchClick = { isSearching = true },
-                onExitSearch = { isSearching = false },
-                onFabClick = { fabExpanded = !fabExpanded },
-                onOpenDrawer = onOpenDrawer,
-                onViewDetails = onViewDetails,
-                onViewContacts = onViewContacts,
-                onEnterFullScreen = { fullScreenAlias = it }
-            )
-            if (fabExpanded) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            fabExpanded = false
-                        }
-                )
+        HomeScreenScaffold(
+            viewModel = viewModel,
+            isSearching = isSearching,
+            fabExpanded = fabExpanded,
+            onSearchClick = { isSearching = true },
+            onExitSearch = { isSearching = false },
+            onFabClick = { fabExpanded = !fabExpanded },
+            onOpenDrawer = onOpenDrawer,
+            onViewDetails = onViewDetails,
+            onViewContacts = onViewContacts,
+            onEnterFullScreen = { fullScreenAlias = it },
+            onCustomAliasClick = {
+                fabExpanded = false
+                showCustomAliasDialog = true
             }
-        }
+        )
     }
 
     fullScreenAlias?.let {
@@ -109,6 +102,10 @@ fun HomeScreen(
             alias = it,
             onDismiss = { fullScreenAlias = null }
         )
+    }
+
+    if (showCustomAliasDialog) {
+        CustomAliasDialog(onDismiss = { showCustomAliasDialog = false })
     }
 }
 
@@ -124,7 +121,8 @@ private fun HomeScreenScaffold(
     onOpenDrawer: () -> Unit,
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
-    onEnterFullScreen: (Alias) -> Unit
+    onEnterFullScreen: (Alias) -> Unit,
+    onCustomAliasClick: () -> Unit
 ) = with(viewModel) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -154,8 +152,8 @@ private fun HomeScreenScaffold(
             HomeScreenFAB(
                 expanded = fabExpanded,
                 onClick = onFabClick,
-                onRandomAliasClick = {},
-                onCustomAliasClick = {}
+                onRandomAliasClick = ::randomAlias,
+                onCustomAliasClick = onCustomAliasClick
             )
         }
     ) { innerPadding ->
@@ -199,6 +197,18 @@ private fun HomeScreenScaffold(
             onFetchMore = ::fetchMoreAliases,
             onRefresh = ::refresh
         )
+
+        if (fabExpanded) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onFabClick
+                    )
+            )
+        }
     }
 }
 
@@ -209,6 +219,11 @@ private fun HomeScreenFAB(
     onRandomAliasClick: () -> Unit,
     onCustomAliasClick: () -> Unit
 ) {
+    val rotation by animateFloatAsState(
+        targetValue = if (expanded) 45f else 0f,
+        label = "fab_rotation"
+    )
+
     Column(
         horizontalAlignment = Alignment.End
     ) {
@@ -277,7 +292,7 @@ private fun HomeScreenFAB(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = stringResource(R.string.create_new_alias),
-                modifier = Modifier.rotate(if (expanded) 45f else 0f)
+                modifier = Modifier.rotate(rotation)
             )
         }
     }

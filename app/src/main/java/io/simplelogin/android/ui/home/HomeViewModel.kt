@@ -171,6 +171,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun randomAlias() {}
+
     private suspend fun handle(error: ApiError) {
         val config = SnackbarConfiguration(
             message = error.description(context),
