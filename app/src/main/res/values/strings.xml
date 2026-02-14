@@ -116,4 +116,7 @@
     <string name="no_pinned_aliases">No pinned aliases</string>
     <string name="no_active_aliases">No active aliases</string>
     <string name="no_disabled_aliases">No disabled aliases</string>
+    <string name="create_new_alias">Create new alias</string>
+    <string name="random_alias">Random alias</string>
+    <string name="custom_alias">Custom alias</string>
 </resources>

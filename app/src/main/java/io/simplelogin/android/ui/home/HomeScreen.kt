@@ -2,44 +2,67 @@ package io.simplelogin.android.ui.home
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
     onOpenDrawer: () -> Unit,
     onViewDetails: (Alias) -> Unit,
-    onViewContacts: (Alias) -> Unit
-) = with(hiltViewModel<HomeViewModel>()) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    onViewContacts: (Alias) -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
-    var searchQuery by rememberSaveable { mutableStateOf("") }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
-    val state by stateFlow.collectAsState()
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    var fabExpanded by rememberSaveable { mutableStateOf(false) }
 
     BackHandler {
         if (isSearching) {
@@ -53,69 +76,31 @@ fun HomeScreen(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            containerColor = Color.Transparent,
-            topBar = {
-                if (isSearching) {
-                    SearchTopAppBar(
-                        query = searchQuery,
-                        onQueryChange = { searchQuery = it },
-                        onExitSearch = { isSearching = false }
-                    )
-                } else {
-                    NormalTopAppBar(
-                        selectedAliasFilterMode = state.aliasFilterMode,
-                        scrollBehavior = scrollBehavior,
-                        onOpenDrawer = onOpenDrawer,
-                        onSearchClick = { isSearching = true },
-                        onSelectAliasFilterMode = ::updateAliasFilterMode
-                    )
-                }
-            }
-        ) { innerPadding ->
-            AliasesList(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                stats = state.stats,
-                aliases = state.aliases,
-                selectedAliasFilterMode = state.aliasFilterMode,
-                fetchError = state.fetchError,
-                isFetching = state.isFetching,
-                isRefreshing = state.isRefreshing,
-                optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
-                displayInfos = state.deviceSettings.aliasDisplayInfos,
-                aliasCellSelection = state.deviceSettings.aliasCellSelection,
-                swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
-                swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
-                onAction = {
-                    when (it) {
-                        is AliasAction.ViewDetails -> onViewDetails(it.alias)
-
-                        is AliasAction.ViewContacts -> onViewContacts(it.alias)
-
-                        is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
-
-                        is AliasAction.EnterFullScreen -> {
-                            fullScreenAlias = it.alias
-                        }
-
-                        is AliasAction.Disable -> toggle(it.alias)
-
-                        is AliasAction.Enable -> toggle(it.alias)
-
-                        is AliasAction.Pin -> pin(it.alias)
-
-                        is AliasAction.Unpin -> unpin(it.alias)
-
-                        is AliasAction.Delete -> delete(it.alias)
-                    }
-                },
-                onRetry = ::fetchMoreAliases,
-                onFetchMore = ::fetchMoreAliases,
-                onRefresh = ::refresh
+        Box {
+            HomeScreenScaffold(
+                viewModel = viewModel,
+                isSearching = isSearching,
+                fabExpanded = fabExpanded,
+                onSearchClick = { isSearching = true },
+                onExitSearch = { isSearching = false },
+                onFabClick = { fabExpanded = !fabExpanded },
+                onOpenDrawer = onOpenDrawer,
+                onViewDetails = onViewDetails,
+                onViewContacts = onViewContacts,
+                onEnterFullScreen = { fullScreenAlias = it }
             )
+            if (fabExpanded) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            fabExpanded = false
+                        }
+                )
+            }
         }
     }
 
@@ -124,5 +109,176 @@ fun HomeScreen(
             alias = it,
             onDismiss = { fullScreenAlias = null }
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreenScaffold(
+    viewModel: HomeViewModel,
+    isSearching: Boolean,
+    fabExpanded: Boolean,
+    onSearchClick: () -> Unit,
+    onExitSearch: () -> Unit,
+    onFabClick: () -> Unit,
+    onOpenDrawer: () -> Unit,
+    onViewDetails: (Alias) -> Unit,
+    onViewContacts: (Alias) -> Unit,
+    onEnterFullScreen: (Alias) -> Unit
+) = with(viewModel) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val state by stateFlow.collectAsState()
+    Scaffold(
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = Color.Transparent,
+        topBar = {
+            if (isSearching) {
+                SearchTopAppBar(
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    onExitSearch = onExitSearch
+                )
+            } else {
+                NormalTopAppBar(
+                    selectedAliasFilterMode = state.aliasFilterMode,
+                    scrollBehavior = scrollBehavior,
+                    onOpenDrawer = onOpenDrawer,
+                    onSearchClick = onSearchClick,
+                    onSelectAliasFilterMode = ::updateAliasFilterMode
+                )
+            }
+        },
+        floatingActionButton = {
+            HomeScreenFAB(
+                expanded = fabExpanded,
+                onClick = onFabClick,
+                onRandomAliasClick = {},
+                onCustomAliasClick = {}
+            )
+        }
+    ) { innerPadding ->
+        AliasesList(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            stats = state.stats,
+            aliases = state.aliases,
+            selectedAliasFilterMode = state.aliasFilterMode,
+            fetchError = state.fetchError,
+            isFetching = state.isFetching,
+            isRefreshing = state.isRefreshing,
+            optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
+            displayInfos = state.deviceSettings.aliasDisplayInfos,
+            aliasCellSelection = state.deviceSettings.aliasCellSelection,
+            swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
+            swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
+            onAction = {
+                when (it) {
+                    is AliasAction.ViewDetails -> onViewDetails(it.alias)
+
+                    is AliasAction.ViewContacts -> onViewContacts(it.alias)
+
+                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
+
+                    is AliasAction.EnterFullScreen -> onEnterFullScreen(it.alias)
+
+                    is AliasAction.Disable -> toggle(it.alias)
+
+                    is AliasAction.Enable -> toggle(it.alias)
+
+                    is AliasAction.Pin -> pin(it.alias)
+
+                    is AliasAction.Unpin -> unpin(it.alias)
+
+                    is AliasAction.Delete -> delete(it.alias)
+                }
+            },
+            onRetry = ::fetchMoreAliases,
+            onFetchMore = ::fetchMoreAliases,
+            onRefresh = ::refresh
+        )
+    }
+}
+
+@Composable
+private fun HomeScreenFAB(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    onRandomAliasClick: () -> Unit,
+    onCustomAliasClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.End
+    ) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shadowElevation = 2.dp
+                    ) {
+                        Text(
+                            text = stringResource(R.string.random_alias),
+                            modifier = Modifier.padding(
+                                horizontal = 12.dp,
+                                vertical = 8.dp
+                            )
+                        )
+                    }
+                    SmallFloatingActionButton(onClick = onRandomAliasClick) {
+                        Icon(
+                            imageVector = Icons.Default.Shuffle,
+                            contentDescription = stringResource(R.string.random_alias)
+                        )
+                    }
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shadowElevation = 2.dp
+                    ) {
+                        Text(
+                            text = stringResource(R.string.custom_alias),
+                            modifier = Modifier.padding(
+                                horizontal = 12.dp,
+                                vertical = 8.dp
+                            )
+                        )
+                    }
+                    SmallFloatingActionButton(onClick = onCustomAliasClick) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.custom_alias)
+                        )
+                    }
+                }
+            }
+        }
+
+        FloatingActionButton(onClick = onClick) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(R.string.create_new_alias),
+                modifier = Modifier.rotate(if (expanded) 45f else 0f)
+            )
+        }
     }
 }
