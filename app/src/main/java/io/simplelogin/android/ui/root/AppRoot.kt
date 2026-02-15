@@ -8,6 +8,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
@@ -75,10 +76,7 @@ fun AppRoot(
     val listDetailSceneStrategy = rememberListDetailSceneStrategy<NavKey>(
         directive = calculatePaneScaffoldDirective(windowAdaptiveInfo).copy(
             defaultPanePreferredWidth = listPaneWidth,
-            maxHorizontalPartitions = if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
-                    WIDTH_DP_MEDIUM_LOWER_BOUND
-                )
-            ) 2 else 1,
+            maxHorizontalPartitions = if (windowAdaptiveInfo.supportsMultiplePanes()) 2 else 1,
             horizontalPartitionSpacerSize = 0.dp
         )
     )
@@ -149,3 +147,5 @@ fun AppRoot(
     }
 }
 
+fun WindowAdaptiveInfo.supportsMultiplePanes(): Boolean =
+    windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
