@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -35,6 +37,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,7 +48,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.ui.theme.SlColor
@@ -54,10 +57,12 @@ import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
 fun CustomAliasDialog(
-    viewModel: CustomAliasDialogViewModel = hiltViewModel(),
+    key: String = rememberSaveable { UUID.randomUUID().toString() },
+    viewModel: CustomAliasDialogViewModel = hiltViewModel(key = key),
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -75,16 +80,21 @@ private fun CustomAliasDialogScaffold(
     onDismiss: () -> Unit
 ) = with(viewModel) {
     val context = LocalContext.current
-    var aliasPrefix by rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    var aliasPrefix by remember { mutableStateOf("") }
     val prefixValidation = aliasPrefix.validatePrefix()
-    var selectedSuffix by rememberSaveable { mutableStateOf<Suffix?>(null) }
-    var showSuffixDialog by rememberSaveable { mutableStateOf(false) }
+    var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
+    var showSuffixDialog by remember { mutableStateOf(false) }
     val state by stateFlow.collectAsState()
     val fetchError = state.fetchError
 
     LaunchedEffect(state.aliasOptions) {
         if (selectedSuffix == null && state.aliasOptions != null) {
             selectedSuffix = state.aliasOptions?.suffixes?.firstOrNull()
+        }
+
+        if (aliasPrefix.isEmpty() && state.defaultPrefix != null) {
+            aliasPrefix = state.defaultPrefix ?: ""
         }
     }
 
@@ -104,9 +114,13 @@ private fun CustomAliasDialogScaffold(
                     }
                 },
                 actions = {
-                    TextButton(onClick = {}) {
-                        Text(text = stringResource(R.string.create))
-                    }
+                    if (!state.isLoading && state.fetchError == null)
+                        TextButton(
+                            enabled = prefixValidation is PrefixValidationResult.Valid,
+                            onClick = {}
+                        ) {
+                            Text(text = stringResource(R.string.create))
+                        }
                 }
             )
         }
@@ -116,14 +130,25 @@ private fun CustomAliasDialogScaffold(
                 .padding(innerPadding)
                 .padding(horizontal = Spacing.regular)
         ) {
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
             if (fetchError != null) {
                 RetryButton(
                     error = fetchError,
                     onRetry = {
-                        viewModelScope.launch { fetchOptions() }
+                        scope.launch { fetchOptions() }
                     }
                 )
-            } else {
+            }
+
+            if (state.aliasOptions != null) {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = aliasPrefix,

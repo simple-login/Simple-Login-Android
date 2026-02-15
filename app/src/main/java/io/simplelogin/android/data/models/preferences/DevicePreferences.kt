@@ -75,4 +75,13 @@ enum class DefaultPrefix {
         RANDOM_WORD -> context.getString(R.string.random_word)
         RANDOM_CHARACTERS -> context.getString(R.string.random_characters)
     }
+
+    fun generate() = when (this) {
+        EMPTY -> null
+        RANDOM_WORD -> WordList.words.random()
+        RANDOM_CHARACTERS -> {
+            val chars = ('a'..'z') + ('0'..'9')
+            (1..10).map { chars.random() }.joinToString("")
+        }
+    }
 }
