@@ -52,6 +52,7 @@
     <string name="filter_options">Filter options</string>
     <string name="device_settings">Device settings</string>
     <string name="close">Close</string>
+    <string name="clear">Clear</string>
     <string name="back">Back</string>
     <string name="security">Security</string>
     <string name="too_many_requests">Too many requests</string>
@@ -127,4 +128,9 @@
     <string name="invalid_prefix_dot_at_end">Alias can not contain 2 consecutive dots (..)</string>
     <string name="invalid_prefix_too_long">The alias prefix is too long</string>
     <string name="invalid_prefix_empty">Prefix can not be empty</string>
+    <string name="suffix">Suffix</string>
+    <string name="select_suffix">Select suffix</string>
+    <string name="your_domain">Your domain</string>
+    <string name="public_domain">Public domain</string>
+    <string name="premium_domain">Premium domain</string>
 </resources>

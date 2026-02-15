@@ -85,14 +85,14 @@ interface ApiService {
         @Header(AUTH_HEADER) apiKey: ApiKey,
         @Body body: CreateAliasBody,
         @Query("hostname") hostname: String?
-        ): Response<Alias>
+    ): Response<Alias>
 
     @POST("api/aliases/{id}/contacts")
     suspend fun createContact(
         @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
         @Body body: CreateContactBody
-        ): Response<Contact>
+    ): Response<Contact>
 
     @DELETE("api/aliases/{id}")
     suspend fun deleteAlias(
@@ -131,7 +131,7 @@ interface ApiService {
     ): Response<Aliases>
 
     @GET("api/v5/alias/options")
-    suspend fun getAliasOptions(@Header(AUTH_HEADER) apiKey: String): Response<AliasOptions>
+    suspend fun getAliasOptions(@Header(AUTH_HEADER) apiKey: ApiKey): Response<AliasOptions>
 
     @GET("api/aliases/{id}/contacts")
     suspend fun getContacts(

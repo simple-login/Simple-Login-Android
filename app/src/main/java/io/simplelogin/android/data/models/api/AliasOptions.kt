@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class AliasOptions(
     @SerializedName("can_create") val canCreate: Boolean,
-    @SerializedName("prefixSuggestion") val prefixSuggestion: String,
+    @SerializedName("prefixSuggestion") val prefixSuggestion: String?,
     @SerializedName("suffixes") val suffixes: List<Suffix>
 )
 
