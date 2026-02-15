@@ -48,6 +48,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -108,7 +113,7 @@ private fun CustomAliasDialogScaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.create_new_alias))
+                    Text(text = stringResource(R.string.you_are_about_to_create))
                 },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {
@@ -154,6 +159,30 @@ private fun CustomAliasDialogScaffold(
             }
 
             if (state.aliasOptions != null) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = buildAnnotatedString {
+                        if (prefixValidation is PrefixValidationResult.Invalid) {
+                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.error)) {
+                                append(aliasPrefix)
+                                selectedSuffix?.value?.let {
+                                    append(it)
+                                }
+                            }
+                        } else {
+                            append(aliasPrefix)
+                            selectedSuffix?.value?.let {
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append(it)
+                                }
+                            }
+                        }
+                    },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
                         modifier = Modifier.weight(1f),
