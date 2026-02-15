@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
@@ -75,6 +76,14 @@ class DeviceSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             updateDeviceSettingsUseCase.invoke {
                 it.copy(aliasDisplayInfos = infos)
+            }
+        }
+    }
+
+    fun updateDefaultPrefix(defaultPrefix: DefaultPrefix) {
+        viewModelScope.launch {
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(defaultPrefix = defaultPrefix)
             }
         }
     }

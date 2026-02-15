@@ -133,4 +133,8 @@
     <string name="your_domain">Your domain</string>
     <string name="public_domain">Public domain</string>
     <string name="premium_domain">Premium domain</string>
+    <string name="default_prefix">Default prefix</string>
+    <string name="empty">Empty</string>
+    <string name="random_word">Random word</string>
+    <string name="random_characters">Random characters</string>
 </resources>

@@ -10,7 +10,9 @@ data class DevicePreferences(
     val aliasOptionsDisplay: AliasOptionsDisplay = AliasOptionsDisplay.Default,
     val swipeFromLeftToRightAction: SwipeAction = SwipeAction.DISABLE_ENABLE,
     val swipeFromRightToLeftAction: SwipeAction = SwipeAction.PIN_UNPIN,
-    val aliasDisplayInfos: List<AliasDisplayInfo> = AliasDisplayInfo.entries.toTypedArray().toList()
+    val aliasDisplayInfos: List<AliasDisplayInfo> = AliasDisplayInfo.entries.toTypedArray()
+        .toList(),
+    val defaultPrefix: DefaultPrefix = DefaultPrefix.RANDOM_WORD
 ) {
     companion object {
         val Default = DevicePreferences()
@@ -62,5 +64,15 @@ enum class AliasDisplayInfo {
         NOTE -> context.getString(R.string.note)
         MAILBOXES -> context.getString(R.string.mailboxes)
         LAST_14_DAYS -> context.getString(R.string.last_14_days)
+    }
+}
+
+enum class DefaultPrefix {
+    EMPTY, RANDOM_WORD, RANDOM_CHARACTERS;
+
+    fun title(context: Context) = when (this) {
+        EMPTY -> context.getString(R.string.empty)
+        RANDOM_WORD -> context.getString(R.string.random_word)
+        RANDOM_CHARACTERS -> context.getString(R.string.random_characters)
     }
 }

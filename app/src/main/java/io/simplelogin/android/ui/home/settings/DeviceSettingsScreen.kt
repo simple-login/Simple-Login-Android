@@ -32,6 +32,7 @@ import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
@@ -87,6 +88,11 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
                 onSelectRightToLeft = ::updateSwipeFromRightToLeft,
                 selectedAliasDisplayInfos = settings.aliasDisplayInfos,
                 onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
+            )
+
+            DefaultPrefixSelection(
+                selected = settings.defaultPrefix,
+                onSelect = ::updateDefaultPrefix
             )
         }
     }
@@ -188,6 +194,20 @@ private fun SwipeActionSelection(
             }
         )
     }
+}
+
+@Composable
+private fun DefaultPrefixSelection(
+    selected: DefaultPrefix,
+    onSelect: (DefaultPrefix) -> Unit
+) {
+    OptionRow(
+        title = stringResource(R.string.default_prefix),
+        description = { it.title(LocalContext.current) },
+        options = DefaultPrefix.entries.toTypedArray(),
+        selected = selected,
+        onSelect = onSelect
+    )
 }
 
 @OptIn(ExperimentalTime::class)
