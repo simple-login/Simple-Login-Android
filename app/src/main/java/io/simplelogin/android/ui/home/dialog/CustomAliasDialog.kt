@@ -17,8 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,6 +53,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Suffix
+import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
@@ -85,6 +89,7 @@ private fun CustomAliasDialogScaffold(
     val prefixValidation = aliasPrefix.validatePrefix()
     var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
     var showSuffixDialog by remember { mutableStateOf(false) }
+    var showRandomPrefixMenu by remember { mutableStateOf(false) }
     val state by stateFlow.collectAsState()
     val fetchError = state.fetchError
 
@@ -149,29 +154,66 @@ private fun CustomAliasDialogScaffold(
             }
 
             if (state.aliasOptions != null) {
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = aliasPrefix,
-                    onValueChange = { aliasPrefix = it },
-                    singleLine = true,
-                    label = { Text(text = stringResource(R.string.prefix)) },
-                    isError = prefixValidation.isInvalid,
-                    supportingText = {
-                        if (prefixValidation is PrefixValidationResult.Invalid) {
-                            Text(text = prefixValidation.reason.description(context))
-                        }
-                    },
-                    trailingIcon = {
-                        if (aliasPrefix.isNotEmpty()) {
-                            IconButton(onClick = { aliasPrefix = "" }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Cancel,
-                                    contentDescription = stringResource(R.string.clear)
-                                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = aliasPrefix,
+                        onValueChange = { aliasPrefix = it },
+                        singleLine = true,
+                        label = { Text(text = stringResource(R.string.prefix)) },
+                        isError = prefixValidation.isInvalid,
+                        supportingText = {
+                            if (prefixValidation is PrefixValidationResult.Invalid) {
+                                Text(text = prefixValidation.reason.description(context))
+                            }
+                        },
+                        trailingIcon = {
+                            Row {
+                                if (aliasPrefix.isNotEmpty()) {
+                                    IconButton(onClick = { aliasPrefix = "" }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Cancel,
+                                            contentDescription = stringResource(R.string.clear)
+                                        )
+                                    }
+                                }
+
+                                Box(
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    IconButton(onClick = { showRandomPrefixMenu = true }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Shuffle,
+                                            contentDescription = stringResource(R.string.random_prefix)
+                                        )
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = showRandomPrefixMenu,
+                                        onDismissRequest = { showRandomPrefixMenu = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.random_word)) },
+                                            onClick = {
+                                                showRandomPrefixMenu = false
+                                                aliasPrefix = DefaultPrefix.RANDOM_WORD.generate()
+                                            }
+                                        )
+
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.random_characters)) },
+                                            onClick = {
+                                                showRandomPrefixMenu = false
+                                                aliasPrefix =
+                                                    DefaultPrefix.RANDOM_CHARACTERS.generate()
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         }
-                    }
-                )
+                    )
+                }
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(

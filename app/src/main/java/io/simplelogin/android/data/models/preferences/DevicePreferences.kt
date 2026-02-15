@@ -77,7 +77,7 @@ enum class DefaultPrefix {
     }
 
     fun generate() = when (this) {
-        EMPTY -> null
+        EMPTY -> ""
         RANDOM_WORD -> WordList.words.random()
         RANDOM_CHARACTERS -> {
             val chars = ('a'..'z') + ('0'..'9')

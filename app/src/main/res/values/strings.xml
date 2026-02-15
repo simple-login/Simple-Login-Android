@@ -137,4 +137,5 @@
     <string name="empty">Empty</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
+    <string name="random_prefix">Random prefix</string>
 </resources>
