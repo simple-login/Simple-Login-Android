@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
-    private val aliasFilterModeFlow = MutableStateFlow<AliasFilterMode>(AliasFilterMode.ALL)
+    private val aliasFilterModeFlow = MutableStateFlow(AliasFilterMode.ALL)
 
     init {
         viewModelScope.launch {

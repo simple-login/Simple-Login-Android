@@ -272,6 +272,7 @@ fun TitledFAB(
     onClick: () -> Unit
 ) {
     Row(
+        modifier = Modifier.clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.mediumLarge)
     ) {

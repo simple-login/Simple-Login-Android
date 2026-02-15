@@ -119,4 +119,12 @@
     <string name="create_new_alias">Create new alias</string>
     <string name="random_alias">Random alias</string>
     <string name="custom_alias">Custom alias</string>
+    <string name="create">Create</string>
+    <string name="prefix">Prefix</string>
+    <string name="invalid_prefix_two_consecutive_dots">Prefix can not contain 2 consecutive dots (..)</string>
+    <string name="invalid_prefix_invalid_character">Prefix must contain only lowercase alphanumeric (a–z, 0–9), dot (.), hyphen (-) &amp; underscore (_)</string>
+    <string name="invalid_prefix_dot_at_beginning">Alias can not start with a dot (.)</string>
+    <string name="invalid_prefix_dot_at_end">Alias can not contain 2 consecutive dots (..)</string>
+    <string name="invalid_prefix_too_long">The alias prefix is too long</string>
+    <string name="invalid_prefix_empty">Prefix can not be empty</string>
 </resources>
