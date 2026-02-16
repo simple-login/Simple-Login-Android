@@ -110,6 +110,7 @@ private fun CustomAliasDialogScaffold(
     var showSuffixDialog by remember { mutableStateOf(false) }
     var selectedMailboxes by remember { mutableStateOf<Set<Mailbox>>(emptySet()) }
     var showMailboxesDialog by remember { mutableStateOf(false) }
+    var note by remember { mutableStateOf("") }
     val state by stateFlow.collectAsState()
     val fetchError = state.fetchError
 
@@ -191,7 +192,9 @@ private fun CustomAliasDialogScaffold(
                     selectedSuffix = selectedSuffix,
                     onShowSuffixSelection = { showSuffixDialog = true },
                     selectedMailboxes = selectedMailboxes,
-                    onShowMailboxesSelection = { showMailboxesDialog = true }
+                    onShowMailboxesSelection = { showMailboxesDialog = true },
+                    note = note,
+                    onNoteChanged = { note = it }
                 )
             }
         }
@@ -231,7 +234,9 @@ private fun CustomAliasMainContent(
     selectedSuffix: Suffix?,
     onShowSuffixSelection: () -> Unit,
     selectedMailboxes: Set<Mailbox>,
-    onShowMailboxesSelection: () -> Unit
+    onShowMailboxesSelection: () -> Unit,
+    note: String,
+    onNoteChanged: (String) -> Unit
 ) {
     val context = LocalContext.current
     var showRandomPrefixMenu by remember { mutableStateOf(false) }
@@ -370,6 +375,17 @@ private fun CustomAliasMainContent(
                 .clickable { onShowMailboxesSelection() }
         )
     }
+
+    // Notes
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Spacing.mediumLarge),
+        value = note,
+        onValueChange = onNoteChanged,
+        label = { Text(text = stringResource(R.string.note)) },
+        minLines = 5
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
