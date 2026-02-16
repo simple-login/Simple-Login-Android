@@ -1,7 +1,10 @@
 package io.simplelogin.android.ui.home.dialog
 
+import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,12 +16,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -47,6 +52,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -59,6 +66,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.ui.root.supportsMultiplePanes
@@ -95,13 +103,13 @@ private fun CustomAliasDialogScaffold(
     viewModel: CustomAliasDialogViewModel,
     onDismiss: () -> Unit
 ) = with(viewModel) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var aliasPrefix by remember { mutableStateOf("") }
-    val prefixValidation = aliasPrefix.validatePrefix()
+    var prefix by remember { mutableStateOf("") }
+    val prefixValidation = prefix.validatePrefix()
     var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
     var showSuffixDialog by remember { mutableStateOf(false) }
-    var showRandomPrefixMenu by remember { mutableStateOf(false) }
+    var selectedMailboxes by remember { mutableStateOf<Set<Mailbox>>(emptySet()) }
+    var showMailboxesDialog by remember { mutableStateOf(false) }
     val state by stateFlow.collectAsState()
     val fetchError = state.fetchError
 
@@ -109,9 +117,19 @@ private fun CustomAliasDialogScaffold(
         if (selectedSuffix == null && state.aliasOptions != null) {
             selectedSuffix = state.aliasOptions?.suffixes?.firstOrNull()
         }
+    }
 
-        if (aliasPrefix.isEmpty() && state.defaultPrefix != null) {
-            aliasPrefix = state.defaultPrefix ?: ""
+    LaunchedEffect(state.defaultPrefix) {
+        if (prefix.isEmpty() && state.defaultPrefix != null) {
+            prefix = state.defaultPrefix ?: ""
+        }
+    }
+
+    LaunchedEffect(state.mailboxes) {
+        if (selectedMailboxes.isEmpty() && state.mailboxes?.isNotEmpty() == true) {
+            state.mailboxes?.firstOrNull()?.let {
+                selectedMailboxes = selectedMailboxes + it
+            }
         }
     }
 
@@ -165,113 +183,16 @@ private fun CustomAliasDialogScaffold(
                 )
             }
 
-            if (state.aliasOptions != null) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = buildAnnotatedString {
-                        if (prefixValidation is PrefixValidationResult.Invalid) {
-                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.error)) {
-                                append(aliasPrefix)
-                                selectedSuffix?.value?.let {
-                                    append(it)
-                                }
-                            }
-                        } else {
-                            append(aliasPrefix)
-                            selectedSuffix?.value?.let {
-                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                    append(it)
-                                }
-                            }
-                        }
-                    },
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+            if (state.aliasOptions != null && state.mailboxes != null) {
+                CustomAliasMainContent(
+                    prefix = prefix,
+                    onPrefixChanged = { prefix = it },
+                    prefixValidation = prefixValidation,
+                    selectedSuffix = selectedSuffix,
+                    onShowSuffixSelection = { showSuffixDialog = true },
+                    selectedMailboxes = selectedMailboxes,
+                    onShowMailboxesSelection = { showMailboxesDialog = true }
                 )
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        modifier = Modifier.weight(1f),
-                        value = aliasPrefix,
-                        onValueChange = { aliasPrefix = it },
-                        singleLine = true,
-                        label = { Text(text = stringResource(R.string.prefix)) },
-                        isError = prefixValidation.isInvalid,
-                        supportingText = {
-                            if (prefixValidation is PrefixValidationResult.Invalid) {
-                                Text(text = prefixValidation.reason.description(context))
-                            }
-                        },
-                        trailingIcon = {
-                            Row {
-                                if (aliasPrefix.isNotEmpty()) {
-                                    IconButton(onClick = { aliasPrefix = "" }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Cancel,
-                                            contentDescription = stringResource(R.string.clear)
-                                        )
-                                    }
-                                }
-
-                                Box(
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    IconButton(onClick = { showRandomPrefixMenu = true }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Shuffle,
-                                            contentDescription = stringResource(R.string.random_prefix)
-                                        )
-                                    }
-
-                                    DropdownMenu(
-                                        expanded = showRandomPrefixMenu,
-                                        onDismissRequest = { showRandomPrefixMenu = false }
-                                    ) {
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.random_word)) },
-                                            onClick = {
-                                                showRandomPrefixMenu = false
-                                                aliasPrefix = DefaultPrefix.RANDOM_WORD.generate()
-                                            }
-                                        )
-
-                                        DropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.random_characters)) },
-                                            onClick = {
-                                                showRandomPrefixMenu = false
-                                                aliasPrefix =
-                                                    DefaultPrefix.RANDOM_CHARACTERS.generate()
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    )
-                }
-
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = selectedSuffix?.value ?: "",
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text(text = stringResource(R.string.suffix)) },
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = null
-                            )
-                        }
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .clickable { showSuffixDialog = true }
-                    )
-                }
             }
         }
     }
@@ -288,6 +209,166 @@ private fun CustomAliasDialogScaffold(
                 onDismiss = { showSuffixDialog = false }
             )
         }
+    }
+
+    if (showMailboxesDialog) {
+        state.mailboxes?.let { mailboxes ->
+            MailboxesSelectionDialog(
+                mailboxes = mailboxes,
+                selected = selectedMailboxes,
+                onSelectionChanged = { selectedMailboxes = it },
+                onDismiss = { showMailboxesDialog = false }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CustomAliasMainContent(
+    prefix: String,
+    onPrefixChanged: (String) -> Unit,
+    prefixValidation: PrefixValidationResult,
+    selectedSuffix: Suffix?,
+    onShowSuffixSelection: () -> Unit,
+    selectedMailboxes: Set<Mailbox>,
+    onShowMailboxesSelection: () -> Unit
+) {
+    val context = LocalContext.current
+    var showRandomPrefixMenu by remember { mutableStateOf(false) }
+    // Preview
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = buildAnnotatedString {
+            if (prefixValidation is PrefixValidationResult.Invalid) {
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.error)) {
+                    append(prefix)
+                    selectedSuffix?.value?.let {
+                        append(it)
+                    }
+                }
+            } else {
+                append(prefix)
+                selectedSuffix?.value?.let {
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        append(it)
+                    }
+                }
+            }
+        },
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center
+    )
+
+    // Prefix
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(
+            modifier = Modifier.weight(1f),
+            value = prefix,
+            onValueChange = onPrefixChanged,
+            singleLine = true,
+            label = { Text(text = stringResource(R.string.prefix)) },
+            isError = prefixValidation.isInvalid,
+            supportingText = {
+                if (prefixValidation is PrefixValidationResult.Invalid) {
+                    Text(text = prefixValidation.reason.description(context))
+                }
+            },
+            trailingIcon = {
+                Row {
+                    if (prefix.isNotEmpty()) {
+                        IconButton(onClick = { onPrefixChanged("") }) {
+                            Icon(
+                                imageVector = Icons.Filled.Cancel,
+                                contentDescription = stringResource(R.string.clear)
+                            )
+                        }
+                    }
+
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(onClick = { showRandomPrefixMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Shuffle,
+                                contentDescription = stringResource(R.string.random_prefix)
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = showRandomPrefixMenu,
+                            onDismissRequest = { showRandomPrefixMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.random_word)) },
+                                onClick = {
+                                    showRandomPrefixMenu = false
+                                    onPrefixChanged(DefaultPrefix.RANDOM_WORD.generate())
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.random_characters)) },
+                                onClick = {
+                                    showRandomPrefixMenu = false
+                                    onPrefixChanged(DefaultPrefix.RANDOM_CHARACTERS.generate())
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    // Suffix
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Spacing.mediumLarge)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = selectedSuffix?.value ?: "",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = stringResource(R.string.suffix)) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = null
+                )
+            }
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable { onShowSuffixSelection() }
+        )
+    }
+
+    // Mailboxes
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = selectedMailboxes.joinToString("\n") { it.email },
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = stringResource(R.string.mailboxes)) },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = null
+                )
+            }
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clickable { onShowMailboxesSelection() }
+        )
     }
 }
 
@@ -347,6 +428,87 @@ private fun SuffixSelectionDialog(
                     }
 
                     if (index < suffixes.lastIndex) {
+                        HorizontalDivider()
+                    }
+                }
+            }
+        },
+        confirmButton = {}
+    )
+}
+
+@SuppressLint("RememberReturnType")
+@Composable
+private fun MailboxesSelectionDialog(
+    mailboxes: List<Mailbox>,
+    selected: Set<Mailbox>,
+    onSelectionChanged: (Set<Mailbox>) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var tempSelection by rememberSaveable { mutableStateOf(selected) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.select_mailboxes)) },
+        text = {
+            LazyColumn {
+                itemsIndexed(mailboxes) { index, mailbox ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = Spacing.medium)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                tempSelection =
+                                    if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
+                                        tempSelection - mailbox
+                                    } else {
+                                        tempSelection + mailbox
+                                    }
+                                onSelectionChanged(tempSelection)
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+                            Checkbox(
+                                checked = tempSelection.contains(mailbox),
+                                onCheckedChange = { checked ->
+                                    if (!checked && tempSelection.count() == 1) {
+                                        return@Checkbox
+                                    }
+                                    tempSelection = if (checked) {
+                                        tempSelection + mailbox
+                                    } else {
+                                        tempSelection - mailbox
+                                    }
+                                    onSelectionChanged(tempSelection)
+                                }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(Spacing.small))
+
+                        Text(
+                            text = mailbox.email,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
+                        Spacer(modifier = Modifier.width(Spacing.medium))
+
+                        if (mailbox.default) {
+                            Text(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                text = stringResource(R.string.default_mailbox),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White
+                            )
+                        }
+                    }
+                    if (index < mailboxes.lastIndex) {
                         HorizontalDivider()
                     }
                 }

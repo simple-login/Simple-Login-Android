@@ -3,12 +3,17 @@ package io.simplelogin.android.ui.home.dialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.data.models.api.AliasOptions
+import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import jakarta.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,30 +39,51 @@ class CustomAliasDialogViewModel @Inject constructor(
     suspend fun fetchOptions() {
         observeSessionSettings().collect { settings ->
             settings.apiKey?.let { apiKey ->
-                when (val options = datasource.getAliasOptions(apiKey = apiKey)) {
-                    is Result.Success -> _stateFlow.update { state ->
-                        val devicePreferences = observeDeviceSettings().first()
-                        val sortedSuffixes = options.value.suffixes.sortedWith(
-                            compareByDescending<Suffix> { it.isCustom }
-                                .thenByDescending { it.isPremium }
-                        )
-                        state.copy(
-                            isLoading = false,
-                            defaultPrefix = devicePreferences.defaultPrefix.generate(),
-                            aliasOptions = options.value.copy(suffixes = sortedSuffixes),
-                            fetchError = null
-                        )
-                    }
-
-                    is Result.Failure -> _stateFlow.update { state ->
-                        state.copy(
-                            isLoading = false,
-                            defaultPrefix = null,
-                            aliasOptions = null,
-                            fetchError = options.error
-                        )
-                    }
+                coroutineScope {
+                    val mailboxes = async { datasource.getMailboxes(apiKey = apiKey) }
+                    val options = async { datasource.getAliasOptions(apiKey = apiKey) }
+                    handleResults(
+                        mailboxesResult = mailboxes.await(),
+                        optionsResult = options.await()
+                    )
                 }
+            }
+        }
+    }
+
+    private suspend fun handleResults(
+        mailboxesResult: Result<Mailboxes, ApiError>,
+        optionsResult: Result<AliasOptions, ApiError>
+    ) {
+        when {
+            mailboxesResult is Result.Success && optionsResult is Result.Success -> {
+                val devicePreferences = observeDeviceSettings().first()
+                val sortedSuffixes = optionsResult.value.suffixes.sortedWith(
+                    compareByDescending<Suffix> { it.isCustom }
+                        .thenByDescending { it.isPremium }
+                )
+                val sortedMailboxes = mailboxesResult.value.value.sortedWith(
+                    compareByDescending { it.default }
+                )
+                _stateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        defaultPrefix = devicePreferences.defaultPrefix.generate(),
+                        aliasOptions = optionsResult.value.copy(suffixes = sortedSuffixes),
+                        mailboxes = sortedMailboxes,
+                        fetchError = null
+                    )
+                }
+            }
+
+            mailboxesResult is Result.Failure ->
+                _stateFlow.update {
+                    it.copy(isLoading = false, fetchError = mailboxesResult.error)
+                }
+
+
+            optionsResult is Result.Failure -> _stateFlow.update {
+                it.copy(isLoading = false, fetchError = optionsResult.error)
             }
         }
     }
