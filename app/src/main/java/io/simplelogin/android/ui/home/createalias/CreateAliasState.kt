@@ -1,10 +1,10 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.createalias
 
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Mailbox
 
-data class CustomAliasDialogState(
+data class CreateAliasState(
     val isLoading: Boolean,
     val defaultPrefix: String?,
     val aliasOptions: AliasOptions?,
@@ -12,7 +12,7 @@ data class CustomAliasDialogState(
     val fetchError: ApiError?
 ) {
     companion object {
-        val Default = CustomAliasDialogState(
+        val Default = CreateAliasState(
             isLoading = true,
             defaultPrefix = null,
             aliasOptions = null,

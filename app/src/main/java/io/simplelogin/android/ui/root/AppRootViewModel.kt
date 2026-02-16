@@ -115,6 +115,12 @@ class AppRootViewModel @Inject constructor(
     //endregion
 
     //region Home
+    fun createAlias() {
+        _navBackStack.value.apply {
+            add(CustomAlias)
+        }
+    }
+
     fun viewAliasDetails(alias: Alias) {
         _navBackStack.value.apply {
             // When viewing details of an alias, we remove all previous details

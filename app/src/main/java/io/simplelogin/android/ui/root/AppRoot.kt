@@ -31,6 +31,7 @@ import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
+import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import kotlinx.serialization.Serializable
 
@@ -42,6 +43,9 @@ data object LogInDestination : NavKey
 
 @Serializable
 data object HomeDestination : NavKey
+
+@Serializable
+data object CustomAlias : NavKey
 
 @Serializable
 data class AliasDetails(val alias: Alias) : NavKey
@@ -99,8 +103,13 @@ fun AppRoot(
                     modifier = modifier,
                     onOpenDrawer = onOpenDrawer,
                     onViewDetails = ::viewAliasDetails,
-                    onViewContacts = ::viewAliasContacts
+                    onViewContacts = ::viewAliasContacts,
+                    onCreateAlias = ::createAlias
                 )
+            }
+
+            entry<CustomAlias> {
+                CreateAliasScreen(onDismiss = viewModel::goBack)
             }
 
             entry<AliasDetails>(

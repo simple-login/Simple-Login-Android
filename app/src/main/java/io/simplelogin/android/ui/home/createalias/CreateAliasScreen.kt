@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.createalias
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -39,7 +39,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -53,23 +52,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
-import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
@@ -79,33 +79,16 @@ import io.simplelogin.android.util.validatePrefix
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@Composable
-fun CustomAliasDialog(
-    key: String = rememberSaveable { UUID.randomUUID().toString() },
-    viewModel: CustomAliasDialogViewModel = hiltViewModel(key = key),
-    onDismiss: () -> Unit
-) {
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = windowAdaptiveInfo.supportsMultiplePanes())
-    ) {
-        CustomAliasDialogScaffold(
-            viewModel = viewModel,
-            onDismiss = onDismiss
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CustomAliasDialogScaffold(
-    viewModel: CustomAliasDialogViewModel,
+fun CreateAliasScreen(
+    key: String = rememberSaveable { UUID.randomUUID().toString() },
+    viewModel: CreateAliasViewModel = hiltViewModel(key = key),
     onDismiss: () -> Unit
 ) = with(viewModel) {
     val scope = rememberCoroutineScope()
-    var prefix by remember { mutableStateOf("") }
-    val prefixValidation = prefix.validatePrefix()
+    var prefix by remember { mutableStateOf(TextFieldValue("")) }
+    val prefixValidation = prefix.text.validatePrefix()
     var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
     var showSuffixDialog by remember { mutableStateOf(false) }
     var selectedMailboxes by remember { mutableStateOf<Set<Mailbox>>(emptySet()) }
@@ -121,8 +104,9 @@ private fun CustomAliasDialogScaffold(
     }
 
     LaunchedEffect(state.defaultPrefix) {
-        if (prefix.isEmpty() && state.defaultPrefix != null) {
-            prefix = state.defaultPrefix ?: ""
+        if (prefix.text.isEmpty() && state.defaultPrefix != null) {
+            val prefixText = state.defaultPrefix ?: ""
+            prefix = TextFieldValue(text = prefixText, selection = TextRange(prefixText.length))
         }
     }
 
@@ -228,8 +212,8 @@ private fun CustomAliasDialogScaffold(
 
 @Composable
 private fun CustomAliasMainContent(
-    prefix: String,
-    onPrefixChanged: (String) -> Unit,
+    prefix: TextFieldValue,
+    onPrefixChanged: (TextFieldValue) -> Unit,
     prefixValidation: PrefixValidationResult,
     selectedSuffix: Suffix?,
     onShowSuffixSelection: () -> Unit,
@@ -239,20 +223,25 @@ private fun CustomAliasMainContent(
     onNoteChanged: (String) -> Unit
 ) {
     val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
     var showRandomPrefixMenu by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     // Preview
     Text(
         modifier = Modifier.fillMaxWidth(),
         text = buildAnnotatedString {
             if (prefixValidation is PrefixValidationResult.Invalid) {
                 withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.error)) {
-                    append(prefix)
+                    append(prefix.text)
                     selectedSuffix?.value?.let {
                         append(it)
                     }
                 }
             } else {
-                append(prefix)
+                append(prefix.text)
                 selectedSuffix?.value?.let {
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
                         append(it)
@@ -268,7 +257,9 @@ private fun CustomAliasMainContent(
     // Prefix
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .focusRequester(focusRequester),
             value = prefix,
             onValueChange = onPrefixChanged,
             singleLine = true,
@@ -281,8 +272,8 @@ private fun CustomAliasMainContent(
             },
             trailingIcon = {
                 Row {
-                    if (prefix.isNotEmpty()) {
-                        IconButton(onClick = { onPrefixChanged("") }) {
+                    if (prefix.text.isNotEmpty()) {
+                        IconButton(onClick = { onPrefixChanged(TextFieldValue("")) }) {
                             Icon(
                                 imageVector = Icons.Filled.Cancel,
                                 contentDescription = stringResource(R.string.clear)
@@ -308,7 +299,13 @@ private fun CustomAliasMainContent(
                                 text = { Text(text = stringResource(R.string.random_word)) },
                                 onClick = {
                                     showRandomPrefixMenu = false
-                                    onPrefixChanged(DefaultPrefix.RANDOM_WORD.generate())
+                                    val prefix = DefaultPrefix.RANDOM_WORD.generate()
+                                    onPrefixChanged(
+                                        TextFieldValue(
+                                            text = prefix,
+                                            selection = TextRange(prefix.length)
+                                        )
+                                    )
                                 }
                             )
 
@@ -316,7 +313,13 @@ private fun CustomAliasMainContent(
                                 text = { Text(text = stringResource(R.string.random_characters)) },
                                 onClick = {
                                     showRandomPrefixMenu = false
-                                    onPrefixChanged(DefaultPrefix.RANDOM_CHARACTERS.generate())
+                                    val prefix = DefaultPrefix.RANDOM_CHARACTERS.generate()
+                                    onPrefixChanged(
+                                        TextFieldValue(
+                                            text = prefix,
+                                            selection = TextRange(prefix.length)
+                                        )
+                                    )
                                 }
                             )
                         }

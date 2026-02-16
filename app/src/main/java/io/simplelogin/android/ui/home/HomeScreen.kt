@@ -29,6 +29,7 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,14 +45,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.ui.home.dialog.CustomAliasDialog
+import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
+import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
@@ -60,14 +64,16 @@ fun HomeScreen(
     onOpenDrawer: () -> Unit,
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
+    onCreateAlias: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
-    var showCustomAliasDialog by rememberSaveable { mutableStateOf(false) }
+    var showCreateAliasDialog by rememberSaveable { mutableStateOf(false) }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
+    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
 
     BackHandler {
         if (isSearching) {
@@ -92,7 +98,13 @@ fun HomeScreen(
             onViewDetails = onViewDetails,
             onViewContacts = onViewContacts,
             onEnterFullScreen = { fullScreenAlias = it },
-            onCustomAliasClick = { showCustomAliasDialog = true }
+            onCustomAliasClick = {
+                if (windowAdaptiveInfo.supportsMultiplePanes()) {
+                    showCreateAliasDialog = true
+                } else {
+                    onCreateAlias()
+                }
+            }
         )
     }
 
@@ -103,8 +115,13 @@ fun HomeScreen(
         )
     }
 
-    if (showCustomAliasDialog) {
-        CustomAliasDialog(onDismiss = { showCustomAliasDialog = false })
+    if (showCreateAliasDialog) {
+        Dialog(
+            onDismissRequest = { showCreateAliasDialog = false },
+            properties = DialogProperties(usePlatformDefaultWidth = windowAdaptiveInfo.supportsMultiplePanes())
+        ) {
+            CreateAliasScreen(onDismiss = { showCreateAliasDialog = false })
+        }
     }
 }
 

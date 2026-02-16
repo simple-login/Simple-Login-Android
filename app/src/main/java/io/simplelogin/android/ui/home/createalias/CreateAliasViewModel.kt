@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.createalias
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class CustomAliasDialogViewModel @Inject constructor(
+class CreateAliasViewModel @Inject constructor(
     private val datasource: CreationRemoteDatasource,
     private val observeDeviceSettings: ObserveDeviceSettingsUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase
 ) : ViewModel() {
-    private val _stateFlow = MutableStateFlow(CustomAliasDialogState.Default)
-    val stateFlow: StateFlow<CustomAliasDialogState> = _stateFlow.asStateFlow()
+    private val _stateFlow = MutableStateFlow(CreateAliasState.Default)
+    val stateFlow: StateFlow<CreateAliasState> = _stateFlow.asStateFlow()
 
     init {
         viewModelScope.launch {
