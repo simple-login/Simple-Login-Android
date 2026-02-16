@@ -1,27 +1,43 @@
 package io.simplelogin.android.ui.home.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ActivityAction
@@ -42,15 +58,24 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceSettingsScreen(
+    onDismiss: () -> Unit
+) {
+    Surface(color = Color.Red) {
+        DeviceSettingsScreenScaffold(onDismiss = onDismiss)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceSettingsScreenScaffold(
     onDismiss: () -> Unit
 ) = with(hiltViewModel<DeviceSettingsViewModel>()) {
     val settings by deviceSettings.collectAsState()
 
     Scaffold(
-        modifier = Modifier,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.device_settings)) },
@@ -61,57 +86,90 @@ fun DeviceSettingsScreen(
                             contentDescription = stringResource(R.string.close)
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier =
                 Modifier
                     .padding(horizontal = Spacing.regular)
+                    .padding(bottom = Spacing.regular)
                     .padding(innerPadding)
         ) {
-            ToggleOption(
-                checked = settings.showStats,
-                onCheckedChange = ::updateShowStats,
-                title = stringResource(R.string.show_stats),
-                description = stringResource(R.string.show_stats_description)
-            )
+            item {
+                ToggleOption(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(Spacing.regular))
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(Spacing.regular),
+                    checked = settings.showStats,
+                    onCheckedChange = ::updateShowStats,
+                    title = stringResource(R.string.show_stats),
+                    description = stringResource(R.string.show_stats_description)
+                )
 
-            AliasCellSelectionSection(
-                selected = settings.aliasCellSelection,
-                onSelect = ::updateAliasCellSelection
-            )
+                DeviceSettingsSpacer()
+            }
 
-            AliasOptionsDisplaySection(
-                selected = settings.aliasOptionsDisplay,
-                onSelect = ::updateAliasOptionsDisplay
-            )
+            item {
+                DefaultPrefixSelection(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(Spacing.regular))
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(Spacing.regular),
+                    selected = settings.defaultPrefix,
+                    onSelect = ::updateDefaultPrefix
+                )
+                DeviceSettingsSpacer()
+            }
 
-            SwipeActionSelection(
-                selectedOptionsDisplay = settings.aliasOptionsDisplay,
-                selectedLeftToRight = settings.swipeFromLeftToRightAction,
-                onSelectLeftToRight = ::updateSwipeFromLeftToRight,
-                selectedRightToLeft = settings.swipeFromRightToLeftAction,
-                onSelectRightToLeft = ::updateSwipeFromRightToLeft,
-                selectedAliasDisplayInfos = settings.aliasDisplayInfos,
-                onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
-            )
+            item {
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(Spacing.regular))
+                        .background(color = MaterialTheme.colorScheme.background)
+                ) {
+                    AliasCellSelectionSection(
+                        modifier = Modifier.padding(Spacing.regular),
+                        selected = settings.aliasCellSelection,
+                        onSelect = ::updateAliasCellSelection
+                    )
 
-            DefaultPrefixSelection(
-                selected = settings.defaultPrefix,
-                onSelect = ::updateDefaultPrefix
-            )
+                    DeviceSettingsDivider()
+
+                    AliasOptionsDisplaySection(
+                        modifier = Modifier.padding(Spacing.regular),
+                        selected = settings.aliasOptionsDisplay,
+                        onSelect = ::updateAliasOptionsDisplay
+                    )
+
+                    DeviceSettingsDivider()
+
+                    SwipeActionSelection(
+                        selectedOptionsDisplay = settings.aliasOptionsDisplay,
+                        selectedLeftToRight = settings.swipeFromLeftToRightAction,
+                        onSelectLeftToRight = ::updateSwipeFromLeftToRight,
+                        selectedRightToLeft = settings.swipeFromRightToLeftAction,
+                        onSelectRightToLeft = ::updateSwipeFromRightToLeft,
+                        selectedAliasDisplayInfos = settings.aliasDisplayInfos,
+                        onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 private fun AliasOptionsDisplaySection(
+    modifier: Modifier,
     selected: AliasOptionsDisplay,
     onSelect: (AliasOptionsDisplay) -> Unit
 ) {
     OptionRow(
+        modifier = modifier,
         title = stringResource(R.string.alias_options_display),
         description = { it.title(LocalContext.current) },
         options = AliasOptionsDisplay.entries.toTypedArray(),
@@ -122,10 +180,12 @@ private fun AliasOptionsDisplaySection(
 
 @Composable
 private fun AliasCellSelectionSection(
+    modifier: Modifier,
     selected: AliasCellSelection,
     onSelect: (AliasCellSelection) -> Unit
 ) {
     OptionRow(
+        modifier = modifier,
         title = stringResource(R.string.select_alias_action),
         description = { it.title(LocalContext.current) },
         options = AliasCellSelection.entries.toTypedArray(),
@@ -148,6 +208,7 @@ private fun SwipeActionSelection(
     var showAliasDisplayInfosDialog by rememberSaveable { mutableStateOf(false) }
 
     OptionRow(
+        modifier = Modifier.padding(Spacing.regular),
         title = stringResource(R.string.swipe_from_left_to_right),
         description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
@@ -155,7 +216,10 @@ private fun SwipeActionSelection(
         onSelect = onSelectLeftToRight
     )
 
+    DeviceSettingsDivider()
+
     OptionRow(
+        modifier = Modifier.padding(Spacing.regular),
         title = stringResource(R.string.swipe_from_right_to_left),
         description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
@@ -163,25 +227,49 @@ private fun SwipeActionSelection(
         onSelect = onSelectRightToLeft
     )
 
-    Column(
+    DeviceSettingsDivider()
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showAliasDisplayInfosDialog = true }
-    ) {
-        Text(stringResource(R.string.alias_display))
-
-        Text(
-            text = if (selectedAliasDisplayInfos.isEmpty()) {
-                stringResource(R.string.alias_address_only)
-            } else if (selectedAliasDisplayInfos.size == AliasDisplayInfo.entries.size) {
-                stringResource(R.string.all_information)
-            } else {
-                selectedAliasDisplayInfos.joinToString(", ") { it.title(context) }
+            .padding(Spacing.regular)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                showAliasDisplayInfosDialog = true
             },
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(stringResource(R.string.alias_information))
+
+            Text(
+                text = if (selectedAliasDisplayInfos.isEmpty()) {
+                    stringResource(R.string.alias_address_only)
+                } else if (selectedAliasDisplayInfos.size == AliasDisplayInfo.entries.size) {
+                    stringResource(R.string.all_information)
+                } else {
+                    selectedAliasDisplayInfos.joinToString(", ") { it.title(context) }
+                },
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        Icon(imageVector = Icons.Default.Edit, contentDescription = null)
     }
+
+    DeviceSettingsDivider()
+
+    Text(
+        modifier = Modifier
+            .padding(horizontal = Spacing.regular)
+            .padding(top = Spacing.regular),
+        text = stringResource(R.string.test_with_sample_alias),
+        color = MaterialTheme.colorScheme.secondary,
+        textAlign = TextAlign.Start
+    )
 
     AliasCell(
         alias = Alias.sample,
@@ -205,11 +293,23 @@ private fun SwipeActionSelection(
 }
 
 @Composable
+private fun DeviceSettingsSpacer() {
+    Spacer(modifier = Modifier.height(Spacing.large))
+}
+
+@Composable
+private fun DeviceSettingsDivider() {
+    HorizontalDivider(modifier = Modifier.padding(horizontal = Spacing.regular))
+}
+
+@Composable
 private fun DefaultPrefixSelection(
+    modifier: Modifier,
     selected: DefaultPrefix,
     onSelect: (DefaultPrefix) -> Unit
 ) {
     OptionRow(
+        modifier = modifier,
         title = stringResource(R.string.default_prefix),
         description = { it.title(LocalContext.current) },
         options = DefaultPrefix.entries.toTypedArray(),
@@ -222,7 +322,7 @@ private fun DefaultPrefixSelection(
 private val Alias.Companion.sample: Alias
     get() = Alias(
         id = AliasId(value = 0),
-        email = "news.fejha@simplelogin.io",
+        email = "newsletter@simplelogin.io",
         name = null,
         enabled = true,
         creationTimestamp = Clock.System.now().minus(10.days).epochSeconds.toDouble(),

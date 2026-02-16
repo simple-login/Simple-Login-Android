@@ -101,7 +101,7 @@
     <string name="full_screen_text_mode">Text mode</string>
     <string name="full_screen_qr_code_mode">QR code mode</string>
     <string name="retry">Retry</string>
-    <string name="alias_display">Alias display</string>
+    <string name="alias_information">Alias information</string>
     <string name="all_information">All information</string>
     <string name="alias_address_only">Alias address only</string>
     <string name="creation_date">Creation date</string>
@@ -143,4 +143,5 @@
     <string name="default_mailbox">Default</string>
     <string name="show_stats">Show statistics</string>
     <string name="show_stats_description">Display total aliases, block, forward and reply numbers</string>
+    <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
 </resources>

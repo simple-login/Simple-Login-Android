@@ -30,7 +30,7 @@ fun AliasDisplayInfosDialog(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.alias_display)) },
+        title = { Text(stringResource(R.string.alias_information)) },
         text = {
             Column {
                 AliasDisplayInfo.entries.forEach { info ->
@@ -44,7 +44,8 @@ fun AliasDisplayInfosDialog(
                                     selection.add(info)
                                 }
                             },
-                        verticalAlignment = Alignment.CenterVertically) {
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Checkbox(
                             checked = selection.contains(info),
                             onCheckedChange = { checked ->

@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.util
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,11 @@ fun <T> OptionRow(
 
     Row(
         modifier = modifier
-            .clickable { expanded = true }
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }) {
+                expanded = true
+            }
     ) {
         Text(
             modifier = Modifier.weight(1f),
