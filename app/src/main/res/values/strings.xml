@@ -141,4 +141,6 @@
     <string name="you_are_about_to_create">You are about to create</string>
     <string name="select_mailboxes">Select mailboxes</string>
     <string name="default_mailbox">Default</string>
+    <string name="show_stats">Show statistics</string>
+    <string name="show_stats_description">Display total aliases, block, forward and reply numbers</string>
 </resources>

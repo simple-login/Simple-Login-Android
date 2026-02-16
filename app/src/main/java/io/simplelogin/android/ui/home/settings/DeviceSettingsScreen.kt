@@ -36,6 +36,7 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
+import io.simplelogin.android.ui.util.ToggleOption
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
@@ -70,6 +71,13 @@ fun DeviceSettingsScreen(
                     .padding(horizontal = Spacing.regular)
                     .padding(innerPadding)
         ) {
+            ToggleOption(
+                checked = settings.showStats,
+                onCheckedChange = ::updateShowStats,
+                title = stringResource(R.string.show_stats),
+                description = stringResource(R.string.show_stats_description)
+            )
+
             AliasCellSelectionSection(
                 selected = settings.aliasCellSelection,
                 onSelect = ::updateAliasCellSelection

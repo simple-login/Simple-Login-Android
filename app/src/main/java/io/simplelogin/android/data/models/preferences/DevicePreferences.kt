@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DevicePreferences(
+    val showStats: Boolean = true,
     val aliasCellSelection: AliasCellSelection = AliasCellSelection.Default,
     val aliasOptionsDisplay: AliasOptionsDisplay = AliasOptionsDisplay.Default,
     val swipeFromLeftToRightAction: SwipeAction = SwipeAction.DISABLE_ENABLE,

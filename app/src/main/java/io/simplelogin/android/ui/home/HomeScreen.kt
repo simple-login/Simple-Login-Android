@@ -184,6 +184,7 @@ private fun HomeScreenScaffold(
                 .fillMaxSize()
                 .padding(innerPadding),
             stats = state.stats,
+            showStats = state.deviceSettings.showStats,
             aliases = state.aliases,
             selectedAliasFilterMode = state.aliasFilterMode,
             fetchError = state.fetchError,

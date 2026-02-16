@@ -87,4 +87,12 @@ class DeviceSettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateShowStats(showStats: Boolean) {
+        viewModelScope.launch {
+            updateDeviceSettingsUseCase.invoke {
+                it.copy(showStats = showStats)
+            }
+        }
+    }
 }

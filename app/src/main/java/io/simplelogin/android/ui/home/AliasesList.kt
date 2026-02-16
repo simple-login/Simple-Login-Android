@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 fun AliasesList(
     modifier: Modifier = Modifier,
     stats: Stats?,
+    showStats: Boolean,
     aliases: List<Alias>,
     selectedAliasFilterMode: AliasFilterMode,
     fetchError: ApiError?,
@@ -90,7 +91,7 @@ fun AliasesList(
             state = listState
         ) {
             item {
-                if (selectedAliasFilterMode == AliasFilterMode.ALL && stats != null) {
+                if (selectedAliasFilterMode == AliasFilterMode.ALL && stats != null && showStats) {
                     StatsGrid(stats = stats)
                 }
             }
