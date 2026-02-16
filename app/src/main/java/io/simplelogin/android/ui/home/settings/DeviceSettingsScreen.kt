@@ -1,6 +1,5 @@
 package io.simplelogin.android.ui.home.settings
 
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,8 +43,9 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
-    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+fun DeviceSettingsScreen(
+    onDismiss: () -> Unit
+) = with(hiltViewModel<DeviceSettingsViewModel>()) {
     val settings by deviceSettings.collectAsState()
 
     Scaffold(
@@ -54,7 +54,7 @@ fun DeviceSettingsScreen() = with(hiltViewModel<DeviceSettingsViewModel>()) {
             TopAppBar(
                 title = { Text(stringResource(R.string.device_settings)) },
                 navigationIcon = {
-                    IconButton(onClick = { backDispatcher?.onBackPressed() }) {
+                    IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = stringResource(R.string.close)

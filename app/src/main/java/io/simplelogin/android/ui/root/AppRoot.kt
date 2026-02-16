@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
@@ -45,13 +46,13 @@ data object LogInDestination : NavKey
 data object HomeDestination : NavKey
 
 @Serializable
-data object CustomAlias : NavKey
+data object CreateAliasDestination : NavKey
 
 @Serializable
-data class AliasDetails(val alias: Alias) : NavKey
+data class AliasDetailsDestination(val alias: Alias) : NavKey
 
 @Serializable
-data class AliasContacts(val alias: Alias) : NavKey
+data class AliasContactsDestination(val alias: Alias) : NavKey
 
 @Serializable
 data object DeviceSettingsDestination : NavKey
@@ -68,6 +69,7 @@ fun AppRoot(
     val backStack by navBackStack.collectAsState()
 
     val showLogOutDialog by showLogOutDialog.collectAsState()
+    val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -104,15 +106,15 @@ fun AppRoot(
                     onOpenDrawer = onOpenDrawer,
                     onViewDetails = ::viewAliasDetails,
                     onViewContacts = ::viewAliasContacts,
-                    onCreateAlias = ::createAlias
+                    onCreateAlias = ::showCreateAliasScreen
                 )
             }
 
-            entry<CustomAlias> {
+            entry<CreateAliasDestination> {
                 CreateAliasScreen(onDismiss = viewModel::goBack)
             }
 
-            entry<AliasDetails>(
+            entry<AliasDetailsDestination>(
                 metadata = ListDetailSceneStrategy.detailPane()
             ) { key ->
                 AliasDetailScreen(
@@ -122,7 +124,7 @@ fun AppRoot(
                 )
             }
 
-            entry<AliasContacts>(
+            entry<AliasContactsDestination>(
                 metadata = ListDetailSceneStrategy.extraPane()
             ) { key ->
                 AliasContactsScreen(
@@ -132,7 +134,7 @@ fun AppRoot(
             }
 
             entry<DeviceSettingsDestination> {
-                DeviceSettingsScreen()
+                DeviceSettingsScreen(onDismiss = viewModel::goBack)
             }
         }
     )
@@ -153,6 +155,12 @@ fun AppRoot(
                 }
             }
         )
+    }
+
+    if (showDeviceSettingsDialog) {
+        Dialog(onDismissRequest = ::dismissDeviceSettingsDialog) {
+            DeviceSettingsScreen(onDismiss = ::dismissDeviceSettingsDialog)
+        }
     }
 }
 

@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,6 +61,7 @@ import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
+import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,6 +82,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
+            val windowAdaptiveInfo = currentWindowAdaptiveInfo()
 
             fun closeDrawerAndExecute(task: () -> Unit) {
                 scope.launch {
@@ -95,7 +98,10 @@ class MainActivity : ComponentActivity() {
                         Drawer(
                             appVersion = appRootViewModel.appVersion,
                             onDeviceSettingsClick = {
-                                closeDrawerAndExecute(appRootViewModel::showDeviceSettingsDialog)
+                                val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
+                                closeDrawerAndExecute {
+                                    appRootViewModel.showDeviceSettingsScreen(asDialog = asDialog)
+                                }
                             },
                             onSignOutClick = {
                                 closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
@@ -137,7 +143,7 @@ class MainViewModel @Inject constructor(
     private val baseUrlProvider: BaseUrlProvider,
     private val userSessionPreferences: DataStore<UserSessionPreferences>,
     val snackbarManager: SnackbarManager
-): ViewModel() {
+) : ViewModel() {
     val showLoadingIndicator = loadingState.asStateFlow()
 
     fun observe() {

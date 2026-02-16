@@ -33,6 +33,8 @@ class AppRootViewModel @Inject constructor(
 
     var showLogOutDialog = MutableStateFlow(false)
 
+    var showDeviceSettingsDialog = MutableStateFlow(false)
+
     val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
         .map {
             AppRootState(
@@ -107,17 +109,26 @@ class AppRootViewModel @Inject constructor(
         updateApiKey(null)
     }
 
-    fun showDeviceSettingsDialog() {
-        _navBackStack.value.apply {
-            add(DeviceSettingsDestination)
+
+    fun showDeviceSettingsScreen(asDialog: Boolean) {
+        if (asDialog) {
+            showDeviceSettingsDialog.value = true
+        } else {
+            _navBackStack.value.apply {
+                add(DeviceSettingsDestination)
+            }
         }
+    }
+
+    fun dismissDeviceSettingsDialog() {
+        showDeviceSettingsDialog.value = false
     }
     //endregion
 
     //region Home
-    fun createAlias() {
+    fun showCreateAliasScreen() {
         _navBackStack.value.apply {
-            add(CustomAlias)
+            add(CreateAliasDestination)
         }
     }
 
@@ -125,15 +136,15 @@ class AppRootViewModel @Inject constructor(
         _navBackStack.value.apply {
             // When viewing details of an alias, we remove all previous details
             // from navigation stack
-            removeIf { it is AliasDetails }
-            removeIf { it is AliasContacts }
-            add(AliasDetails(alias))
+            removeIf { it is AliasDetailsDestination }
+            removeIf { it is AliasContactsDestination }
+            add(AliasDetailsDestination(alias))
         }
     }
 
     fun viewAliasContacts(alias: Alias) {
         _navBackStack.value.apply {
-            add(AliasContacts(alias))
+            add(AliasContactsDestination(alias))
         }
     }
     //endregion
