@@ -8,7 +8,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.toMutableStateList
@@ -23,8 +22,8 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 @Composable
 fun AliasDisplayInfosDialog(
     selection: List<AliasDisplayInfo>,
-    onDismiss: () -> Unit,
-    onSave: (List<AliasDisplayInfo>) -> Unit
+    onSelectionChange: (List<AliasDisplayInfo>) -> Unit,
+    onDismiss: () -> Unit
 ) {
     val selection = rememberSaveable { selection.toMutableStateList() }
     val context = LocalContext.current
@@ -43,6 +42,7 @@ fun AliasDisplayInfosDialog(
                                 } else {
                                     selection.add(info)
                                 }
+                                onSelectionChange(selection)
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -58,14 +58,6 @@ fun AliasDisplayInfosDialog(
                 }
             }
         },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
-            }
-
-            TextButton(onClick = { onSave(selection) }) {
-                Text(stringResource(R.string.save))
-            }
-        }
+        confirmButton = {}
     )
 }

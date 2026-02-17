@@ -283,11 +283,8 @@ private fun SwipeActionSelection(
     if (showAliasDisplayInfosDialog) {
         AliasDisplayInfosDialog(
             selection = selectedAliasDisplayInfos,
-            onDismiss = { showAliasDisplayInfosDialog = false },
-            onSave = {
-                showAliasDisplayInfosDialog = false
-                onSaveAliasDisplayInfos(it)
-            }
+            onSelectionChange = onSaveAliasDisplayInfos,
+            onDismiss = { showAliasDisplayInfosDialog = false }
         )
     }
 }
