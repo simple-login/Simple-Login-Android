@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
@@ -87,11 +88,19 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun updateNotification(notification: Boolean) {
+        updateSettings(UpdateUserSettingsOptions(notification = notification))
+    }
+
+    fun updateRandomMode(mode: RandomMode) {
+        updateSettings(UpdateUserSettingsOptions(randomMode = mode))
+    }
+
+    private fun updateSettings(options: UpdateUserSettingsOptions) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isLoading = true) }
             val settings = datasource.updateUserSettings(
                 apiKey = apiKey,
-                options = UpdateUserSettingsOptions(notification = notification)
+                options = options
             )
             when (settings) {
                 is Result.Success -> _stateFlow.update {

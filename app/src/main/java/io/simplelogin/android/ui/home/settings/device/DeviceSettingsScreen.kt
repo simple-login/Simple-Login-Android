@@ -4,16 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +45,8 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
+import io.simplelogin.android.ui.util.SettingsDivider
+import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlin.time.Clock
@@ -95,7 +94,7 @@ fun DeviceSettingsScreen(
                     description = stringResource(R.string.show_stats_description)
                 )
 
-                DeviceSettingsSpacer()
+                SettingsSpacer()
             }
 
             item {
@@ -104,7 +103,7 @@ fun DeviceSettingsScreen(
                     selected = settings.defaultPrefix,
                     onSelect = ::updateDefaultPrefix
                 )
-                DeviceSettingsSpacer()
+                SettingsSpacer()
             }
 
             item {
@@ -115,7 +114,7 @@ fun DeviceSettingsScreen(
                         onSelect = ::updateAliasCellSelection
                     )
 
-                    DeviceSettingsDivider()
+                    SettingsDivider()
 
                     AliasOptionsDisplaySection(
                         modifier = Modifier.padding(Spacing.regular),
@@ -123,7 +122,7 @@ fun DeviceSettingsScreen(
                         onSelect = ::updateAliasOptionsDisplay
                     )
 
-                    DeviceSettingsDivider()
+                    SettingsDivider()
 
                     SwipeActionSelection(
                         selectedOptionsDisplay = settings.aliasOptionsDisplay,
@@ -194,7 +193,7 @@ private fun SwipeActionSelection(
         onSelect = onSelectLeftToRight
     )
 
-    DeviceSettingsDivider()
+    SettingsDivider()
 
     OptionRow(
         modifier = Modifier.padding(Spacing.regular),
@@ -205,7 +204,7 @@ private fun SwipeActionSelection(
         onSelect = onSelectRightToLeft
     )
 
-    DeviceSettingsDivider()
+    SettingsDivider()
 
     Row(
         modifier = Modifier
@@ -238,7 +237,7 @@ private fun SwipeActionSelection(
         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
     }
 
-    DeviceSettingsDivider()
+    SettingsDivider()
 
     Text(
         modifier = Modifier
@@ -265,16 +264,6 @@ private fun SwipeActionSelection(
             onDismiss = { showAliasDisplayInfosDialog = false }
         )
     }
-}
-
-@Composable
-private fun DeviceSettingsSpacer() {
-    Spacer(modifier = Modifier.height(Spacing.large))
-}
-
-@Composable
-private fun DeviceSettingsDivider() {
-    HorizontalDivider(modifier = Modifier.padding(horizontal = Spacing.regular))
 }
 
 @Composable

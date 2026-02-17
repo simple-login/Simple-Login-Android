@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.settings.account
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,8 +33,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.RandomMode
+import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsDivider
+import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlinx.coroutines.launch
@@ -93,7 +99,8 @@ fun AccountSettingsScreen(
                 ) {
                     accountSettingsScreenContent(
                         settings = settings,
-                        onUpdateNotification = ::updateNotification
+                        onUpdateNotification = ::updateNotification,
+                        onUpdateRandomMode = ::updateRandomMode
                     )
                 }
             }
@@ -121,7 +128,8 @@ fun AccountSettingsScreen(
 
 private fun LazyListScope.accountSettingsScreenContent(
     settings: AccountSettings,
-    onUpdateNotification: (Boolean) -> Unit
+    onUpdateNotification: (Boolean) -> Unit,
+    onUpdateRandomMode: (RandomMode) -> Unit
 ) {
     val userInfo = settings.userInfo
     val userSettings = settings.userSettings
@@ -133,5 +141,20 @@ private fun LazyListScope.accountSettingsScreenContent(
             title = stringResource(R.string.newsletter),
             description = stringResource(R.string.newsletter_description)
         )
+        SettingsSpacer()
+    }
+
+    item {
+        Column(modifier = Modifier.primaryContentBackground()) {
+            OptionRow(
+                title = stringResource(R.string.random_mode),
+                description = { it.title(LocalContext.current) },
+                options = RandomMode.entries.toTypedArray(),
+                selected = userSettings.randomMode,
+                onSelect = onUpdateRandomMode
+            )
+
+            SettingsDivider()
+        }
     }
 }
