@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
@@ -22,4 +24,7 @@ abstract class RemoteDatasourceModule {
 
     @[Binds Singleton]
     abstract fun bindCreation(impl: CreationRemoteDatasourceImpl): CreationRemoteDatasource
+
+    @[Binds Singleton]
+    abstract fun bindAccountSettings(impl: AccountSettingsRemoteDatasourceImpl): AccountSettingsRemoteDatasource
 }

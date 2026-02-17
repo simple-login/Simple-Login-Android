@@ -1,0 +1,36 @@
+package io.simplelogin.android.data.remote.datasource
+
+import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.api.UserInfo
+import io.simplelogin.android.data.models.api.UserSettings
+import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.util.Result
+import javax.inject.Inject
+
+interface AccountSettingsRemoteDatasource {
+    suspend fun getUserInfo(apiKey: ApiKey): Result<UserInfo, ApiError>
+    suspend fun getUserSettings(apiKey: ApiKey): Result<UserSettings, ApiError>
+    suspend fun updateUserSettings(
+        apiKey: ApiKey,
+        options: UpdateUserSettingsOptions
+    ): Result<UserSettings, ApiError>
+}
+
+class AccountSettingsRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
+    BaseRemoteDatasource(),
+    AccountSettingsRemoteDatasource {
+    override suspend fun getUserInfo(apiKey: ApiKey): Result<UserInfo, ApiError> =
+        safeApiCall { apiService.getUserInfo(apiKey = apiKey) }
+
+    override suspend fun getUserSettings(apiKey: ApiKey): Result<UserSettings, ApiError> =
+        safeApiCall { apiService.getUserSettings(apiKey = apiKey) }
+
+    override suspend fun updateUserSettings(
+        apiKey: ApiKey,
+        options: UpdateUserSettingsOptions
+    ): Result<UserSettings, ApiError> =
+        safeApiCall { apiService.updateUserSettings(apiKey = apiKey, body = options) }
+
+}

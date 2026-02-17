@@ -59,7 +59,7 @@ interface ApiService {
     suspend fun getStats(@Header(AUTH_HEADER) apiKey: ApiKey): Response<Stats>
 
     @GET("api/user_info")
-    suspend fun getUserInfo(): Response<UserInfo>
+    suspend fun getUserInfo(@Header(AUTH_HEADER) apiKey: ApiKey): Response<UserInfo>
 
     @POST("api/auth/login")
     suspend fun login(@Body body: LoginBody): Response<UserLogin>

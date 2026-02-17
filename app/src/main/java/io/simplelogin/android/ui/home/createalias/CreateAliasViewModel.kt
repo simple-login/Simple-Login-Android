@@ -37,6 +37,7 @@ class CreateAliasViewModel @Inject constructor(
     }
 
     suspend fun fetchOptions() {
+        _stateFlow.update { CreateAliasState.Default }
         observeSessionSettings().collect { settings ->
             settings.apiKey?.let { apiKey ->
                 coroutineScope {
