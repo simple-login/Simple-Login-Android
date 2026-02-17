@@ -12,13 +12,15 @@ data class AccountSettings(
 data class AccountSettingsState(
     val settings: AccountSettings?,
     val isLoading: Boolean,
-    val fetchError: ApiError?
+    val fetchError: ApiError?,
+    val updateError: ApiError?
 ) {
     companion object {
         val Default = AccountSettingsState(
             settings = null,
             isLoading = true,
-            fetchError = null
+            fetchError = null,
+            updateError = null
         )
     }
 }
