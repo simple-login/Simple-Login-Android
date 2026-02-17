@@ -83,6 +83,7 @@ class MainActivity : ComponentActivity() {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
             val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+            val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
 
             fun closeDrawerAndExecute(task: () -> Unit) {
                 scope.launch {
@@ -98,9 +99,13 @@ class MainActivity : ComponentActivity() {
                         Drawer(
                             appVersion = appRootViewModel.appVersion,
                             onDeviceSettingsClick = {
-                                val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
                                 closeDrawerAndExecute {
                                     appRootViewModel.showDeviceSettingsScreen(asDialog = asDialog)
+                                }
+                            },
+                            onAccountSettingsClick = {
+                                closeDrawerAndExecute {
+                                    appRootViewModel.showAccountSettingsScreen(asDialog = asDialog)
                                 }
                             },
                             onSignOutClick = {
@@ -247,13 +252,14 @@ private fun MainUi(
 private fun Drawer(
     appVersion: String,
     onDeviceSettingsClick: () -> Unit,
+    onAccountSettingsClick: () -> Unit,
     onSignOutClick: () -> Unit
 ) {
     ModalDrawerSheet(
         drawerShape = RectangleShape
     ) {
         NavigationDrawerItem(
-            label = { Text(stringResource(R.string.device_settings)) },
+            label = { Text(text = stringResource(R.string.device_settings)) },
             shape = RectangleShape,
             selected = false,
             onClick = onDeviceSettingsClick
@@ -262,7 +268,16 @@ private fun Drawer(
         HorizontalDivider()
 
         NavigationDrawerItem(
-            label = { Text(stringResource(R.string.sign_out)) },
+            label = { Text(text = stringResource(R.string.account_settings)) },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onAccountSettingsClick
+        )
+
+        HorizontalDivider()
+
+        NavigationDrawerItem(
+            label = { Text(text = stringResource(R.string.sign_out)) },
             shape = RectangleShape,
             selected = false,
             onClick = onSignOutClick

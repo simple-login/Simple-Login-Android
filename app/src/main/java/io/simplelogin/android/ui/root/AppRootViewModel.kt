@@ -35,6 +35,8 @@ class AppRootViewModel @Inject constructor(
 
     var showDeviceSettingsDialog = MutableStateFlow(false)
 
+    var showAccountSettingsDialog = MutableStateFlow(false)
+
     val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
         .map {
             AppRootState(
@@ -122,6 +124,20 @@ class AppRootViewModel @Inject constructor(
 
     fun dismissDeviceSettingsDialog() {
         showDeviceSettingsDialog.value = false
+    }
+
+    fun showAccountSettingsScreen(asDialog: Boolean) {
+        if (asDialog) {
+            showAccountSettingsDialog.value = true
+        } else {
+            _navBackStack.value.apply {
+                add(AccountSettingsDestination)
+            }
+        }
+    }
+
+    fun dismissAccountSettingsDialog() {
+        showAccountSettingsDialog.value = false
     }
     //endregion
 

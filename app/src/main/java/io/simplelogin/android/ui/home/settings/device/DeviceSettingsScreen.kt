@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -58,18 +57,9 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
-@Composable
-fun DeviceSettingsScreen(
-    onDismiss: () -> Unit
-) {
-    Surface(color = Color.Red) {
-        DeviceSettingsScreenScaffold(onDismiss = onDismiss)
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceSettingsScreenScaffold(
+fun DeviceSettingsScreen(
     onDismiss: () -> Unit
 ) = with(hiltViewModel<DeviceSettingsViewModel>()) {
     val settings by deviceSettings.collectAsState()
