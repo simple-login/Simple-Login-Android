@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings
+package io.simplelogin.android.ui.home.settings.device
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
