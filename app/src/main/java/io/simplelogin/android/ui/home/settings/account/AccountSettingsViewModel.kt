@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
 import io.simplelogin.android.data.models.api.UserInfo
@@ -93,6 +94,10 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun updateRandomMode(mode: RandomMode) {
         updateSettings(UpdateUserSettingsOptions(randomMode = mode))
+    }
+
+    fun updateRandomAliasSuffix(suffix: RandomAliasSuffix) {
+        updateSettings(UpdateUserSettingsOptions(randomAliasSuffix = suffix))
     }
 
     private fun updateSettings(options: UpdateUserSettingsOptions) {

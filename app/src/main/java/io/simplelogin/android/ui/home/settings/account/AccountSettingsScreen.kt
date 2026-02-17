@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.ui.theme.Spacing
@@ -100,7 +101,8 @@ fun AccountSettingsScreen(
                     accountSettingsScreenContent(
                         settings = settings,
                         onUpdateNotification = ::updateNotification,
-                        onUpdateRandomMode = ::updateRandomMode
+                        onUpdateRandomMode = ::updateRandomMode,
+                        onUpdateRandomAliasSuffix = ::updateRandomAliasSuffix
                     )
                 }
             }
@@ -129,7 +131,8 @@ fun AccountSettingsScreen(
 private fun LazyListScope.accountSettingsScreenContent(
     settings: AccountSettings,
     onUpdateNotification: (Boolean) -> Unit,
-    onUpdateRandomMode: (RandomMode) -> Unit
+    onUpdateRandomMode: (RandomMode) -> Unit,
+    onUpdateRandomAliasSuffix: (RandomAliasSuffix) -> Unit
 ) {
     val userInfo = settings.userInfo
     val userSettings = settings.userSettings
@@ -145,13 +148,25 @@ private fun LazyListScope.accountSettingsScreenContent(
     }
 
     item {
-        Column(modifier = Modifier.primaryContentBackground()) {
+        Column(modifier = Modifier.primaryContentBackground(padded = false)) {
             OptionRow(
+                modifier = Modifier.padding(Spacing.regular),
                 title = stringResource(R.string.random_mode),
                 description = { it.title(LocalContext.current) },
                 options = RandomMode.entries.toTypedArray(),
                 selected = userSettings.randomMode,
                 onSelect = onUpdateRandomMode
+            )
+
+            SettingsDivider()
+
+            OptionRow(
+                modifier = Modifier.padding(Spacing.regular),
+                title = stringResource(R.string.random_suffix),
+                description = { it.title(LocalContext.current) },
+                options = RandomAliasSuffix.entries.toTypedArray(),
+                selected = userSettings.randomAliasSuffix,
+                onSelect = onUpdateRandomAliasSuffix
             )
 
             SettingsDivider()

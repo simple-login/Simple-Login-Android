@@ -148,4 +148,6 @@
     <string name="newsletter">Newsletter</string>
     <string name="newsletter_description">We will occasionally send you emails with new feature announcements</string>
     <string name="random_mode">Random mode</string>
+    <string name="random_suffix">Random suffix</string>
+    <string name="random_5_characters">Random 5 characters</string>
 </resources>
