@@ -8,6 +8,7 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
@@ -38,15 +39,17 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    suspend fun refresh() {
+    fun refresh() {
         _stateFlow.update { AccountSettingsState.Default }
         withApiKey { apiKey ->
             coroutineScope {
-                val userInfo = async { datasource.getUserInfo(apiKey = apiKey) }
-                val userSettings = async { datasource.getUserSettings(apiKey = apiKey) }
+                val userInfo = async { datasource.getUserInfo(apiKey) }
+                val userSettings = async { datasource.getUserSettings(apiKey) }
+                val usableDomains = async { datasource.getUsableDomains(apiKey) }
                 handleResults(
                     userInfoResult = userInfo.await(),
-                    userSettingsResult = userSettings.await()
+                    userSettingsResult = userSettings.await(),
+                    usableDomainsResult = usableDomains.await()
                 )
             }
         }
@@ -54,15 +57,19 @@ class AccountSettingsViewModel @Inject constructor(
 
     private fun handleResults(
         userInfoResult: Result<UserInfo, ApiError>,
-        userSettingsResult: Result<UserSettings, ApiError>
+        userSettingsResult: Result<UserSettings, ApiError>,
+        usableDomainsResult: Result<List<UsableDomain>, ApiError>
     ) {
         when {
-            userInfoResult is Result.Success && userSettingsResult is Result.Success -> {
+            userInfoResult is Result.Success &&
+                    userSettingsResult is Result.Success &&
+                    usableDomainsResult is Result.Success -> {
                 _stateFlow.update {
                     it.copy(
                         settings = AccountSettings(
                             userInfo = userInfoResult.value,
-                            userSettings = userSettingsResult.value
+                            userSettings = userSettingsResult.value,
+                            usableDomain = usableDomainsResult.value
                         ),
                         isLoading = false,
                         fetchError = null

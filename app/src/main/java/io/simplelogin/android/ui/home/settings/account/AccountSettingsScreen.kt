@@ -35,7 +35,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
-import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.RetryButton
@@ -43,7 +42,6 @@ import io.simplelogin.android.ui.util.SettingsDivider
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,9 +118,7 @@ fun AccountSettingsScreen(
             }
 
             if (fetchError != null) {
-                RetryButton(
-                    error = fetchError,
-                    onRetry = { scope.launch { refresh() } })
+                RetryButton(error = fetchError, onRetry = ::refresh)
             }
         }
     }

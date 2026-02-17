@@ -1,12 +1,14 @@
 package io.simplelogin.android.ui.home.settings.account
 
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
 
 data class AccountSettings(
     val userInfo: UserInfo,
-    val userSettings: UserSettings
+    val userSettings: UserSettings,
+    val usableDomain: List<UsableDomain>
 )
 
 data class AccountSettingsState(
