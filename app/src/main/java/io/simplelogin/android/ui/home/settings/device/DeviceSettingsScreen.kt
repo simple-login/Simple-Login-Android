@@ -1,6 +1,5 @@
 package io.simplelogin.android.ui.home.settings.device
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -32,7 +30,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,6 +49,7 @@ import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.ToggleOption
+import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
@@ -90,10 +88,7 @@ fun DeviceSettingsScreen(
         ) {
             item {
                 ToggleOption(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(Spacing.regular))
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .padding(Spacing.regular),
+                    modifier = Modifier.primaryContentBackground(),
                     checked = settings.showStats,
                     onCheckedChange = ::updateShowStats,
                     title = stringResource(R.string.show_stats),
@@ -105,10 +100,7 @@ fun DeviceSettingsScreen(
 
             item {
                 DefaultPrefixSelection(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(Spacing.regular))
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .padding(Spacing.regular),
+                    modifier = Modifier.primaryContentBackground(),
                     selected = settings.defaultPrefix,
                     onSelect = ::updateDefaultPrefix
                 )
@@ -116,11 +108,7 @@ fun DeviceSettingsScreen(
             }
 
             item {
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(Spacing.regular))
-                        .background(color = MaterialTheme.colorScheme.background)
-                ) {
+                Column(modifier = Modifier.primaryContentBackground(padded = false)) {
                     AliasCellSelectionSection(
                         modifier = Modifier.padding(Spacing.regular),
                         selected = settings.aliasCellSelection,
