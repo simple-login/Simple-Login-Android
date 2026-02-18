@@ -8,7 +8,7 @@ import io.simplelogin.android.data.models.api.UserSettings
 data class AccountSettings(
     val userInfo: UserInfo,
     val userSettings: UserSettings,
-    val usableDomain: List<UsableDomain>
+    val usableDomains: List<UsableDomain>
 )
 
 data class AccountSettingsState(

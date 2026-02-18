@@ -150,4 +150,5 @@
     <string name="random_mode">Random mode</string>
     <string name="random_suffix">Random suffix</string>
     <string name="random_5_characters">Random 5 characters</string>
+    <string name="default_domain_for_random_aliases">Default domain for random aliases</string>
 </resources>

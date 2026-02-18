@@ -64,12 +64,15 @@ class AccountSettingsViewModel @Inject constructor(
             userInfoResult is Result.Success &&
                     userSettingsResult is Result.Success &&
                     usableDomainsResult is Result.Success -> {
+                val sortedUsableDomains = usableDomainsResult.value.sortedWith(
+                    compareByDescending { it.isCustom }
+                )
                 _stateFlow.update {
                     it.copy(
                         settings = AccountSettings(
                             userInfo = userInfoResult.value,
                             userSettings = userSettingsResult.value,
-                            usableDomain = usableDomainsResult.value
+                            usableDomains = sortedUsableDomains
                         ),
                         isLoading = false,
                         fetchError = null
@@ -105,6 +108,10 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun updateRandomAliasSuffix(suffix: RandomAliasSuffix) {
         updateSettings(UpdateUserSettingsOptions(randomAliasSuffix = suffix))
+    }
+
+    fun updateUsableDomain(domain: UsableDomain) {
+        updateSettings(UpdateUserSettingsOptions(randomAliasDefaultDomain = domain.name))
     }
 
     private fun updateSettings(options: UpdateUserSettingsOptions) {
