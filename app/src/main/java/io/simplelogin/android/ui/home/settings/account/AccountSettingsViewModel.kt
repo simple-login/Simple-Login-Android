@@ -35,9 +35,7 @@ class AccountSettingsViewModel @Inject constructor(
     val stateFlow: StateFlow<AccountSettingsState> = _stateFlow
 
     init {
-        viewModelScope.launch {
-            refresh()
-        }
+        refresh()
     }
 
     fun refresh() {

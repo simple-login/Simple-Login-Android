@@ -93,9 +93,7 @@ fun AccountSettingsScreen(
 
     LaunchedEffect(updateError) {
         updateError?.let {
-            snackbarHostState.showSnackbar(
-                message = it.description(context)
-            )
+            snackbarHostState.showSnackbar(message = it.description(context))
             clearUpdateError()
         }
     }

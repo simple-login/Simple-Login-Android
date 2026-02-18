@@ -164,4 +164,7 @@
     <string name="edit_profile">Edit profile</string>
     <string name="edit_display_name">Edit display name</string>
     <string name="edit_profile_picture">Edit profile picture</string>
+    <string name="mailbox_options">Mailbox options</string>
+    <string name="unverified">Unverified</string>
+    <string name="delete_mailbox_alert_title">Delete mailbox %s?</string>
 </resources>

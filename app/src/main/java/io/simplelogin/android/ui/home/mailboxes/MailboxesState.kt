@@ -5,15 +5,17 @@ import io.simplelogin.android.data.models.api.Mailbox
 
 data class MailboxesState(
     val mailboxes: List<Mailbox>?,
-    val isLoading: Boolean,
+    val isFetching: Boolean,
     val fetchError: ApiError?,
+    val isUpdating: Boolean,
     val updateError: ApiError?
 ) {
     companion object {
         val Default = MailboxesState(
             mailboxes = null,
-            isLoading = true,
+            isFetching = true,
             fetchError = null,
+            isUpdating = false,
             updateError = null
         )
     }
