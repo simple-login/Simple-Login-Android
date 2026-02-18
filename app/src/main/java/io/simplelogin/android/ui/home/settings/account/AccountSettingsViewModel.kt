@@ -99,6 +99,20 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
+    fun toggleProtonLink() {
+        val userInfo = _stateFlow.value.settings?.userInfo
+        if (userInfo != null) {
+            val updated = if (userInfo.connectedProtonAddress != null) {
+                userInfo.copy(connectedProtonAddress = null)
+            } else {
+                userInfo.copy(connectedProtonAddress = "john.doe@proton.me")
+            }
+            _stateFlow.update {
+                it.copy(settings = it.settings?.copy(userInfo = updated))
+            }
+        }
+    }
+
     fun updateNotification(notification: Boolean) {
         updateSettings(UpdateUserSettingsOptions(notification = notification))
     }

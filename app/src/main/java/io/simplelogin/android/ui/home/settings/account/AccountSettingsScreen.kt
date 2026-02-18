@@ -36,14 +36,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
@@ -51,6 +56,7 @@ import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
+import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
@@ -70,7 +76,6 @@ fun AccountSettingsScreen(
     val settings = state.settings
     val fetchError = state.fetchError
     val updateError = state.updateError
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     var showUsableDomainsDialog by remember { mutableStateOf(false) }
@@ -117,6 +122,7 @@ fun AccountSettingsScreen(
                 ) {
                     accountSettingsScreenContent(
                         settings = settings,
+                        onToggleProtonLink = ::toggleProtonLink,
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
                         onUpdateRandomAliasSuffix = ::updateRandomAliasSuffix,
@@ -161,14 +167,65 @@ fun AccountSettingsScreen(
 
 private fun LazyListScope.accountSettingsScreenContent(
     settings: AccountSettings,
+    onToggleProtonLink: () -> Unit,
     onUpdateNotification: (Boolean) -> Unit,
     onUpdateRandomMode: (RandomMode) -> Unit,
     onUpdateRandomAliasSuffix: (RandomAliasSuffix) -> Unit,
     onShowUsableDomainsSelector: () -> Unit,
-    onUpdateSenderFormat: (SenderFormat) -> Unit
+    onUpdateSenderFormat: (SenderFormat) -> Unit,
 ) {
     val userInfo = settings.userInfo
+    val connectedProtonAddress = userInfo.connectedProtonAddress
     val userSettings = settings.userSettings
+
+    item {
+        SettingsHeader(text = "Proton")
+
+        Row(
+            modifier = Modifier
+                .primaryContentBackground()
+                .clickableRippleDisabled(onClick = onToggleProtonLink),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_proton),
+                tint = Color.Unspecified,
+                contentDescription = null
+            )
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = Spacing.medium),
+                text = if (connectedProtonAddress != null)
+                    stringResource(R.string.unlink_with_proton) else
+                    stringResource(R.string.link_with_proton),
+                color = ProtonPurple
+            )
+        }
+
+        Text(
+            modifier = Modifier
+                .padding(top = Spacing.small)
+                .padding(horizontal = Spacing.regular),
+            text = if (connectedProtonAddress != null) {
+                buildAnnotatedString {
+                    append(stringResource(R.string.already_linked_to_proton))
+                    append(" ")
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(connectedProtonAddress)
+                    }
+                }
+            } else {
+                AnnotatedString(stringResource(R.string.not_linked_to_proton))
+            },
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
+        SettingsSpacer()
+    }
+
     item {
         ToggleOption(
             modifier = Modifier.primaryContentBackground(),
