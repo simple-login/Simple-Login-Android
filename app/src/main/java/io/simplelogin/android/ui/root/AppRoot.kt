@@ -33,6 +33,7 @@ import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
+import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
 import io.simplelogin.android.ui.home.settings.account.AccountSettingsScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
 import kotlinx.serialization.Serializable
@@ -61,6 +62,9 @@ data object DeviceSettingsDestination : NavKey
 @Serializable
 data object AccountSettingsDestination : NavKey
 
+@Serializable
+data object MailboxesDestination : NavKey
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -75,6 +79,7 @@ fun AppRoot(
     val showLogOutDialog by showLogOutDialog.collectAsState()
     val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
     val showAccountSettingsDialog by showAccountSettingsDialog.collectAsState()
+    val showMailboxesDialog by showMailboxesDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -145,6 +150,10 @@ fun AppRoot(
             entry<AccountSettingsDestination> {
                 AccountSettingsScreen(onDismiss = viewModel::goBack)
             }
+
+            entry<MailboxesDestination> {
+                MailboxesScreen(onDismiss = viewModel::goBack)
+            }
         }
     )
 
@@ -175,6 +184,12 @@ fun AppRoot(
     if (showAccountSettingsDialog) {
         Dialog(onDismissRequest = ::dismissAccountSettingsDialog) {
             AccountSettingsScreen(onDismiss = ::dismissAccountSettingsDialog)
+        }
+    }
+
+    if (showMailboxesDialog) {
+        Dialog(onDismissRequest = ::dismissMailboxesDialog) {
+            MailboxesScreen(onDismiss = ::dismissMailboxesDialog)
         }
     }
 }

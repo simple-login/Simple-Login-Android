@@ -10,8 +10,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -99,14 +97,19 @@ class MainActivity : ComponentActivity() {
                     drawerContent = {
                         Drawer(
                             appVersion = appRootViewModel.appVersion,
-                            onDeviceSettingsClick = {
+                            onMailboxesClick = {
                                 closeDrawerAndExecute {
-                                    appRootViewModel.showDeviceSettingsScreen(asDialog = asDialog)
+                                    appRootViewModel.showMailboxesScreen(asDialog)
                                 }
                             },
                             onAccountSettingsClick = {
                                 closeDrawerAndExecute {
-                                    appRootViewModel.showAccountSettingsScreen(asDialog = asDialog)
+                                    appRootViewModel.showAccountSettingsScreen(asDialog)
+                                }
+                            },
+                            onDeviceSettingsClick = {
+                                closeDrawerAndExecute {
+                                    appRootViewModel.showDeviceSettingsScreen(asDialog)
                                 }
                             },
                             onSignOutClick = {
@@ -248,18 +251,19 @@ private fun MainUi(
 @Composable
 private fun Drawer(
     appVersion: String,
-    onDeviceSettingsClick: () -> Unit,
+    onMailboxesClick: () -> Unit,
     onAccountSettingsClick: () -> Unit,
+    onDeviceSettingsClick: () -> Unit,
     onSignOutClick: () -> Unit
 ) {
     ModalDrawerSheet(
         drawerShape = RectangleShape
     ) {
         NavigationDrawerItem(
-            label = { Text(text = stringResource(R.string.device_settings)) },
+            label = { Text(text = stringResource(R.string.mailboxes)) },
             shape = RectangleShape,
             selected = false,
-            onClick = onDeviceSettingsClick
+            onClick = onMailboxesClick
         )
 
         HorizontalDivider()
@@ -269,6 +273,13 @@ private fun Drawer(
             shape = RectangleShape,
             selected = false,
             onClick = onAccountSettingsClick
+        )
+
+        NavigationDrawerItem(
+            label = { Text(text = stringResource(R.string.device_settings)) },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onDeviceSettingsClick
         )
 
         HorizontalDivider()
