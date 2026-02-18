@@ -63,6 +63,7 @@ import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -234,11 +235,7 @@ private fun MainUi(
                         .fillMaxSize()
                         .background(Color.LightGray.copy(alpha = 0.5f))
                         // Intercept all click events to disable click while loading
-                        .clickable(
-                            onClick = {},
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ),
+                        .clickableRippleDisabled(onClick = {}),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

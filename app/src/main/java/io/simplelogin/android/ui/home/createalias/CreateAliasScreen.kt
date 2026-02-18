@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +72,7 @@ import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
@@ -475,10 +475,7 @@ private fun MailboxesSelectionDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = Spacing.medium)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
+                            .clickableRippleDisabled {
                                 tempSelection =
                                     if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
                                         tempSelection - mailbox

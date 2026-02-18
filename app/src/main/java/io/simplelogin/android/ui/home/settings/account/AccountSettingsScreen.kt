@@ -1,7 +1,5 @@
 package io.simplelogin.android.ui.home.settings.account
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,7 +46,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
@@ -61,6 +58,7 @@ import io.simplelogin.android.ui.util.SettingsDivider
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -209,12 +207,7 @@ private fun LazyListScope.accountSettingsScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(Spacing.regular)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onShowUsableDomainsSelector()
-                    },
+                    .clickableRippleDisabled(onClick = onShowUsableDomainsSelector),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -250,13 +243,7 @@ private fun UsableDomainsDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = Spacing.medium)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }) {
-                                onSelect(
-                                    domain
-                                )
-                            },
+                            .clickableRippleDisabled { onSelect(domain) },
                         horizontalAlignment = Alignment.Start
                     ) {
                         Row(

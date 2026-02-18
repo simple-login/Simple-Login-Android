@@ -2,8 +2,6 @@ package io.simplelogin.android.ui.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 
 @Composable
 fun LoginContentScreen(
@@ -64,12 +62,7 @@ fun LoginContentScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .clickable(
-                // Disable ripple effect
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = { focusManager.clearFocus() }
-            ),
+            .clickableRippleDisabled { focusManager.clearFocus() },
         contentAlignment = Alignment.Center,
     ) {
         LoginColumn(
@@ -148,10 +141,12 @@ private fun LoginColumn(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        CompositionLocalProvider(LocalRippleConfiguration provides RippleConfiguration(
-            color = ProtonPurple,
-            rippleAlpha = null
-        )) {
+        CompositionLocalProvider(
+            LocalRippleConfiguration provides RippleConfiguration(
+                color = ProtonPurple,
+                rippleAlpha = null
+            )
+        ) {
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 border = BorderStroke(1.dp, ProtonPurple),
