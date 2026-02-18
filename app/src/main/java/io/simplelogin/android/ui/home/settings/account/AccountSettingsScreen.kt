@@ -58,6 +58,7 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.SettingsDivider
+import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
@@ -180,6 +181,7 @@ private fun LazyListScope.accountSettingsScreenContent(
     }
 
     item {
+        SettingsHeader(text = stringResource(R.string.aliases))
         Column(modifier = Modifier.primaryContentBackground(padded = false)) {
             OptionRow(
                 modifier = Modifier.padding(Spacing.regular),
