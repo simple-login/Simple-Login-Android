@@ -1,9 +1,12 @@
 package io.simplelogin.android.ui.home.settings.device
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -14,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -97,11 +101,38 @@ fun DeviceSettingsScreen(
             }
 
             item {
-                DefaultPrefixSelection(
-                    modifier = Modifier.primaryContentBackground(),
-                    selected = settings.defaultPrefix,
-                    onSelect = ::updateDefaultPrefix
-                )
+                Column(modifier = Modifier.primaryContentBackground()) {
+                    DefaultPrefixSelection(
+                        selected = settings.defaultPrefix,
+                        onSelect = ::updateDefaultPrefix
+                    )
+
+                    AnimatedVisibility(visible = settings.defaultPrefix == DefaultPrefix.RANDOM_CHARACTERS) {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.number_of_random_characters),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                textAlign = TextAlign.Start
+                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Slider(
+                                    modifier = Modifier.weight(1f),
+                                    value = settings.prefixRandomCharacterCount.toFloat(),
+                                    onValueChange = { updateRandomCharacterCount(it.toInt()) },
+                                    valueRange = 1f..10f,
+                                    steps = 8
+                                )
+
+                                Text(
+                                    modifier = Modifier.padding(start = Spacing.mediumLarge),
+                                    text = "${settings.prefixRandomCharacterCount}"
+                                )
+                            }
+                        }
+                    }
+                }
+
                 SettingsSpacer()
             }
 
@@ -262,7 +293,7 @@ private fun SwipeActionSelection(
 
 @Composable
 private fun DefaultPrefixSelection(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     selected: DefaultPrefix,
     onSelect: (DefaultPrefix) -> Unit
 ) {

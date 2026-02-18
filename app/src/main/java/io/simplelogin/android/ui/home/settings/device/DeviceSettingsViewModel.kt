@@ -29,19 +29,11 @@ class DeviceSettingsViewModel @Inject constructor(
         )
 
     fun updateAliasCellSelection(selection: AliasCellSelection) {
-        viewModelScope.launch {
-            updateDeviceSettingsUseCase.invoke {
-                it.copy(aliasCellSelection = selection)
-            }
-        }
+        updateSettings { it.copy(aliasCellSelection = selection) }
     }
 
-    fun updateAliasOptionsDisplay(selection: AliasOptionsDisplay) {
-        viewModelScope.launch {
-            updateDeviceSettingsUseCase.invoke {
-                it.copy(aliasOptionsDisplay = selection)
-            }
-        }
+    fun updateAliasOptionsDisplay(display: AliasOptionsDisplay) {
+        updateSettings { it.copy(aliasOptionsDisplay = display) }
     }
 
     fun updateSwipeFromLeftToRight(action: SwipeAction) {
@@ -73,11 +65,7 @@ class DeviceSettingsViewModel @Inject constructor(
     }
 
     fun updateAliasDisplayInfos(infos: List<AliasDisplayInfo>) {
-        viewModelScope.launch {
-            updateDeviceSettingsUseCase.invoke {
-                it.copy(aliasDisplayInfos = infos)
-            }
-        }
+        updateSettings { it.copy(aliasDisplayInfos = infos) }
     }
 
     fun updateDefaultPrefix(defaultPrefix: DefaultPrefix) {
@@ -86,12 +74,21 @@ class DeviceSettingsViewModel @Inject constructor(
                 it.copy(defaultPrefix = defaultPrefix)
             }
         }
+        updateSettings { it.copy(defaultPrefix = defaultPrefix) }
+    }
+
+    fun updateRandomCharacterCount(count: Int) {
+        updateSettings { it.copy(prefixRandomCharacterCount = count) }
     }
 
     fun updateShowStats(showStats: Boolean) {
+        updateSettings { it.copy(showStats = showStats) }
+    }
+
+    private fun updateSettings(update: (DevicePreferences) -> DevicePreferences) {
         viewModelScope.launch {
             updateDeviceSettingsUseCase.invoke {
-                it.copy(showStats = showStats)
+                update(it)
             }
         }
     }

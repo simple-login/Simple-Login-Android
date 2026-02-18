@@ -66,10 +66,14 @@ class CreateAliasViewModel @Inject constructor(
                 val sortedMailboxes = mailboxesResult.value.value.sortedWith(
                     compareByDescending { it.default }
                 )
+                val randomCharacterCount = devicePreferences.prefixRandomCharacterCount
                 _stateFlow.update {
                     it.copy(
                         isLoading = false,
-                        defaultPrefix = devicePreferences.defaultPrefix.generate(),
+                        defaultPrefix = devicePreferences.defaultPrefix.generate(
+                            randomCharacterCount
+                        ),
+                        randomCharacterCount = randomCharacterCount,
                         aliasOptions = optionsResult.value.copy(suffixes = sortedSuffixes),
                         mailboxes = sortedMailboxes,
                         fetchError = null

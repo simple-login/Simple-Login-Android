@@ -137,6 +137,7 @@
     <string name="empty">Empty</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
+    <string name="number_of_random_characters">Number of random characters</string>
     <string name="random_prefix">Random prefix</string>
     <string name="you_are_about_to_create">You are about to create</string>
     <string name="select_mailboxes">Select mailboxes</string>

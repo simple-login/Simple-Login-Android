@@ -13,7 +13,8 @@ data class DevicePreferences(
     val swipeFromRightToLeftAction: SwipeAction = SwipeAction.PIN_UNPIN,
     val aliasDisplayInfos: List<AliasDisplayInfo> = AliasDisplayInfo.entries.toTypedArray()
         .toList(),
-    val defaultPrefix: DefaultPrefix = DefaultPrefix.RANDOM_WORD
+    val defaultPrefix: DefaultPrefix = DefaultPrefix.RANDOM_WORD,
+    val prefixRandomCharacterCount: Int = 5
 ) {
     companion object {
         val Default = DevicePreferences()
@@ -77,12 +78,12 @@ enum class DefaultPrefix {
         RANDOM_CHARACTERS -> context.getString(R.string.random_characters)
     }
 
-    fun generate() = when (this) {
+    fun generate(randomCharacterCount: Int) = when (this) {
         EMPTY -> ""
         RANDOM_WORD -> WordList.words.random()
         RANDOM_CHARACTERS -> {
             val chars = ('a'..'z') + ('0'..'9')
-            (1..5).map { chars.random() }.joinToString("")
+            (1..randomCharacterCount).map { chars.random() }.joinToString("")
         }
     }
 }

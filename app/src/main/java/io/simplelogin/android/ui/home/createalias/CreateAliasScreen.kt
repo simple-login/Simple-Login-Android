@@ -171,6 +171,7 @@ fun CreateAliasScreen(
             if (state.aliasOptions != null && state.mailboxes != null) {
                 CustomAliasMainContent(
                     prefix = prefix,
+                    randomCharacterCount = state.randomCharacterCount,
                     onPrefixChanged = { prefix = it },
                     prefixValidation = prefixValidation,
                     selectedSuffix = selectedSuffix,
@@ -213,6 +214,7 @@ fun CreateAliasScreen(
 @Composable
 private fun CustomAliasMainContent(
     prefix: TextFieldValue,
+    randomCharacterCount: Int,
     onPrefixChanged: (TextFieldValue) -> Unit,
     prefixValidation: PrefixValidationResult,
     selectedSuffix: Suffix?,
@@ -255,7 +257,10 @@ private fun CustomAliasMainContent(
     )
 
     // Prefix
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier.padding(top = Spacing.regular),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -299,7 +304,8 @@ private fun CustomAliasMainContent(
                                 text = { Text(text = stringResource(R.string.random_word)) },
                                 onClick = {
                                     showRandomPrefixMenu = false
-                                    val prefix = DefaultPrefix.RANDOM_WORD.generate()
+                                    val prefix =
+                                        DefaultPrefix.RANDOM_WORD.generate(randomCharacterCount)
                                     onPrefixChanged(
                                         TextFieldValue(
                                             text = prefix,
@@ -313,7 +319,9 @@ private fun CustomAliasMainContent(
                                 text = { Text(text = stringResource(R.string.random_characters)) },
                                 onClick = {
                                     showRandomPrefixMenu = false
-                                    val prefix = DefaultPrefix.RANDOM_CHARACTERS.generate()
+                                    val prefix = DefaultPrefix.RANDOM_CHARACTERS.generate(
+                                        randomCharacterCount
+                                    )
                                     onPrefixChanged(
                                         TextFieldValue(
                                             text = prefix,
