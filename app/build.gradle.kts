@@ -97,4 +97,6 @@ dependencies {
     implementation(libs.nav3.runtime)
     implementation(libs.nav3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.nav3)
+
+    implementation(libs.coil.compose)
 }

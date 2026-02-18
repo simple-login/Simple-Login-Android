@@ -160,4 +160,8 @@
     <string name="unlink_with_proton">Unlink account</string>
     <string name="already_linked_to_proton">Your account is currently linked to the Proton account</string>
     <string name="not_linked_to_proton">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="edit_display_name">Edit display name</string>
+    <string name="edit_profile_picture">Edit profile picture</string>
 </resources>
