@@ -12,6 +12,8 @@ import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasourceImpl
+import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasourceImpl
 import javax.inject.Singleton
 
 @[Module InstallIn(SingletonComponent::class)]
@@ -27,4 +29,7 @@ abstract class RemoteDatasourceModule {
 
     @[Binds Singleton]
     abstract fun bindAccountSettings(impl: AccountSettingsRemoteDatasourceImpl): AccountSettingsRemoteDatasource
+
+    @[Binds Singleton]
+    abstract fun bindMailboxes(impl: MailboxesRemoteDatasourceImpl): MailboxesRemoteDatasource
 }
