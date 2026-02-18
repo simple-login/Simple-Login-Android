@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +43,6 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
-import io.simplelogin.android.ui.util.SettingsDivider
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
@@ -105,22 +105,22 @@ fun DeviceSettingsScreen(
             }
 
             item {
-                Column(modifier = Modifier.primaryContentBackground(padded = false)) {
+                Column(modifier = Modifier.primaryContentBackground()) {
                     AliasCellSelectionSection(
-                        modifier = Modifier.padding(Spacing.regular),
+                        modifier = Modifier.padding(bottom = Spacing.regular),
                         selected = settings.aliasCellSelection,
                         onSelect = ::updateAliasCellSelection
                     )
 
-                    SettingsDivider()
+                    HorizontalDivider()
 
                     AliasOptionsDisplaySection(
-                        modifier = Modifier.padding(Spacing.regular),
+                        modifier = Modifier.padding(vertical = Spacing.regular),
                         selected = settings.aliasOptionsDisplay,
                         onSelect = ::updateAliasOptionsDisplay
                     )
 
-                    SettingsDivider()
+                    HorizontalDivider()
 
                     SwipeActionSelection(
                         selectedOptionsDisplay = settings.aliasOptionsDisplay,
@@ -183,7 +183,7 @@ private fun SwipeActionSelection(
     var showAliasDisplayInfosDialog by rememberSaveable { mutableStateOf(false) }
 
     OptionRow(
-        modifier = Modifier.padding(Spacing.regular),
+        modifier = Modifier.padding(vertical = Spacing.regular),
         title = stringResource(R.string.swipe_from_left_to_right),
         description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
@@ -191,10 +191,10 @@ private fun SwipeActionSelection(
         onSelect = onSelectLeftToRight
     )
 
-    SettingsDivider()
+    HorizontalDivider()
 
     OptionRow(
-        modifier = Modifier.padding(Spacing.regular),
+        modifier = Modifier.padding(vertical = Spacing.regular),
         title = stringResource(R.string.swipe_from_right_to_left),
         description = { it.title(LocalContext.current) },
         options = SwipeAction.entries.toTypedArray(),
@@ -202,12 +202,12 @@ private fun SwipeActionSelection(
         onSelect = onSelectRightToLeft
     )
 
-    SettingsDivider()
+    HorizontalDivider()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Spacing.regular)
+            .padding(vertical = Spacing.regular)
             .clickableRippleDisabled { showAliasDisplayInfosDialog = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -230,11 +230,10 @@ private fun SwipeActionSelection(
         Icon(imageVector = Icons.Default.Edit, contentDescription = null)
     }
 
-    SettingsDivider()
+    HorizontalDivider()
 
     Text(
         modifier = Modifier
-            .padding(horizontal = Spacing.regular)
             .padding(top = Spacing.regular),
         text = stringResource(R.string.test_with_sample_alias),
         color = MaterialTheme.colorScheme.secondary,

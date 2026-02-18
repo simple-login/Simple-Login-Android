@@ -54,7 +54,6 @@ import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.SettingsDivider
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
@@ -180,9 +179,9 @@ private fun LazyListScope.accountSettingsScreenContent(
 
     item {
         SettingsHeader(text = stringResource(R.string.aliases))
-        Column(modifier = Modifier.primaryContentBackground(padded = false)) {
+        Column(modifier = Modifier.primaryContentBackground()) {
             OptionRow(
-                modifier = Modifier.padding(Spacing.regular),
+                modifier = Modifier.padding(bottom = Spacing.regular),
                 title = stringResource(R.string.random_mode),
                 description = { it.title(LocalContext.current) },
                 options = RandomMode.entries.toTypedArray(),
@@ -190,10 +189,10 @@ private fun LazyListScope.accountSettingsScreenContent(
                 onSelect = onUpdateRandomMode
             )
 
-            SettingsDivider()
+            HorizontalDivider()
 
             OptionRow(
-                modifier = Modifier.padding(Spacing.regular),
+                modifier = Modifier.padding(vertical = Spacing.regular),
                 title = stringResource(R.string.random_suffix),
                 description = { it.title(LocalContext.current) },
                 options = RandomAliasSuffix.entries.toTypedArray(),
@@ -201,12 +200,12 @@ private fun LazyListScope.accountSettingsScreenContent(
                 onSelect = onUpdateRandomAliasSuffix
             )
 
-            SettingsDivider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Spacing.regular)
+                    .padding(top = Spacing.regular)
                     .clickableRippleDisabled(onClick = onShowUsableDomainsSelector),
                 verticalAlignment = Alignment.CenterVertically
             ) {

@@ -10,15 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
-fun Modifier.primaryContentBackground(padded: Boolean = true): Modifier =
+fun Modifier.primaryContentBackground(): Modifier =
     this
         .clip(RoundedCornerShape(Spacing.regular))
         .background(color = MaterialTheme.colorScheme.background)
-        .padding(if (padded) Spacing.regular else 0.dp)
+        .padding(Spacing.regular)
 
 @Composable
 fun Modifier.clickableRippleDisabled(onClick: () -> Unit): Modifier =
