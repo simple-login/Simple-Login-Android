@@ -43,6 +43,7 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
+import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
@@ -105,6 +106,7 @@ fun DeviceSettingsScreen(
             }
 
             item {
+                SettingsHeader(text = stringResource(R.string.alias_display_and_interaction))
                 Column(modifier = Modifier.primaryContentBackground()) {
                     AliasCellSelectionSection(
                         modifier = Modifier.padding(bottom = Spacing.regular),

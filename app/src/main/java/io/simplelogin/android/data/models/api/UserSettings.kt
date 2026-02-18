@@ -26,7 +26,16 @@ enum class SenderFormat {
     AT_ONLY,
 
     @SerializedName("NO_NAME")
-    NO_NAME
+    NO_NAME;
+
+    fun description(context: Context): String =
+        when (this) {
+            A -> "John Doe - john.doe(a)example.com"
+            AT -> "John Doe - john.doe at example.com"
+            NAME_ONLY -> "John Doe"
+            AT_ONLY -> "john at example.com"
+            NO_NAME -> context.getString(R.string.no_name_format_description)
+        }
 }
 
 enum class RandomAliasSuffix {

@@ -49,6 +49,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
+import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -119,7 +120,8 @@ fun AccountSettingsScreen(
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
                         onUpdateRandomAliasSuffix = ::updateRandomAliasSuffix,
-                        onShowUsableDomainsSelector = { showUsableDomainsDialog = true }
+                        onShowUsableDomainsSelector = { showUsableDomainsDialog = true },
+                        onUpdateSenderFormat = ::updateSenderFormat
                     )
                 }
             }
@@ -162,7 +164,8 @@ private fun LazyListScope.accountSettingsScreenContent(
     onUpdateNotification: (Boolean) -> Unit,
     onUpdateRandomMode: (RandomMode) -> Unit,
     onUpdateRandomAliasSuffix: (RandomAliasSuffix) -> Unit,
-    onShowUsableDomainsSelector: () -> Unit
+    onShowUsableDomainsSelector: () -> Unit,
+    onUpdateSenderFormat: (SenderFormat) -> Unit
 ) {
     val userInfo = settings.userInfo
     val userSettings = settings.userSettings
@@ -174,11 +177,13 @@ private fun LazyListScope.accountSettingsScreenContent(
             title = stringResource(R.string.newsletter),
             description = stringResource(R.string.newsletter_description)
         )
+
         SettingsSpacer()
     }
 
     item {
-        SettingsHeader(text = stringResource(R.string.aliases))
+        SettingsHeader(text = stringResource(R.string.random_aliases))
+
         Column(modifier = Modifier.primaryContentBackground()) {
             OptionRow(
                 modifier = Modifier.padding(bottom = Spacing.regular),
@@ -222,6 +227,19 @@ private fun LazyListScope.accountSettingsScreenContent(
                 Icon(imageVector = Icons.Default.Edit, contentDescription = null)
             }
         }
+
+        SettingsSpacer()
+    }
+
+    item {
+        OptionRow(
+            modifier = Modifier.primaryContentBackground(),
+            title = stringResource(R.string.sender_address_format),
+            description = { it.description(LocalContext.current) },
+            options = SenderFormat.entries.toTypedArray(),
+            selected = userSettings.senderFormat,
+            onSelect = onUpdateSenderFormat
+        )
     }
 }
 

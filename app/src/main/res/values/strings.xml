@@ -151,4 +151,8 @@
     <string name="random_suffix">Random suffix</string>
     <string name="random_5_characters">Random 5 characters</string>
     <string name="default_domain_for_random_aliases">Default domain for random aliases</string>
+    <string name="alias_display_and_interaction">Alias display &amp; interaction</string>
+    <string name="sender_address_format">Sender address format</string>
+    <string name="no_name_format_description">No Name (i.e. only reverse-alias)</string>
+    <string name="random_aliases">Random aliases</string>
 </resources>

@@ -82,7 +82,7 @@ enum class DefaultPrefix {
         RANDOM_WORD -> WordList.words.random()
         RANDOM_CHARACTERS -> {
             val chars = ('a'..'z') + ('0'..'9')
-            (1..10).map { chars.random() }.joinToString("")
+            (1..5).map { chars.random() }.joinToString("")
         }
     }
 }
