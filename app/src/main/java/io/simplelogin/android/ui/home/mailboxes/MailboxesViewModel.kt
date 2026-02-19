@@ -53,7 +53,28 @@ class MailboxesViewModel @Inject constructor(
         }
     }
 
-    fun add(email: String) {}
+    fun add(email: String) {
+        _stateFlow.update { it.copy(isUpdating = true) }
+        withApiKey { apiKey ->
+            when (val result = datasource.createMailbox(
+                apiKey = apiKey,
+                email = email
+            )) {
+                is Result.Success -> _stateFlow.update {
+                    val updatedMailboxes = listOf(result.value) + (it.mailboxes ?: emptyList())
+                    it.copy(
+                        mailboxes = updatedMailboxes,
+                        isUpdating = false,
+                        addedMailbox = result.value
+                    )
+                }
+
+                is Result.Failure -> _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = result.error)
+                }
+            }
+        }
+    }
 
     fun setAsDefault(mailbox: Mailbox) {}
 
@@ -62,6 +83,12 @@ class MailboxesViewModel @Inject constructor(
     fun clearUpdateError() {
         _stateFlow.update {
             it.copy(updateError = null)
+        }
+    }
+
+    fun clearAddedMailbox() {
+        _stateFlow.update {
+            it.copy(addedMailbox = null)
         }
     }
 

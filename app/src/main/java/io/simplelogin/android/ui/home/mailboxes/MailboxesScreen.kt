@@ -103,6 +103,18 @@ fun MailboxesScreen(
         }
     }
 
+    LaunchedEffect(state.addedMailbox) {
+        state.addedMailbox?.let {
+            snackbarHostState.showSnackbar(
+                context.getString(
+                    R.string.mailbox_verification_message,
+                    it.email
+                )
+            )
+            clearAddedMailbox()
+        }
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {

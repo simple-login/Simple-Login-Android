@@ -176,4 +176,5 @@
     <string name="add_mailbox_description">A verification email will be sent to this email address</string>
     <string name="add">Add</string>
     <string name="updated_successfully">Updated successfully</string>
+    <string name="mailbox_verification_message">We\'ve sent a verification email to %s</string>
 </resources>
