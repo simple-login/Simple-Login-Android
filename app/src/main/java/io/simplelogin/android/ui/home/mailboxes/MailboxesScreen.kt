@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -183,7 +184,8 @@ fun MailboxesScreen(
                         modifier = Modifier
                             .padding(horizontal = Spacing.regular)
                             .padding(bottom = Spacing.regular)
-                            .primaryContentBackground()
+                            .primaryContentBackground(),
+                        contentPadding = PaddingValues(bottom = 80.dp) // Avoid FAB
                     ) {
                         itemsIndexed(mailboxes) { index, mailbox ->
                             val topPadding = if (index == 0) 0.dp else Spacing.regular
