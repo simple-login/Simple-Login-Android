@@ -50,7 +50,9 @@ class MailboxesViewModel @Inject constructor(
         }
     }
 
-    fun deleteMailbox(mailbox: Mailbox) {}
+    fun setAsDefault(mailbox: Mailbox) {}
+
+    fun delete(mailbox: Mailbox) {}
 
     fun clearUpdateError() {
         _stateFlow.update {

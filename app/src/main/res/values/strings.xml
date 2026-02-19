@@ -167,4 +167,5 @@
     <string name="mailbox_options">Mailbox options</string>
     <string name="unverified">Unverified</string>
     <string name="delete_mailbox_alert_title">Delete mailbox %s?</string>
+    <string name="set_as_default">Set as default</string>
 </resources>

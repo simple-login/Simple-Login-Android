@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -23,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -116,7 +119,8 @@ fun MailboxesScreen(
                                     bottom = bottomPadding
                                 ),
                                 mailbox = mailbox,
-                                onDelete = { deleteMailbox(mailbox) }
+                                onSetAsDefault = { setAsDefault(mailbox) },
+                                onDelete = { delete(mailbox) }
                             )
                             if (index < mailboxes.lastIndex) {
                                 HorizontalDivider()
@@ -150,6 +154,7 @@ fun MailboxesScreen(
 fun MailboxRow(
     modifier: Modifier,
     mailbox: Mailbox,
+    onSetAsDefault: () -> Unit,
     onDelete: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -210,8 +215,36 @@ fun MailboxRow(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false }
                 ) {
+                    if (mailbox.verified) {
+                        DropdownMenuItem(
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.StarBorder,
+                                    contentDescription = null
+                                )
+                            },
+                            text = { Text(text = stringResource(R.string.set_as_default)) },
+                            onClick = {
+                                showMenu = false
+                                onSetAsDefault()
+                            }
+                        )
+
+                        HorizontalDivider()
+                    }
+
                     DropdownMenuItem(
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null
+                            )
+                        },
                         text = { Text(text = stringResource(R.string.delete)) },
+                        colors = MenuDefaults.itemColors(
+                            leadingIconColor = Color.Red,
+                            textColor = Color.Red
+                        ),
                         onClick = {
                             showMenu = false
                             showDeleteAlert = true
