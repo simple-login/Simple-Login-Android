@@ -27,12 +27,14 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.ui.home.settings.device.DeviceSettingsScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
+import io.simplelogin.android.ui.home.customdomains.CustomDomainDetailsScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
 import io.simplelogin.android.ui.home.settings.account.AccountSettingsScreen
@@ -69,6 +71,9 @@ data object MailboxesDestination : NavKey
 @Serializable
 data object CustomDomainsDestination : NavKey
 
+@Serializable
+data class CustomDomainDetailsDestination(val domain: CustomDomain) : NavKey
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -85,6 +90,7 @@ fun AppRoot(
     val showAccountSettingsDialog by showAccountSettingsDialog.collectAsState()
     val showMailboxesDialog by showMailboxesDialog.collectAsState()
     val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
+    val customDomainDetailsAsDialog by customDomainDetailsAsDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -161,7 +167,16 @@ fun AppRoot(
             }
 
             entry<CustomDomainsDestination> {
-                CustomDomainsScreen(onDismiss = viewModel::goBack)
+                CustomDomainsScreen(onViewDetails = {
+                    viewModel.showCustomDomainDetails(
+                        domain = it,
+                        asDialog = false
+                    )
+                }, onDismiss = viewModel::goBack)
+            }
+
+            entry<CustomDomainDetailsDestination> {
+                CustomDomainDetailsScreen(domain = it.domain, onDismiss = viewModel::goBack)
             }
         }
     )
@@ -204,7 +219,16 @@ fun AppRoot(
 
     if (showCustomDomainsDialog) {
         Dialog(onDismissRequest = ::dismissCustomDomainsDialog) {
-            CustomDomainsScreen(onDismiss = ::dismissCustomDomainsDialog)
+            CustomDomainsScreen(
+                onViewDetails = { showCustomDomainDetails(domain = it, asDialog = true) },
+                onDismiss = ::dismissCustomDomainsDialog
+            )
+        }
+    }
+
+    customDomainDetailsAsDialog?.let {
+        Dialog(onDismissRequest = ::dismissCustomDomainDetailsDialog) {
+            CustomDomainDetailsScreen(domain = it, onDismiss = ::dismissCustomDomainDetailsDialog)
         }
     }
 }

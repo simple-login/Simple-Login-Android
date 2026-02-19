@@ -1,7 +1,9 @@
 package io.simplelogin.android.data.models.api
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CustomDomain(
     @SerializedName("id") val id: Int,
     @SerializedName("creation_timestamp") val creationTimestamp: Double,

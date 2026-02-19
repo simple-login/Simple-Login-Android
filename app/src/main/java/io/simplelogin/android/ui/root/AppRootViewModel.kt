@@ -7,6 +7,7 @@ import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -40,6 +41,8 @@ class AppRootViewModel @Inject constructor(
     var showMailboxesDialog = MutableStateFlow(false)
 
     var showCustomDomainsDialog = MutableStateFlow(false)
+
+    var customDomainDetailsAsDialog = MutableStateFlow<CustomDomain?>(null)
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
         .map {
@@ -170,6 +173,20 @@ class AppRootViewModel @Inject constructor(
 
     fun dismissCustomDomainsDialog() {
         showCustomDomainsDialog.value = false
+    }
+
+    fun showCustomDomainDetails(domain: CustomDomain, asDialog: Boolean) {
+        if (asDialog) {
+            customDomainDetailsAsDialog.value = domain
+        } else {
+            _navBackStack.value.apply {
+                add(CustomDomainDetailsDestination(domain))
+            }
+        }
+    }
+
+    fun dismissCustomDomainDetailsDialog() {
+        customDomainDetailsAsDialog.value = null
     }
 
     //endregion

@@ -51,6 +51,7 @@ import io.simplelogin.android.util.relativeDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDomainsScreen(
+    onViewDetails: (CustomDomain) -> Unit,
     onDismiss: () -> Unit
 ) = with(hiltViewModel<CustomDomainsViewModel>()) {
     val state by stateFlow.collectAsState()
@@ -105,7 +106,7 @@ fun CustomDomainsScreen(
                         )
                     }
                 } else {
-                    DomainList(domains)
+                    DomainList(domains = domains, onViewDetails = onViewDetails)
                 }
             }
 
@@ -128,7 +129,10 @@ fun CustomDomainsScreen(
 }
 
 @Composable
-private fun DomainList(domains: List<CustomDomain>) {
+private fun DomainList(
+    domains: List<CustomDomain>,
+    onViewDetails: (CustomDomain) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = Spacing.regular)
@@ -138,9 +142,7 @@ private fun DomainList(domains: List<CustomDomain>) {
         itemsIndexed(domains) { index, domain ->
             DomainRow(
                 modifier = Modifier
-                    .clickable {
-
-                    }
+                    .clickable { onViewDetails(domain) }
                     .padding(Spacing.regular),
                 domain = domain,
             )
