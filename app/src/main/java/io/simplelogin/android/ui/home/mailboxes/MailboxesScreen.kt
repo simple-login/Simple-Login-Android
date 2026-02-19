@@ -1,7 +1,5 @@
 package io.simplelogin.android.ui.home.mailboxes
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
@@ -43,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +50,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.UnverifiedBadge
 import io.simplelogin.android.ui.util.primaryContentBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -166,38 +164,18 @@ fun MailboxRow(
         Text(
             text = mailbox.email,
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
         )
 
         if (mailbox.default) {
             Spacer(modifier = Modifier.width(Spacing.regular))
-
-            Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(Spacing.medium))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(horizontal = Spacing.medium, vertical = Spacing.small),
-                text = stringResource(R.string.default_mailbox),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White
-            )
+            DefaultBadge()
         }
 
         if (!mailbox.verified) {
             Spacer(modifier = Modifier.width(Spacing.regular))
-
-            Text(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(Spacing.medium),
-                    )
-                    .padding(horizontal = Spacing.medium, vertical = Spacing.small),
-                text = stringResource(R.string.unverified),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
-            )
+            UnverifiedBadge()
         }
 
         if (!mailbox.default) {

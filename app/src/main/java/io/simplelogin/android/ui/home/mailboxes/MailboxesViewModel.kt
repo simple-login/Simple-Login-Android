@@ -33,9 +33,12 @@ class MailboxesViewModel @Inject constructor(
         _stateFlow.update { it.copy(isFetching = true) }
         withApiKey { apiKey ->
             when (val result = datasource.getMailboxes(apiKey)) {
-                is Result.Success -> _stateFlow.update {
+                is Result.Success -> _stateFlow.update { it ->
+                    val sortedMailboxes = result.value.value.sortedWith(
+                        compareByDescending { it.creationTimestamp }
+                    )
                     it.copy(
-                        mailboxes = result.value.value,
+                        mailboxes = sortedMailboxes,
                         isFetching = false
                     )
                 }

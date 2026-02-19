@@ -2,7 +2,6 @@ package io.simplelogin.android.ui.home.createalias
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Cancel
@@ -50,10 +48,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -71,7 +67,9 @@ import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.UnverifiedBadge
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
@@ -484,18 +482,21 @@ private fun MailboxesSelectionDialog(
                             .fillMaxWidth()
                             .padding(vertical = Spacing.medium)
                             .clickableRippleDisabled {
-                                tempSelection =
-                                    if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
-                                        tempSelection - mailbox
-                                    } else {
-                                        tempSelection + mailbox
-                                    }
-                                onSelectionChanged(tempSelection)
+                                if (mailbox.verified) {
+                                    tempSelection =
+                                        if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
+                                            tempSelection - mailbox
+                                        } else {
+                                            tempSelection + mailbox
+                                        }
+                                    onSelectionChanged(tempSelection)
+                                }
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                             Checkbox(
+                                enabled = mailbox.verified,
                                 checked = tempSelection.contains(mailbox),
                                 onCheckedChange = { checked ->
                                     if (!checked && tempSelection.count() == 1) {
@@ -515,21 +516,18 @@ private fun MailboxesSelectionDialog(
 
                         Text(
                             text = mailbox.email,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
                         )
 
                         Spacer(modifier = Modifier.width(Spacing.medium))
 
                         if (mailbox.default) {
-                            Text(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                                text = stringResource(R.string.default_mailbox),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White
-                            )
+                            DefaultBadge()
+                        }
+
+                        if (!mailbox.verified) {
+                            UnverifiedBadge()
                         }
                     }
                     if (index < mailboxes.lastIndex) {
