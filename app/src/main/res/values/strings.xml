@@ -172,4 +172,8 @@
         <item quantity="one">%d alias</item>
         <item quantity="other">%d aliases</item>
     </plurals>
+    <string name="add_mailbox">Add mailbox</string>
+    <string name="add_mailbox_description">A verification email will be sent to this email address</string>
+    <string name="add">Add</string>
+    <string name="updated_successfully">Updated successfully</string>
 </resources>

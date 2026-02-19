@@ -53,6 +53,8 @@ class MailboxesViewModel @Inject constructor(
         }
     }
 
+    fun add(email: String) {}
+
     fun setAsDefault(mailbox: Mailbox) {}
 
     fun delete(mailbox: Mailbox) {}

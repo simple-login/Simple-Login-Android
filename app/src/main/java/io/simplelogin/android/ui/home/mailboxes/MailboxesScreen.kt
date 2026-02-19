@@ -1,15 +1,20 @@
 package io.simplelogin.android.ui.home.mailboxes
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.StarBorder
@@ -19,11 +24,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -41,6 +48,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +57,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
@@ -57,8 +68,10 @@ import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.relativeDateTime
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MailboxesScreen(
@@ -70,11 +83,23 @@ fun MailboxesScreen(
     val fetchError = state.fetchError
     val updateError = state.updateError
     val snackbarHostState = remember { SnackbarHostState() }
+    var hasInitiallyLoaded by remember { mutableStateOf(false) }
+    var showAddMailboxDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(updateError) {
         updateError?.let {
             snackbarHostState.showSnackbar(it.description(context))
             clearUpdateError()
+        }
+    }
+
+    LaunchedEffect(state.isFetching) {
+        if (!state.isFetching && state.fetchError == null && hasInitiallyLoaded) {
+            snackbarHostState.showSnackbar(context.getString(R.string.updated_successfully))
+        }
+
+        if (!state.isFetching && !hasInitiallyLoaded) {
+            hasInitiallyLoaded = true
         }
     }
 
@@ -94,7 +119,17 @@ fun MailboxesScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        floatingActionButton = {
+            AnimatedVisibility(visible = mailboxes != null) {
+                FloatingActionButton(onClick = { showAddMailboxDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.add_mailbox)
+                    )
+                }
+            }
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding),
@@ -148,6 +183,16 @@ fun MailboxesScreen(
                 RetryButton(error = fetchError, onRetry = ::fetchMailboxes)
             }
         }
+    }
+
+    if (showAddMailboxDialog) {
+        AddMailboxDialog(
+            onAdd = {
+                showAddMailboxDialog = false
+                add(it)
+            },
+            onDismiss = { showAddMailboxDialog = false }
+        )
     }
 }
 
@@ -285,4 +330,66 @@ fun MailboxRow(
             }
         )
     }
+}
+
+@Composable
+fun AddMailboxDialog(
+    onAdd: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val focusRequester = remember { FocusRequester() }
+    var email by remember { mutableStateOf("") }
+    var isValidEmail by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.add_mailbox)) },
+        text = {
+            Column {
+                Text(text = stringResource(R.string.add_mailbox_description))
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    value = email,
+                    onValueChange = {
+                        isValidEmail = true
+                        email = it
+                    },
+                    label = { Text(text = stringResource(R.string.email_address)) },
+                    singleLine = true,
+                    isError = !isValidEmail,
+                    supportingText = {
+                        if (!isValidEmail) {
+                            Text(text = stringResource(R.string.invalid_email_error))
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done
+                    )
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                isValidEmail = email.isValidEmail()
+                if (isValidEmail) {
+                    onAdd(email)
+                }
+            }) {
+                Text(text = stringResource(R.string.add))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
+            }
+        }
+    )
 }
