@@ -2,6 +2,7 @@ package io.simplelogin.android.ui.home.mailboxes
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,7 +69,6 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.relativeDateTime
@@ -183,17 +183,10 @@ fun MailboxesScreen(
                         modifier = Modifier
                             .padding(horizontal = Spacing.regular)
                             .padding(bottom = Spacing.regular)
-                            .primaryContentBackground()
+                            .primaryContentBackground(padded = false)
                     ) {
                         itemsIndexed(mailboxes) { index, mailbox ->
-                            val topPadding = if (index == 0) 0.dp else Spacing.regular
-                            val bottomPadding =
-                                if (index == mailboxes.lastIndex) 0.dp else Spacing.regular
                             MailboxRow(
-                                modifier = Modifier.padding(
-                                    top = topPadding,
-                                    bottom = bottomPadding
-                                ),
                                 mailbox = mailbox,
                                 onSetAsDefault = { setAsDefault(mailbox) },
                                 onDelete = { mailboxToDelete = mailbox }
@@ -250,14 +243,16 @@ fun MailboxesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MailboxRow(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     mailbox: Mailbox,
     onSetAsDefault: () -> Unit,
     onDelete: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     Row(
-        modifier = modifier.clickableRippleDisabled { showMenu = true },
+        modifier = modifier
+            .clickable { showMenu = true }
+            .padding(Spacing.regular),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {

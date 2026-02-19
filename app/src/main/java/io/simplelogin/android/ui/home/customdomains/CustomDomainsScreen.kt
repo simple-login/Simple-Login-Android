@@ -39,7 +39,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.CustomDomain
@@ -134,21 +133,15 @@ private fun DomainList(domains: List<CustomDomain>) {
         modifier = Modifier
             .padding(horizontal = Spacing.regular)
             .padding(bottom = Spacing.regular)
-            .primaryContentBackground(),
+            .primaryContentBackground(padded = false),
     ) {
         itemsIndexed(domains) { index, domain ->
-            val topPadding = if (index == 0) 0.dp else Spacing.regular
-            val bottomPadding =
-                if (index == domains.lastIndex) 0.dp else Spacing.regular
             DomainRow(
                 modifier = Modifier
                     .clickable {
-                        
+
                     }
-                    .padding(
-                        top = topPadding,
-                        bottom = bottomPadding
-                    ),
+                    .padding(Spacing.regular),
                 domain = domain,
             )
             if (index < domains.lastIndex) {

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -87,7 +88,7 @@ fun DeleteMailboxDialog(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
-                        options.forEach { option ->
+                        options.forEachIndexed { index, option ->
                             DropdownMenuItem(
                                 text = { Text(text = option.description(context)) },
                                 trailingIcon = {
@@ -103,6 +104,10 @@ fun DeleteMailboxDialog(
                                     selectedOption = option
                                 }
                             )
+
+                            if (index < options.lastIndex) {
+                                HorizontalDivider()
+                            }
                         }
                     }
                 }
