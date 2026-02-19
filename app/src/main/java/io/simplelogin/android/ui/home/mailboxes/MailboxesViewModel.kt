@@ -78,7 +78,29 @@ class MailboxesViewModel @Inject constructor(
 
     fun setAsDefault(mailbox: Mailbox) {}
 
-    fun delete(mailbox: Mailbox) {}
+    fun deleteMailbox(mailbox: Mailbox, option: MailboxDeleteOption) {
+        _stateFlow.update { it.copy(isUpdating = true) }
+        withApiKey { apiKey ->
+            val result = datasource.deleteMailbox(
+                apiKey = apiKey,
+                mailbox = mailbox,
+                transferredMailbox = option.mailbox
+            )
+            when (result) {
+                is Result.Success -> _stateFlow.update { state ->
+                    state.copy(
+                        mailboxes = state.mailboxes?.filter { it.id != mailbox.id },
+                        isUpdating = false,
+                        deletedMailbox = mailbox
+                    )
+                }
+
+                is Result.Failure -> _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = result.error)
+                }
+            }
+        }
+    }
 
     fun clearUpdateError() {
         _stateFlow.update {
@@ -89,6 +111,12 @@ class MailboxesViewModel @Inject constructor(
     fun clearAddedMailbox() {
         _stateFlow.update {
             it.copy(addedMailbox = null)
+        }
+    }
+
+    fun clearDeletedMailbox() {
+        _stateFlow.update {
+            it.copy(deletedMailbox = null)
         }
     }
 

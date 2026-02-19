@@ -29,6 +29,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -198,7 +199,7 @@ interface ApiService {
         @Body body: EmailBody
     ): Response<Mailbox>
 
-    @DELETE("api/mailboxes/{id}")
+    @HTTP(method = "DELETE", path = "api/mailboxes/{id}", hasBody = true)
     suspend fun deleteMailbox(
         @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") mailboxId: Int,

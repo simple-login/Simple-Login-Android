@@ -166,7 +166,6 @@
     <string name="edit_profile_picture">Edit profile picture</string>
     <string name="mailbox_options">Mailbox options</string>
     <string name="unverified">Unverified</string>
-    <string name="delete_mailbox_alert_title">Delete mailbox %s?</string>
     <string name="set_as_default">Set as default</string>
     <plurals name="number_of_aliases">
         <item quantity="one">%d alias</item>
@@ -177,4 +176,10 @@
     <string name="add">Add</string>
     <string name="updated_successfully">Updated successfully</string>
     <string name="mailbox_verification_message">We\'ve sent a verification email to %s</string>
+    <string name="delete_mailbox">Delete mailbox</string>
+    <string name="delete_mailbox_explanation">Depending on your alias deletion setting, all aliases owned by the mailbox %s will be either immediately deleted or moved to the trash.\nYou can choose to transfer them to a different mailbox.</string>
+    <string name="select_an_option">Select an option</string>
+    <string name="delete_aliases">Delete aliases</string>
+    <string name="transfer_aliases_to_mailbox">Transfer aliases to %s</string>
+    <string name="mailbox_deleted">Mailbox %s deleted</string>
 </resources>

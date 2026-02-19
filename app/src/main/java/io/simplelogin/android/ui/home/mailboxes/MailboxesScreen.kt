@@ -85,6 +85,7 @@ fun MailboxesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var hasInitiallyLoaded by remember { mutableStateOf(false) }
     var showAddMailboxDialog by remember { mutableStateOf(false) }
+    var mailboxToDelete by remember { mutableStateOf<Mailbox?>(null) }
 
     LaunchedEffect(updateError) {
         updateError?.let {
@@ -112,6 +113,18 @@ fun MailboxesScreen(
                 )
             )
             clearAddedMailbox()
+        }
+    }
+
+    LaunchedEffect(state.deletedMailbox) {
+        state.deletedMailbox?.let {
+            snackbarHostState.showSnackbar(
+                context.getString(
+                    R.string.mailbox_deleted,
+                    it.email
+                )
+            )
+            clearDeletedMailbox()
         }
     }
 
@@ -169,7 +182,7 @@ fun MailboxesScreen(
                                 ),
                                 mailbox = mailbox,
                                 onSetAsDefault = { setAsDefault(mailbox) },
-                                onDelete = { delete(mailbox) }
+                                onDelete = { mailboxToDelete = mailbox }
                             )
                             if (index < mailboxes.lastIndex) {
                                 HorizontalDivider()
@@ -206,6 +219,18 @@ fun MailboxesScreen(
             onDismiss = { showAddMailboxDialog = false }
         )
     }
+
+    mailboxToDelete?.let { mailbox ->
+        DeleteMailboxDialog(
+            mailboxToDelete = mailbox,
+            mailboxes = state.mailboxes ?: listOf(),
+            onDelete = {
+                mailboxToDelete = null
+                deleteMailbox(mailbox, it)
+            },
+            onDismiss = { mailboxToDelete = null }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -217,7 +242,6 @@ fun MailboxRow(
     onDelete: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
-    var showDeleteAlert by remember { mutableStateOf(false) }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -309,38 +333,12 @@ fun MailboxRow(
                         ),
                         onClick = {
                             showMenu = false
-                            showDeleteAlert = true
+                            onDelete()
                         }
                     )
                 }
             }
         }
-    }
-
-    if (showDeleteAlert) {
-        AlertDialog(
-            onDismissRequest = { showDeleteAlert = false },
-            title = {
-                Text(
-                    text = stringResource(
-                        id = R.string.delete_mailbox_alert_title, mailbox.email
-                    )
-                )
-            },
-            text = {},
-            confirmButton = {
-                TextButton(onClick = { showDeleteAlert = false }) {
-                    Text(text = stringResource(R.string.cancel))
-                }
-
-                TextButton(onClick = {
-                    showDeleteAlert = false
-                    onDelete()
-                }) {
-                    Text(text = stringResource(R.string.delete))
-                }
-            }
-        )
     }
 }
 
