@@ -33,6 +33,7 @@ import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
+import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
 import io.simplelogin.android.ui.home.settings.account.AccountSettingsScreen
 import io.simplelogin.android.ui.login.LoginMasterScreen
@@ -65,6 +66,9 @@ data object AccountSettingsDestination : NavKey
 @Serializable
 data object MailboxesDestination : NavKey
 
+@Serializable
+data object CustomDomainsDestination : NavKey
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -80,6 +84,7 @@ fun AppRoot(
     val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
     val showAccountSettingsDialog by showAccountSettingsDialog.collectAsState()
     val showMailboxesDialog by showMailboxesDialog.collectAsState()
+    val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -154,6 +159,10 @@ fun AppRoot(
             entry<MailboxesDestination> {
                 MailboxesScreen(onDismiss = viewModel::goBack)
             }
+
+            entry<CustomDomainsDestination> {
+                CustomDomainsScreen(onDismiss = viewModel::goBack)
+            }
         }
     )
 
@@ -190,6 +199,12 @@ fun AppRoot(
     if (showMailboxesDialog) {
         Dialog(onDismissRequest = ::dismissMailboxesDialog) {
             MailboxesScreen(onDismiss = ::dismissMailboxesDialog)
+        }
+    }
+
+    if (showCustomDomainsDialog) {
+        Dialog(onDismissRequest = ::dismissCustomDomainsDialog) {
+            CustomDomainsScreen(onDismiss = ::dismissCustomDomainsDialog)
         }
     }
 }

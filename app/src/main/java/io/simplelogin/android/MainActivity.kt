@@ -102,6 +102,11 @@ class MainActivity : ComponentActivity() {
                                     appRootViewModel.showMailboxesScreen(asDialog)
                                 }
                             },
+                            onCustomDomainsClick = {
+                                closeDrawerAndExecute {
+                                    appRootViewModel.showCustomDomainsScreen(asDialog)
+                                }
+                            },
                             onAccountSettingsClick = {
                                 closeDrawerAndExecute {
                                     appRootViewModel.showAccountSettingsScreen(asDialog)
@@ -252,6 +257,7 @@ private fun MainUi(
 private fun Drawer(
     appVersion: String,
     onMailboxesClick: () -> Unit,
+    onCustomDomainsClick: () -> Unit,
     onAccountSettingsClick: () -> Unit,
     onDeviceSettingsClick: () -> Unit,
     onSignOutClick: () -> Unit
@@ -264,6 +270,13 @@ private fun Drawer(
             shape = RectangleShape,
             selected = false,
             onClick = onMailboxesClick
+        )
+
+        NavigationDrawerItem(
+            label = { Text(text = stringResource(R.string.custom_domains)) },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onCustomDomainsClick
         )
 
         HorizontalDivider()
