@@ -10,6 +10,8 @@ import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasourceImpl
+import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
@@ -32,4 +34,7 @@ abstract class RemoteDatasourceModule {
 
     @[Binds Singleton]
     abstract fun bindMailboxes(impl: MailboxesRemoteDatasourceImpl): MailboxesRemoteDatasource
+
+    @[Binds Singleton]
+    abstract fun bindCustomDomains(impl: CustomDomainsRemoteDatasourceImpl): CustomDomainsRemoteDatasource
 }

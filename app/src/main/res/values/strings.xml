@@ -184,4 +184,6 @@
     <string name="mailbox_deleted">Mailbox %s deleted</string>
     <string name="mailbox_set_as_default">Mailbox %s is set as default</string>
     <string name="custom_domains">Custom domains</string>
+    <string name="no_custom_domains_message">No custom domains yet.\nAdd your first one via the web app.</string>
+    <string name="learn_more">Learn more</string>
 </resources>
