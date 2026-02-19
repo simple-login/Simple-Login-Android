@@ -182,4 +182,5 @@
     <string name="delete_aliases">Delete aliases</string>
     <string name="transfer_aliases_to_mailbox">Transfer aliases to %s</string>
     <string name="mailbox_deleted">Mailbox %s deleted</string>
+    <string name="mailbox_set_as_default">Mailbox %s is set as default</string>
 </resources>

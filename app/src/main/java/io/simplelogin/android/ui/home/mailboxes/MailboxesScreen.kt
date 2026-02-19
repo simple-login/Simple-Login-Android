@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,6 +68,7 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.relativeDateTime
@@ -125,6 +127,18 @@ fun MailboxesScreen(
                 )
             )
             clearDeletedMailbox()
+        }
+    }
+
+    LaunchedEffect(state.newDefaultMailbox) {
+        state.newDefaultMailbox?.let {
+            snackbarHostState.showSnackbar(
+                context.getString(
+                    R.string.mailbox_set_as_default,
+                    it.email
+                )
+            )
+            clearNewDefaultMailbox()
         }
     }
 
@@ -243,7 +257,7 @@ fun MailboxRow(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     Row(
-        modifier = modifier,
+        modifier = modifier.clickableRippleDisabled { showMenu = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
@@ -361,6 +375,8 @@ fun AddMailboxDialog(
         text = {
             Column {
                 Text(text = stringResource(R.string.add_mailbox_description))
+
+                Spacer(modifier = Modifier.height(Spacing.medium))
 
                 OutlinedTextField(
                     modifier = Modifier

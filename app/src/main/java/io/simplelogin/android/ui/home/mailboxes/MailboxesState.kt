@@ -10,7 +10,8 @@ data class MailboxesState(
     val isUpdating: Boolean,
     val updateError: ApiError?,
     val addedMailbox: Mailbox?,
-    val deletedMailbox: Mailbox?
+    val deletedMailbox: Mailbox?,
+    val newDefaultMailbox: Mailbox?
 ) {
     companion object {
         val Default = MailboxesState(
@@ -20,7 +21,8 @@ data class MailboxesState(
             isUpdating = false,
             updateError = null,
             addedMailbox = null,
-            deletedMailbox = null
+            deletedMailbox = null,
+            newDefaultMailbox = null
         )
     }
 }

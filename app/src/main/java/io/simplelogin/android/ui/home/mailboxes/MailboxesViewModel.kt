@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
+import io.simplelogin.android.data.models.api.UpdateMailboxOptions
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -76,7 +77,39 @@ class MailboxesViewModel @Inject constructor(
         }
     }
 
-    fun setAsDefault(mailbox: Mailbox) {}
+    fun setAsDefault(newDefaultMailbox: Mailbox) {
+        _stateFlow.update { it.copy(isUpdating = true) }
+        withApiKey { apiKey ->
+            val result = datasource.updateMailbox(
+                apiKey = apiKey,
+                mailbox = newDefaultMailbox,
+                options = UpdateMailboxOptions(default = true)
+            )
+
+            when (result) {
+                is Result.Success -> {
+                    val updatedMailboxes = _stateFlow.value.mailboxes?.map { mailbox ->
+                        when {
+                            mailbox.id == newDefaultMailbox.id -> mailbox.copy(default = true)
+                            mailbox.default -> mailbox.copy(default = false)
+                            else -> mailbox
+                        }
+                    }
+                    _stateFlow.update {
+                        it.copy(
+                            mailboxes = updatedMailboxes,
+                            newDefaultMailbox = newDefaultMailbox,
+                            isUpdating = false
+                        )
+                    }
+                }
+
+                is Result.Failure -> _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = result.error)
+                }
+            }
+        }
+    }
 
     fun deleteMailbox(mailbox: Mailbox, option: MailboxDeleteOption) {
         _stateFlow.update { it.copy(isUpdating = true) }
@@ -102,23 +135,13 @@ class MailboxesViewModel @Inject constructor(
         }
     }
 
-    fun clearUpdateError() {
-        _stateFlow.update {
-            it.copy(updateError = null)
-        }
-    }
+    fun clearUpdateError() = _stateFlow.update { it.copy(updateError = null) }
 
-    fun clearAddedMailbox() {
-        _stateFlow.update {
-            it.copy(addedMailbox = null)
-        }
-    }
+    fun clearAddedMailbox() = _stateFlow.update { it.copy(addedMailbox = null) }
 
-    fun clearDeletedMailbox() {
-        _stateFlow.update {
-            it.copy(deletedMailbox = null)
-        }
-    }
+    fun clearDeletedMailbox() = _stateFlow.update { it.copy(deletedMailbox = null) }
+
+    fun clearNewDefaultMailbox() = _stateFlow.update { it.copy(newDefaultMailbox = null) }
 
     private fun withApiKey(block: suspend (ApiKey) -> Unit) {
         apiKey?.let { viewModelScope.launch { block(it) } }
