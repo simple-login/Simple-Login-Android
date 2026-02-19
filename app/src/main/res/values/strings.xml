@@ -168,4 +168,8 @@
     <string name="unverified">Unverified</string>
     <string name="delete_mailbox_alert_title">Delete mailbox %s?</string>
     <string name="set_as_default">Set as default</string>
+    <plurals name="number_of_aliases">
+        <item quantity="one">%d alias</item>
+        <item quantity="other">%d aliases</item>
+    </plurals>
 </resources>

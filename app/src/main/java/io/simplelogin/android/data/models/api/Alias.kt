@@ -1,8 +1,9 @@
 package io.simplelogin.android.data.models.api
 
 import android.content.Context
-import android.text.format.DateUtils
 import com.google.gson.annotations.SerializedName
+import io.simplelogin.android.util.relativeDateTime
+import io.simplelogin.android.util.relativeTimeSpan
 import kotlinx.serialization.Serializable
 
 @[JvmInline Serializable]
@@ -64,23 +65,3 @@ data class Alias(
 data class Aliases(
     @SerializedName("aliases") val aliases: List<Alias>
 )
-
-private fun Double.relativeDateTime(context: Context): String =
-    DateUtils.getRelativeDateTimeString(
-        context,
-        (this * 1_000).toLong(),
-        DateUtils.MINUTE_IN_MILLIS,
-        DateUtils.WEEK_IN_MILLIS,
-        DateUtils.FORMAT_SHOW_DATE or
-                DateUtils.FORMAT_SHOW_TIME or
-                DateUtils.FORMAT_SHOW_YEAR or
-                DateUtils.FORMAT_ABBREV_RELATIVE or
-                DateUtils.FORMAT_ABBREV_MONTH
-    ).toString()
-
-private fun Double.relativeTimeSpan(): String =
-    DateUtils.getRelativeTimeSpanString(
-        (this * 1_000).toLong(),
-        System.currentTimeMillis(),
-        DateUtils.MINUTE_IN_MILLIS
-    ).toString()

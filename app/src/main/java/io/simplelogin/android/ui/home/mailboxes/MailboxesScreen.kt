@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.mailboxes
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +44,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -54,6 +57,7 @@ import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.util.relativeDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,21 +165,44 @@ fun MailboxRow(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = mailbox.email,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
-            color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
-        )
+        Column {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = mailbox.email,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
+                )
 
-        if (mailbox.default) {
-            Spacer(modifier = Modifier.width(Spacing.regular))
-            DefaultBadge()
-        }
+                if (mailbox.default) {
+                    Spacer(modifier = Modifier.width(Spacing.medium))
+                    DefaultBadge()
+                }
 
-        if (!mailbox.verified) {
-            Spacer(modifier = Modifier.width(Spacing.regular))
-            UnverifiedBadge()
+                if (!mailbox.verified) {
+                    Spacer(modifier = Modifier.width(Spacing.medium))
+                    UnverifiedBadge()
+                }
+            }
+
+            Text(
+                text = buildAnnotatedString {
+                    append(mailbox.creationTimestamp.relativeDateTime(LocalContext.current))
+                    append(" • ")
+                    if (mailbox.aliasCount == 0) {
+                        append(stringResource(R.string.no_aliases))
+                    } else {
+                        append(
+                            pluralStringResource(
+                                R.plurals.number_of_aliases,
+                                mailbox.aliasCount,
+                                mailbox.aliasCount
+                            )
+                        )
+                    }
+                },
+                color = MaterialTheme.colorScheme.secondary
+            )
         }
 
         if (!mailbox.default) {
