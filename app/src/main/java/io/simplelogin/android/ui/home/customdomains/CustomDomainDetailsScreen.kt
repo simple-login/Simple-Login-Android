@@ -70,6 +70,7 @@ import io.simplelogin.android.util.relativeDateTime
 @Composable
 fun CustomDomainDetailsScreen(
     domain: CustomDomain,
+    onViewDeletedAliases: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val viewModel =
@@ -133,7 +134,7 @@ fun CustomDomainDetailsScreen(
                 onEditDisplayName = { showEditDisplayNameDialog = true },
                 onToggleCatchAll = viewModel::updateCatchAll,
                 onToggleRandomPrefixGeneration = viewModel::updateRandomPrefixGeneration,
-                onViewDeletedAliases = {}
+                onViewDeletedAliases = onViewDeletedAliases
             )
 
             AnimatedVisibility(

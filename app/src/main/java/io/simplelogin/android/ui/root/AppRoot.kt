@@ -34,6 +34,7 @@ import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
+import io.simplelogin.android.ui.home.customdomains.CustomDomainDeletedAliasesScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainDetailsScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
@@ -74,6 +75,9 @@ data object CustomDomainsDestination : NavKey
 @Serializable
 data class CustomDomainDetailsDestination(val domain: CustomDomain) : NavKey
 
+@Serializable
+data class CustomDomainDeletedAliasesDestination(val domain: CustomDomain) : NavKey
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -91,6 +95,7 @@ fun AppRoot(
     val showMailboxesDialog by showMailboxesDialog.collectAsState()
     val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
     val customDomainDetailsAsDialog by customDomainDetailsAsDialog.collectAsState()
+    val customDomainDeletedAliasesAsDialog by customDomainDeletedAliasesAsDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -176,7 +181,20 @@ fun AppRoot(
             }
 
             entry<CustomDomainDetailsDestination> {
-                CustomDomainDetailsScreen(domain = it.domain, onDismiss = viewModel::goBack)
+                CustomDomainDetailsScreen(
+                    domain = it.domain,
+                    onDismiss = viewModel::goBack,
+                    onViewDeletedAliases = {
+                        viewModel.showCustomDomainDeletedAliases(
+                            domain = it.domain,
+                            asDialog = false
+                        )
+                    }
+                )
+            }
+
+            entry<CustomDomainDeletedAliasesDestination> {
+                CustomDomainDeletedAliasesScreen(domain = it.domain, onDismiss = viewModel::goBack)
             }
         }
     )
@@ -228,7 +246,24 @@ fun AppRoot(
 
     customDomainDetailsAsDialog?.let {
         Dialog(onDismissRequest = ::dismissCustomDomainDetailsDialog) {
-            CustomDomainDetailsScreen(domain = it, onDismiss = ::dismissCustomDomainDetailsDialog)
+            CustomDomainDetailsScreen(
+                domain = it,
+                onDismiss = ::dismissCustomDomainDetailsDialog,
+                onViewDeletedAliases = {
+                    viewModel.showCustomDomainDeletedAliases(
+                        domain = it,
+                        asDialog = true
+                    )
+                })
+        }
+    }
+
+    customDomainDeletedAliasesAsDialog?.let {
+        Dialog(onDismissRequest = ::dismissCustomDomainDeletedAliasesDialog) {
+            CustomDomainDeletedAliasesScreen(
+                domain = it,
+                onDismiss = ::dismissCustomDomainDeletedAliasesDialog
+            )
         }
     }
 }

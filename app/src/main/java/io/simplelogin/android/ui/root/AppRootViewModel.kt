@@ -43,6 +43,7 @@ class AppRootViewModel @Inject constructor(
     var showCustomDomainsDialog = MutableStateFlow(false)
 
     var customDomainDetailsAsDialog = MutableStateFlow<CustomDomain?>(null)
+    var customDomainDeletedAliasesAsDialog = MutableStateFlow<CustomDomain?>(null)
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
         .map {
@@ -187,6 +188,20 @@ class AppRootViewModel @Inject constructor(
 
     fun dismissCustomDomainDetailsDialog() {
         customDomainDetailsAsDialog.value = null
+    }
+
+    fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {
+        if (asDialog) {
+            customDomainDeletedAliasesAsDialog.value = domain
+        } else {
+            _navBackStack.value.apply {
+                add(CustomDomainDeletedAliasesDestination(domain))
+            }
+        }
+    }
+
+    fun dismissCustomDomainDeletedAliasesDialog() {
+        customDomainDeletedAliasesAsDialog.value = null
     }
 
     //endregion
