@@ -6,11 +6,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -43,7 +40,6 @@ import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,55 +110,57 @@ fun AliasesList(
             }
 
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .primaryContentBackground()
-                ) {
-                    Column {
-                        aliases.forEachIndexed { index, alias ->
-                            AliasCell(
-                                modifier = Modifier.clickable {
-                                    when (aliasCellSelection) {
-                                        AliasCellSelection.VIEW_DETAILS -> onAction(
-                                            AliasAction.ViewDetails(
-                                                alias
-                                            )
+                aliases.forEachIndexed { index, alias ->
+                    AliasCell(
+                        modifier = Modifier
+                            .clickable {
+                                when (aliasCellSelection) {
+                                    AliasCellSelection.VIEW_DETAILS -> onAction(
+                                        AliasAction.ViewDetails(
+                                            alias
                                         )
+                                    )
 
-                                        AliasCellSelection.COPY_EMAIL -> onAction(
-                                            AliasAction.CopyEmailAddress(
-                                                alias
-                                            )
+                                    AliasCellSelection.COPY_EMAIL -> onAction(
+                                        AliasAction.CopyEmailAddress(
+                                            alias
                                         )
-                                    }
-                                },
-                                alias = alias,
-                                optionsDisplay = optionsDisplay,
-                                displayInfos = displayInfos,
-                                swipeFromStartToEndAction = swipeFromStartToEndAction,
-                                swipeFromEndToStartAction = swipeFromEndToStartAction,
-                                onAction = onAction
+                                    )
+                                }
+                            }
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart = if (index == 0) Spacing.regular else 0.dp,
+                                    topEnd = if (index == 0) Spacing.regular else 0.dp,
+                                    bottomStart = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
+                                    bottomEnd = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
+                                )
                             )
+                            .background(SlColor.ContentContainerBackgroundColor),
+                        alias = alias,
+                        optionsDisplay = optionsDisplay,
+                        displayInfos = displayInfos,
+                        swipeFromStartToEndAction = swipeFromStartToEndAction,
+                        swipeFromEndToStartAction = swipeFromEndToStartAction,
+                        onAction = onAction
+                    )
 
-                            if (index < aliases.lastIndex) {
-                                HorizontalDivider()
-                            }
-                        }
+                    if (index < aliases.lastIndex) {
+                        HorizontalDivider()
+                    }
+                }
 
-                        AnimatedVisibility(
-                            visible = isFetching && !isRefreshing,
-                            enter = EnterTransition.None,
-                            exit = fadeOut()
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize(Alignment.Center)
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        }
+                AnimatedVisibility(
+                    visible = isFetching && !isRefreshing,
+                    enter = EnterTransition.None,
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center)
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
             }
