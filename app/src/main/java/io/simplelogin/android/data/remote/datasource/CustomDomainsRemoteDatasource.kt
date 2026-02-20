@@ -2,17 +2,37 @@ package io.simplelogin.android.data.remote.datasource
 
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.api.CustomDomains
+import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface CustomDomainsRemoteDatasource {
     suspend fun getCustomDomains(apiKey: ApiKey): Result<CustomDomains, ApiError>
+    suspend fun updateCustomDomains(
+        apiKey: ApiKey,
+        domain: CustomDomain,
+        options: UpdateCustomDomainOptions
+    ): Result<CustomDomain, ApiError>
 }
 
 class CustomDomainsRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
     BaseRemoteDatasource(), CustomDomainsRemoteDatasource {
     override suspend fun getCustomDomains(apiKey: ApiKey): Result<CustomDomains, ApiError> =
         safeApiCall { apiService.getCustomDomains(apiKey = apiKey) }
+
+    override suspend fun updateCustomDomains(
+        apiKey: ApiKey,
+        domain: CustomDomain,
+        options: UpdateCustomDomainOptions
+    ): Result<CustomDomain, ApiError> =
+        safeApiCall {
+            apiService.updateCustomDomain(
+                apiKey = apiKey,
+                domainId = domain.id,
+                body = options
+            )
+        }.mapValue { it.customDomain }
 }
