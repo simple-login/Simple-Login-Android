@@ -13,21 +13,32 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class DeviceSettingsState {
+    data object Loading : DeviceSettingsState()
+    data class Loaded(val settings: DevicePreferences) : DeviceSettingsState()
+}
+
 @HiltViewModel
 class DeviceSettingsViewModel @Inject constructor(
-    observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase,
-    private val updateDeviceSettingsUseCase: UpdateDeviceSettingsUseCase
+    observeDeviceSettings: ObserveDeviceSettingsUseCase,
+    private val updateDeviceSettings: UpdateDeviceSettingsUseCase
 ) : ViewModel() {
-    val deviceSettings = observeDeviceSettingsUseCase.invoke()
+    val stateFlow = observeDeviceSettings().map {
+        DeviceSettingsState.Loaded(it)
+    }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = DevicePreferences.Default
+            initialValue = DeviceSettingsState.Loading
         )
+
+    private val currentSettings: DevicePreferences?
+        get() = (stateFlow.value as? DeviceSettingsState.Loaded)?.settings
 
     fun updateAliasCellSelection(selection: AliasCellSelection) {
         updateSettings { it.copy(aliasCellSelection = selection) }
@@ -38,13 +49,13 @@ class DeviceSettingsViewModel @Inject constructor(
     }
 
     fun updateSwipeFromLeftToRight(action: SwipeAction) {
-        viewModelScope.launch {
-            val oldSwipeFromLeftToRight = deviceSettings.value.swipeFromLeftToRightAction
-            updateDeviceSettingsUseCase.invoke {
+        withCurrentSettings { currentSettings ->
+            val oldSwipeFromLeftToRight = currentSettings.swipeFromLeftToRightAction
+            updateDeviceSettings.invoke {
                 it.copy(swipeFromLeftToRightAction = action)
             }
-            if (action == deviceSettings.value.swipeFromRightToLeftAction) {
-                updateDeviceSettingsUseCase.invoke {
+            if (action == currentSettings.swipeFromRightToLeftAction) {
+                updateDeviceSettings.invoke {
                     it.copy(swipeFromRightToLeftAction = oldSwipeFromLeftToRight)
                 }
             }
@@ -52,13 +63,13 @@ class DeviceSettingsViewModel @Inject constructor(
     }
 
     fun updateSwipeFromRightToLeft(action: SwipeAction) {
-        viewModelScope.launch {
-            val oldSwipeFromRightToLeft = deviceSettings.value.swipeFromRightToLeftAction
-            updateDeviceSettingsUseCase.invoke {
+        withCurrentSettings { currentSettings ->
+            val oldSwipeFromRightToLeft = currentSettings.swipeFromRightToLeftAction
+            updateDeviceSettings.invoke {
                 it.copy(swipeFromRightToLeftAction = action)
             }
-            if (action == deviceSettings.value.swipeFromLeftToRightAction) {
-                updateDeviceSettingsUseCase.invoke {
+            if (action == currentSettings.swipeFromLeftToRightAction) {
+                updateDeviceSettings.invoke {
                     it.copy(swipeFromLeftToRightAction = oldSwipeFromRightToLeft)
                 }
             }
@@ -71,7 +82,7 @@ class DeviceSettingsViewModel @Inject constructor(
 
     fun updateDefaultPrefix(defaultPrefix: DefaultPrefix) {
         viewModelScope.launch {
-            updateDeviceSettingsUseCase.invoke {
+            updateDeviceSettings.invoke {
                 it.copy(defaultPrefix = defaultPrefix)
             }
         }
@@ -92,8 +103,17 @@ class DeviceSettingsViewModel @Inject constructor(
 
     private fun updateSettings(update: (DevicePreferences) -> DevicePreferences) {
         viewModelScope.launch {
-            updateDeviceSettingsUseCase.invoke {
+            updateDeviceSettings.invoke {
                 update(it)
+            }
+        }
+    }
+
+    private fun withCurrentSettings(block: suspend (DevicePreferences) -> Unit) {
+        viewModelScope.launch {
+            when (val value = stateFlow.value) {
+                is DeviceSettingsState.Loaded -> block(value.settings)
+                DeviceSettingsState.Loading -> {}
             }
         }
     }

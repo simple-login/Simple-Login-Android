@@ -2,10 +2,12 @@ package io.simplelogin.android.ui.home.settings.device
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.BrightnessAuto
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -49,6 +52,7 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
+import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.SlColor
@@ -66,9 +70,10 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceSettingsScreen(
+    viewModel: DeviceSettingsViewModel = hiltViewModel(),
     onDismiss: () -> Unit
-) = with(hiltViewModel<DeviceSettingsViewModel>()) {
-    val settings by deviceSettings.collectAsState()
+) {
+    val state by viewModel.stateFlow.collectAsState()
 
     Scaffold(
         containerColor = SlColor.BackgroundColor,
@@ -87,116 +92,138 @@ fun DeviceSettingsScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier =
-                Modifier
-                    .padding(horizontal = Spacing.regular)
-                    .padding(bottom = Spacing.regular)
-                    .padding(innerPadding)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                OptionRow(
-                    modifier = Modifier.primaryContentBackground(),
-                    paddingValues = PaddingValues(Spacing.regular),
-                    title = stringResource(R.string.theme),
-                    description = {
-                        val icon = when (it) {
-                            Theme.LIGHT -> Icons.Outlined.LightMode
-                            Theme.DARK -> Icons.Outlined.DarkMode
-                            Theme.MATCH_SYSTEM -> Icons.Outlined.BrightnessAuto
-                        }
-                        Row {
-                            Icon(imageVector = icon, contentDescription = null)
-                            Spacer(modifier = Modifier.width(Spacing.medium))
-                            Text(text = it.title(context = LocalContext.current))
-                        }
-                    },
-                    options = Theme.entries.toTypedArray(),
-                    selected = settings.theme,
-                    onSelect = ::updateTheme
-                )
+            when (state) {
+                is DeviceSettingsState.Loading ->
+                    CircularProgressIndicator()
 
-                SettingsSpacer()
-            }
-
-            item {
-                ToggleOption(
-                    modifier = Modifier.primaryContentBackground(),
-                    paddingValues = PaddingValues(Spacing.regular),
-                    checked = settings.showStats,
-                    onCheckedChange = ::updateShowStats,
-                    title = stringResource(R.string.show_stats),
-                    description = stringResource(R.string.show_stats_description)
-                )
-
-                SettingsSpacer()
-            }
-
-            item {
-                Column(modifier = Modifier.primaryContentBackground()) {
-                    DefaultPrefixSelection(
-                        selected = settings.defaultPrefix,
-                        onSelect = ::updateDefaultPrefix
+                is DeviceSettingsState.Loaded ->
+                    DeviceSettingsContent(
+                        viewModel = viewModel,
+                        settings = (state as DeviceSettingsState.Loaded).settings
                     )
+            }
+        }
+    }
+}
 
-                    AnimatedVisibility(visible = settings.defaultPrefix == DefaultPrefix.RANDOM_CHARACTERS) {
-                        Column {
-                            Text(
-                                text = stringResource(R.string.number_of_random_characters),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.secondary,
-                                textAlign = TextAlign.Start
+@Composable
+private fun DeviceSettingsContent(
+    settings: DevicePreferences,
+    viewModel: DeviceSettingsViewModel
+) = with(viewModel) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(horizontal = Spacing.regular)
+            .padding(bottom = Spacing.regular)
+    ) {
+        item {
+            OptionRow(
+                modifier = Modifier.primaryContentBackground(),
+                paddingValues = PaddingValues(Spacing.regular),
+                title = stringResource(R.string.theme),
+                description = {
+                    val icon = when (it) {
+                        Theme.LIGHT -> Icons.Outlined.LightMode
+                        Theme.DARK -> Icons.Outlined.DarkMode
+                        Theme.MATCH_SYSTEM -> Icons.Outlined.BrightnessAuto
+                    }
+                    Row {
+                        Icon(imageVector = icon, contentDescription = null)
+                        Spacer(modifier = Modifier.width(Spacing.medium))
+                        Text(text = it.title(context = LocalContext.current))
+                    }
+                },
+                options = Theme.entries.toTypedArray(),
+                selected = settings.theme,
+                onSelect = ::updateTheme
+            )
+
+            SettingsSpacer()
+        }
+
+        item {
+            ToggleOption(
+                modifier = Modifier.primaryContentBackground(),
+                paddingValues = PaddingValues(Spacing.regular),
+                checked = settings.showStats,
+                onCheckedChange = ::updateShowStats,
+                title = stringResource(R.string.show_stats),
+                description = stringResource(R.string.show_stats_description)
+            )
+
+            SettingsSpacer()
+        }
+
+        item {
+            Column(modifier = Modifier.primaryContentBackground()) {
+                DefaultPrefixSelection(
+                    selected = settings.defaultPrefix,
+                    onSelect = ::updateDefaultPrefix
+                )
+
+                AnimatedVisibility(visible = settings.defaultPrefix == DefaultPrefix.RANDOM_CHARACTERS) {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.number_of_random_characters),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            textAlign = TextAlign.Start
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Slider(
+                                modifier = Modifier.weight(1f),
+                                value = settings.prefixRandomCharacterCount.toFloat(),
+                                onValueChange = { updateRandomCharacterCount(it.toInt()) },
+                                valueRange = 1f..10f,
+                                steps = 8
                             )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Slider(
-                                    modifier = Modifier.weight(1f),
-                                    value = settings.prefixRandomCharacterCount.toFloat(),
-                                    onValueChange = { updateRandomCharacterCount(it.toInt()) },
-                                    valueRange = 1f..10f,
-                                    steps = 8
-                                )
 
-                                Text(
-                                    modifier = Modifier.padding(start = Spacing.mediumLarge),
-                                    text = "${settings.prefixRandomCharacterCount}"
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.padding(start = Spacing.mediumLarge),
+                                text = "${settings.prefixRandomCharacterCount}"
+                            )
                         }
                     }
                 }
-
-                SettingsSpacer()
             }
 
-            item {
-                SettingsHeader(text = stringResource(R.string.alias_display_and_interaction))
-                Column(modifier = Modifier.primaryContentBackground()) {
-                    AliasCellSelectionSection(
-                        modifier = Modifier,
-                        selected = settings.aliasCellSelection,
-                        onSelect = ::updateAliasCellSelection
-                    )
+            SettingsSpacer()
+        }
 
-                    HorizontalDivider()
+        item {
+            SettingsHeader(text = stringResource(R.string.alias_display_and_interaction))
+            Column(modifier = Modifier.primaryContentBackground()) {
+                AliasCellSelectionSection(
+                    modifier = Modifier,
+                    selected = settings.aliasCellSelection,
+                    onSelect = ::updateAliasCellSelection
+                )
 
-                    AliasOptionsDisplaySection(
-                        modifier = Modifier,
-                        selected = settings.aliasOptionsDisplay,
-                        onSelect = ::updateAliasOptionsDisplay
-                    )
+                HorizontalDivider()
 
-                    HorizontalDivider()
+                AliasOptionsDisplaySection(
+                    modifier = Modifier,
+                    selected = settings.aliasOptionsDisplay,
+                    onSelect = ::updateAliasOptionsDisplay
+                )
 
-                    SwipeActionSelection(
-                        selectedOptionsDisplay = settings.aliasOptionsDisplay,
-                        selectedLeftToRight = settings.swipeFromLeftToRightAction,
-                        onSelectLeftToRight = ::updateSwipeFromLeftToRight,
-                        selectedRightToLeft = settings.swipeFromRightToLeftAction,
-                        onSelectRightToLeft = ::updateSwipeFromRightToLeft,
-                        selectedAliasDisplayInfos = settings.aliasDisplayInfos,
-                        onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
-                    )
-                }
+                HorizontalDivider()
+
+                SwipeActionSelection(
+                    selectedOptionsDisplay = settings.aliasOptionsDisplay,
+                    selectedLeftToRight = settings.swipeFromLeftToRightAction,
+                    onSelectLeftToRight = ::updateSwipeFromLeftToRight,
+                    selectedRightToLeft = settings.swipeFromRightToLeftAction,
+                    onSelectRightToLeft = ::updateSwipeFromRightToLeft,
+                    selectedAliasDisplayInfos = settings.aliasDisplayInfos,
+                    onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
+                )
             }
         }
     }
