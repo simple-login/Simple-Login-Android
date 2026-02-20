@@ -3,6 +3,7 @@ package io.simplelogin.android
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,6 +54,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
@@ -62,8 +67,11 @@ import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
 import io.simplelogin.android.ui.util.clickableRippleDisabled
+import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,10 +87,30 @@ class MainActivity : ComponentActivity() {
         applyOrientationRestrictions()
         enableEdgeToEdge()
         setContent {
+            val devicePreferences by viewModel.devicePreferences.collectAsState()
+            val darkTheme = when (devicePreferences.theme) {
+                Theme.LIGHT -> false
+                Theme.DARK -> true
+                Theme.MATCH_SYSTEM -> isSystemInDarkTheme()
+            }
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
             val windowAdaptiveInfo = currentWindowAdaptiveInfo()
             val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
+
+            DisposableEffect(darkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
+                    ) { darkTheme },
+                    navigationBarStyle = SystemBarStyle.auto(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
+                    ) { darkTheme }
+                )
+                onDispose {}
+            }
 
             fun closeDrawerAndExecute(task: () -> Unit) {
                 scope.launch {
@@ -91,7 +119,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            SimpleLoginTheme {
+            SimpleLoginTheme(darkTheme = darkTheme) {
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
@@ -156,9 +184,16 @@ class MainViewModel @Inject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val baseUrlProvider: BaseUrlProvider,
     private val userSessionPreferences: DataStore<UserSessionPreferences>,
-    val snackbarManager: SnackbarManager
+    val snackbarManager: SnackbarManager,
+    observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     val showLoadingIndicator = loadingState.asStateFlow()
+    val devicePreferences = observeDeviceSettings()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            DevicePreferences.Default
+        )
 
     fun observe() {
         viewModelScope.launch {
