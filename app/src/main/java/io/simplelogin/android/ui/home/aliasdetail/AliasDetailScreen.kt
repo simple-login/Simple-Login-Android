@@ -28,7 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
@@ -49,10 +49,7 @@ fun AliasDetailScreen(
     onViewContacts: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-
-    // Must explicitly provide the type of viewModel
-    // otherwise it will crash at runtime even though the compiler could infer the type
-    val viewModel: AliasDetailViewModel = hiltViewModel { factory: AliasDetailViewModel.Factory ->
+    val viewModel = hiltViewModel { factory: AliasDetailViewModel.Factory ->
         factory.create(alias)
     }
 
