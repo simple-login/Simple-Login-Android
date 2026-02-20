@@ -1,7 +1,9 @@
 package io.simplelogin.android.ui.home.settings.device
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +56,6 @@ import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -95,6 +96,7 @@ fun DeviceSettingsScreen(
             item {
                 OptionRow(
                     modifier = Modifier.primaryContentBackground(),
+                    paddingValues = PaddingValues(Spacing.regular),
                     title = stringResource(R.string.theme),
                     description = {
                         val icon = when (it) {
@@ -119,6 +121,7 @@ fun DeviceSettingsScreen(
             item {
                 ToggleOption(
                     modifier = Modifier.primaryContentBackground(),
+                    paddingValues = PaddingValues(Spacing.regular),
                     checked = settings.showStats,
                     onCheckedChange = ::updateShowStats,
                     title = stringResource(R.string.show_stats),
@@ -168,7 +171,7 @@ fun DeviceSettingsScreen(
                 SettingsHeader(text = stringResource(R.string.alias_display_and_interaction))
                 Column(modifier = Modifier.primaryContentBackground()) {
                     AliasCellSelectionSection(
-                        modifier = Modifier.padding(bottom = Spacing.regular),
+                        modifier = Modifier,
                         selected = settings.aliasCellSelection,
                         onSelect = ::updateAliasCellSelection
                     )
@@ -176,7 +179,7 @@ fun DeviceSettingsScreen(
                     HorizontalDivider()
 
                     AliasOptionsDisplaySection(
-                        modifier = Modifier.padding(vertical = Spacing.regular),
+                        modifier = Modifier,
                         selected = settings.aliasOptionsDisplay,
                         onSelect = ::updateAliasOptionsDisplay
                     )
@@ -206,6 +209,7 @@ private fun AliasOptionsDisplaySection(
 ) {
     OptionRow(
         modifier = modifier,
+        paddingValues = PaddingValues(Spacing.regular),
         title = stringResource(R.string.alias_options_display),
         description = { Text(text = it.title(LocalContext.current)) },
         options = AliasOptionsDisplay.entries.toTypedArray(),
@@ -222,6 +226,7 @@ private fun AliasCellSelectionSection(
 ) {
     OptionRow(
         modifier = modifier,
+        paddingValues = PaddingValues(Spacing.regular),
         title = stringResource(R.string.select_alias_action),
         description = { Text(text = it.title(LocalContext.current)) },
         options = AliasCellSelection.entries.toTypedArray(),
@@ -244,7 +249,7 @@ private fun SwipeActionSelection(
     var showAliasDisplayInfosDialog by rememberSaveable { mutableStateOf(false) }
 
     OptionRow(
-        modifier = Modifier.padding(vertical = Spacing.regular),
+        paddingValues = PaddingValues(Spacing.regular),
         title = stringResource(R.string.swipe_from_left_to_right),
         description = { Text(text = it.title(context)) },
         options = SwipeAction.entries.toTypedArray(),
@@ -255,7 +260,7 @@ private fun SwipeActionSelection(
     HorizontalDivider()
 
     OptionRow(
-        modifier = Modifier.padding(vertical = Spacing.regular),
+        paddingValues = PaddingValues(Spacing.regular),
         title = stringResource(R.string.swipe_from_right_to_left),
         description = { Text(text = it.title(context)) },
         options = SwipeAction.entries.toTypedArray(),
@@ -268,8 +273,8 @@ private fun SwipeActionSelection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Spacing.regular)
-            .clickableRippleDisabled { showAliasDisplayInfosDialog = true },
+            .clickable { showAliasDisplayInfosDialog = true }
+            .padding(Spacing.regular),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -295,7 +300,8 @@ private fun SwipeActionSelection(
 
     Text(
         modifier = Modifier
-            .padding(top = Spacing.regular),
+            .padding(top = Spacing.regular)
+            .padding(horizontal = Spacing.regular),
         text = stringResource(R.string.test_with_sample_alias),
         color = MaterialTheme.colorScheme.secondary,
         textAlign = TextAlign.Start
@@ -327,6 +333,7 @@ private fun DefaultPrefixSelection(
 ) {
     OptionRow(
         modifier = modifier,
+        paddingValues = PaddingValues(Spacing.regular),
         title = stringResource(R.string.default_prefix),
         description = { Text(text = it.title(LocalContext.current)) },
         options = DefaultPrefix.entries.toTypedArray(),

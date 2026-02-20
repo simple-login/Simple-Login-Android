@@ -183,7 +183,7 @@ fun MailboxesScreen(
                         modifier = Modifier
                             .padding(horizontal = Spacing.regular)
                             .padding(bottom = Spacing.regular)
-                            .primaryContentBackground(padded = false)
+                            .primaryContentBackground()
                     ) {
                         itemsIndexed(mailboxes) { index, mailbox ->
                             MailboxRow(

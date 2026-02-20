@@ -1,9 +1,12 @@
 package io.simplelogin.android.ui.util
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -17,6 +20,7 @@ import io.simplelogin.android.ui.theme.Spacing
 @Composable
 fun ToggleOption(
     modifier: Modifier = Modifier,
+    paddingValues: PaddingValues = PaddingValues(),
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     title: String,
@@ -25,7 +29,8 @@ fun ToggleOption(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickableRippleDisabled { onCheckedChange(!checked) },
+            .clickable { onCheckedChange(!checked) }
+            .padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {

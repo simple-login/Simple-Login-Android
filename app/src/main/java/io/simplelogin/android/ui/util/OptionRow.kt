@@ -7,7 +7,9 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.DropdownMenu
@@ -29,6 +31,7 @@ import io.simplelogin.android.ui.theme.Spacing
 @Composable
 fun <T> OptionRow(
     modifier: Modifier = Modifier,
+    paddingValues: PaddingValues = PaddingValues(),
     title: String,
     description: @Composable (T) -> Unit,
     options: Array<T>,
@@ -37,7 +40,11 @@ fun <T> OptionRow(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Row(modifier = modifier.clickable { expanded = true }) {
+    Row(
+        modifier = modifier
+            .clickable { expanded = true }
+            .padding(paddingValues)
+    ) {
         Text(
             modifier = Modifier.weight(1f),
             text = title

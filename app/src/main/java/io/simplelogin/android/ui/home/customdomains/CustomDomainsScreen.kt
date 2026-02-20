@@ -137,7 +137,7 @@ private fun DomainList(
         modifier = Modifier
             .padding(horizontal = Spacing.regular)
             .padding(bottom = Spacing.regular)
-            .primaryContentBackground(padded = false),
+            .primaryContentBackground(),
     ) {
         itemsIndexed(domains) { index, domain ->
             DomainRow(
