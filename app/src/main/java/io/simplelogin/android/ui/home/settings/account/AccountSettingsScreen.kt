@@ -102,7 +102,7 @@ fun AccountSettingsScreen(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = SlColor.BackgroundColor,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.account_settings)) },

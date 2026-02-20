@@ -51,6 +51,7 @@ import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.SettingsHeader
@@ -70,7 +71,7 @@ fun DeviceSettingsScreen(
     val settings by deviceSettings.collectAsState()
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = SlColor.BackgroundColor,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.device_settings)) },

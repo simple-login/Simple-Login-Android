@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -19,6 +20,14 @@ object SlColor {
     val Green = Color(0xFF5FC88F)
     val Blue = Color(0xFF4989FF)
     val Amber = Color(0xFFFFC107)
+
+    @get:Composable
+    val BackgroundColor: Color
+        get() = MaterialTheme.colorScheme.surfaceContainer
+
+    @get:Composable
+    val ContentContainerBackgroundColor: Color
+        get() = MaterialTheme.colorScheme.background
 
     @get:Composable
     val textInverted: Color

@@ -54,6 +54,7 @@ import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 import io.simplelogin.android.ui.root.supportsMultiplePanes
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 
@@ -84,7 +85,7 @@ fun HomeScreen(
 
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surfaceContainer
+        color = SlColor.BackgroundColor
     ) {
         HomeScreenScaffold(
             viewModel = viewModel,
@@ -291,7 +292,7 @@ fun TitledFAB(
     ) {
         Surface(
             shape = MaterialTheme.shapes.small,
-            color = MaterialTheme.colorScheme.surfaceContainer,
+            color = SlColor.BackgroundColor,
             shadowElevation = 2.dp
         ) {
             Text(

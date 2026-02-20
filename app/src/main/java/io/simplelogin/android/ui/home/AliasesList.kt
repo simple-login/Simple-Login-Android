@@ -40,6 +40,7 @@ import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.home.cell.AliasCell
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -116,7 +117,7 @@ fun AliasesList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(Spacing.regular))
-                        .background(MaterialTheme.colorScheme.background)
+                        .background(SlColor.ContentContainerBackgroundColor)
                 ) {
                     Column {
                         aliases.forEachIndexed { index, alias ->

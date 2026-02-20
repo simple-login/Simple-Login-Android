@@ -37,6 +37,7 @@ import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.util.RetryButton
 import kotlinx.coroutines.launch
 
@@ -69,7 +70,7 @@ fun AliasDetailScreen(
         }
     }
 
-    Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
+    Surface(color = SlColor.BackgroundColor) {
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {

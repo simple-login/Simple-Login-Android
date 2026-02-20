@@ -42,6 +42,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.CustomDomain
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
@@ -59,7 +60,7 @@ fun CustomDomainsScreen(
     val fetchError = state.fetchError
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = SlColor.BackgroundColor,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.custom_domains)) },
