@@ -69,6 +69,7 @@ import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
+import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -93,6 +94,7 @@ fun AccountSettingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showUsableDomainsDialog by remember { mutableStateOf(false) }
     var showEditUserInfoMenu by remember { mutableStateOf(false) }
+    var showEditDisplayNameDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(updateError) {
         updateError?.let {
@@ -137,7 +139,10 @@ fun AccountSettingsScreen(
                         showEditUserInfoMenu = showEditUserInfoMenu,
                         onShowEditUserInfoMenu = { showEditUserInfoMenu = true },
                         onDismissEditUserInfoMenu = { showEditUserInfoMenu = false },
-                        onEditDisplayName = {},
+                        onEditDisplayName = {
+                            showEditUserInfoMenu = false
+                            showEditDisplayNameDialog = true
+                        },
                         onEditProfilePicture = {},
                         onToggleProtonLink = ::toggleProtonLink,
                         onUpdateNotification = ::updateNotification,
@@ -179,6 +184,17 @@ fun AccountSettingsScreen(
                 onDismiss = { showUsableDomainsDialog = false }
             )
         }
+    }
+
+    if (showEditDisplayNameDialog) {
+        EditTextDialog(
+            value = state.settings?.userInfo?.name,
+            title = stringResource(R.string.edit_display_name),
+            onSave = {
+                showEditDisplayNameDialog = false
+            },
+            onDismiss = { showEditDisplayNameDialog = false }
+        )
     }
 }
 

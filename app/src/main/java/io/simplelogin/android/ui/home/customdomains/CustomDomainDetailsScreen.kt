@@ -13,23 +13,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -43,19 +39,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.CustomDomain
+import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.SettingsFooter
@@ -155,8 +148,12 @@ fun CustomDomainDetailsScreen(
     }
 
     if (showEditDisplayNameDialog) {
-        EditDisplayNameDialog(
-            domain = domain,
+        EditTextDialog(
+            value = domain.name,
+            title = stringResource(
+                if (domain.name == null) R.string.create_display_name
+                else R.string.edit_display_name
+            ),
             onSave = {
                 showEditDisplayNameDialog = false
                 viewModel.updateDisplayName(it)
@@ -274,63 +271,4 @@ private fun CustomDomainDetailList(
             }
         }
     }
-}
-
-@Composable
-private fun EditDisplayNameDialog(
-    domain: CustomDomain,
-    onSave: (String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val domainName = domain.name ?: ""
-    var value by remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = domainName,
-                selection = TextRange(domainName.length)
-            )
-        )
-    }
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = stringResource(
-                    if (domain.name == null) R.string.create_display_name
-                    else R.string.edit_display_name
-                )
-            )
-        },
-        text = {
-            OutlinedTextField(
-                modifier = Modifier.focusRequester(focusRequester),
-                value = value,
-                onValueChange = { value = it },
-                trailingIcon = {
-                    IconButton(onClick = { value = TextFieldValue(text = "") }) {
-                        Icon(
-                            imageVector = Icons.Filled.Cancel,
-                            contentDescription = stringResource(R.string.clear)
-                        )
-                    }
-                }
-            )
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel))
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onSave(value.text) }) {
-                Text(text = stringResource(R.string.save))
-            }
-        }
-    )
 }
