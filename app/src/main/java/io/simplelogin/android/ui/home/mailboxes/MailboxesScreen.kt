@@ -2,9 +2,11 @@ package io.simplelogin.android.ui.home.mailboxes
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -50,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -61,6 +65,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Mailbox
@@ -69,7 +74,6 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.relativeDateTime
 
@@ -182,11 +186,24 @@ fun MailboxesScreen(
                     LazyColumn(
                         modifier = Modifier
                             .padding(horizontal = Spacing.regular)
-                            .padding(bottom = Spacing.regular)
-                            .primaryContentBackground()
+                            .padding(bottom = Spacing.regular),
+                        contentPadding = PaddingValues(bottom = 80.dp) // Avoid FAB
                     ) {
-                        itemsIndexed(mailboxes) { index, mailbox ->
+                        itemsIndexed(
+                            items = mailboxes,
+                            key = { _, mailbox -> mailbox.id }
+                        ) { index, mailbox ->
                             MailboxRow(
+                                modifier = Modifier
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = if (index == 0) Spacing.regular else 0.dp,
+                                            topEnd = if (index == 0) Spacing.regular else 0.dp,
+                                            bottomStart = if (index == mailboxes.lastIndex) Spacing.regular else 0.dp,
+                                            bottomEnd = if (index == mailboxes.lastIndex) Spacing.regular else 0.dp,
+                                        )
+                                    )
+                                    .background(SlColor.ContentContainerBackgroundColor),
                                 mailbox = mailbox,
                                 onSetAsDefault = { setAsDefault(mailbox) },
                                 onDelete = { mailboxToDelete = mailbox }
@@ -251,6 +268,7 @@ private fun MailboxRow(
     var showMenu by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .clickable { showMenu = true }
             .padding(Spacing.regular),
         verticalAlignment = Alignment.CenterVertically

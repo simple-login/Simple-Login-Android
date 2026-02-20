@@ -43,6 +43,7 @@ import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,8 +117,7 @@ fun AliasesList(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(Spacing.regular))
-                        .background(SlColor.ContentContainerBackgroundColor)
+                        .primaryContentBackground()
                 ) {
                     Column {
                         aliases.forEachIndexed { index, alias ->
