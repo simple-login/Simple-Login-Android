@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DevicePreferences(
+    val theme: Theme = Theme.MATCH_SYSTEM,
     val showStats: Boolean = true,
     val aliasCellSelection: AliasCellSelection = AliasCellSelection.Default,
     val aliasOptionsDisplay: AliasOptionsDisplay = AliasOptionsDisplay.Default,
@@ -85,5 +86,15 @@ enum class DefaultPrefix {
             val chars = ('a'..'z') + ('0'..'9')
             (1..randomCharacterCount).map { chars.random() }.joinToString("")
         }
+    }
+}
+
+enum class Theme {
+    LIGHT, DARK, MATCH_SYSTEM;
+
+    fun title(context: Context) = when (this) {
+        LIGHT -> context.getString(R.string.light)
+        DARK -> context.getString(R.string.dark)
+        MATCH_SYSTEM -> context.getString(R.string.match_system)
     }
 }

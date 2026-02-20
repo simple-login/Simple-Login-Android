@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.SwipeAction
@@ -83,6 +84,10 @@ class DeviceSettingsViewModel @Inject constructor(
 
     fun updateShowStats(showStats: Boolean) {
         updateSettings { it.copy(showStats = showStats) }
+    }
+
+    fun updateTheme(theme: Theme) {
+        updateSettings { it.copy(theme = theme) }
     }
 
     private fun updateSettings(update: (DevicePreferences) -> DevicePreferences) {

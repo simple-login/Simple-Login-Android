@@ -3,10 +3,8 @@ package io.simplelogin.android.ui.home.settings.device
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -42,6 +40,7 @@ import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.ui.home.cell.AliasCell
@@ -88,6 +87,19 @@ fun DeviceSettingsScreen(
                     .padding(bottom = Spacing.regular)
                     .padding(innerPadding)
         ) {
+            item {
+                OptionRow(
+                    modifier = Modifier.primaryContentBackground(),
+                    title = stringResource(R.string.theme),
+                    description = { it.title(context = LocalContext.current) },
+                    options = Theme.entries.toTypedArray(),
+                    selected = settings.theme,
+                    onSelect = ::updateTheme
+                )
+
+                SettingsSpacer()
+            }
+
             item {
                 ToggleOption(
                     modifier = Modifier.primaryContentBackground(),

@@ -186,4 +186,8 @@
     <string name="custom_domains">Custom domains</string>
     <string name="no_custom_domains_message">No custom domains yet.\nAdd your first one via the web app.</string>
     <string name="learn_more">Learn more</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="match_system">Match system</string>
 </resources>
