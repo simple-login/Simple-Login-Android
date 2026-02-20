@@ -1,9 +1,11 @@
 package io.simplelogin.android.ui.home.settings.account
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -204,7 +206,8 @@ private fun LazyListScope.accountSettingsScreenContent(
                 .primaryContentBackground()
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .clickableRippleDisabled(onClick = onShowEditUserInfoMenu),
+                .clickable(onClick = onShowEditUserInfoMenu)
+                .padding(Spacing.regular),
             verticalAlignment = Alignment.CenterVertically
         ) {
             userInfo.profilePictureUrl?.let {
@@ -281,7 +284,8 @@ private fun LazyListScope.accountSettingsScreenContent(
         Row(
             modifier = Modifier
                 .primaryContentBackground()
-                .clickableRippleDisabled(onClick = onToggleProtonLink),
+                .clickable(onClick = onToggleProtonLink)
+                .padding(Spacing.regular),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -326,6 +330,7 @@ private fun LazyListScope.accountSettingsScreenContent(
     item {
         ToggleOption(
             modifier = Modifier.primaryContentBackground(),
+            paddingValues = PaddingValues(Spacing.regular),
             checked = userSettings.notification,
             onCheckedChange = onUpdateNotification,
             title = stringResource(R.string.newsletter),
@@ -340,9 +345,9 @@ private fun LazyListScope.accountSettingsScreenContent(
 
         Column(modifier = Modifier.primaryContentBackground()) {
             OptionRow(
-                modifier = Modifier.padding(bottom = Spacing.regular),
+                paddingValues = PaddingValues(Spacing.regular),
                 title = stringResource(R.string.random_mode),
-                description = { it.title(LocalContext.current) },
+                description = { Text(text = it.title(LocalContext.current)) },
                 options = RandomMode.entries.toTypedArray(),
                 selected = userSettings.randomMode,
                 onSelect = onUpdateRandomMode
@@ -351,9 +356,9 @@ private fun LazyListScope.accountSettingsScreenContent(
             HorizontalDivider()
 
             OptionRow(
-                modifier = Modifier.padding(vertical = Spacing.regular),
+                paddingValues = PaddingValues(Spacing.regular),
                 title = stringResource(R.string.random_suffix),
-                description = { it.title(LocalContext.current) },
+                description = { Text(text = it.title(LocalContext.current)) },
                 options = RandomAliasSuffix.entries.toTypedArray(),
                 selected = userSettings.randomAliasSuffix,
                 onSelect = onUpdateRandomAliasSuffix
@@ -364,8 +369,8 @@ private fun LazyListScope.accountSettingsScreenContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = Spacing.regular)
-                    .clickableRippleDisabled(onClick = onShowUsableDomainsSelector),
+                    .clickable(onClick = onShowUsableDomainsSelector)
+                    .padding(Spacing.regular),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -388,8 +393,9 @@ private fun LazyListScope.accountSettingsScreenContent(
     item {
         OptionRow(
             modifier = Modifier.primaryContentBackground(),
+            paddingValues = PaddingValues(Spacing.regular),
             title = stringResource(R.string.sender_address_format),
-            description = { it.description(LocalContext.current) },
+            description = { Text(text = it.description(LocalContext.current)) },
             options = SenderFormat.entries.toTypedArray(),
             selected = userSettings.senderFormat,
             onSelect = onUpdateSenderFormat
