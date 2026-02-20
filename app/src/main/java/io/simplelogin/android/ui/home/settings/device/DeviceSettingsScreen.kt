@@ -3,8 +3,10 @@ package io.simplelogin.android.ui.home.settings.device
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -94,14 +96,17 @@ fun DeviceSettingsScreen(
                 OptionRow(
                     modifier = Modifier.primaryContentBackground(),
                     title = stringResource(R.string.theme),
-                    description = { it.title(context = LocalContext.current) },
-                    leadingIcon = {
+                    description = {
                         val icon = when (it) {
                             Theme.LIGHT -> Icons.Outlined.LightMode
                             Theme.DARK -> Icons.Outlined.DarkMode
                             Theme.MATCH_SYSTEM -> Icons.Outlined.BrightnessAuto
                         }
-                        Icon(imageVector = icon, contentDescription = null)
+                        Row {
+                            Icon(imageVector = icon, contentDescription = null)
+                            Spacer(modifier = Modifier.width(Spacing.medium))
+                            Text(text = it.title(context = LocalContext.current))
+                        }
                     },
                     options = Theme.entries.toTypedArray(),
                     selected = settings.theme,
@@ -202,7 +207,7 @@ private fun AliasOptionsDisplaySection(
     OptionRow(
         modifier = modifier,
         title = stringResource(R.string.alias_options_display),
-        description = { it.title(LocalContext.current) },
+        description = { Text(text = it.title(LocalContext.current)) },
         options = AliasOptionsDisplay.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect
@@ -218,7 +223,7 @@ private fun AliasCellSelectionSection(
     OptionRow(
         modifier = modifier,
         title = stringResource(R.string.select_alias_action),
-        description = { it.title(LocalContext.current) },
+        description = { Text(text = it.title(LocalContext.current)) },
         options = AliasCellSelection.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect
@@ -241,7 +246,7 @@ private fun SwipeActionSelection(
     OptionRow(
         modifier = Modifier.padding(vertical = Spacing.regular),
         title = stringResource(R.string.swipe_from_left_to_right),
-        description = { it.title(LocalContext.current) },
+        description = { Text(text = it.title(context)) },
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedLeftToRight,
         onSelect = onSelectLeftToRight
@@ -252,7 +257,7 @@ private fun SwipeActionSelection(
     OptionRow(
         modifier = Modifier.padding(vertical = Spacing.regular),
         title = stringResource(R.string.swipe_from_right_to_left),
-        description = { it.title(LocalContext.current) },
+        description = { Text(text = it.title(context)) },
         options = SwipeAction.entries.toTypedArray(),
         selected = selectedRightToLeft,
         onSelect = onSelectRightToLeft
@@ -323,7 +328,7 @@ private fun DefaultPrefixSelection(
     OptionRow(
         modifier = modifier,
         title = stringResource(R.string.default_prefix),
-        description = { it.title(LocalContext.current) },
+        description = { Text(text = it.title(LocalContext.current)) },
         options = DefaultPrefix.entries.toTypedArray(),
         selected = selected,
         onSelect = onSelect

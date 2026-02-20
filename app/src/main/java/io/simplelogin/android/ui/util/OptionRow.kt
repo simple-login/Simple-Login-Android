@@ -1,5 +1,9 @@
 package io.simplelogin.android.ui.util
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,8 +14,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,9 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.Spacing
 
@@ -30,22 +30,17 @@ import io.simplelogin.android.ui.theme.Spacing
 fun <T> OptionRow(
     modifier: Modifier = Modifier,
     title: String,
-    description: @Composable (T) -> String,
-    leadingIcon: @Composable ((T) -> Unit)? = null,
+    description: @Composable (T) -> Unit,
     options: Array<T>,
     selected: T,
-    onSelect: (T) -> Unit,
-    style: TextStyle = LocalTextStyle.current,
-    color: Color = LocalContentColor.current
+    onSelect: (T) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(modifier = modifier.clickable { expanded = true }) {
         Text(
             modifier = Modifier.weight(1f),
-            text = title,
-            color = color,
-            style = style
+            text = title
         )
 
         Box {
@@ -53,11 +48,13 @@ fun <T> OptionRow(
                 horizontalArrangement = Arrangement.spacedBy(Spacing.small),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = description(selected),
-                    color = color,
-                    style = style
-                )
+                AnimatedContent(
+                    targetState = selected,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() }
+                ) { targetSelected ->
+                    description(targetSelected)
+
+                }
 
                 Icon(
                     painter = painterResource(R.drawable.ic_selector),
@@ -71,7 +68,6 @@ fun <T> OptionRow(
             ) {
                 options.forEachIndexed { index, option ->
                     DropdownMenuItem(
-                        leadingIcon = leadingIcon?.let { { it(option) } },
                         trailingIcon = {
                             if (option == selected) {
                                 Icon(
@@ -80,7 +76,7 @@ fun <T> OptionRow(
                                 )
                             }
                         },
-                        text = { Text(text = description(option)) },
+                        text = { description(option) },
                         onClick = {
                             onSelect(option)
                             expanded = false
