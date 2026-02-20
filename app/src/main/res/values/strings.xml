@@ -190,4 +190,10 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="match_system">Match system</string>
+    <string name="catch_all_header">Auto create/on the fly alias</string>
+    <string name="catch_all">Catch all</string>
+    <string name="catch_all_footer">Simply use anything@%s next time you need an alias. It will be automatically created the first time it receives an email. To have more fine-grained control, you can also define auto create rules.</string>
+    <string name="default_display_name">Default display name</string>
+    <string name="default_display_name_footer">Default display name for aliases created with %s unless overwritten by the alias display name.</string>
+    <string name="create_display_name">Create display name</string>
 </resources>
