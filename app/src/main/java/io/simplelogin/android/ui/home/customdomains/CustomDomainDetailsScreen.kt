@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
@@ -37,8 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -51,6 +55,7 @@ import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.util.relativeDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +74,23 @@ fun CustomDomainDetailsScreen(
         containerColor = SlColor.BackgroundColor,
         topBar = {
             TopAppBar(
-                title = { Text(text = domain.domainName) },
+                title = {
+                    Text(text = buildAnnotatedString {
+                        append(domain.domainName)
+                        append(" • ")
+                        if (domain.aliasCount == 0) {
+                            append(stringResource(R.string.no_aliases))
+                        } else {
+                            append(
+                                pluralStringResource(
+                                    R.plurals.number_of_aliases,
+                                    domain.aliasCount,
+                                    domain.aliasCount
+                                )
+                            )
+                        }
+                    })
+                },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {
                         Icon(
@@ -89,7 +110,14 @@ fun CustomDomainDetailsScreen(
                 .padding(innerPadding)
         ) {
             item {
-                Text(domain.domainName)
+                SettingsHeader(text = stringResource(R.string.created_at))
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .primaryContentBackground()
+                        .padding(Spacing.regular),
+                    text = domain.creationTimestamp.relativeDateTime(LocalContext.current)
+                )
                 SettingsSpacer()
             }
 
@@ -142,10 +170,38 @@ fun CustomDomainDetailsScreen(
                     paddingValues = PaddingValues(Spacing.regular),
                     checked = domain.catchAll,
                     onCheckedChange = {},
-                    title = stringResource(R.string.catch_all)
+                    title = stringResource(R.string.catch_all),
+                    description = stringResource(R.string.catch_all_footer, domain.domainName)
                 )
 
-                SettingsFooter(text = stringResource(R.string.catch_all_footer, domain.domainName))
+                SettingsSpacer()
+            }
+
+            item {
+                ToggleOption(
+                    modifier = Modifier.primaryContentBackground(),
+                    paddingValues = PaddingValues(Spacing.regular),
+                    checked = domain.randomPrefixGeneration,
+                    onCheckedChange = {},
+                    title = stringResource(R.string.random_prefix_generation),
+                    description = stringResource(R.string.random_prefix_generation_footer)
+                )
+
+                SettingsSpacer()
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .primaryContentBackground()
+                        .clickable {}
+                        .padding(Spacing.regular),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(R.string.deleted_aliases))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null)
+                }
             }
         }
     }
