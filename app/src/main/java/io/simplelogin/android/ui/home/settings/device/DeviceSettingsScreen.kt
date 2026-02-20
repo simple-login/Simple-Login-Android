@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.BrightnessAuto
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -92,6 +95,14 @@ fun DeviceSettingsScreen(
                     modifier = Modifier.primaryContentBackground(),
                     title = stringResource(R.string.theme),
                     description = { it.title(context = LocalContext.current) },
+                    leadingIcon = {
+                        val icon = when (it) {
+                            Theme.LIGHT -> Icons.Outlined.LightMode
+                            Theme.DARK -> Icons.Outlined.DarkMode
+                            Theme.MATCH_SYSTEM -> Icons.Outlined.BrightnessAuto
+                        }
+                        Icon(imageVector = icon, contentDescription = null)
+                    },
                     options = Theme.entries.toTypedArray(),
                     selected = settings.theme,
                     onSelect = ::updateTheme

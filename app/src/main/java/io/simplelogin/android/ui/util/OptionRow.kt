@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.util
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,18 +28,19 @@ import io.simplelogin.android.ui.theme.Spacing
 
 @Composable
 fun <T> OptionRow(
+    modifier: Modifier = Modifier,
     title: String,
     description: @Composable (T) -> String,
+    leadingIcon: @Composable ((T) -> Unit)? = null,
     options: Array<T>,
     selected: T,
     onSelect: (T) -> Unit,
-    modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
     color: Color = LocalContentColor.current
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Row(modifier = modifier.clickableRippleDisabled { expanded = true }) {
+    Row(modifier = modifier.clickable { expanded = true }) {
         Text(
             modifier = Modifier.weight(1f),
             text = title,
@@ -69,6 +71,7 @@ fun <T> OptionRow(
             ) {
                 options.forEachIndexed { index, option ->
                     DropdownMenuItem(
+                        leadingIcon = leadingIcon?.let { { it(option) } },
                         trailingIcon = {
                             if (option == selected) {
                                 Icon(
