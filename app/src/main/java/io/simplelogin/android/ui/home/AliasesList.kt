@@ -113,21 +113,6 @@ fun AliasesList(
             itemsIndexed(aliases) { index, alias ->
                 AliasCell(
                     modifier = Modifier
-                        .clickable {
-                            when (aliasCellSelection) {
-                                AliasCellSelection.VIEW_DETAILS -> onAction(
-                                    AliasAction.ViewDetails(
-                                        alias
-                                    )
-                                )
-
-                                AliasCellSelection.COPY_EMAIL -> onAction(
-                                    AliasAction.CopyEmailAddress(
-                                        alias
-                                    )
-                                )
-                            }
-                        }
                         .clip(
                             RoundedCornerShape(
                                 topStart = if (index == 0) Spacing.regular else 0.dp,
@@ -138,6 +123,7 @@ fun AliasesList(
                         )
                         .background(SlColor.ContentContainerBackgroundColor),
                     alias = alias,
+                    cellSelection = aliasCellSelection,
                     optionsDisplay = optionsDisplay,
                     displayInfos = displayInfos,
                     swipeFromStartToEndAction = swipeFromStartToEndAction,

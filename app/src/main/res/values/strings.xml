@@ -73,6 +73,7 @@
     <string name="view_details">View details</string>
     <string name="view_contacts">View contacts</string>
     <string name="copy_alias_address">Copy alias address</string>
+    <string name="view_options">View options</string>
     <string name="enter_full_screen">Enter full screen</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>

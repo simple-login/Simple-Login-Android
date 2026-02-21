@@ -220,6 +220,7 @@ private fun DeviceSettingsContent(
                 HorizontalDivider()
 
                 SwipeActionSelection(
+                    selectedAliasCellSelection = settings.aliasCellSelection,
                     selectedOptionsDisplay = settings.aliasOptionsDisplay,
                     selectedLeftToRight = settings.swipeFromLeftToRightAction,
                     onSelectLeftToRight = ::updateSwipeFromLeftToRight,
@@ -269,6 +270,7 @@ private fun AliasCellSelectionSection(
 
 @Composable
 private fun SwipeActionSelection(
+    selectedAliasCellSelection: AliasCellSelection,
     selectedOptionsDisplay: AliasOptionsDisplay,
     selectedLeftToRight: SwipeAction,
     onSelectLeftToRight: (SwipeAction) -> Unit,
@@ -341,6 +343,7 @@ private fun SwipeActionSelection(
 
     AliasCell(
         alias = Alias.sample,
+        cellSelection = selectedAliasCellSelection,
         optionsDisplay = selectedOptionsDisplay,
         displayInfos = selectedAliasDisplayInfos,
         swipeFromStartToEndAction = selectedLeftToRight,

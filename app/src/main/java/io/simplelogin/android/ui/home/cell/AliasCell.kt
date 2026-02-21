@@ -2,6 +2,7 @@ package io.simplelogin.android.ui.home.cell
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,14 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoNotDisturbOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +37,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
@@ -53,6 +58,7 @@ import io.simplelogin.android.ui.util.IconContent
 fun AliasCell(
     modifier: Modifier = Modifier,
     alias: Alias,
+    cellSelection: AliasCellSelection,
     optionsDisplay: AliasOptionsDisplay,
     displayInfos: List<AliasDisplayInfo>,
     swipeFromStartToEndAction: SwipeAction,
@@ -151,8 +157,8 @@ fun AliasCell(
         },
         content = {
             AliasCellContent(
-                modifier = Modifier.padding(vertical = Spacing.medium),
                 alias = alias,
+                cellSelection = cellSelection,
                 optionsDisplay = optionsDisplay,
                 displayInfos = displayInfos,
                 onAction = { action ->
@@ -181,6 +187,7 @@ fun AliasCell(
 private fun AliasCellContent(
     modifier: Modifier = Modifier,
     alias: Alias,
+    cellSelection: AliasCellSelection,
     optionsDisplay: AliasOptionsDisplay,
     displayInfos: List<AliasDisplayInfo>,
     onAction: (AliasAction) -> Unit
@@ -193,15 +200,37 @@ private fun AliasCellContent(
     }
 
     val optionsIconButton: @Composable () -> Unit = {
-        IconButton(onClick = { showOptions = true }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.alias_options)
-            )
+        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+            IconButton(onClick = { showOptions = true }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.alias_options)
+                )
+            }
         }
     }
 
-    Column(modifier = modifier.padding(start = Spacing.regular)) {
+    Column(
+        modifier = modifier
+            .clickable {
+                when (cellSelection) {
+                    AliasCellSelection.VIEW_DETAILS -> onAction(
+                        AliasAction.ViewDetails(
+                            alias
+                        )
+                    )
+
+                    AliasCellSelection.COPY_EMAIL -> onAction(
+                        AliasAction.CopyEmailAddress(
+                            alias
+                        )
+                    )
+
+                    AliasCellSelection.VIEW_OPTIONS -> showOptions = true
+                }
+            }
+            .padding(horizontal = Spacing.regular, vertical = Spacing.medium)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -238,7 +267,7 @@ private fun AliasCellContent(
             }
         }
 
-        if (displayInfos.contains(AliasDisplayInfo.NOTE) && alias.note != null && alias.note.isNotEmpty()) {
+        if (displayInfos.contains(AliasDisplayInfo.NOTE) && !alias.note.isNullOrEmpty()) {
             Text(
                 text = alias.note,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

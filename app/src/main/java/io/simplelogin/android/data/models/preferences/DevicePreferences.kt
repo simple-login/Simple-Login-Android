@@ -23,7 +23,7 @@ data class DevicePreferences(
 }
 
 enum class AliasCellSelection {
-    VIEW_DETAILS, COPY_EMAIL;
+    VIEW_DETAILS, COPY_EMAIL, VIEW_OPTIONS;
 
     companion object {
         val Default = COPY_EMAIL
@@ -32,6 +32,7 @@ enum class AliasCellSelection {
     fun title(context: Context) = when (this) {
         VIEW_DETAILS -> context.getString(R.string.view_details)
         COPY_EMAIL -> context.getString(R.string.copy_alias_address)
+        VIEW_OPTIONS -> context.getString(R.string.view_options)
     }
 }
 
