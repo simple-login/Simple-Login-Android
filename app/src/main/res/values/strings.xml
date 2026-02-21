@@ -200,4 +200,9 @@
     <string name="random_prefix_generation_footer">Add a random prefix for this domain when creating new aliases.</string>
     <string name="deleted_aliases">Deleted aliases</string>
     <string name="created_at">Created at</string>
+    <string name="no_deleted_aliases">No deleted aliases</string>
+    <plurals name="number_of_deleted_aliases">
+        <item quantity="one">%d deleted alias</item>
+        <item quantity="other">%d deleted aliases</item>
+    </plurals>
 </resources>

@@ -57,7 +57,6 @@ fun CustomDomainsScreen(
 ) = with(hiltViewModel<CustomDomainsViewModel>()) {
     val state by stateFlow.collectAsState()
     val domains = state.domains
-    val fetchError = state.fetchError
 
     Scaffold(
         containerColor = SlColor.BackgroundColor,
@@ -122,8 +121,8 @@ fun CustomDomainsScreen(
                 }
             }
 
-            if (fetchError != null) {
-                RetryButton(error = fetchError, onRetry = ::fetchCustomDomains)
+            state.fetchError?.let {
+                RetryButton(error = it, onRetry = ::fetchCustomDomains)
             }
         }
     }
@@ -160,6 +159,7 @@ private fun DomainRow(
     modifier: Modifier,
     domain: CustomDomain
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -181,7 +181,7 @@ private fun DomainRow(
 
             Text(
                 text = buildAnnotatedString {
-                    append(domain.creationTimestamp.relativeDateTime(LocalContext.current))
+                    append(domain.creationTimestamp.relativeDateTime(context))
                     append(" • ")
                     if (domain.aliasCount == 0) {
                         append(stringResource(R.string.no_aliases))

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -109,47 +110,46 @@ fun AliasesList(
                 }
             }
 
-            item {
-                aliases.forEachIndexed { index, alias ->
-                    AliasCell(
-                        modifier = Modifier
-                            .clickable {
-                                when (aliasCellSelection) {
-                                    AliasCellSelection.VIEW_DETAILS -> onAction(
-                                        AliasAction.ViewDetails(
-                                            alias
-                                        )
+            itemsIndexed(aliases) { index, alias ->
+                AliasCell(
+                    modifier = Modifier
+                        .clickable {
+                            when (aliasCellSelection) {
+                                AliasCellSelection.VIEW_DETAILS -> onAction(
+                                    AliasAction.ViewDetails(
+                                        alias
                                     )
-
-                                    AliasCellSelection.COPY_EMAIL -> onAction(
-                                        AliasAction.CopyEmailAddress(
-                                            alias
-                                        )
-                                    )
-                                }
-                            }
-                            .clip(
-                                RoundedCornerShape(
-                                    topStart = if (index == 0) Spacing.regular else 0.dp,
-                                    topEnd = if (index == 0) Spacing.regular else 0.dp,
-                                    bottomStart = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
-                                    bottomEnd = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
                                 )
+
+                                AliasCellSelection.COPY_EMAIL -> onAction(
+                                    AliasAction.CopyEmailAddress(
+                                        alias
+                                    )
+                                )
+                            }
+                        }
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = if (index == 0) Spacing.regular else 0.dp,
+                                topEnd = if (index == 0) Spacing.regular else 0.dp,
+                                bottomStart = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
+                                bottomEnd = if (index == aliases.lastIndex) Spacing.regular else 0.dp,
                             )
-                            .background(SlColor.ContentContainerBackgroundColor),
-                        alias = alias,
-                        optionsDisplay = optionsDisplay,
-                        displayInfos = displayInfos,
-                        swipeFromStartToEndAction = swipeFromStartToEndAction,
-                        swipeFromEndToStartAction = swipeFromEndToStartAction,
-                        onAction = onAction
-                    )
+                        )
+                        .background(SlColor.ContentContainerBackgroundColor),
+                    alias = alias,
+                    optionsDisplay = optionsDisplay,
+                    displayInfos = displayInfos,
+                    swipeFromStartToEndAction = swipeFromStartToEndAction,
+                    swipeFromEndToStartAction = swipeFromEndToStartAction,
+                    onAction = onAction
+                )
 
-                    if (index < aliases.lastIndex) {
-                        HorizontalDivider()
-                    }
+                if (index < aliases.lastIndex) {
+                    HorizontalDivider()
                 }
-
+            }
+            item {
                 AnimatedVisibility(
                     visible = isFetching && !isRefreshing,
                     enter = EnterTransition.None,
