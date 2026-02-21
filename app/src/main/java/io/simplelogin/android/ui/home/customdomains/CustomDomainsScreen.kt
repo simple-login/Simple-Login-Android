@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.customdomains
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
@@ -28,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -39,14 +42,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsFooter
 import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.util.relativeDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,11 +141,19 @@ private fun DomainList(
         modifier = Modifier
             .padding(horizontal = Spacing.regular)
             .padding(bottom = Spacing.regular)
-            .primaryContentBackground(),
     ) {
         itemsIndexed(domains) { index, domain ->
             DomainRow(
                 modifier = Modifier
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = if (index == 0) Spacing.regular else 0.dp,
+                            topEnd = if (index == 0) Spacing.regular else 0.dp,
+                            bottomStart = if (index == domains.lastIndex) Spacing.regular else 0.dp,
+                            bottomEnd = if (index == domains.lastIndex) Spacing.regular else 0.dp
+                        )
+                    )
+                    .background(SlColor.ContentContainerBackgroundColor)
                     .clickable { onViewDetails(domain) }
                     .padding(Spacing.regular),
                 domain = domain,
@@ -149,6 +161,10 @@ private fun DomainList(
             if (index < domains.lastIndex) {
                 HorizontalDivider()
             }
+        }
+
+        item {
+            SettingsFooter(text = stringResource(R.string.use_web_app_to_add_custom_domains))
         }
     }
 }
