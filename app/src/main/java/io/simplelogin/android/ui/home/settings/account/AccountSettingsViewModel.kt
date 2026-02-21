@@ -1,5 +1,7 @@
 package io.simplelogin.android.ui.home.settings.account
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +18,7 @@ import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Base64
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,8 +120,22 @@ class AccountSettingsViewModel @Inject constructor(
         updateInfo(UpdateUserInfoOption.DisplayName(displayName))
     }
 
-    fun updateProfilePicture(base64: String?) {
-        updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
+    fun updateProfilePicture(uri: Uri?, context: Context) {
+        if (uri == null) return
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val bytes = inputStream?.readBytes()
+                inputStream?.close()
+
+                if (bytes != null) {
+                    val base64 = Base64.getEncoder().encodeToString(bytes)
+                    updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
+                }
+            } catch (e: Exception) {
+                
+            }
+        }
     }
 
     fun updateNotification(notification: Boolean) {

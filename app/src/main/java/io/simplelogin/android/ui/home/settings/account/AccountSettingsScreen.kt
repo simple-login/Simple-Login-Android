@@ -1,5 +1,8 @@
 package io.simplelogin.android.ui.home.settings.account
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -96,6 +99,11 @@ fun AccountSettingsScreen(
     var showEditUserInfoMenu by remember { mutableStateOf(false) }
     var showEditDisplayNameDialog by remember { mutableStateOf(false) }
 
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { updateProfilePicture(uri = it, context = context) }
+    )
+
     LaunchedEffect(updateError) {
         updateError?.let {
             snackbarHostState.showSnackbar(message = it.description(context))
@@ -143,7 +151,12 @@ fun AccountSettingsScreen(
                             showEditUserInfoMenu = false
                             showEditDisplayNameDialog = true
                         },
-                        onEditProfilePicture = {},
+                        onEditProfilePicture = {
+                            showEditUserInfoMenu = false
+                            photoPickerLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        },
                         onToggleProtonLink = ::toggleProtonLink,
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
