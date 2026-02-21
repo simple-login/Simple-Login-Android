@@ -168,7 +168,11 @@ private fun DeviceSettingsContent(
                 )
 
                 AnimatedVisibility(visible = settings.defaultPrefix == DefaultPrefix.RANDOM_CHARACTERS) {
-                    Column {
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = Spacing.regular)
+                            .padding(bottom = Spacing.regular)
+                    ) {
                         Text(
                             text = stringResource(R.string.number_of_random_characters),
                             style = MaterialTheme.typography.bodyMedium,

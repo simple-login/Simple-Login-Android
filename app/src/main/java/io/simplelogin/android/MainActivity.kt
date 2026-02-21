@@ -16,10 +16,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.outlined.AllInbox
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -302,6 +309,7 @@ private fun Drawer(
     ) {
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.mailboxes)) },
+            icon = { Icon(imageVector = Icons.Outlined.AllInbox, contentDescription = null) },
             shape = RectangleShape,
             selected = false,
             onClick = onMailboxesClick
@@ -309,6 +317,7 @@ private fun Drawer(
 
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.custom_domains)) },
+            icon = { Icon(imageVector = Icons.Outlined.Language, contentDescription = null) },
             shape = RectangleShape,
             selected = false,
             onClick = onCustomDomainsClick
@@ -318,6 +327,7 @@ private fun Drawer(
 
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.account_settings)) },
+            icon = { Icon(imageVector = Icons.Outlined.Person, contentDescription = null) },
             shape = RectangleShape,
             selected = false,
             onClick = onAccountSettingsClick
@@ -325,6 +335,7 @@ private fun Drawer(
 
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.device_settings)) },
+            icon = { Icon(imageVector = Icons.Outlined.Settings, contentDescription = null) },
             shape = RectangleShape,
             selected = false,
             onClick = onDeviceSettingsClick
@@ -334,6 +345,12 @@ private fun Drawer(
 
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.sign_out)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Logout,
+                    contentDescription = null
+                )
+            },
             shape = RectangleShape,
             selected = false,
             onClick = onSignOutClick
