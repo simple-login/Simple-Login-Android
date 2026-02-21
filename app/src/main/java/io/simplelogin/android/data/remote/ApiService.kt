@@ -20,6 +20,7 @@ import io.simplelogin.android.data.models.api.UpdateAliasOptions
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
 import io.simplelogin.android.data.models.api.UpdateCustomDomainResponse
 import io.simplelogin.android.data.models.api.UpdateMailboxOptions
+import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
@@ -61,6 +62,12 @@ interface ApiService {
 
     @GET("api/user_info")
     suspend fun getUserInfo(@Header(AUTH_HEADER) apiKey: ApiKey): Response<UserInfo>
+
+    @PATCH("api/user_info")
+    suspend fun updateUserInfo(
+        @Header(AUTH_HEADER) apiKey: ApiKey,
+        @Body body: UpdateUserInfoOption
+    ): Response<UserInfo>
 
     @POST("api/auth/login")
     suspend fun login(@Body body: LoginBody): Response<UserLogin>

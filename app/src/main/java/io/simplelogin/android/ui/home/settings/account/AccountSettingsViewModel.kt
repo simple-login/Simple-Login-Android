@@ -8,6 +8,7 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
+import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
@@ -111,6 +112,14 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateDisplayName(displayName: String) {
+        updateInfo(UpdateUserInfoOption.DisplayName(displayName))
+    }
+
+    fun updateProfilePicture(base64: String?) {
+        updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
+    }
+
     fun updateNotification(notification: Boolean) {
         updateSettings(UpdateUserSettingsOptions(notification = notification))
     }
@@ -150,6 +159,31 @@ class AccountSettingsViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         updateError = settings.error
+                    )
+                }
+            }
+        }
+    }
+
+    private fun updateInfo(option: UpdateUserInfoOption) {
+        withApiKey { apiKey ->
+            _stateFlow.update { it.copy(isLoading = true) }
+            val info = datasource.updateUserInfo(
+                apiKey = apiKey,
+                option = option
+            )
+            when (info) {
+                is Result.Success -> _stateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        settings = it.settings?.copy(userInfo = info.value)
+                    )
+                }
+
+                is Result.Failure -> _stateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        updateError = info.error
                     )
                 }
             }

@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.simplelogin.android.data.models.api.UpdateUserInfoOption
+import io.simplelogin.android.data.models.api.UpdateUserInfoOptionSerializer
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.BaseUrlProviderImpl
@@ -23,7 +25,10 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Provides
     @Singleton
-    fun provideGson(): Gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
+    fun provideGson(): Gson = GsonBuilder()
+        .setStrictness(Strictness.LENIENT)
+        .registerTypeAdapter(UpdateUserInfoOption::class.java, UpdateUserInfoOptionSerializer())
+        .create()
 
     @Provides
     @Singleton

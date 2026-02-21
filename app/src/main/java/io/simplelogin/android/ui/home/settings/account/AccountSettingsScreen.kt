@@ -192,6 +192,7 @@ fun AccountSettingsScreen(
             title = stringResource(R.string.edit_display_name),
             onSave = {
                 showEditDisplayNameDialog = false
+                updateDisplayName(it)
             },
             onDismiss = { showEditDisplayNameDialog = false }
         )
