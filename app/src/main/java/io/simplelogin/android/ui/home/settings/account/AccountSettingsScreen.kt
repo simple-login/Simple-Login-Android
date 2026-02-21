@@ -157,6 +157,10 @@ fun AccountSettingsScreen(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )
                         },
+                        onRemoveProfilePicture = {
+                            showEditUserInfoMenu = false
+                            removeProfilePicture()
+                        },
                         onToggleProtonLink = ::toggleProtonLink,
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
@@ -219,6 +223,7 @@ private fun LazyListScope.accountSettingsScreenContent(
     onDismissEditUserInfoMenu: () -> Unit,
     onEditDisplayName: () -> Unit,
     onEditProfilePicture: () -> Unit,
+    onRemoveProfilePicture: () -> Unit,
     onToggleProtonLink: () -> Unit,
     onUpdateNotification: (Boolean) -> Unit,
     onUpdateRandomMode: (RandomMode) -> Unit,
@@ -297,9 +302,18 @@ private fun LazyListScope.accountSettingsScreenContent(
                         onClick = onEditDisplayName
                     )
 
+                    HorizontalDivider()
+
                     DropdownMenuItem(
                         text = { Text(text = stringResource(R.string.edit_profile_picture)) },
                         onClick = onEditProfilePicture
+                    )
+
+                    HorizontalDivider()
+
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(R.string.remove_profile_picture)) },
+                        onClick = onRemoveProfilePicture
                     )
                 }
             }

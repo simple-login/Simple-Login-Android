@@ -28,6 +28,7 @@ object ApiServiceModule {
     fun provideGson(): Gson = GsonBuilder()
         .setStrictness(Strictness.LENIENT)
         .registerTypeAdapter(UpdateUserInfoOption::class.java, UpdateUserInfoOptionSerializer())
+        .serializeNulls()
         .create()
 
     @Provides
@@ -65,7 +66,7 @@ object ApiServiceModule {
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: Interceptor,
         dynamicBaseUrlInterceptor: DynamicBaseUrlInterceptor,
-        ): OkHttpClient =
+    ): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(headerInterceptor)

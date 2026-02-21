@@ -120,6 +120,10 @@ class AccountSettingsViewModel @Inject constructor(
         updateInfo(UpdateUserInfoOption.DisplayName(displayName))
     }
 
+    fun removeProfilePicture() {
+        updateInfo(UpdateUserInfoOption.ProfilePicture(null))
+    }
+
     fun updateProfilePicture(uri: Uri?, context: Context) {
         if (uri == null) return
         viewModelScope.launch(Dispatchers.IO) {
@@ -133,7 +137,7 @@ class AccountSettingsViewModel @Inject constructor(
                     updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
                 }
             } catch (e: Exception) {
-                
+
             }
         }
     }
