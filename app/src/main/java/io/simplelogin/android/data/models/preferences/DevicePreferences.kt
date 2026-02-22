@@ -9,6 +9,7 @@ data class DevicePreferences(
     val theme: Theme = Theme.MATCH_SYSTEM,
     val showStats: Boolean = true,
     val copyAfterCreating: Boolean = true,
+    val askForRandomAliasNote: Boolean = false,
     val aliasCellSelection: AliasCellSelection = AliasCellSelection.Default,
     val aliasOptionsDisplay: AliasOptionsDisplay = AliasOptionsDisplay.Default,
     val swipeFromLeftToRightAction: SwipeAction = SwipeAction.DISABLE_ENABLE,

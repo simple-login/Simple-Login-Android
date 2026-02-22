@@ -97,6 +97,10 @@ class DeviceSettingsViewModel @Inject constructor(
         updateSettings { it.copy(copyAfterCreating = copyAfterCreating) }
     }
 
+    fun updateAskForRandomAliasNote(ask: Boolean) {
+        updateSettings { it.copy(askForRandomAliasNote = ask) }
+    }
+
     fun updateShowStats(showStats: Boolean) {
         updateSettings { it.copy(showStats = showStats) }
     }

@@ -150,6 +150,8 @@
     <string name="show_stats">Show statistics</string>
     <string name="show_stats_description">Display total aliases, block, forward and reply numbers</string>
     <string name="copy_after_creating">Copy email address after creating aliases</string>
+    <string name="ask_for_random_alias_note">Random alias note</string>
+    <string name="ask_for_random_alias_note_description">Ask for note before creating random aliases</string>
     <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
     <string name="account_settings">Account settings</string>
     <string name="newsletter">Newsletter</string>

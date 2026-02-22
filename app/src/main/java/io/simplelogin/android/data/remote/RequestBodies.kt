@@ -53,7 +53,7 @@ data class SearchBody(
 )
 
 data class NoteBody(
-    val note: String?
+    @SerializedName("note") val note: String?
 )
 
 data class PasswordBody(

@@ -52,6 +52,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
+import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
@@ -170,13 +171,10 @@ private fun HomeScreenScaffold(
             HomeScreenFAB(
                 expanded = fabExpanded,
                 onClick = onCollapseFAB,
-                onRandomByWordClick = {
+                askForRandomAliasNote = state.deviceSettings.askForRandomAliasNote,
+                onRandomAlias = { mode, note ->
                     onCollapseFAB()
-                    viewModel.randomAlias(RandomMode.WORD)
-                },
-                onRandomByUuidClick = {
-                    onCollapseFAB()
-                    viewModel.randomAlias(RandomMode.UUID)
+                    viewModel.randomAlias(mode = mode, note = note)
                 },
                 onCustomAliasClick = {
                     onCollapseFAB()
@@ -240,15 +238,17 @@ private fun HomeScreenScaffold(
 @Composable
 private fun HomeScreenFAB(
     expanded: Boolean,
+    askForRandomAliasNote: Boolean,
     onClick: () -> Unit,
-    onRandomByWordClick: () -> Unit,
-    onRandomByUuidClick: () -> Unit,
+    onRandomAlias: (RandomMode, String?) -> Unit,
     onCustomAliasClick: () -> Unit
 ) {
     val rotation by animateFloatAsState(
         targetValue = if (expanded) 45f else 0f,
         label = "fab_rotation"
     )
+
+    var selectedRandomMode by rememberSaveable { mutableStateOf<RandomMode?>(null) }
 
     Column(
         horizontalAlignment = Alignment.End
@@ -266,13 +266,25 @@ private fun HomeScreenFAB(
                 TitledFAB(
                     title = stringResource(R.string.random_alias_by_uuid),
                     imageVector = Icons.Default.Numbers,
-                    onClick = onRandomByUuidClick
+                    onClick = {
+                        if (askForRandomAliasNote) {
+                            selectedRandomMode = RandomMode.UUID
+                        } else {
+                            onRandomAlias(RandomMode.UUID, null)
+                        }
+                    }
                 )
 
                 TitledFAB(
                     title = stringResource(R.string.random_alias_by_word),
                     imageVector = Icons.Default.Abc,
-                    onClick = onRandomByWordClick
+                    onClick = {
+                        if (askForRandomAliasNote) {
+                            selectedRandomMode = RandomMode.WORD
+                        } else {
+                            onRandomAlias(RandomMode.WORD, null)
+                        }
+                    }
                 )
 
                 TitledFAB(
@@ -290,6 +302,18 @@ private fun HomeScreenFAB(
                 modifier = Modifier.rotate(rotation)
             )
         }
+    }
+
+    selectedRandomMode?.let { mode ->
+        EditTextDialog(
+            value = "",
+            title = stringResource(R.string.note),
+            onSave = {
+                selectedRandomMode = null
+                onRandomAlias(mode, it)
+            },
+            onDismiss = { selectedRandomMode = null }
+        )
     }
 }
 

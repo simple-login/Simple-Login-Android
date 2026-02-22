@@ -206,6 +206,16 @@ private fun DeviceSettingsContent(
                     onCheckedChange = ::updateCopyAfterCreating,
                     title = stringResource(R.string.copy_after_creating)
                 )
+
+                HorizontalDivider()
+
+                ToggleOption(
+                    paddingValues = PaddingValues(Spacing.regular),
+                    checked = settings.askForRandomAliasNote,
+                    onCheckedChange = ::updateAskForRandomAliasNote,
+                    title = stringResource(R.string.ask_for_random_alias_note),
+                    description = stringResource(R.string.ask_for_random_alias_note_description)
+                )
             }
 
             SettingsSpacer()
@@ -379,7 +389,12 @@ private fun DefaultPrefixSelection(
 ) {
     OptionRow(
         modifier = modifier,
-        paddingValues = PaddingValues(Spacing.regular),
+        paddingValues = PaddingValues(
+            start = Spacing.regular,
+            end = Spacing.regular,
+            top = Spacing.regular,
+            bottom = if (selected != DefaultPrefix.RANDOM_CHARACTERS) Spacing.regular else Spacing.small
+        ),
         title = stringResource(R.string.default_prefix),
         description = { Text(text = it.title(LocalContext.current)) },
         options = DefaultPrefix.entries.toTypedArray(),

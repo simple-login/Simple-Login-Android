@@ -34,7 +34,7 @@ interface AliasesRemoteDatasource {
         page: Int
     ): Result<List<AliasActivity>, ApiError>
 
-    suspend fun random(apiKey: ApiKey, mode: RandomMode): Result<Alias, ApiError>
+    suspend fun random(apiKey: ApiKey, mode: RandomMode, note: String?): Result<Alias, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -107,13 +107,17 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             apiService.getAliasActivities(apiKey = apiKey, aliasId = aliasId, pageId = page)
         }.mapValue { it.activities }
 
-    override suspend fun random(apiKey: ApiKey, mode: RandomMode): Result<Alias, ApiError> =
+    override suspend fun random(
+        apiKey: ApiKey,
+        mode: RandomMode,
+        note: String?
+    ): Result<Alias, ApiError> =
         safeApiCall {
             apiService.randomAlias(
                 apiKey = apiKey,
                 mode = mode.value,
                 hostname = null,
-                body = NoteBody(null)
+                body = NoteBody(note)
             )
         }
 }

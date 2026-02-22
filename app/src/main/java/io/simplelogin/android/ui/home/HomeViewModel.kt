@@ -173,11 +173,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun randomAlias(mode: RandomMode) {
+    fun randomAlias(mode: RandomMode, note: String?) {
         viewModelScope.launch {
             val settings = observeDeviceSettings().first()
             val copyAfterCreating = settings.copyAfterCreating
-            aliasListManager.randomAlias(mode)
+            aliasListManager.randomAlias(mode = mode, note = note)
                 .fold(onSuccess = { randomAlias ->
                     if (copyAfterCreating) {
                         copyToClipboard(
