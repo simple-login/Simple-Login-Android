@@ -96,6 +96,6 @@ enum class Theme {
     fun title(context: Context) = when (this) {
         LIGHT -> context.getString(R.string.light)
         DARK -> context.getString(R.string.dark)
-        MATCH_SYSTEM -> context.getString(R.string.match_system)
+        MATCH_SYSTEM -> context.getString(R.string.device_default)
     }
 }

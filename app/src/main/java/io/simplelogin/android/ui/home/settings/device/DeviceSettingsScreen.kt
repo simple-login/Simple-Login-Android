@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.BrightnessAuto
+import androidx.compose.material.icons.outlined.Brightness6
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.CircularProgressIndicator
@@ -131,7 +131,7 @@ private fun DeviceSettingsContent(
                     val icon = when (it) {
                         Theme.LIGHT -> Icons.Outlined.LightMode
                         Theme.DARK -> Icons.Outlined.DarkMode
-                        Theme.MATCH_SYSTEM -> Icons.Outlined.BrightnessAuto
+                        Theme.MATCH_SYSTEM -> Icons.Outlined.Brightness6
                     }
                     Row {
                         Icon(imageVector = icon, contentDescription = null)
