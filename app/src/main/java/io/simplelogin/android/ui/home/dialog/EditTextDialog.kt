@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.dialog
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.AlertDialog
@@ -49,7 +50,9 @@ fun EditTextDialog(
         title = { Text(text = title) },
         text = {
             OutlinedTextField(
-                modifier = Modifier.focusRequester(focusRequester),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
                 value = textFieldValue,
                 onValueChange = { textFieldValue = it },
                 trailingIcon = {

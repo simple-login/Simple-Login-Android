@@ -34,12 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
@@ -47,6 +47,8 @@ import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsHeader
+import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.primaryContentBackground
 import kotlinx.coroutines.launch
 
@@ -67,6 +69,8 @@ fun AliasDetailScreen(
     val closeOptionsAndHandleAction: (AliasAction) -> Unit = {
         showAliasOptions = false
     }
+    var showAliasNoteEditorDialog by remember { mutableStateOf(false) }
+
     val optionsIconButton: @Composable () -> Unit = {
         IconButton(onClick = { showAliasOptions = true }) {
             Icon(
@@ -117,6 +121,28 @@ fun AliasDetailScreen(
                     .fillMaxSize(),
                 contentPadding = PaddingValues(Spacing.regular)
             ) {
+                item {
+                    SettingsHeader(text = stringResource(R.string.note))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .primaryContentBackground()
+                            .clickable { showAliasNoteEditorDialog = true }
+                            .padding(Spacing.regular)) {
+                        if (alias.note.isNullOrBlank()) {
+                            Text(
+                                text = stringResource(R.string.add_note),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        } else {
+                            Text(text = alias.note, maxLines = 10)
+                        }
+                    }
+
+                    SettingsSpacer()
+                }
+
                 item {
                     Row(
                         modifier = Modifier
@@ -178,6 +204,15 @@ fun AliasDetailScreen(
             aliasDetails = true,
             onDismiss = { showAliasOptions = false },
             onAction = closeOptionsAndHandleAction
+        )
+    }
+
+    if (showAliasNoteEditorDialog) {
+        EditTextDialog(
+            title = alias.email,
+            value = alias.note,
+            onSave = { showAliasNoteEditorDialog = false },
+            onDismiss = { showAliasNoteEditorDialog = false }
         )
     }
 }

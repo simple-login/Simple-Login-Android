@@ -7,6 +7,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
@@ -46,31 +47,34 @@ class AliasDetailViewModel @AssistedInject constructor(
     )
 
     init {
-        viewModelScope.launch {
-            getActivities()
+        getActivities()
+    }
+
+    fun getActivities() {
+        activitiesStateFlow.value = AliasActivitiesState.Loading
+        withApiKey { apiKey ->
+            remoteDatasource.getActivities(
+                apiKey = apiKey,
+                aliasId = alias.id,
+                page = 0
+            ).fold(
+                onSuccess = {
+                    activitiesStateFlow.value = AliasActivitiesState.Loaded(it)
+                },
+                onFailure = {
+                    activitiesStateFlow.value = AliasActivitiesState.Error(it)
+                }
+            )
         }
     }
 
-    suspend fun getActivities() {
-        activitiesStateFlow.value = AliasActivitiesState.Loading
-        observeSessionSettings()
-            .collect { settings ->
-                val apiKey = settings.apiKey
-                assert(apiKey != null) { "API key is null" }
-                apiKey?.let {
-                    remoteDatasource.getActivities(
-                        apiKey = apiKey,
-                        aliasId = alias.id,
-                        page = 0
-                    ).fold(
-                        onSuccess = {
-                            activitiesStateFlow.value = AliasActivitiesState.Loaded(it)
-                        },
-                        onFailure = {
-                            activitiesStateFlow.value = AliasActivitiesState.Error(it)
-                        }
-                    )
+    private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
+        viewModelScope.launch {
+            observeSessionSettings().collect { settings ->
+                settings.apiKey?.let {
+                    perform(it)
                 }
             }
+        }
     }
 }
