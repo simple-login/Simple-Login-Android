@@ -165,50 +165,38 @@ class AccountSettingsViewModel @Inject constructor(
     private fun updateSettings(options: UpdateUserSettingsOptions) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isLoading = true) }
-            val settings = datasource.updateUserSettings(
-                apiKey = apiKey,
-                options = options
-            )
-            when (settings) {
-                is Result.Success -> _stateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        settings = it.settings?.copy(userSettings = settings.value)
-                    )
-                }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        updateError = settings.error
-                    )
-                }
-            }
+            datasource.updateUserSettings(apiKey = apiKey, options = options)
+                .fold(onSuccess = { result ->
+                    _stateFlow.update {
+                        it.copy(
+                            isLoading = false,
+                            settings = it.settings?.copy(userSettings = result)
+                        )
+                    }
+                }, onFailure = { error ->
+                    _stateFlow.update {
+                        it.copy(isLoading = false, updateError = error)
+                    }
+                })
         }
     }
 
     private fun updateInfo(option: UpdateUserInfoOption) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isLoading = true) }
-            val info = datasource.updateUserInfo(
-                apiKey = apiKey,
-                option = option
-            )
-            when (info) {
-                is Result.Success -> _stateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        settings = it.settings?.copy(userInfo = info.value)
-                    )
-                }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        updateError = info.error
-                    )
-                }
-            }
+            datasource.updateUserInfo(apiKey = apiKey, option = option)
+                .fold(onSuccess = { result ->
+                    _stateFlow.update {
+                        it.copy(
+                            isLoading = false,
+                            settings = it.settings?.copy(userInfo = result)
+                        )
+                    }
+                }, onFailure = { error ->
+                    _stateFlow.update {
+                        it.copy(isLoading = false, updateError = error)
+                    }
+                })
         }
     }
 

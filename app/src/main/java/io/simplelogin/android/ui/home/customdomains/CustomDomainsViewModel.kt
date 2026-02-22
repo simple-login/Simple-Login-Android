@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
-import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,21 +28,16 @@ class CustomDomainsViewModel @Inject constructor(
         viewModelScope.launch {
             observeSessionSettings().collect { settings ->
                 settings.apiKey?.let { apiKey ->
-                    when (val result = datasource.getCustomDomains(apiKey)) {
-                        is Result.Success -> _stateFlow.update {
-                            it.copy(
-                                domains = result.value.value,
-                                isFetching = false
-                            )
-                        }
-
-                        is Result.Failure -> _stateFlow.update {
-                            it.copy(
-                                isFetching = false,
-                                fetchError = result.error
-                            )
-                        }
-                    }
+                    datasource.getCustomDomains(apiKey)
+                        .fold(onSuccess = { result ->
+                            _stateFlow.update {
+                                it.copy(domains = result.value, isFetching = false)
+                            }
+                        }, onFailure = { error ->
+                            _stateFlow.update {
+                                it.copy(isFetching = false, fetchError = error)
+                            }
+                        })
                 }
             }
         }

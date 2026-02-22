@@ -7,7 +7,6 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateMailboxOptions
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
-import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,105 +32,96 @@ class MailboxesViewModel @Inject constructor(
     fun fetchMailboxes() {
         _stateFlow.update { it.copy(isFetching = true) }
         withApiKey { apiKey ->
-            when (val result = datasource.getMailboxes(apiKey)) {
-                is Result.Success -> _stateFlow.update { it ->
-                    val sortedMailboxes = result.value.value.sortedWith(
-                        compareByDescending { it.creationTimestamp }
-                    )
-                    it.copy(
-                        mailboxes = sortedMailboxes,
-                        isFetching = false
-                    )
-                }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(
-                        isFetching = false,
-                        fetchError = result.error
-                    )
-                }
-            }
+            datasource.getMailboxes(apiKey)
+                .fold(onSuccess = { result ->
+                    _stateFlow.update { it ->
+                        val sortedMailboxes = result.value.sortedWith(
+                            compareByDescending { it.creationTimestamp }
+                        )
+                        it.copy(
+                            mailboxes = sortedMailboxes,
+                            isFetching = false
+                        )
+                    }
+                }, onFailure = { error ->
+                    _stateFlow.update {
+                        it.copy(isFetching = false, fetchError = error)
+                    }
+                })
         }
     }
 
     fun add(email: String) {
         _stateFlow.update { it.copy(isUpdating = true) }
         withApiKey { apiKey ->
-            when (val result = datasource.createMailbox(
-                apiKey = apiKey,
-                email = email
-            )) {
-                is Result.Success -> _stateFlow.update {
-                    val updatedMailboxes = listOf(result.value) + (it.mailboxes ?: emptyList())
-                    it.copy(
-                        mailboxes = updatedMailboxes,
-                        isUpdating = false,
-                        addedMailbox = result.value
-                    )
-                }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(isUpdating = false, updateError = result.error)
-                }
-            }
+            datasource.createMailbox(apiKey = apiKey, email = email)
+                .fold(onSuccess = { result ->
+                    _stateFlow.update {
+                        val updatedMailboxes = listOf(result) + (it.mailboxes ?: emptyList())
+                        it.copy(
+                            mailboxes = updatedMailboxes,
+                            isUpdating = false,
+                            addedMailbox = result
+                        )
+                    }
+                }, onFailure = { error ->
+                    _stateFlow.update {
+                        it.copy(isUpdating = false, updateError = error)
+                    }
+                })
         }
     }
 
     fun setAsDefault(newDefaultMailbox: Mailbox) {
         _stateFlow.update { it.copy(isUpdating = true) }
         withApiKey { apiKey ->
-            val result = datasource.updateMailbox(
+            datasource.updateMailbox(
                 apiKey = apiKey,
                 mailbox = newDefaultMailbox,
                 options = UpdateMailboxOptions(default = true)
-            )
-
-            when (result) {
-                is Result.Success -> {
-                    val updatedMailboxes = _stateFlow.value.mailboxes?.map { mailbox ->
-                        when {
-                            mailbox.id == newDefaultMailbox.id -> mailbox.copy(default = true)
-                            mailbox.default -> mailbox.copy(default = false)
-                            else -> mailbox
-                        }
-                    }
-                    _stateFlow.update {
-                        it.copy(
-                            mailboxes = updatedMailboxes,
-                            newDefaultMailbox = newDefaultMailbox,
-                            isUpdating = false
-                        )
+            ).fold(onSuccess = {
+                val updatedMailboxes = _stateFlow.value.mailboxes?.map { mailbox ->
+                    when {
+                        mailbox.id == newDefaultMailbox.id -> mailbox.copy(default = true)
+                        mailbox.default -> mailbox.copy(default = false)
+                        else -> mailbox
                     }
                 }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(isUpdating = false, updateError = result.error)
+                _stateFlow.update {
+                    it.copy(
+                        mailboxes = updatedMailboxes,
+                        newDefaultMailbox = newDefaultMailbox,
+                        isUpdating = false
+                    )
                 }
-            }
+            }, onFailure = { error ->
+                _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = error)
+                }
+            })
         }
     }
 
     fun deleteMailbox(mailbox: Mailbox, option: MailboxDeleteOption) {
         _stateFlow.update { it.copy(isUpdating = true) }
         withApiKey { apiKey ->
-            val result = datasource.deleteMailbox(
+            datasource.deleteMailbox(
                 apiKey = apiKey,
                 mailbox = mailbox,
                 transferredMailbox = option.mailbox
-            )
-            when (result) {
-                is Result.Success -> _stateFlow.update { state ->
+            ).fold(onSuccess = {
+                _stateFlow.update { state ->
                     state.copy(
                         mailboxes = state.mailboxes?.filter { it.id != mailbox.id },
                         isUpdating = false,
                         deletedMailbox = mailbox
                     )
                 }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(isUpdating = false, updateError = result.error)
+            }, onFailure = { error ->
+                _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = error)
                 }
-            }
+            })
         }
     }
 

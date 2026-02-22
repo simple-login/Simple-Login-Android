@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
-import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,16 +36,16 @@ class CustomDomainDeletedAliasesViewModel @AssistedInject constructor(
     fun fetchDeletedAliases() {
         _stateFlow.update { it.copy(isFetching = true, fetchError = null) }
         withApiKey { apiKey ->
-            val result = datasource.getDeletedAliases(apiKey = apiKey, domain = domain)
-            when (result) {
-                is Result.Success -> _stateFlow.update {
-                    it.copy(aliases = result.value, isFetching = false, fetchError = null)
-                }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(aliases = null, isFetching = false, fetchError = result.error)
-                }
-            }
+            datasource.getDeletedAliases(apiKey = apiKey, domain = domain)
+                .fold(onSuccess = { result ->
+                    _stateFlow.update {
+                        it.copy(aliases = result, isFetching = false, fetchError = null)
+                    }
+                }, onFailure = { error ->
+                    _stateFlow.update {
+                        it.copy(aliases = null, isFetching = false, fetchError = error)
+                    }
+                })
         }
     }
 

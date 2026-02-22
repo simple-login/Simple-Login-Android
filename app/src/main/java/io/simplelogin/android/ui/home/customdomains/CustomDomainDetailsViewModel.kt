@@ -10,7 +10,6 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
-import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,23 +55,19 @@ class CustomDomainDetailsViewModel @AssistedInject constructor(
     private fun updateDomain(options: UpdateCustomDomainOptions) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isUpdating = true) }
-            val result = datasource.updateCustomDomains(
+            datasource.updateCustomDomains(
                 apiKey = apiKey,
                 domain = stateFlow.value.domain,
                 options = options
-            )
-            when (result) {
-                is Result.Success -> _stateFlow.update {
-                    it.copy(
-                        domain = result.value,
-                        isUpdating = false
-                    )
+            ).fold(onSuccess = { result ->
+                _stateFlow.update {
+                    it.copy(domain = result, isUpdating = false)
                 }
-
-                is Result.Failure -> _stateFlow.update {
-                    it.copy(isUpdating = false, updateError = result.error)
+            }, onFailure = { error ->
+                _stateFlow.update {
+                    it.copy(isUpdating = false, updateError = error)
                 }
-            }
+            })
         }
     }
 
