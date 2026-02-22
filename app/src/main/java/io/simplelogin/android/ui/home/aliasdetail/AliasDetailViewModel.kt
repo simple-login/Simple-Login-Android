@@ -22,7 +22,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     @Assisted val alias: Alias,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val remoteDatasource: AliasesRemoteDatasource,
-    observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase
+    observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
@@ -33,7 +33,7 @@ class AliasDetailViewModel @AssistedInject constructor(
         MutableStateFlow<AliasActivitiesState>(AliasActivitiesState.Loading)
 
     val stateFlow = combine(
-        observeDeviceSettingsUseCase(),
+        observeDeviceSettings(),
         activitiesStateFlow
     ) { deviceSettings, activities ->
         AliasDetailScreenState(

@@ -6,7 +6,7 @@ import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface ForgotPasswordUseCase {
-    suspend fun invoke(email: String): Result<Unit, ApiError>
+    suspend operator fun invoke(email: String): Result<Unit, ApiError>
 }
 
 class ForgotPasswordUseCaseImpl @Inject constructor(private val datasource: LogInSignUpRemoteDatasource) :

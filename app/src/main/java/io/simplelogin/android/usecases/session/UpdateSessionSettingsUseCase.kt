@@ -5,12 +5,12 @@ import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import javax.inject.Inject
 
 interface UpdateSessionSettingsUseCase {
-    suspend fun invoke(transform: (UserSessionPreferences) -> UserSessionPreferences)
+    suspend operator fun invoke(transform: (UserSessionPreferences) -> UserSessionPreferences)
 }
 
 class UpdateSessionSettingsUseCaseImpl @Inject constructor(private val dataStore: DataStore<UserSessionPreferences>) :
     UpdateSessionSettingsUseCase {
-    override suspend fun invoke(transform: (UserSessionPreferences) -> UserSessionPreferences) {
+    override suspend operator fun invoke(transform: (UserSessionPreferences) -> UserSessionPreferences) {
         dataStore.updateData(transform)
     }
 }

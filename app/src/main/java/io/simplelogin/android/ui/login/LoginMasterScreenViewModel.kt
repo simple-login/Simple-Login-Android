@@ -36,10 +36,10 @@ class LoginMasterScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
-    private val logInUseCase: LogInUseCase,
-    private val forgotPasswordUseCase: ForgotPasswordUseCase,
-    private val signUpUseCase: SignUpUseCase,
-    private val resendActivationCodeUseCase: ResendActivationCodeUseCase,
+    private val logIn: LogInUseCase,
+    private val forgotPassword: ForgotPasswordUseCase,
+    private val signUp: SignUpUseCase,
+    private val resendActivationCode: ResendActivationCodeUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     @AppVersion val appVersion: String,
     observeSessionSettings: ObserveSessionSettingsUseCase
@@ -67,7 +67,7 @@ class LoginMasterScreenViewModel @Inject constructor(
         }
 
         launchLoading(doWork = {
-            logInUseCase.invoke(email = email, password = password)
+            logIn(email = email, password = password)
         }, handleResult = {
             when (it) {
                 is Result.Success -> {
@@ -89,13 +89,13 @@ class LoginMasterScreenViewModel @Inject constructor(
         launchLoading(doWork = {
             delay(1_000)
         }, handleResult = {
-            updateSessionSettings.invoke { it.copy(apiKey = apiKey) }
+            updateSessionSettings { it.copy(apiKey = apiKey) }
         })
     }
 
     fun signUp(email: String, password: String) {
         launchLoading(doWork = {
-            signUpUseCase.invoke(email = email, password = password)
+            signUp.invoke(email = email, password = password)
         }, handleResult = {
             val message = when (it) {
                 is Result.Success ->
@@ -109,7 +109,7 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     fun forgotPassword(email: String) {
         launchLoading(doWork = {
-            forgotPasswordUseCase.invoke(email)
+            forgotPassword.invoke(email)
         }, handleResult = {
             val message = when (it) {
                 is Result.Success ->
@@ -123,7 +123,7 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     fun resentActivationCode(email: String) {
         launchLoading(doWork = {
-            resendActivationCodeUseCase.invoke(email)
+            resendActivationCode(email)
         }, handleResult = {
             val message = when (it) {
                 is Result.Success ->
