@@ -4,6 +4,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.EnabledResponse
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 data class AliasListState(
@@ -54,6 +56,7 @@ interface AliasListManager {
     suspend fun pin(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun delete(aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun randomAlias(mode: RandomMode): Result<Alias, ApiError>
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -248,6 +251,24 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
             }, onFailure = {
                 isModifying.value = false
                 Result.Failure(it)
+            })
+    }
+
+    override suspend fun randomAlias(mode: RandomMode): Result<Alias, ApiError> {
+        val apiKey = requireNotNull(apiKey) { "API key is not set" }
+        isModifying.value = true
+        return datasource.random(apiKey = apiKey, mode = mode)
+            .fold(onSuccess = { randomAlias ->
+                if (filterMode == AliasFilterMode.ALL || filterMode == AliasFilterMode.ENABLED) {
+                    aliases.update { currentAliases ->
+                        listOf(randomAlias) + currentAliases
+                    }
+                }
+                isModifying.value = false
+                Result.Success(randomAlias)
+            }, onFailure = { error ->
+                isModifying.value = false
+                Result.Failure(error)
             })
     }
 

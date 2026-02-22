@@ -16,9 +16,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Abc
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -48,6 +49,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.FullScreenDialog
@@ -168,9 +170,13 @@ private fun HomeScreenScaffold(
             HomeScreenFAB(
                 expanded = fabExpanded,
                 onClick = onCollapseFAB,
-                onRandomAliasClick = {
+                onRandomByWordClick = {
                     onCollapseFAB()
-                    viewModel.randomAlias()
+                    viewModel.randomAlias(RandomMode.WORD)
+                },
+                onRandomByUuidClick = {
+                    onCollapseFAB()
+                    viewModel.randomAlias(RandomMode.UUID)
                 },
                 onCustomAliasClick = {
                     onCollapseFAB()
@@ -235,7 +241,8 @@ private fun HomeScreenScaffold(
 private fun HomeScreenFAB(
     expanded: Boolean,
     onClick: () -> Unit,
-    onRandomAliasClick: () -> Unit,
+    onRandomByWordClick: () -> Unit,
+    onRandomByUuidClick: () -> Unit,
     onCustomAliasClick: () -> Unit
 ) {
     val rotation by animateFloatAsState(
@@ -253,12 +260,19 @@ private fun HomeScreenFAB(
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.End
             ) {
                 TitledFAB(
-                    title = stringResource(R.string.random_alias),
-                    imageVector = Icons.Default.Shuffle,
-                    onClick = onRandomAliasClick
+                    title = stringResource(R.string.random_alias_by_uuid),
+                    imageVector = Icons.Default.Numbers,
+                    onClick = onRandomByUuidClick
+                )
+
+                TitledFAB(
+                    title = stringResource(R.string.random_alias_by_word),
+                    imageVector = Icons.Default.Abc,
+                    onClick = onRandomByWordClick
                 )
 
                 TitledFAB(

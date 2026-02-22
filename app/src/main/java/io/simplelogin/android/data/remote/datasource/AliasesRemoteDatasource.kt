@@ -1,15 +1,18 @@
 package io.simplelogin.android.data.remote.datasource
 
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.UpdateAliasOptions
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EnabledResponse
+import io.simplelogin.android.data.remote.NoteBody
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
@@ -30,6 +33,8 @@ interface AliasesRemoteDatasource {
         aliasId: AliasId,
         page: Int
     ): Result<List<AliasActivity>, ApiError>
+
+    suspend fun random(apiKey: ApiKey, mode: RandomMode): Result<Alias, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -101,4 +106,14 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
         safeApiCall {
             apiService.getAliasActivities(apiKey = apiKey, aliasId = aliasId, pageId = page)
         }.mapValue { it.activities }
+
+    override suspend fun random(apiKey: ApiKey, mode: RandomMode): Result<Alias, ApiError> =
+        safeApiCall {
+            apiService.randomAlias(
+                apiKey = apiKey,
+                mode = mode.value,
+                hostname = null,
+                body = NoteBody(null)
+            )
+        }
 }

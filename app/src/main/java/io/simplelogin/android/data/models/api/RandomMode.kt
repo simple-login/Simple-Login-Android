@@ -15,4 +15,10 @@ enum class RandomMode {
         UUID -> "UUID"
         WORD -> context.getString(R.string.random_word)
     }
+
+    val value: String
+        get() = when (this) {
+            UUID -> "uuid"
+            WORD -> "word"
+        }
 }

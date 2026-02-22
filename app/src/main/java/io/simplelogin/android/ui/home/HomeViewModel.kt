@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
@@ -171,7 +172,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun randomAlias() {}
+    fun randomAlias(mode: RandomMode) {
+        viewModelScope.launch {
+            aliasListManager.randomAlias(mode)
+                .fold(onSuccess = { randomAlias ->
+                    val message = context.getString(R.string.alias_created, randomAlias.email)
+                    snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                }, onFailure = ::handle)
+        }
+    }
 
     private suspend fun handle(error: ApiError) {
         val config = SnackbarConfiguration(

@@ -283,7 +283,7 @@ private fun MainUi(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.LightGray.copy(alpha = 0.5f))
+                        .background(Color.LightGray.copy(alpha = 0.1f))
                         // Intercept all click events to disable click while loading
                         .clickableRippleDisabled(onClick = {}),
                     contentAlignment = Alignment.Center

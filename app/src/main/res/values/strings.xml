@@ -119,8 +119,11 @@
     <string name="no_active_aliases">No active aliases</string>
     <string name="no_disabled_aliases">No disabled aliases</string>
     <string name="create_new_alias">Create new alias</string>
-    <string name="random_alias">Random alias</string>
+    <string name="random_alias_by_word">Random by word</string>
+    <string name="random_alias_by_uuid">Random by UUID</string>
     <string name="custom_alias">Custom alias</string>
+    <string name="alias_created">\"%s\" is created</string>
+    <string name="alias_created_and_copied_to_clipboard">\"%s\" is created and copied to clipboard</string>
     <string name="create">Create</string>
     <string name="prefix">Prefix</string>
     <string name="invalid_prefix_two_consecutive_dots">Prefix can not contain 2 consecutive dots (..)</string>
