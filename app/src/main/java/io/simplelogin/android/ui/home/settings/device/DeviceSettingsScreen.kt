@@ -123,44 +123,46 @@ private fun DeviceSettingsContent(
             .padding(bottom = Spacing.regular)
     ) {
         item {
-            OptionRow(
-                modifier = Modifier.primaryContentBackground(),
-                paddingValues = PaddingValues(Spacing.regular),
-                title = stringResource(R.string.theme),
-                description = {
-                    val icon = when (it) {
-                        Theme.LIGHT -> Icons.Outlined.LightMode
-                        Theme.DARK -> Icons.Outlined.DarkMode
-                        Theme.MATCH_SYSTEM -> Icons.Outlined.Brightness6
-                    }
-                    Row {
-                        Icon(imageVector = icon, contentDescription = null)
-                        Spacer(modifier = Modifier.width(Spacing.medium))
-                        Text(text = it.title(context = LocalContext.current))
-                    }
-                },
-                options = Theme.entries.toTypedArray(),
-                selected = settings.theme,
-                onSelect = ::updateTheme
-            )
+            SettingsHeader(text = stringResource(R.string.display))
+
+            Column(modifier = Modifier.primaryContentBackground()) {
+                OptionRow(
+                    paddingValues = PaddingValues(Spacing.regular),
+                    title = stringResource(R.string.theme),
+                    description = {
+                        val icon = when (it) {
+                            Theme.LIGHT -> Icons.Outlined.LightMode
+                            Theme.DARK -> Icons.Outlined.DarkMode
+                            Theme.MATCH_SYSTEM -> Icons.Outlined.Brightness6
+                        }
+                        Row {
+                            Icon(imageVector = icon, contentDescription = null)
+                            Spacer(modifier = Modifier.width(Spacing.medium))
+                            Text(text = it.title(context = LocalContext.current))
+                        }
+                    },
+                    options = Theme.entries.toTypedArray(),
+                    selected = settings.theme,
+                    onSelect = ::updateTheme
+                )
+
+                HorizontalDivider()
+
+                ToggleOption(
+                    paddingValues = PaddingValues(Spacing.regular),
+                    checked = settings.showStats,
+                    onCheckedChange = ::updateShowStats,
+                    title = stringResource(R.string.show_stats),
+                    description = stringResource(R.string.show_stats_description)
+                )
+            }
 
             SettingsSpacer()
         }
 
         item {
-            ToggleOption(
-                modifier = Modifier.primaryContentBackground(),
-                paddingValues = PaddingValues(Spacing.regular),
-                checked = settings.showStats,
-                onCheckedChange = ::updateShowStats,
-                title = stringResource(R.string.show_stats),
-                description = stringResource(R.string.show_stats_description)
-            )
+            SettingsHeader(text = stringResource(R.string.alias_creation))
 
-            SettingsSpacer()
-        }
-
-        item {
             Column(modifier = Modifier.primaryContentBackground()) {
                 DefaultPrefixSelection(
                     selected = settings.defaultPrefix,
@@ -195,6 +197,15 @@ private fun DeviceSettingsContent(
                         }
                     }
                 }
+
+                HorizontalDivider()
+
+                ToggleOption(
+                    paddingValues = PaddingValues(Spacing.regular),
+                    checked = settings.copyAfterCreating,
+                    onCheckedChange = ::updateCopyAfterCreating,
+                    title = stringResource(R.string.copy_after_creating)
+                )
             }
 
             SettingsSpacer()

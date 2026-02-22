@@ -93,6 +93,10 @@ class DeviceSettingsViewModel @Inject constructor(
         updateSettings { it.copy(prefixRandomCharacterCount = count) }
     }
 
+    fun updateCopyAfterCreating(copyAfterCreating: Boolean) {
+        updateSettings { it.copy(copyAfterCreating = copyAfterCreating) }
+    }
+
     fun updateShowStats(showStats: Boolean) {
         updateSettings { it.copy(showStats = showStats) }
     }

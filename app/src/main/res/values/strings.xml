@@ -141,6 +141,7 @@
     <string name="empty">Empty</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
+    <string name="alias_creation">Alias creation</string>
     <string name="number_of_random_characters">Number of random characters</string>
     <string name="random_prefix">Random prefix</string>
     <string name="you_are_about_to_create">You are about to create</string>
@@ -148,6 +149,7 @@
     <string name="default_mailbox">Default</string>
     <string name="show_stats">Show statistics</string>
     <string name="show_stats_description">Display total aliases, block, forward and reply numbers</string>
+    <string name="copy_after_creating">Copy email address after creating aliases</string>
     <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
     <string name="account_settings">Account settings</string>
     <string name="newsletter">Newsletter</string>
@@ -193,6 +195,7 @@
     <string name="no_custom_domains_message">No custom domains yet.\nAdd your first one via the web app.</string>
     <string name="learn_more">Learn more</string>
     <string name="use_web_app_to_add_custom_domains">To add new domains, please use your web application.</string>
+    <string name="display">Display</string>
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>

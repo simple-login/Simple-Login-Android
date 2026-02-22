@@ -22,6 +22,7 @@ import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,9 +33,9 @@ class HomeViewModel @Inject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
     private val aliasListManager: AliasListManager,
-    private val copyToClipboardUseCase: CopyToClipboardUseCase,
+    private val copyToClipboard: CopyToClipboardUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    observeDeviceSettingsUseCase: ObserveDeviceSettingsUseCase
+    private val observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     private val aliasFilterModeFlow = MutableStateFlow(AliasFilterMode.ALL)
 
@@ -64,7 +65,7 @@ class HomeViewModel @Inject constructor(
     }
 
     val stateFlow = combine(
-        observeDeviceSettingsUseCase(),
+        observeDeviceSettings(),
         aliasFilterModeFlow,
         aliasListManager.state,
     ) { deviceSettings, aliasFilterMode, aliasesListState ->
@@ -85,7 +86,7 @@ class HomeViewModel @Inject constructor(
 
     fun copyAliasAddress(email: String) {
         viewModelScope.launch {
-            copyToClipboardUseCase.invoke(
+            copyToClipboard(
                 label = context.getString(R.string.alias_address_label),
                 content = email
             )
@@ -174,9 +175,20 @@ class HomeViewModel @Inject constructor(
 
     fun randomAlias(mode: RandomMode) {
         viewModelScope.launch {
+            val settings = observeDeviceSettings().first()
+            val copyAfterCreating = settings.copyAfterCreating
             aliasListManager.randomAlias(mode)
                 .fold(onSuccess = { randomAlias ->
-                    val message = context.getString(R.string.alias_created, randomAlias.email)
+                    if (copyAfterCreating) {
+                        copyToClipboard(
+                            label = context.getString(R.string.alias_address_label),
+                            content = randomAlias.email
+                        )
+                    }
+                    val message = context.getString(
+                        if (copyAfterCreating) R.string.alias_created_and_copied_to_clipboard else R.string.alias_created,
+                        randomAlias.email
+                    )
                     snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
                 }, onFailure = ::handle)
         }

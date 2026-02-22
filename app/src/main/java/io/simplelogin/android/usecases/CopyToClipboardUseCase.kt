@@ -7,7 +7,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 interface CopyToClipboardUseCase {
-    suspend fun invoke(label: String, content: String)
+    suspend operator fun invoke(label: String, content: String)
 }
 
 class CopyToClipboardUseCaseImpl @Inject constructor(@ApplicationContext private val context: Context) :
