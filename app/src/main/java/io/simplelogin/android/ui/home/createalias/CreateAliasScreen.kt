@@ -538,6 +538,7 @@ private fun MailboxesSelectionDialog(
                         Spacer(modifier = Modifier.width(Spacing.small))
 
                         Text(
+                            modifier = Modifier.weight(1f),
                             text = mailbox.email,
                             style = MaterialTheme.typography.bodyLarge,
                             color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
