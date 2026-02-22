@@ -225,7 +225,9 @@ class AppRootViewModel @Inject constructor(
 
     fun viewAliasContacts(alias: Alias) {
         _navBackStack.value.apply {
-            add(AliasContactsDestination(alias))
+            if (lastOrNull() != AliasContactsDestination(alias)) {
+                add(AliasContactsDestination(alias))
+            }
         }
     }
     //endregion
