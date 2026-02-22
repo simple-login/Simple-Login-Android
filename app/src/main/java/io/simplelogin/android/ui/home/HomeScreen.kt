@@ -168,19 +168,21 @@ private fun HomeScreenScaffold(
             }
         },
         floatingActionButton = {
-            HomeScreenFAB(
-                expanded = fabExpanded,
-                onClick = onCollapseFAB,
-                askForRandomAliasNote = state.deviceSettings.askForRandomAliasNote,
-                onRandomAlias = { mode, note ->
-                    onCollapseFAB()
-                    viewModel.randomAlias(mode = mode, note = note)
-                },
-                onCustomAliasClick = {
-                    onCollapseFAB()
-                    onCustomAliasClick()
-                }
-            )
+            AnimatedVisibility(visible = !isSearching) {
+                HomeScreenFAB(
+                    expanded = fabExpanded,
+                    onClick = onCollapseFAB,
+                    askForRandomAliasNote = state.deviceSettings.askForRandomAliasNote,
+                    onRandomAlias = { mode, note ->
+                        onCollapseFAB()
+                        viewModel.randomAlias(mode = mode, note = note)
+                    },
+                    onCustomAliasClick = {
+                        onCollapseFAB()
+                        onCustomAliasClick()
+                    }
+                )
+            }
         }
     ) { innerPadding ->
         AliasesList(
