@@ -12,10 +12,15 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AllInbox
@@ -53,8 +58,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
@@ -73,6 +80,7 @@ import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
+import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.Job
@@ -357,6 +365,20 @@ private fun Drawer(
         )
 
         Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                modifier = Modifier.widthIn(max = 180.dp),
+                painter = painterResource(R.drawable.ic_logo_powered_by_proton),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                contentDescription = null
+            )
+        }
+
+        Spacer(modifier = Modifier.height(Spacing.large))
 
         Text(
             modifier = Modifier.fillMaxWidth(),
