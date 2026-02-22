@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,8 @@ import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.clickableRippleDisabled
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun HomeScreen(
@@ -68,6 +71,7 @@ fun HomeScreen(
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
     onCreateAlias: () -> Unit,
+    createdAliasFlow: Flow<Alias> = emptyFlow(),
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
@@ -77,6 +81,12 @@ fun HomeScreen(
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
     val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+
+    LaunchedEffect(Unit) {
+        createdAliasFlow.collect { alias ->
+            viewModel.handleCreatedAlias(alias)
+        }
+    }
 
     BackHandler {
         if (isSearching) {
@@ -123,7 +133,13 @@ fun HomeScreen(
             onDismissRequest = { showCreateAliasDialog = false },
             properties = DialogProperties(usePlatformDefaultWidth = windowAdaptiveInfo.supportsMultiplePanes())
         ) {
-            CreateAliasScreen(onDismiss = { showCreateAliasDialog = false })
+            CreateAliasScreen(
+                onAliasCreated = {
+                    showCreateAliasDialog = false
+                    viewModel.handleCreatedAlias(it)
+                },
+                onDismiss = { showCreateAliasDialog = false }
+            )
         }
     }
 }

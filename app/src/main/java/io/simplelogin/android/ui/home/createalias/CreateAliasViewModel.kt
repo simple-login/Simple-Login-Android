@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.Suffix
+import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -28,27 +31,24 @@ class CreateAliasViewModel @Inject constructor(
     private val observeDeviceSettings: ObserveDeviceSettingsUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase
 ) : ViewModel() {
+    private var apiKey: ApiKey? = null
     private val _stateFlow = MutableStateFlow(CreateAliasState.Default)
     val stateFlow: StateFlow<CreateAliasState> = _stateFlow.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            fetchOptions()
-        }
+        fetchOptions()
     }
 
-    suspend fun fetchOptions() {
+    fun fetchOptions() {
         _stateFlow.update { CreateAliasState.Default }
-        observeSessionSettings().collect { settings ->
-            settings.apiKey?.let { apiKey ->
-                coroutineScope {
-                    val mailboxes = async { datasource.getMailboxes(apiKey = apiKey) }
-                    val options = async { datasource.getAliasOptions(apiKey = apiKey) }
-                    handleResults(
-                        mailboxesResult = mailboxes.await(),
-                        optionsResult = options.await()
-                    )
-                }
+        withApiKey { apiKey ->
+            coroutineScope {
+                val mailboxes = async { datasource.getMailboxes(apiKey = apiKey) }
+                val options = async { datasource.getAliasOptions(apiKey = apiKey) }
+                handleResults(
+                    mailboxesResult = mailboxes.await(),
+                    optionsResult = options.await()
+                )
             }
         }
     }
@@ -92,6 +92,31 @@ class CreateAliasViewModel @Inject constructor(
             optionsResult is Result.Failure -> _stateFlow.update {
                 it.copy(isLoading = false, fetchError = optionsResult.error)
             }
+        }
+    }
+
+    private fun withApiKey(block: suspend (ApiKey) -> Unit) {
+        apiKey?.let { viewModelScope.launch { block(it) } }
+            ?: viewModelScope.launch {
+                observeSessionSettings()
+                    .mapNotNull { it.apiKey }
+                    .first()
+                    .let { fetchedApiKey ->
+                        apiKey = fetchedApiKey
+                        block(fetchedApiKey)
+                    }
+            }
+    }
+
+    fun create(body: CreateAliasBody) {
+        _stateFlow.update { it.copy(isLoading = true) }
+        withApiKey { apiKey ->
+            datasource.create(apiKey = apiKey, body = body)
+                .fold(onSuccess = { alias ->
+                    _stateFlow.update { it.copy(isLoading = false, createdAlias = alias) }
+                }, onFailure = { error ->
+                    _stateFlow.update { it.copy(isLoading = false, createError = error) }
+                })
         }
     }
 }

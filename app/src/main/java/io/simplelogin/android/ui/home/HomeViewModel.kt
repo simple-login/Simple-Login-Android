@@ -175,23 +175,34 @@ class HomeViewModel @Inject constructor(
 
     fun randomAlias(mode: RandomMode, note: String?) {
         viewModelScope.launch {
-            val settings = observeDeviceSettings().first()
-            val copyAfterCreating = settings.copyAfterCreating
             aliasListManager.randomAlias(mode = mode, note = note)
-                .fold(onSuccess = { randomAlias ->
-                    if (copyAfterCreating) {
-                        copyToClipboard(
-                            label = context.getString(R.string.alias_address_label),
-                            content = randomAlias.email
-                        )
-                    }
-                    val message = context.getString(
-                        if (copyAfterCreating) R.string.alias_created_and_copied_to_clipboard else R.string.alias_created,
-                        randomAlias.email
-                    )
-                    snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                .fold(onSuccess = {
+                    copyAndShowSnackbar(it)
                 }, onFailure = ::handle)
         }
+    }
+
+    fun handleCreatedAlias(alias: Alias) {
+        viewModelScope.launch {
+            aliasListManager.handleNewlyCreatedAlias(alias)
+            copyAndShowSnackbar(alias)
+        }
+    }
+
+    private suspend fun copyAndShowSnackbar(alias: Alias) {
+        val settings = observeDeviceSettings().first()
+        val copyAfterCreating = settings.copyAfterCreating
+        if (copyAfterCreating) {
+            copyToClipboard(
+                label = context.getString(R.string.alias_address_label),
+                content = alias.email
+            )
+        }
+        val message = context.getString(
+            if (copyAfterCreating) R.string.alias_created_and_copied_to_clipboard else R.string.alias_created,
+            alias.email
+        )
+        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
     }
 
     private suspend fun handle(error: ApiError) {

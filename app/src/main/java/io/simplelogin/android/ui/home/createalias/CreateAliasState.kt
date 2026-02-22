@@ -1,26 +1,22 @@
 package io.simplelogin.android.ui.home.createalias
 
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 
 data class CreateAliasState(
-    val isLoading: Boolean,
-    val defaultPrefix: String?,
-    val randomCharacterCount: Int,
-    val aliasOptions: AliasOptions?,
-    val mailboxes: List<Mailbox>?,
-    val fetchError: ApiError?
+    val isLoading: Boolean = true,
+    val defaultPrefix: String? = null,
+    val randomCharacterCount: Int = DevicePreferences.Default.prefixRandomCharacterCount,
+    val aliasOptions: AliasOptions? = null,
+    val mailboxes: List<Mailbox>? = null,
+    val fetchError: ApiError? = null,
+    val createError: ApiError? = null,
+    val createdAlias: Alias? = null
 ) {
     companion object {
-        val Default = CreateAliasState(
-            isLoading = true,
-            defaultPrefix = null,
-            randomCharacterCount = DevicePreferences.Default.prefixRandomCharacterCount,
-            aliasOptions = null,
-            mailboxes = null,
-            fetchError = null
-        )
+        val Default = CreateAliasState()
     }
 }

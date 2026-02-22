@@ -57,6 +57,7 @@ interface AliasListManager {
     suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun delete(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun randomAlias(mode: RandomMode, note: String?): Result<Alias, ApiError>
+    suspend fun handleNewlyCreatedAlias(alias: Alias)
 }
 
 class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRemoteDatasource) :
@@ -270,6 +271,14 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 isModifying.value = false
                 Result.Failure(error)
             })
+    }
+
+    override suspend fun handleNewlyCreatedAlias(alias: Alias) {
+        if (filterMode == AliasFilterMode.ALL || filterMode == AliasFilterMode.ENABLED) {
+            aliases.update { currentAliases ->
+                listOf(alias) + currentAliases
+            }
+        }
     }
 
     private companion object {

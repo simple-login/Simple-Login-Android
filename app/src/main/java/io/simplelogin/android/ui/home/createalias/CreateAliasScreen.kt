@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -62,9 +63,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
+import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
@@ -82,6 +85,7 @@ import java.util.UUID
 fun CreateAliasScreen(
     key: String = rememberSaveable { UUID.randomUUID().toString() },
     viewModel: CreateAliasViewModel = hiltViewModel(key = key),
+    onAliasCreated: (Alias) -> Unit,
     onDismiss: () -> Unit
 ) = with(viewModel) {
     val scope = rememberCoroutineScope()
@@ -116,6 +120,10 @@ fun CreateAliasScreen(
         }
     }
 
+    LaunchedEffect(state.createdAlias) {
+        state.createdAlias?.let { onAliasCreated(it) }
+    }
+
     Scaffold(
         modifier = Modifier.wrapContentHeight(),
         topBar = {
@@ -135,7 +143,19 @@ fun CreateAliasScreen(
                     if (!state.isLoading && state.fetchError == null)
                         TextButton(
                             enabled = prefixValidation is PrefixValidationResult.Valid,
-                            onClick = {}
+                            onClick = {
+                                selectedSuffix?.let { selectedSuffix ->
+                                    viewModel.create(
+                                        CreateAliasBody(
+                                            prefix = prefix.text,
+                                            signedSuffix = selectedSuffix.signature,
+                                            mailboxIds = selectedMailboxes.map { it.id },
+                                            note = note,
+                                            name = null
+                                        )
+                                    )
+                                }
+                            }
                         ) {
                             Text(text = stringResource(R.string.create))
                         }
@@ -143,20 +163,10 @@ fun CreateAliasScreen(
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = Spacing.regular)
+        Box(
+            modifier = Modifier.padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            if (state.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-
             if (fetchError != null) {
                 RetryButton(
                     error = fetchError,
@@ -167,18 +177,31 @@ fun CreateAliasScreen(
             }
 
             if (state.aliasOptions != null && state.mailboxes != null) {
-                CustomAliasMainContent(
-                    prefix = prefix,
-                    randomCharacterCount = state.randomCharacterCount,
-                    onPrefixChanged = { prefix = it },
-                    prefixValidation = prefixValidation,
-                    selectedSuffix = selectedSuffix,
-                    onShowSuffixSelection = { showSuffixDialog = true },
-                    selectedMailboxes = selectedMailboxes,
-                    onShowMailboxesSelection = { showMailboxesDialog = true },
-                    note = note,
-                    onNoteChanged = { note = it }
-                )
+                Column(modifier = Modifier.padding(horizontal = Spacing.regular)) {
+                    CustomAliasMainContent(
+                        prefix = prefix,
+                        randomCharacterCount = state.randomCharacterCount,
+                        onPrefixChanged = { prefix = it },
+                        prefixValidation = prefixValidation,
+                        selectedSuffix = selectedSuffix,
+                        onShowSuffixSelection = { showSuffixDialog = true },
+                        selectedMailboxes = selectedMailboxes,
+                        onShowMailboxesSelection = { showMailboxesDialog = true },
+                        note = note,
+                        onNoteChanged = { note = it }
+                    )
+                }
+            }
+
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {},
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

@@ -132,12 +132,16 @@ fun AppRoot(
                     onOpenDrawer = onOpenDrawer,
                     onViewDetails = ::viewAliasDetails,
                     onViewContacts = ::viewAliasContacts,
-                    onCreateAlias = ::showCreateAliasScreen
+                    onCreateAlias = ::showCreateAliasScreen,
+                    createdAliasFlow = viewModel.createdAlias
                 )
             }
 
             entry<CreateAliasDestination> {
-                CreateAliasScreen(onDismiss = viewModel::goBack)
+                CreateAliasScreen(
+                    onAliasCreated = viewModel::handleCreatedAlias,
+                    onDismiss = viewModel::goBack
+                )
             }
 
             entry<AliasDetailsDestination>(

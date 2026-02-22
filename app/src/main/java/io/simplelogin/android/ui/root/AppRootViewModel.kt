@@ -12,11 +12,13 @@ import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,6 +33,9 @@ class AppRootViewModel @Inject constructor(
     private val _navBackStack =
         MutableStateFlow(mutableStateListOf<NavKey>(InitializationDestination))
     val navBackStack = _navBackStack.asStateFlow()
+
+    private val _createdAlias = Channel<Alias>(Channel.BUFFERED)
+    val createdAlias = _createdAlias.receiveAsFlow()
 
     var showLogOutDialog = MutableStateFlow(false)
 
@@ -211,6 +216,11 @@ class AppRootViewModel @Inject constructor(
         _navBackStack.value.apply {
             add(CreateAliasDestination)
         }
+    }
+
+    fun handleCreatedAlias(alias: Alias) {
+        _createdAlias.trySend(alias)
+        goBack()
     }
 
     fun viewAliasDetails(alias: Alias) {
