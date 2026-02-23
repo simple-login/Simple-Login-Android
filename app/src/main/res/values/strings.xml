@@ -232,4 +232,7 @@
     <string name="after_five_minutes">After 5 minutes</string>
     <string name="after_ten_minutes">After 10 minutes</string>
     <string name="after_one_hour">After 1 hour</string>
+    <string name="choose_a_pin_code">Choose a PIN code</string>
+    <string name="repeat_pin_code">Repeat PIN code</string>
+    <string name="pins_not_matched">PINs not matched</string>
 </resources>

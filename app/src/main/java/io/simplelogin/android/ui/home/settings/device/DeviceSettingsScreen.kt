@@ -122,6 +122,8 @@ private fun DeviceSettingsContent(
     settings: DevicePreferences,
     viewModel: DeviceSettingsViewModel
 ) = with(viewModel) {
+    var showSetPinDialog by rememberSaveable { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = Spacing.regular)
@@ -137,7 +139,13 @@ private fun DeviceSettingsContent(
                     description = { Text(text = it.title(context = LocalContext.current)) },
                     options = DeviceLockType.entries.toTypedArray(),
                     selected = session.lockType,
-                    onSelect = ::updateLockType
+                    onSelect = {
+                        when (it) {
+                            DeviceLockType.NONE -> {}
+                            DeviceLockType.BIOMETRIC -> {}
+                            DeviceLockType.PIN -> showSetPinDialog = true
+                        }
+                    }
                 )
 
                 AnimatedVisibility(visible = session.lockType != DeviceLockType.NONE) {
@@ -304,6 +312,13 @@ private fun DeviceSettingsContent(
                 )
             }
         }
+    }
+
+    if (showSetPinDialog) {
+        CreateOrEditPinDialog(
+            mode = CreateOrEditPinMode.CREATE,
+            onConfirm = {},
+            onDismiss = { showSetPinDialog = false })
     }
 }
 
