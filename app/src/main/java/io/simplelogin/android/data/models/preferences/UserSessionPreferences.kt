@@ -1,5 +1,7 @@
 package io.simplelogin.android.data.models.preferences
 
+import android.content.Context
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.util.Constants
 import kotlinx.serialization.Serializable
@@ -9,13 +11,38 @@ data class UserSessionPreferences(
     val baseUrl: String = Constants.DEFAULT_BASE_URL,
     val apiKey: ApiKey? = null,
     val lockEnabled: Boolean = false,
+    val lockType: DeviceLockType = DeviceLockType.DEFAULT,
     val lockTimeOut: LockTimeOut = LockTimeOut.DEFAULT,
+    val pinCodeHash: String? = null
 )
+
+enum class DeviceLockType {
+    NONE, BIOMETRIC, PIN;
+
+    companion object {
+        val DEFAULT: DeviceLockType = NONE
+    }
+
+    fun title(context: Context) = when (this) {
+        NONE -> context.getString(R.string.none)
+        BIOMETRIC -> context.getString(R.string.biometric)
+        PIN -> context.getString(R.string.pin_code)
+    }
+}
 
 enum class LockTimeOut {
     IMMEDIATE, ONE_MINUTE, TWO_MINUTES, FIVE_MINUTES, TEN_MINUTES, ONE_HOUR;
 
     companion object {
-        val DEFAULT: LockTimeOut = TWO_MINUTES
+        val DEFAULT: LockTimeOut = IMMEDIATE
+    }
+
+    fun title(context: Context) = when (this) {
+        IMMEDIATE -> context.getString(R.string.immediately)
+        ONE_MINUTE -> context.getString(R.string.after_one_minute)
+        TWO_MINUTES -> context.getString(R.string.after_two_minutes)
+        FIVE_MINUTES -> context.getString(R.string.after_five_minutes)
+        TEN_MINUTES -> context.getString(R.string.after_ten_minutes)
+        ONE_HOUR -> context.getString(R.string.after_one_hour)
     }
 }

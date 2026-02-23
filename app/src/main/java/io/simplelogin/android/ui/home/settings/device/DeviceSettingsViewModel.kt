@@ -8,28 +8,41 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
+import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.data.models.preferences.SwipeAction
+import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class DeviceSettingsState {
     data object Loading : DeviceSettingsState()
-    data class Loaded(val settings: DevicePreferences) : DeviceSettingsState()
+    data class Loaded(
+        val settings: DevicePreferences,
+        val session: UserSessionPreferences
+    ) : DeviceSettingsState()
 }
 
 @HiltViewModel
 class DeviceSettingsViewModel @Inject constructor(
     observeDeviceSettings: ObserveDeviceSettingsUseCase,
-    private val updateDeviceSettings: UpdateDeviceSettingsUseCase
+    observeSessionSettings: ObserveSessionSettingsUseCase,
+    private val updateDeviceSettings: UpdateDeviceSettingsUseCase,
+    private val updateSessionSettings: UpdateSessionSettingsUseCase
 ) : ViewModel() {
-    val stateFlow = observeDeviceSettings().map {
-        DeviceSettingsState.Loaded(it)
+    val stateFlow = combine(
+        observeDeviceSettings(),
+        observeSessionSettings()
+    ) { settings, session ->
+        DeviceSettingsState.Loaded(settings = settings, session = session)
     }
         .stateIn(
             scope = viewModelScope,
@@ -107,6 +120,18 @@ class DeviceSettingsViewModel @Inject constructor(
 
     fun updateTheme(theme: Theme) {
         updateSettings { it.copy(theme = theme) }
+    }
+
+    fun updateLockType(lockType: DeviceLockType) {
+        viewModelScope.launch {
+            updateSessionSettings { it.copy(lockType = lockType) }
+        }
+    }
+
+    fun updateLockTimeout(timeOut: LockTimeOut) {
+        viewModelScope.launch {
+            updateSessionSettings { it.copy(lockTimeOut = timeOut) }
+        }
     }
 
     private fun updateSettings(update: (DevicePreferences) -> DevicePreferences) {

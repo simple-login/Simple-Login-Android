@@ -52,8 +52,11 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
+import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.data.models.preferences.SwipeAction
+import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -105,6 +108,7 @@ fun DeviceSettingsScreen(
                 is DeviceSettingsState.Loaded ->
                     DeviceSettingsContent(
                         viewModel = viewModel,
+                        session = (state as DeviceSettingsState.Loaded).session,
                         settings = (state as DeviceSettingsState.Loaded).settings
                     )
             }
@@ -114,6 +118,7 @@ fun DeviceSettingsScreen(
 
 @Composable
 private fun DeviceSettingsContent(
+    session: UserSessionPreferences,
     settings: DevicePreferences,
     viewModel: DeviceSettingsViewModel
 ) = with(viewModel) {
@@ -122,6 +127,49 @@ private fun DeviceSettingsContent(
             .padding(horizontal = Spacing.regular)
             .padding(bottom = Spacing.regular)
     ) {
+        item {
+            SettingsHeader(text = stringResource(R.string.security))
+
+            Column(modifier = Modifier.primaryContentBackground()) {
+                OptionRow(
+                    paddingValues = PaddingValues(Spacing.regular),
+                    title = stringResource(R.string.unlock_with),
+                    description = { Text(text = it.title(context = LocalContext.current)) },
+                    options = DeviceLockType.entries.toTypedArray(),
+                    selected = session.lockType,
+                    onSelect = ::updateLockType
+                )
+
+                AnimatedVisibility(visible = session.lockType == DeviceLockType.PIN) {
+                    Column {
+                        HorizontalDivider()
+
+                        OptionRow(
+                            paddingValues = PaddingValues(Spacing.regular),
+                            title = stringResource(R.string.automatic_lock),
+                            description = { Text(text = it.title(context = LocalContext.current)) },
+                            options = LockTimeOut.entries.toTypedArray(),
+                            selected = session.lockTimeOut,
+                            onSelect = ::updateLockTimeout
+                        )
+
+                        HorizontalDivider()
+
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {}
+                                .padding(Spacing.regular),
+                            text = stringResource(R.string.change_pin_code),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+            SettingsSpacer()
+        }
+
         item {
             SettingsHeader(text = stringResource(R.string.display))
 
