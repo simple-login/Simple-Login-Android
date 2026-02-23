@@ -217,4 +217,7 @@
         <item quantity="one">%d deleted alias</item>
         <item quantity="other">%d deleted aliases</item>
     </plurals>
+    <string name="create_new_contact">Create new contact</string>
+    <string name="pick_from_contacts">Pick from Contacts</string>
+    <string name="enter_contact_email">Enter contact email</string>
 </resources>

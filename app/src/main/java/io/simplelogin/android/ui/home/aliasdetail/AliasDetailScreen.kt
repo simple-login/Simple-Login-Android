@@ -210,7 +210,7 @@ fun AliasDetailScreen(
     if (showAliasNoteEditorDialog) {
         EditTextDialog(
             title = alias.email,
-            value = alias.note,
+            initialValue = alias.note,
             onSave = { showAliasNoteEditorDialog = false },
             onDismiss = { showAliasNoteEditorDialog = false }
         )

@@ -25,17 +25,17 @@ import io.simplelogin.android.R
 
 @Composable
 fun EditTextDialog(
-    value: String?,
+    initialValue: String?,
     title: String,
     onSave: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val value = value ?: ""
+    val initialValue = initialValue ?: ""
     var textFieldValue by remember {
         mutableStateOf(
             TextFieldValue(
-                text = value,
-                selection = TextRange(value.length)
+                text = initialValue,
+                selection = TextRange(initialValue.length)
             )
         )
     }

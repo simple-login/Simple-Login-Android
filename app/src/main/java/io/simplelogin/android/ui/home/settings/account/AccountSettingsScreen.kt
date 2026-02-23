@@ -205,7 +205,7 @@ fun AccountSettingsScreen(
 
     if (showEditDisplayNameDialog) {
         EditTextDialog(
-            value = state.settings?.userInfo?.name,
+            initialValue = state.settings?.userInfo?.name,
             title = stringResource(R.string.edit_display_name),
             onSave = {
                 showEditDisplayNameDialog = false

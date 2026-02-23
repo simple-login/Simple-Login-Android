@@ -149,7 +149,7 @@ fun CustomDomainDetailsScreen(
 
     if (showEditDisplayNameDialog) {
         EditTextDialog(
-            value = domain.name,
+            initialValue = domain.name,
             title = stringResource(
                 if (domain.name == null) R.string.create_display_name
                 else R.string.edit_display_name

@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.adaptive.android)
     implementation(libs.androidx.adaptive.navigation3)
     implementation(libs.androidx.compose.adaptive.navigation3)
+    implementation(libs.androidx.compose.ui)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
