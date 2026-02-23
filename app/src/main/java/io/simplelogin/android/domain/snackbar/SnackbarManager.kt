@@ -10,7 +10,7 @@ interface SnackbarManager {
     suspend fun showSnackbar(configuration: SnackbarConfiguration)
 }
 
-class SnackbarManagerImpl: SnackbarManager {
+class SnackbarManagerImpl : SnackbarManager {
     private val _configuration = MutableSharedFlow<SnackbarConfiguration>()
 
     override val configuration: Flow<SnackbarConfiguration>

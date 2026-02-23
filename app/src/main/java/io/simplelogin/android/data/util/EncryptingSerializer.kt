@@ -9,11 +9,11 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 
-class EncryptingSerializer<T> (
+class EncryptingSerializer<T>(
     private val crypto: Crypto,
     private val serializer: KSerializer<T>,
     override val defaultValue: T
-    ): Serializer<T> {
+) : Serializer<T> {
 
     override suspend fun readFrom(input: InputStream): T {
         val encryptedBytes = withContext(Dispatchers.IO) {

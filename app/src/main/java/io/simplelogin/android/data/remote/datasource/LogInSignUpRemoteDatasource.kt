@@ -12,7 +12,12 @@ import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
 interface LogInSignUpRemoteDatasource {
-    suspend fun logIn(email: String, password: String, deviceName: String): Result<UserLogin, ApiError>
+    suspend fun logIn(
+        email: String,
+        password: String,
+        deviceName: String
+    ): Result<UserLogin, ApiError>
+
     suspend fun forgotPassword(email: String): Result<OkResponse, ApiError>
     suspend fun signUp(email: String, password: String): Result<MessageResponse, ApiError>
     suspend fun reactivate(email: String): Result<MessageResponse, ApiError>

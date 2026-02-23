@@ -8,7 +8,7 @@ import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
-class MockCrypto: Crypto {
+class MockCrypto : Crypto {
     override fun encrypt(bytes: ByteArray) = bytes.reversedArray()
     override fun decrypt(bytes: ByteArray) = bytes.reversedArray()
 }
@@ -18,7 +18,7 @@ class EncryptingSerializerTest {
         MockCrypto(),
         UserSessionPreferences.serializer(),
         UserSessionPreferences()
-        )
+    )
 
     @Test
     fun serialize() = runTest {

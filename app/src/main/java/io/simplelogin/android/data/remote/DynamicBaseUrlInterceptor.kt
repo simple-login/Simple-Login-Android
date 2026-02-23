@@ -10,7 +10,7 @@ interface BaseUrlProvider {
     fun updateBaseUrl(url: String)
 }
 
-object BaseUrlProviderImpl: BaseUrlProvider {
+object BaseUrlProviderImpl : BaseUrlProvider {
     private var _baseUrl: String = Constants.DEFAULT_BASE_URL
 
     override fun getBaseUrl() = _baseUrl
@@ -20,7 +20,7 @@ object BaseUrlProviderImpl: BaseUrlProvider {
     }
 }
 
-class DynamicBaseUrlInterceptor(val baseUrlProvider: BaseUrlProvider): Interceptor {
+class DynamicBaseUrlInterceptor(val baseUrlProvider: BaseUrlProvider) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 

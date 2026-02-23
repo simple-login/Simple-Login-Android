@@ -13,7 +13,7 @@ interface Crypto {
     fun decrypt(bytes: ByteArray): ByteArray
 }
 
-object CryptoImpl: Crypto {
+object CryptoImpl : Crypto {
     private const val KEY_ALIAS = "key"
     private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
     private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC

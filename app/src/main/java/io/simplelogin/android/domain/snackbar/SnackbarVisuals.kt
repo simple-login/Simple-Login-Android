@@ -18,14 +18,14 @@ class SnackbarVisualsFailure(
     override val duration: SnackbarDuration,
     override val message: String,
     override val withDismissAction: Boolean
-): SnackbarVisuals
+) : SnackbarVisuals
 
 class SnackbarVisualsInformation(
     override val actionLabel: String?,
     override val duration: SnackbarDuration,
     override val message: String,
     override val withDismissAction: Boolean
-): SnackbarVisuals
+) : SnackbarVisuals
 
 class SnackbarVisualsColors(
     val containerColor: Color? = null,

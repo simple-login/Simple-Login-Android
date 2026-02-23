@@ -36,8 +36,8 @@ import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.Spacing
 
 sealed class VerificationMode {
-    object Mfa: VerificationMode()
-    data class Activation(val email: String): VerificationMode()
+    object Mfa : VerificationMode()
+    data class Activation(val email: String) : VerificationMode()
 
     val titleRes: Int
         get() = when (this) {
@@ -94,53 +94,56 @@ fun VerificationDialog(
                     VerificationKeyboard(
                         ableToConfirm = ableToConfirm,
                         onTap = { key ->
-                        when (key) {
-                            is VerificationKeyboardKey.Number -> {
-                                val value = key.value
-                                if (digit1 == null) {
-                                    digit1 = value
-                                } else if (digit2 == null) {
-                                    digit2 = value
-                                } else if (digit3 == null) {
-                                    digit3 = value
-                                } else if (digit4 == null) {
-                                    digit4 = value
-                                } else if (digit5 == null) {
-                                    digit5 = value
-                                } else if (digit6 == null) {
-                                    digit6 = value
-                                    ableToConfirm = true
+                            when (key) {
+                                is VerificationKeyboardKey.Number -> {
+                                    val value = key.value
+                                    if (digit1 == null) {
+                                        digit1 = value
+                                    } else if (digit2 == null) {
+                                        digit2 = value
+                                    } else if (digit3 == null) {
+                                        digit3 = value
+                                    } else if (digit4 == null) {
+                                        digit4 = value
+                                    } else if (digit5 == null) {
+                                        digit5 = value
+                                    } else if (digit6 == null) {
+                                        digit6 = value
+                                        ableToConfirm = true
+                                    }
+                                }
+
+                                is VerificationKeyboardKey.Delete -> {
+                                    ableToConfirm = false
+                                    if (digit6 != null) {
+                                        digit6 = null
+                                    } else if (digit5 != null) {
+                                        digit5 = null
+                                    } else if (digit4 != null) {
+                                        digit4 = null
+                                    } else if (digit3 != null) {
+                                        digit3 = null
+                                    } else if (digit2 != null) {
+                                        digit2 = null
+                                    } else if (digit1 != null) {
+                                        digit1 = null
+                                    }
+                                }
+
+                                is VerificationKeyboardKey.Ok -> {
+                                    if (digit1 != null &&
+                                        digit2 != null &&
+                                        digit3 != null &&
+                                        digit4 != null &&
+                                        digit5 != null &&
+                                        digit6 != null
+                                    ) {
+                                        val code = "$digit1$digit2$digit3$digit4$digit5$digit6"
+                                        onConfirm(code)
+                                    }
                                 }
                             }
-                            is VerificationKeyboardKey.Delete -> {
-                                ableToConfirm = false
-                                if (digit6 != null) {
-                                    digit6 = null
-                                } else if (digit5 != null) {
-                                    digit5 = null
-                                } else if (digit4 != null) {
-                                    digit4 = null
-                                } else if (digit3 != null) {
-                                    digit3 = null
-                                } else if (digit2 != null) {
-                                    digit2 = null
-                                } else if (digit1 != null) {
-                                    digit1 = null
-                                }
-                            }
-                            is VerificationKeyboardKey.Ok -> {
-                                if (digit1 != null &&
-                                    digit2 != null &&
-                                    digit3 != null &&
-                                    digit4 != null &&
-                                    digit5 != null &&
-                                    digit6 != null) {
-                                    val code = "$digit1$digit2$digit3$digit4$digit5$digit6"
-                                    onConfirm(code)
-                                }
-                            }
-                        }
-                    })
+                        })
                 }
             } else {
                 Text(stringResource(mode.descriptionRes))
@@ -177,6 +180,7 @@ fun VerificationDialog(
                                 }
                             }
                         }
+
                         else -> {}
                     }
                 }
@@ -196,9 +200,9 @@ private fun DigitText(value: Int?) {
 }
 
 private sealed class VerificationKeyboardKey {
-    data class Number(val value: Int): VerificationKeyboardKey()
-    object Delete: VerificationKeyboardKey()
-    object Ok: VerificationKeyboardKey()
+    data class Number(val value: Int) : VerificationKeyboardKey()
+    object Delete : VerificationKeyboardKey()
+    object Ok : VerificationKeyboardKey()
 }
 
 @Composable
@@ -206,7 +210,7 @@ private fun VerificationKeyboard(
     ableToConfirm: Boolean,
     onTap: (VerificationKeyboardKey) -> Unit
 ) {
-    val keys = listOf<VerificationKeyboardKey>(
+    val keys = listOf(
         VerificationKeyboardKey.Number(1),
         VerificationKeyboardKey.Number(2),
         VerificationKeyboardKey.Number(3),
@@ -236,8 +240,7 @@ private fun VerificationKeyboard(
                             .background(
                                 color = MaterialTheme.colorScheme.surfaceBright,
                                 shape = CircleShape
-                            )
-                        ,
+                            ),
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onSurface
                         ),
@@ -246,6 +249,7 @@ private fun VerificationKeyboard(
                         DigitText(key.value)
                     }
                 }
+
                 is VerificationKeyboardKey.Delete -> {
                     TextButton(
                         modifier = Modifier.aspectRatio(1f),
@@ -260,6 +264,7 @@ private fun VerificationKeyboard(
                         )
                     }
                 }
+
                 is VerificationKeyboardKey.Ok -> {
                     TextButton(
                         enabled = ableToConfirm,

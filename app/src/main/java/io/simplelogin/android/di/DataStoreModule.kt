@@ -32,7 +32,7 @@ object DataStoreModule {
             crypto,
             UserSessionPreferences.serializer(),
             UserSessionPreferences()
-            )
+        )
 
     @[Provides Singleton]
     fun provideUserSessionPreferencesDataStore(
