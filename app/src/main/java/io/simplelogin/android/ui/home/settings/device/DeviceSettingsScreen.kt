@@ -140,7 +140,7 @@ private fun DeviceSettingsContent(
                     onSelect = ::updateLockType
                 )
 
-                AnimatedVisibility(visible = session.lockType == DeviceLockType.PIN) {
+                AnimatedVisibility(visible = session.lockType != DeviceLockType.NONE) {
                     Column {
                         HorizontalDivider()
 
@@ -152,7 +152,11 @@ private fun DeviceSettingsContent(
                             selected = session.lockTimeOut,
                             onSelect = ::updateLockTimeout
                         )
+                    }
+                }
 
+                AnimatedVisibility(visible = session.lockType == DeviceLockType.PIN) {
+                    Column {
                         HorizontalDivider()
 
                         Text(
