@@ -104,7 +104,7 @@ fun AliasesList(
             }
 
             item {
-                if (aliases.isEmpty() && !isFetching) {
+                if (aliases.isEmpty() && !isFetching && fetchError == null) {
                     Text(selectedAliasFilterMode.noAliasesMessage(context))
                 }
             }

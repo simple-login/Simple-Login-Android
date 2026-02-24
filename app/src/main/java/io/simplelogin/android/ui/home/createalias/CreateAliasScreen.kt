@@ -129,7 +129,9 @@ fun CreateAliasScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.you_are_about_to_create))
+                    if (state.aliasOptions != null) {
+                        Text(text = stringResource(R.string.you_are_about_to_create))
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {
