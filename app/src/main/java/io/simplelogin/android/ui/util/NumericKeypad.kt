@@ -153,6 +153,7 @@ private fun KeypadButton(
                 modifier = modifier.size(size),
                 shape = CircleShape,
                 colors = ButtonDefaults.textButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 enabled = confirmEnabled,

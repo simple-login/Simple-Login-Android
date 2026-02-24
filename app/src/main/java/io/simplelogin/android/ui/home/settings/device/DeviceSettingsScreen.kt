@@ -315,7 +315,7 @@ private fun DeviceSettingsContent(
     }
 
     if (showSetPinDialog) {
-        CreateOrEditPinDialog(
+        CreateOrConfirmPinDialog(
             mode = CreateOrEditPinMode.CREATE,
             onConfirm = {},
             onDismiss = { showSetPinDialog = false })
