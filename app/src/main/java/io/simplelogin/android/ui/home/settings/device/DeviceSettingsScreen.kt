@@ -27,6 +27,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -35,6 +37,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,6 +71,7 @@ import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
+import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
@@ -79,6 +84,7 @@ fun DeviceSettingsScreen(
     onDismiss: () -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsState()
+    val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
 
     Scaffold(
         containerColor = SlColor.BackgroundColor,
@@ -95,6 +101,9 @@ fun DeviceSettingsScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         }
     ) { innerPadding ->
         Box(
@@ -111,22 +120,30 @@ fun DeviceSettingsScreen(
                     DeviceSettingsContent(
                         viewModel = viewModel,
                         session = (state as DeviceSettingsState.Loaded).session,
-                        settings = (state as DeviceSettingsState.Loaded).settings
+                        settings = (state as DeviceSettingsState.Loaded).settings,
+                        snackbarHostState = snackbarHostState
                     )
             }
         }
     }
 }
 
+private enum class PinConfirmationReason {
+    SET_TO_NONE, SET_TO_BIOMETRIC, CHANGE_PIN
+}
+
 @Composable
 private fun DeviceSettingsContent(
     session: UserSessionPreferences,
     settings: DevicePreferences,
+    snackbarHostState: SnackbarHostState,
     viewModel: DeviceSettingsViewModel
 ) = with(viewModel) {
     var showSetPinDialog by rememberSaveable { mutableStateOf(false) }
-    var showConfirmPinDialog by rememberSaveable { mutableStateOf(false) }
+    var showUpdatePinDialog by rememberSaveable { mutableStateOf(false) }
+    var pinConfirmationReason by rememberSaveable { mutableStateOf<PinConfirmationReason?>(null) }
     var showInvalidPinDialog by rememberSaveable { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = Modifier
@@ -145,13 +162,17 @@ private fun DeviceSettingsContent(
                     selected = session.lockType,
                     onSelect = {
                         when (it) {
-                            DeviceLockType.NONE -> {}
+                            DeviceLockType.NONE -> when (session.lockType) {
+                                DeviceLockType.PIN ->
+                                    pinConfirmationReason = PinConfirmationReason.SET_TO_NONE
+
+                                DeviceLockType.BIOMETRIC -> {}
+                                DeviceLockType.NONE -> {}// No opt
+                            }
+
                             DeviceLockType.BIOMETRIC -> {}
                             DeviceLockType.PIN -> when (session.lockType) {
-                                DeviceLockType.NONE -> {
-                                    showSetPinDialog = true
-                                }
-
+                                DeviceLockType.NONE -> showSetPinDialog = true
                                 DeviceLockType.BIOMETRIC -> {}
                                 DeviceLockType.PIN -> {}
                             }
@@ -181,7 +202,9 @@ private fun DeviceSettingsContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { showConfirmPinDialog = true }
+                                .clickable {
+                                    pinConfirmationReason = PinConfirmationReason.CHANGE_PIN
+                                }
                                 .padding(Spacing.regular),
                             text = stringResource(R.string.change_pin_code),
                             color = MaterialTheme.colorScheme.primary
@@ -326,27 +349,59 @@ private fun DeviceSettingsContent(
     }
 
     if (showSetPinDialog) {
+        val successMessage = stringResource(R.string.pin_code_set)
         CreateOrConfirmPinDialog(
             mode = CreateOrEditPinMode.CREATE,
             onConfirm = {
                 showSetPinDialog = false
                 viewModel.setPinCode(it)
+                scope.launch {
+                    snackbarHostState.showSnackbar(message = successMessage)
+                }
             },
             onDismiss = { showSetPinDialog = false })
     }
 
-    if (showConfirmPinDialog) {
+    if (showUpdatePinDialog) {
+        val successMessage = stringResource(R.string.pin_code_updated)
+        CreateOrConfirmPinDialog(
+            mode = CreateOrEditPinMode.CREATE,
+            onConfirm = {
+                showUpdatePinDialog = false
+                viewModel.setPinCode(it)
+                scope.launch {
+                    snackbarHostState.showSnackbar(message = successMessage)
+                }
+            },
+            onDismiss = { showUpdatePinDialog = false })
+    }
+    
+    pinConfirmationReason?.let {
+        val successMessage = when (it) {
+            PinConfirmationReason.SET_TO_NONE -> stringResource(R.string.pin_code_removed)
+            else -> null
+        }
         CreateOrConfirmPinDialog(
             mode = CreateOrEditPinMode.CONFIRM,
             onConfirm = { confirmedPin ->
-                showConfirmPinDialog = false
                 if (session.pinCode == confirmedPin) {
-                    showSetPinDialog = true
+                    when (pinConfirmationReason) {
+                        PinConfirmationReason.SET_TO_NONE -> viewModel.removeAutoLock()
+                        PinConfirmationReason.SET_TO_BIOMETRIC -> {}
+                        PinConfirmationReason.CHANGE_PIN -> showUpdatePinDialog = true
+                        else -> {}
+                    }
+                    scope.launch {
+                        successMessage?.let { successMessage ->
+                            snackbarHostState.showSnackbar(message = successMessage)
+                        }
+                    }
                 } else {
                     showInvalidPinDialog = true
                 }
+                pinConfirmationReason = null
             },
-            onDismiss = { showConfirmPinDialog = false })
+            onDismiss = { pinConfirmationReason = null })
     }
 
     if (showInvalidPinDialog) {

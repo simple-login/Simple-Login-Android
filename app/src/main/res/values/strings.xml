@@ -238,4 +238,7 @@
     <string name="pins_not_matched">PINs not matched</string>
     <string name="pin_length_description">PIN code must be between 4 and 10 digits</string>
     <string name="invalid_pin_code">Invalid PIN code</string>
+    <string name="pin_code_set">PIN code set</string>
+    <string name="pin_code_updated">PIN code updated</string>
+    <string name="pin_code_removed">PIN code removed</string>
 </resources>

@@ -122,6 +122,12 @@ class DeviceSettingsViewModel @Inject constructor(
         updateSettings { it.copy(theme = theme) }
     }
 
+    fun removeAutoLock() {
+        viewModelScope.launch {
+            updateSessionSettings { it.copy(lockType = DeviceLockType.NONE) }
+        }
+    }
+
     fun setPinCode(pin: String) {
         viewModelScope.launch {
             updateSessionSettings { it.copy(lockType = DeviceLockType.PIN, pinCode = pin) }
