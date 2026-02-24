@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 data class UserSessionPreferences(
     val baseUrl: String = Constants.DEFAULT_BASE_URL,
     val apiKey: ApiKey? = null,
-    val lockEnabled: Boolean = false,
     val lockType: DeviceLockType = DeviceLockType.DEFAULT,
     val lockTimeOut: LockTimeOut = LockTimeOut.DEFAULT,
     val pinCode: String? = null

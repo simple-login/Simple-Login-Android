@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
+import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
@@ -98,7 +99,7 @@ class AppRootViewModel @Inject constructor(
                     // Log out, remove API key and reset lock settings
                     it.copy(
                         apiKey = null,
-                        lockEnabled = false,
+                        lockType = DeviceLockType.DEFAULT,
                         lockTimeOut = LockTimeOut.DEFAULT
                     )
                 } else {

@@ -241,4 +241,8 @@
     <string name="pin_code_set">PIN code set</string>
     <string name="pin_code_updated">PIN code updated</string>
     <string name="pin_code_removed">PIN code removed</string>
+    <string name="biometric_or_device_credential_not_available">Biometric or device credential not available</string>
+    <string name="please_authenticate">Please authenticate</string>
+    <string name="biometric_lock_enabled">Biometric lock enabled</string>
+    <string name="biometric_lock_disabled">Biometric lock disabled</string>
 </resources>

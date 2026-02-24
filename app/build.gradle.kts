@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.adaptive.navigation3)
     implementation(libs.androidx.compose.adaptive.navigation3)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
@@ -100,4 +101,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.nav3)
 
     implementation(libs.coil.compose)
+    implementation(libs.androidx.biometric)
 }

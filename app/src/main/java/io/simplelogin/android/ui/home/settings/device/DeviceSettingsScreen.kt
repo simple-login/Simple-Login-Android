@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.settings.device
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,6 +73,7 @@ import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.ui.util.rememberBiometricAuthenticator
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -132,6 +135,11 @@ private enum class PinConfirmationReason {
     SET_TO_NONE, SET_TO_BIOMETRIC, CHANGE_PIN
 }
 
+private enum class BiometricAuthenticationReason {
+    SET_TO_NONE, SET_TO_PIN, ENABLE
+}
+
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 private fun DeviceSettingsContent(
     session: UserSessionPreferences,
@@ -143,7 +151,57 @@ private fun DeviceSettingsContent(
     var showUpdatePinDialog by rememberSaveable { mutableStateOf(false) }
     var pinConfirmationReason by rememberSaveable { mutableStateOf<PinConfirmationReason?>(null) }
     var showInvalidPinDialog by rememberSaveable { mutableStateOf(false) }
+    var biometricAuthenticationReason by rememberSaveable {
+        mutableStateOf<BiometricAuthenticationReason?>(null)
+    }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val biometricallyAuthenticate = rememberBiometricAuthenticator(
+        title = stringResource(R.string.please_authenticate),
+        onSuccess = {
+            when (biometricAuthenticationReason) {
+                BiometricAuthenticationReason.ENABLE -> {
+                    viewModel.enableBiometricLock()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = context.getString(R.string.biometric_lock_enabled))
+                    }
+                }
+
+                BiometricAuthenticationReason.SET_TO_NONE -> {
+                    viewModel.removeAutoLock()
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = context.getString(R.string.biometric_lock_disabled))
+                    }
+                }
+
+                BiometricAuthenticationReason.SET_TO_PIN -> showSetPinDialog = true
+
+                else -> {}
+            }
+            biometricAuthenticationReason = null
+        },
+        onError = { errorMessage ->
+            biometricAuthenticationReason = null
+            scope.launch {
+                snackbarHostState.showSnackbar(message = errorMessage)
+            }
+        },
+        onCancel = {
+            biometricAuthenticationReason = null
+        },
+        onNotAvailable = {
+            biometricAuthenticationReason = null
+            scope.launch {
+                snackbarHostState.showSnackbar(message = context.getString(R.string.biometric_or_device_credential_not_available))
+            }
+        }
+    )
+
+    LaunchedEffect(biometricAuthenticationReason) {
+        biometricAuthenticationReason?.let {
+            biometricallyAuthenticate()
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -160,22 +218,36 @@ private fun DeviceSettingsContent(
                     description = { Text(text = it.title(context = LocalContext.current)) },
                     options = DeviceLockType.entries.toTypedArray(),
                     selected = session.lockType,
-                    onSelect = {
-                        when (it) {
-                            DeviceLockType.NONE -> when (session.lockType) {
-                                DeviceLockType.PIN ->
-                                    pinConfirmationReason = PinConfirmationReason.SET_TO_NONE
+                    onSelect = { selectedType ->
+                        val currentType = session.lockType
+                        when (currentType) {
+                            // None -> Biometric
+                            DeviceLockType.NONE if selectedType == DeviceLockType.BIOMETRIC ->
+                                biometricAuthenticationReason = BiometricAuthenticationReason.ENABLE
 
-                                DeviceLockType.BIOMETRIC -> {}
-                                DeviceLockType.NONE -> {}// No opt
-                            }
+                            // None -> PIN
+                            DeviceLockType.NONE if selectedType == DeviceLockType.PIN ->
+                                showSetPinDialog = true
 
-                            DeviceLockType.BIOMETRIC -> {}
-                            DeviceLockType.PIN -> when (session.lockType) {
-                                DeviceLockType.NONE -> showSetPinDialog = true
-                                DeviceLockType.BIOMETRIC -> {}
-                                DeviceLockType.PIN -> {}
-                            }
+                            // Biometric -> None
+                            DeviceLockType.BIOMETRIC if selectedType == DeviceLockType.NONE ->
+                                biometricAuthenticationReason =
+                                    BiometricAuthenticationReason.SET_TO_NONE
+
+                            // Biometric -> PIN
+                            DeviceLockType.BIOMETRIC if selectedType == DeviceLockType.PIN ->
+                                biometricAuthenticationReason =
+                                    BiometricAuthenticationReason.SET_TO_PIN
+
+                            // PIN -> None
+                            DeviceLockType.PIN if selectedType == DeviceLockType.NONE ->
+                                pinConfirmationReason = PinConfirmationReason.SET_TO_NONE
+
+                            // PIN -> Biometric
+                            DeviceLockType.PIN if selectedType == DeviceLockType.BIOMETRIC ->
+                                pinConfirmationReason = PinConfirmationReason.SET_TO_BIOMETRIC
+
+                            else -> {}
                         }
                     }
                 )
@@ -375,7 +447,7 @@ private fun DeviceSettingsContent(
             },
             onDismiss = { showUpdatePinDialog = false })
     }
-    
+
     pinConfirmationReason?.let {
         val successMessage = when (it) {
             PinConfirmationReason.SET_TO_NONE -> stringResource(R.string.pin_code_removed)
@@ -387,7 +459,9 @@ private fun DeviceSettingsContent(
                 if (session.pinCode == confirmedPin) {
                     when (pinConfirmationReason) {
                         PinConfirmationReason.SET_TO_NONE -> viewModel.removeAutoLock()
-                        PinConfirmationReason.SET_TO_BIOMETRIC -> {}
+                        PinConfirmationReason.SET_TO_BIOMETRIC ->
+                            biometricAuthenticationReason = BiometricAuthenticationReason.ENABLE
+
                         PinConfirmationReason.CHANGE_PIN -> showUpdatePinDialog = true
                         else -> {}
                     }

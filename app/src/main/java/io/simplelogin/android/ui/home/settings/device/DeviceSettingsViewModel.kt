@@ -128,6 +128,12 @@ class DeviceSettingsViewModel @Inject constructor(
         }
     }
 
+    fun enableBiometricLock() {
+        viewModelScope.launch {
+            updateSessionSettings { it.copy(lockType = DeviceLockType.BIOMETRIC) }
+        }
+    }
+
     fun setPinCode(pin: String) {
         viewModelScope.launch {
             updateSessionSettings { it.copy(lockType = DeviceLockType.PIN, pinCode = pin) }
