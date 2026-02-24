@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Brightness6
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -123,6 +125,8 @@ private fun DeviceSettingsContent(
     viewModel: DeviceSettingsViewModel
 ) = with(viewModel) {
     var showSetPinDialog by rememberSaveable { mutableStateOf(false) }
+    var showConfirmPinDialog by rememberSaveable { mutableStateOf(false) }
+    var showInvalidPinDialog by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier
@@ -143,7 +147,14 @@ private fun DeviceSettingsContent(
                         when (it) {
                             DeviceLockType.NONE -> {}
                             DeviceLockType.BIOMETRIC -> {}
-                            DeviceLockType.PIN -> showSetPinDialog = true
+                            DeviceLockType.PIN -> when (session.lockType) {
+                                DeviceLockType.NONE -> {
+                                    showSetPinDialog = true
+                                }
+
+                                DeviceLockType.BIOMETRIC -> {}
+                                DeviceLockType.PIN -> {}
+                            }
                         }
                     }
                 )
@@ -170,7 +181,7 @@ private fun DeviceSettingsContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {}
+                                .clickable { showConfirmPinDialog = true }
                                 .padding(Spacing.regular),
                             text = stringResource(R.string.change_pin_code),
                             color = MaterialTheme.colorScheme.primary
@@ -317,8 +328,37 @@ private fun DeviceSettingsContent(
     if (showSetPinDialog) {
         CreateOrConfirmPinDialog(
             mode = CreateOrEditPinMode.CREATE,
-            onConfirm = {},
+            onConfirm = {
+                showSetPinDialog = false
+                viewModel.setPinCode(it)
+            },
             onDismiss = { showSetPinDialog = false })
+    }
+
+    if (showConfirmPinDialog) {
+        CreateOrConfirmPinDialog(
+            mode = CreateOrEditPinMode.CONFIRM,
+            onConfirm = { confirmedPin ->
+                showConfirmPinDialog = false
+                if (session.pinCode == confirmedPin) {
+                    showSetPinDialog = true
+                } else {
+                    showInvalidPinDialog = true
+                }
+            },
+            onDismiss = { showConfirmPinDialog = false })
+    }
+
+    if (showInvalidPinDialog) {
+        AlertDialog(
+            onDismissRequest = { showInvalidPinDialog = false },
+            title = { Text(text = stringResource(R.string.invalid_pin_code)) },
+            confirmButton = {
+                TextButton(onClick = { showInvalidPinDialog = false }) {
+                    Text(text = stringResource(R.string.close))
+                }
+            }
+        )
     }
 }
 

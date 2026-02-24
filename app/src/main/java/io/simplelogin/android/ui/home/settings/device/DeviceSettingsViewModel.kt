@@ -122,9 +122,9 @@ class DeviceSettingsViewModel @Inject constructor(
         updateSettings { it.copy(theme = theme) }
     }
 
-    fun updateLockType(lockType: DeviceLockType) {
+    fun setPinCode(pin: String) {
         viewModelScope.launch {
-            updateSessionSettings { it.copy(lockType = lockType) }
+            updateSessionSettings { it.copy(lockType = DeviceLockType.PIN, pinCode = pin) }
         }
     }
 
