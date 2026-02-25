@@ -245,4 +245,5 @@
     <string name="please_authenticate">Please authenticate</string>
     <string name="biometric_lock_enabled">Biometric lock enabled</string>
     <string name="biometric_lock_disabled">Biometric lock disabled</string>
+    <string name="unlock">Unlock</string>
 </resources>

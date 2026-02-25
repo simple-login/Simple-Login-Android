@@ -12,7 +12,8 @@ data class UserSessionPreferences(
     val apiKey: ApiKey? = null,
     val lockType: DeviceLockType = DeviceLockType.DEFAULT,
     val lockTimeOut: LockTimeOut = LockTimeOut.DEFAULT,
-    val pinCode: String? = null
+    val pinCode: String? = null,
+    val lastBackgroundTime: Long = 0L
 )
 
 enum class DeviceLockType {
@@ -43,5 +44,14 @@ enum class LockTimeOut {
         FIVE_MINUTES -> context.getString(R.string.after_five_minutes)
         TEN_MINUTES -> context.getString(R.string.after_ten_minutes)
         ONE_HOUR -> context.getString(R.string.after_one_hour)
+    }
+
+    fun toMillis(): Long = when (this) {
+        IMMEDIATE -> 0L
+        ONE_MINUTE -> 60_000L
+        TWO_MINUTES -> 120_000L
+        FIVE_MINUTES -> 300_000L
+        TEN_MINUTES -> 600_000L
+        ONE_HOUR -> 3_600_000L
     }
 }

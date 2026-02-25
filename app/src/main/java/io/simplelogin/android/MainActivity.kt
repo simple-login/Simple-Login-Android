@@ -1,8 +1,8 @@
 package io.simplelogin.android
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -76,6 +76,7 @@ import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
+import io.simplelogin.android.ui.home.lockscreen.LockScreen
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
@@ -97,6 +98,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            setRecentsScreenshotEnabled(false)
+        }
         viewModel.observe()
         setUpSplashScreen()
         applyOrientationRestrictions()
@@ -135,44 +139,48 @@ class MainActivity : AppCompatActivity() {
             }
 
             SimpleLoginTheme(darkTheme = darkTheme) {
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        Drawer(
-                            appVersion = appRootViewModel.appVersion,
-                            onMailboxesClick = {
-                                closeDrawerAndExecute {
-                                    appRootViewModel.showMailboxesScreen(asDialog)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    ModalNavigationDrawer(
+                        drawerState = drawerState,
+                        drawerContent = {
+                            Drawer(
+                                appVersion = appRootViewModel.appVersion,
+                                onMailboxesClick = {
+                                    closeDrawerAndExecute {
+                                        appRootViewModel.showMailboxesScreen(asDialog)
+                                    }
+                                },
+                                onCustomDomainsClick = {
+                                    closeDrawerAndExecute {
+                                        appRootViewModel.showCustomDomainsScreen(asDialog)
+                                    }
+                                },
+                                onAccountSettingsClick = {
+                                    closeDrawerAndExecute {
+                                        appRootViewModel.showAccountSettingsScreen(asDialog)
+                                    }
+                                },
+                                onDeviceSettingsClick = {
+                                    closeDrawerAndExecute {
+                                        appRootViewModel.showDeviceSettingsScreen(asDialog)
+                                    }
+                                },
+                                onSignOutClick = {
+                                    closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
                                 }
-                            },
-                            onCustomDomainsClick = {
-                                closeDrawerAndExecute {
-                                    appRootViewModel.showCustomDomainsScreen(asDialog)
-                                }
-                            },
-                            onAccountSettingsClick = {
-                                closeDrawerAndExecute {
-                                    appRootViewModel.showAccountSettingsScreen(asDialog)
-                                }
-                            },
-                            onDeviceSettingsClick = {
-                                closeDrawerAndExecute {
-                                    appRootViewModel.showDeviceSettingsScreen(asDialog)
-                                }
-                            },
-                            onSignOutClick = {
-                                closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
-                            }
-                        )
-                    },
-                    content = {
-                        MainUi(
-                            drawerState = drawerState,
-                            viewModel = viewModel,
-                            appRootViewModel = appRootViewModel
-                        )
-                    }
-                )
+                            )
+                        },
+                        content = {
+                            MainUi(
+                                drawerState = drawerState,
+                                viewModel = viewModel,
+                                appRootViewModel = appRootViewModel
+                            )
+                        }
+                    )
+
+                    LockScreen()
+                }
             }
         }
     }

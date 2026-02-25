@@ -23,8 +23,9 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.NumericKeypad
 import io.simplelogin.android.ui.util.NumericKeypadKey
 
-enum class CreateOrEditPinMode {
-    CREATE, CONFIRM
+sealed class CreateOrEditPinMode {
+    data object Create : CreateOrEditPinMode()
+    data class Confirm(val pinCode: String?) : CreateOrEditPinMode()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,22 +34,24 @@ fun CreateOrConfirmPinDialog(
     mode: CreateOrEditPinMode,
     minLength: Int = 4,
     maxLength: Int = 10,
-    onConfirm: (String) -> Unit,
-    onDismiss: () -> Unit
+    onCreate: ((String) -> Unit)? = null,
+    onConfirmSuccess: (() -> Unit)? = null,
+    onDismiss: (() -> Unit)
 ) {
     var pin by rememberSaveable { mutableStateOf("") }
     var isRepeating by rememberSaveable { mutableStateOf(false) }
     var repeatedPin by rememberSaveable { mutableStateOf("") }
     var notMatched by rememberSaveable { mutableStateOf(false) }
+    var invalidPin by rememberSaveable { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             val text = when (mode) {
-                CreateOrEditPinMode.CREATE ->
+                is CreateOrEditPinMode.Create ->
                     if (isRepeating) stringResource(R.string.repeat_pin_code) else stringResource(R.string.choose_a_pin_code)
 
-                CreateOrEditPinMode.CONFIRM -> stringResource(R.string.enter_current_pin_code)
+                is CreateOrEditPinMode.Confirm -> stringResource(R.string.enter_current_pin_code)
             }
             Text(text = text)
         },
@@ -65,23 +68,28 @@ fun CreateOrConfirmPinDialog(
                     style = MaterialTheme.typography.headlineLarge
                 )
 
-                if (mode == CreateOrEditPinMode.CREATE) {
-                    if (notMatched) {
-                        Text(
-                            text = stringResource(R.string.pins_not_matched),
-                            color = Color.Red,
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
-                    } else {
-                        Text(
-                            text = if (isRepeating) "" else stringResource(R.string.pin_length_description),
-                            color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                val descriptionText = if (invalidPin) {
+                    stringResource(R.string.invalid_pin_code)
+                } else if (notMatched) {
+                    stringResource(R.string.pins_not_matched)
+                } else if (mode !is CreateOrEditPinMode.Confirm) {
+                    stringResource(R.string.pin_length_description)
+                } else {
+                    ""
                 }
+
+                val descriptionTextColor = if (invalidPin || notMatched) {
+                    Color.Red
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                }
+
+                Text(
+                    text = descriptionText,
+                    color = descriptionTextColor,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
 
                 Spacer(modifier = Modifier.height(Spacing.large))
 
@@ -97,6 +105,7 @@ fun CreateOrConfirmPinDialog(
                                     repeatedPin += it.value
                                 } else {
                                     pin += it.value
+                                    invalidPin = false
                                 }
                             }
 
@@ -111,10 +120,10 @@ fun CreateOrConfirmPinDialog(
 
                             is NumericKeypadKey.Ok -> {
                                 when (mode) {
-                                    CreateOrEditPinMode.CREATE -> {
+                                    is CreateOrEditPinMode.Create -> {
                                         if (isRepeating) {
                                             if (repeatedPin == pin) {
-                                                onConfirm(pin)
+                                                onCreate?.let { it(pin) }
                                             } else {
                                                 repeatedPin = ""
                                                 notMatched = true
@@ -124,7 +133,14 @@ fun CreateOrConfirmPinDialog(
                                         }
                                     }
 
-                                    CreateOrEditPinMode.CONFIRM -> onConfirm(pin)
+                                    is CreateOrEditPinMode.Confirm -> {
+                                        if (mode.pinCode == pin) {
+                                            onConfirmSuccess?.let { it() }
+                                        } else {
+                                            pin = ""
+                                            invalidPin = true
+                                        }
+                                    }
                                 }
                             }
                         }

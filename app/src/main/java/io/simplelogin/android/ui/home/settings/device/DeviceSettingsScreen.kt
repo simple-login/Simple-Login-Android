@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Brightness6
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -31,7 +30,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -150,7 +148,6 @@ private fun DeviceSettingsContent(
     var showSetPinDialog by rememberSaveable { mutableStateOf(false) }
     var showUpdatePinDialog by rememberSaveable { mutableStateOf(false) }
     var pinConfirmationReason by rememberSaveable { mutableStateOf<PinConfirmationReason?>(null) }
-    var showInvalidPinDialog by rememberSaveable { mutableStateOf(false) }
     var biometricAuthenticationReason by rememberSaveable {
         mutableStateOf<BiometricAuthenticationReason?>(null)
     }
@@ -423,8 +420,8 @@ private fun DeviceSettingsContent(
     if (showSetPinDialog) {
         val successMessage = stringResource(R.string.pin_code_set)
         CreateOrConfirmPinDialog(
-            mode = CreateOrEditPinMode.CREATE,
-            onConfirm = {
+            mode = CreateOrEditPinMode.Create,
+            onCreate = {
                 showSetPinDialog = false
                 viewModel.setPinCode(it)
                 scope.launch {
@@ -437,8 +434,8 @@ private fun DeviceSettingsContent(
     if (showUpdatePinDialog) {
         val successMessage = stringResource(R.string.pin_code_updated)
         CreateOrConfirmPinDialog(
-            mode = CreateOrEditPinMode.CREATE,
-            onConfirm = {
+            mode = CreateOrEditPinMode.Create,
+            onCreate = {
                 showUpdatePinDialog = false
                 viewModel.setPinCode(it)
                 scope.launch {
@@ -454,40 +451,24 @@ private fun DeviceSettingsContent(
             else -> null
         }
         CreateOrConfirmPinDialog(
-            mode = CreateOrEditPinMode.CONFIRM,
-            onConfirm = { confirmedPin ->
-                if (session.pinCode == confirmedPin) {
-                    when (pinConfirmationReason) {
-                        PinConfirmationReason.SET_TO_NONE -> viewModel.removeAutoLock()
-                        PinConfirmationReason.SET_TO_BIOMETRIC ->
-                            biometricAuthenticationReason = BiometricAuthenticationReason.ENABLE
+            mode = CreateOrEditPinMode.Confirm(session.pinCode),
+            onConfirmSuccess = {
+                when (pinConfirmationReason) {
+                    PinConfirmationReason.SET_TO_NONE -> viewModel.removeAutoLock()
+                    PinConfirmationReason.SET_TO_BIOMETRIC ->
+                        biometricAuthenticationReason = BiometricAuthenticationReason.ENABLE
 
-                        PinConfirmationReason.CHANGE_PIN -> showUpdatePinDialog = true
-                        else -> {}
+                    PinConfirmationReason.CHANGE_PIN -> showUpdatePinDialog = true
+                    else -> {}
+                }
+                scope.launch {
+                    successMessage?.let { successMessage ->
+                        snackbarHostState.showSnackbar(message = successMessage)
                     }
-                    scope.launch {
-                        successMessage?.let { successMessage ->
-                            snackbarHostState.showSnackbar(message = successMessage)
-                        }
-                    }
-                } else {
-                    showInvalidPinDialog = true
                 }
                 pinConfirmationReason = null
             },
             onDismiss = { pinConfirmationReason = null })
-    }
-
-    if (showInvalidPinDialog) {
-        AlertDialog(
-            onDismissRequest = { showInvalidPinDialog = false },
-            title = { Text(text = stringResource(R.string.invalid_pin_code)) },
-            confirmButton = {
-                TextButton(onClick = { showInvalidPinDialog = false }) {
-                    Text(text = stringResource(R.string.close))
-                }
-            }
-        )
     }
 }
 
