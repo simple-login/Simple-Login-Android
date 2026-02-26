@@ -1,7 +1,9 @@
 package io.simplelogin.android.data.models.api
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserInfo(
     @SerializedName("name") val name: String,
     @SerializedName("email") val email: String,

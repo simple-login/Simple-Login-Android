@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.AppVersion
@@ -23,7 +24,6 @@ import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.isValidPassword
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -41,6 +41,7 @@ class LoginMasterScreenViewModel @Inject constructor(
     private val signUp: SignUpUseCase,
     private val resendActivationCode: ResendActivationCodeUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
+    private val accountSettingsRemoteDatasource: AccountSettingsRemoteDatasource,
     @AppVersion val appVersion: String,
     observeSessionSettings: ObserveSessionSettingsUseCase
 ) : ViewModel() {
@@ -87,10 +88,13 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     fun login(apiKey: ApiKey) {
         launchLoading(doWork = {
-            // TODO: Fetch and cache UserIndo
-            delay(1_000)
-        }, handleResult = {
-            updateSessionSettings { it.copy(apiKey = apiKey) }
+            accountSettingsRemoteDatasource.getUserInfo(apiKey)
+        }, handleResult = { result ->
+            result.fold(onSuccess = { userInfo ->
+                updateSessionSettings { it.copy(apiKey = apiKey, userInfo = userInfo) }
+            }, onFailure = { error ->
+                showSnackbar(error.description(context))
+            })
         })
     }
 

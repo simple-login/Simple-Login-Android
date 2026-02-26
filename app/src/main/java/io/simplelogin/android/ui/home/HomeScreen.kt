@@ -169,6 +169,7 @@ private fun HomeScreenScaffold(
                 )
             } else {
                 NormalTopAppBar(
+                    isPremium = state.userInfo?.isPremium ?: false,
                     selectedAliasFilterMode = state.aliasFilterMode,
                     scrollBehavior = scrollBehavior,
                     onOpenDrawer = onOpenDrawer,

@@ -65,11 +65,13 @@ class HomeViewModel @Inject constructor(
     }
 
     val stateFlow = combine(
+        observeSessionSettings(),
         observeDeviceSettings(),
         aliasFilterModeFlow,
         aliasListManager.state,
-    ) { deviceSettings, aliasFilterMode, aliasesListState ->
+    ) { session, deviceSettings, aliasFilterMode, aliasesListState ->
         HomeScreenState(
+            userInfo = session.userInfo,
             deviceSettings = deviceSettings,
             aliasFilterMode = aliasFilterMode,
             stats = aliasesListState.stats,

@@ -1,7 +1,10 @@
 package io.simplelogin.android.ui.home.topbar
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
@@ -20,15 +23,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.ui.theme.SlColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NormalTopAppBar(
+    isPremium: Boolean,
     selectedAliasFilterMode: AliasFilterMode,
     scrollBehavior: TopAppBarScrollBehavior,
     onOpenDrawer: () -> Unit,
@@ -44,10 +52,24 @@ fun NormalTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
         navigationIcon = {
             IconButton(onClick = onOpenDrawer) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = stringResource(R.string.open_menu)
-                )
+                Box {
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = stringResource(R.string.open_menu)
+                    )
+
+                    if (isPremium) {
+                        Icon(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.TopEnd)
+                                .offset(x = 4.dp, y = (-4).dp),
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            tint = SlColor.Amber
+                        )
+                    }
+                }
             }
         },
         actions = {
