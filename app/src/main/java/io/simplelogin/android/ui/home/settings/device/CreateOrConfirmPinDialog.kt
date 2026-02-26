@@ -36,6 +36,7 @@ fun CreateOrConfirmPinDialog(
     maxLength: Int = 10,
     onCreate: ((String) -> Unit)? = null,
     onConfirmSuccess: (() -> Unit)? = null,
+    onConfirmFailure: (() -> Unit)? = null,
     onDismiss: (() -> Unit)
 ) {
     var pin by rememberSaveable { mutableStateOf("") }
@@ -97,14 +98,14 @@ fun CreateOrConfirmPinDialog(
                     modifier = Modifier.fillMaxWidth(),
                     numbersEnabled = if (isRepeating) repeatedPin.length < maxLength else pin.length < maxLength,
                     confirmEnabled = if (isRepeating) repeatedPin.length >= minLength else pin.length >= minLength,
-                    onTap = {
-                        when (it) {
+                    onTap = { key ->
+                        when (key) {
                             is NumericKeypadKey.Number -> {
                                 if (isRepeating) {
                                     notMatched = false
-                                    repeatedPin += it.value
+                                    repeatedPin += key.value
                                 } else {
-                                    pin += it.value
+                                    pin += key.value
                                     invalidPin = false
                                 }
                             }
@@ -139,6 +140,7 @@ fun CreateOrConfirmPinDialog(
                                         } else {
                                             pin = ""
                                             invalidPin = true
+                                            onConfirmFailure?.let { it() }
                                         }
                                     }
                                 }

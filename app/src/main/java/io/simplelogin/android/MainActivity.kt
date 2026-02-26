@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
             val scope = rememberCoroutineScope()
             val windowAdaptiveInfo = currentWindowAdaptiveInfo()
             val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
+            val appRooState by appRootViewModel.stateFlow.collectAsState()
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
@@ -179,7 +180,9 @@ class MainActivity : AppCompatActivity() {
                         }
                     )
 
-                    LockScreen()
+                    if (appRooState.apiKey != null) {
+                        LockScreen()
+                    }
                 }
             }
         }

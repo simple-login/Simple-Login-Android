@@ -87,6 +87,7 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     fun login(apiKey: ApiKey) {
         launchLoading(doWork = {
+            // TODO: Fetch and cache UserIndo
             delay(1_000)
         }, handleResult = {
             updateSessionSettings { it.copy(apiKey = apiKey) }

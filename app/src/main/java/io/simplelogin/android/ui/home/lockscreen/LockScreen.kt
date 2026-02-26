@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +50,7 @@ fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
     val scope = rememberCoroutineScope()
     val state by stateFlow.collectAsState()
     var showPinDialog by rememberSaveable { mutableStateOf(false) }
+    var showLastAttemptDialog by rememberSaveable { mutableStateOf(false) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -95,7 +97,9 @@ fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
                         TopAppBar(
                             title = {},
                             actions = {
-                                IconButton(onClick = ::logOut) {
+                                IconButton(onClick = {
+                                    scope.launch { logOut() }
+                                }) {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Outlined.Logout,
                                         contentDescription = null
@@ -135,9 +139,36 @@ fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
             mode = CreateOrEditPinMode.Confirm(pinCode),
             onConfirmSuccess = {
                 showPinDialog = false
-                unlock()
+                scope.launch {
+                    unlock()
+                }
+            },
+            onConfirmFailure = {
+                scope.launch {
+                    when (recordFailure()) {
+                        LockScreenFailure.INVALID_ATTEMPT -> {}
+                        LockScreenFailure.LAST_ATTEMPT -> showLastAttemptDialog = true
+                        LockScreenFailure.SHOULD_LOG_OUT -> {
+                            showPinDialog = false
+                            logOut()
+                        }
+                    }
+                }
             },
             onDismiss = { showPinDialog = false }
+        )
+    }
+
+    if (showLastAttemptDialog) {
+        AlertDialog(
+            title = { Text(text = stringResource(R.string.last_attempt_title)) },
+            text = { Text(text = stringResource(R.string.last_attempt_description)) },
+            onDismissRequest = { showLastAttemptDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showLastAttemptDialog = false }) {
+                    Text(text = stringResource(R.string.close))
+                }
+            },
         )
     }
 }

@@ -10,6 +10,8 @@ import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCaseImpl
 import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.LogInUseCaseImpl
+import io.simplelogin.android.usecases.login.LogOutImpl
+import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCaseImpl
 import io.simplelogin.android.usecases.login.SignUpUseCase
@@ -52,4 +54,7 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindUpdateDeviceSettingsUseCase(impl: UpdateDeviceSettingsUseCaseImpl): UpdateDeviceSettingsUseCase
+
+    @[Binds Singleton]
+    abstract fun bindLogOutUseCase(impl: LogOutImpl): LogOutUseCase
 }

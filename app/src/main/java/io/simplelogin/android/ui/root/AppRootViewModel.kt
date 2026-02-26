@@ -6,11 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.Alias
-import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
-import io.simplelogin.android.data.models.preferences.DeviceLockType
-import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.di.AppVersion
+import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.channels.Channel
@@ -27,8 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
-    observeSessionSettingsUseCase: ObserveSessionSettingsUseCase,
-    private val updateSessionSettingsUseCase: UpdateSessionSettingsUseCase
+    observeSessionSettings: ObserveSessionSettingsUseCase,
+    private val updateSessionSettings: UpdateSessionSettingsUseCase,
+    private val logOutUseCase: LogOutUseCase
 ) : ViewModel() {
 
     private val _navBackStack =
@@ -51,7 +50,7 @@ class AppRootViewModel @Inject constructor(
     var customDomainDetailsAsDialog = MutableStateFlow<CustomDomain?>(null)
     var customDomainDeletedAliasesAsDialog = MutableStateFlow<CustomDomain?>(null)
 
-    val stateFlow: StateFlow<AppRootState> = observeSessionSettingsUseCase()
+    val stateFlow: StateFlow<AppRootState> = observeSessionSettings()
         .map {
             AppRootState(
                 isReady = true,
@@ -91,26 +90,6 @@ class AppRootViewModel @Inject constructor(
         _navBackStack.value.apply { removeAt(lastIndex) }
     }
 
-    //region Log in/sign up
-    fun updateApiKey(apiKey: ApiKey?) {
-        viewModelScope.launch {
-            updateSessionSettingsUseCase.invoke {
-                if (apiKey == null) {
-                    // Log out, remove API key and reset lock settings
-                    it.copy(
-                        apiKey = null,
-                        lockType = DeviceLockType.DEFAULT,
-                        lockTimeOut = LockTimeOut.DEFAULT
-                    )
-                } else {
-                    // Login
-                    it.copy(apiKey = apiKey)
-                }
-            }
-        }
-    }
-    //endregion
-
     //region Drawer
     fun showLogOutDialog() {
         showLogOutDialog.value = true
@@ -122,7 +101,9 @@ class AppRootViewModel @Inject constructor(
 
     fun logOut() {
         showLogOutDialog.value = false
-        updateApiKey(null)
+        viewModelScope.launch {
+            logOutUseCase()
+        }
     }
 
 

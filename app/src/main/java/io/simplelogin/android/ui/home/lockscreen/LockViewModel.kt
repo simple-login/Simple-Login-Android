@@ -3,6 +3,7 @@ package io.simplelogin.android.ui.home.lockscreen
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.DeviceLockType
+import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LockViewModel @Inject constructor(
+    val logOut: LogOutUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase
 ) : ViewModel() {
@@ -46,9 +48,23 @@ class LockViewModel @Inject constructor(
         }
     }
 
-    fun unlock() {
-        _stateFlow.value = LockScreenState.Unprotected
+    suspend fun recordFailure(): LockScreenFailure {
+        val session = observeSessionSettings().first()
+        val updatedNumberOfFailedAttempt = session.numberOfFailedAttempt + 1
+        updateSessionSettings { it.copy(numberOfFailedAttempt = updatedNumberOfFailedAttempt) }
+        return if (updatedNumberOfFailedAttempt == 2) {
+            LockScreenFailure.LAST_ATTEMPT
+        } else if (updatedNumberOfFailedAttempt >= 3) {
+            LockScreenFailure.SHOULD_LOG_OUT
+        } else {
+            LockScreenFailure.INVALID_ATTEMPT
+        }
     }
 
-    fun logOut() {}
+    suspend fun unlock() {
+        _stateFlow.value = LockScreenState.Unprotected
+        updateSessionSettings {
+            it.copy(numberOfFailedAttempt = 0)
+        }
+    }
 }

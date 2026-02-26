@@ -13,7 +13,8 @@ data class UserSessionPreferences(
     val lockType: DeviceLockType = DeviceLockType.DEFAULT,
     val lockTimeOut: LockTimeOut = LockTimeOut.DEFAULT,
     val pinCode: String? = null,
-    val lastBackgroundTime: Long = 0L
+    val lastBackgroundTime: Long = 0L,
+    val numberOfFailedAttempt: Int = 0
 )
 
 enum class DeviceLockType {

@@ -246,4 +246,6 @@
     <string name="biometric_lock_enabled">Biometric lock enabled</string>
     <string name="biometric_lock_disabled">Biometric lock disabled</string>
     <string name="unlock">Unlock</string>
+    <string name="last_attempt_title">Final attempt</string>
+    <string name="last_attempt_description">One more failed attempt will sign you out</string>
 </resources>
