@@ -3,7 +3,6 @@ package io.simplelogin.android.ui.home.lockscreen
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.DeviceLockType
-import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LockViewModel @Inject constructor(
-    val logOut: LogOutUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase
 ) : ViewModel() {

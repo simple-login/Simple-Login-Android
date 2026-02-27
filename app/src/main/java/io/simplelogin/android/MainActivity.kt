@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     if (appRooState.apiKey != null) {
-                        LockScreen()
+                        LockScreen(onLogOut = { appRootViewModel.logOut() })
                     }
                 }
             }

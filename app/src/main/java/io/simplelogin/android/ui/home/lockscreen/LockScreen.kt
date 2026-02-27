@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
+fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val state by stateFlow.collectAsState()
@@ -94,37 +94,39 @@ fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.background,
                     topBar = {
-                        TopAppBar(
-                            title = {},
-                            actions = {
-                                IconButton(onClick = {
-                                    scope.launch { logOut() }
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Outlined.Logout,
-                                        contentDescription = null
-                                    )
+                        if (state is LockScreenState.Protected) {
+                            TopAppBar(
+                                title = {},
+                                actions = {
+                                    IconButton(onClick = onLogOut) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Outlined.Logout,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_logo_with_name),
-                            contentDescription = null,
-                            modifier = Modifier.size(120.dp),
-                            tint = Color.Gray
-                        )
+                    if (state is LockScreenState.Protected) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_logo_with_name),
+                                contentDescription = null,
+                                modifier = Modifier.size(120.dp),
+                                tint = Color.Gray
+                            )
 
-                        TextButton(onClick = { showPinDialog = true }) {
-                            Text(text = stringResource(R.string.unlock))
+                            TextButton(onClick = { showPinDialog = true }) {
+                                Text(text = stringResource(R.string.unlock))
+                            }
                         }
                     }
                 }
@@ -150,7 +152,7 @@ fun LockScreen() = with(hiltViewModel<LockViewModel>()) {
                         LockScreenFailure.LAST_ATTEMPT -> showLastAttemptDialog = true
                         LockScreenFailure.SHOULD_LOG_OUT -> {
                             showPinDialog = false
-                            logOut()
+                            onLogOut()
                         }
                     }
                 }
