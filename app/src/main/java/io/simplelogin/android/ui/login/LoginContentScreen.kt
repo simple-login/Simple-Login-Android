@@ -212,7 +212,10 @@ private fun LoginColumn(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                     onClick = onSignInWithApiKeyClick
                 ) {
-                    Text(stringResource(R.string.sign_in_with_api_key))
+                    Text(
+                        text = stringResource(R.string.sign_in_with_api_key),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
                 TextButton(onClick = onForgotPasswordClick) {
