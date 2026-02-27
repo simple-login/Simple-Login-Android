@@ -38,9 +38,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.ui.home.settings.device.CreateOrConfirmPinDialog
 import io.simplelogin.android.ui.home.settings.device.CreateOrEditPinMode
+import io.simplelogin.android.ui.util.rememberBiometricAuthenticator
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +51,39 @@ fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
     val state by stateFlow.collectAsState()
     var showPinDialog by rememberSaveable { mutableStateOf(false) }
     var showLastAttemptDialog by rememberSaveable { mutableStateOf(false) }
+
+    fun handleFailure() {
+        scope.launch {
+            when (recordFailure()) {
+                LockScreenFailure.INVALID_ATTEMPT -> {}
+                LockScreenFailure.LAST_ATTEMPT -> showLastAttemptDialog = true
+                LockScreenFailure.SHOULD_LOG_OUT -> {
+                    showPinDialog = false
+                    onLogOut()
+                }
+            }
+        }
+    }
+
+    val biometricallyAuthenticate = rememberBiometricAuthenticator(
+        title = stringResource(R.string.please_authenticate),
+        onSuccess = {
+            scope.launch { unlock() }
+        },
+        onError = {
+            scope.launch { recordFailure() }
+        },
+        onCancel = { handleFailure() },
+        onNotAvailable = onLogOut
+    )
+
+    fun authenticate() {
+        if (state.isPinProtected) {
+            showPinDialog = true
+        } else if (state.isBiometricProtected) {
+            biometricallyAuthenticate()
+        }
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -75,9 +108,7 @@ fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
     }
 
     LaunchedEffect(state) {
-        if ((state as? LockScreenState.Protected)?.lockType == DeviceLockType.PIN) {
-            showPinDialog = true
-        }
+        authenticate()
     }
 
     when (state) {
@@ -124,7 +155,7 @@ fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
                                 tint = Color.Gray
                             )
 
-                            TextButton(onClick = { showPinDialog = true }) {
+                            TextButton(onClick = { authenticate() }) {
                                 Text(text = stringResource(R.string.unlock))
                             }
                         }
@@ -145,18 +176,7 @@ fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
                     unlock()
                 }
             },
-            onConfirmFailure = {
-                scope.launch {
-                    when (recordFailure()) {
-                        LockScreenFailure.INVALID_ATTEMPT -> {}
-                        LockScreenFailure.LAST_ATTEMPT -> showLastAttemptDialog = true
-                        LockScreenFailure.SHOULD_LOG_OUT -> {
-                            showPinDialog = false
-                            onLogOut()
-                        }
-                    }
-                }
-            },
+            onConfirmFailure = { handleFailure() },
             onDismiss = { showPinDialog = false }
         )
     }
