@@ -2,6 +2,7 @@ package io.simplelogin.android.ui.home.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.UserInfo
@@ -62,6 +65,7 @@ fun UserInfoCard(
         } ?: Box(
             modifier = Modifier
                 .fillMaxHeight()
+                .heightIn(min = 48.dp)
                 .aspectRatio(1f)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary),
@@ -77,17 +81,19 @@ fun UserInfoCard(
 
         Spacer(modifier = Modifier.width(Spacing.medium))
 
-        Column {
-            Text(
-                text = userInfo.name,
-                fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    lineHeight = TextUnit.Unspecified,
-                    platformStyle = PlatformTextStyle(includeFontPadding = false)
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+        Column(verticalArrangement = Arrangement.Center) {
+            if (userInfo.name.isNotEmpty()) {
+                Text(
+                    text = userInfo.name,
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        lineHeight = TextUnit.Unspecified,
+                        platformStyle = PlatformTextStyle(includeFontPadding = false)
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
             if (userInfo.isPremium) {
                 Text(
