@@ -16,7 +16,7 @@ import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.Token
-import io.simplelogin.android.data.models.api.UpdateAliasOptions
+import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
 import io.simplelogin.android.data.models.api.UpdateCustomDomainResponse
 import io.simplelogin.android.data.models.api.UpdateMailboxOptions
@@ -166,7 +166,7 @@ interface ApiService {
     suspend fun updateAlias(
         @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") aliasId: AliasId,
-        @Body body: UpdateAliasOptions
+        @Body body: UpdateAliasOption
     ): Response<OkResponse>
 
     // Contact

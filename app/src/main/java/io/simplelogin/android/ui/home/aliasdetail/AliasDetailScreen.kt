@@ -58,7 +58,8 @@ import kotlinx.coroutines.launch
 fun AliasDetailScreen(
     alias: Alias,
     onGoBack: () -> Unit,
-    onViewContacts: () -> Unit
+    onViewContacts: () -> Unit,
+    onAliasUpdated: (Alias) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val viewModel =
@@ -241,9 +242,9 @@ fun AliasDetailScreen(
             description = alias.email,
             mailboxes = mailboxes,
             initialSelectedIds = alias.mailboxes.map { it.id },
-            onSave = {
+            onSave = { mailboxes ->
                 viewModel.removeMailboxesToUpdate()
-                viewModel.updateMailboxes(it)
+                viewModel.updateMailboxes(mailboxes = mailboxes, onSuccess = onAliasUpdated)
             },
             onDismiss = {
                 viewModel.removeMailboxesToUpdate()

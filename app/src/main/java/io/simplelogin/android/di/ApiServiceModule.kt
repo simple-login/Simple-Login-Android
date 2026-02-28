@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.simplelogin.android.data.models.api.UpdateAliasOption
+import io.simplelogin.android.data.models.api.UpdateAliasOptionSerializer
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOptionSerializer
 import io.simplelogin.android.data.remote.ApiService
@@ -28,6 +30,7 @@ object ApiServiceModule {
     fun provideGson(): Gson = GsonBuilder()
         .setStrictness(Strictness.LENIENT)
         .registerTypeAdapter(UpdateUserInfoOption::class.java, UpdateUserInfoOptionSerializer())
+        .registerTypeAdapter(UpdateAliasOption::class.java, UpdateAliasOptionSerializer())
         .serializeNulls()
         .create()
 

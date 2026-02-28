@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasDetailViewModel.Factory::class)
@@ -43,6 +44,8 @@ class AliasDetailViewModel @AssistedInject constructor(
         fun create(alias: Alias): AliasDetailViewModel
     }
 
+    private val aliasStateFlow = MutableStateFlow(alias)
+
     private val activitiesStateFlow =
         MutableStateFlow<AliasActivitiesState>(AliasActivitiesState.Loading)
 
@@ -50,9 +53,10 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     val stateFlow = combine(
         observeDeviceSettings(),
+        aliasStateFlow,
         activitiesStateFlow,
         mailboxesToUpdateStateFlow
-    ) { deviceSettings, activities, mailboxes ->
+    ) { deviceSettings, alias, activities, mailboxes ->
         AliasDetailScreenState(
             alias = alias,
             devicePreferences = deviceSettings,
@@ -94,14 +98,24 @@ class AliasDetailViewModel @AssistedInject constructor(
                 .fold(onSuccess = { mailboxes ->
                     loadingState.emit(false)
                     mailboxesToUpdateStateFlow.emit(mailboxes.value)
-                }, onFailure = { error ->
-                    loadingState.emit(false)
-                    handle(error)
-                })
+                }, onFailure = ::handle)
         }
     }
 
-    fun updateMailboxes(mailboxes: List<Mailbox>) {}
+    fun updateMailboxes(mailboxes: List<Mailbox>, onSuccess: (Alias) -> Unit) {
+        withApiKey { apiKey ->
+            loadingState.emit(true)
+            aliasesRemoteDatasource.updateMailboxes(
+                apiKey = apiKey,
+                alias = alias,
+                mailboxes = mailboxes
+            ).fold(onSuccess = {
+                loadingState.emit(false)
+                aliasStateFlow.update { it.copy(mailboxes = mailboxes.map { it.toMailboxLite() }) }
+                onSuccess(aliasStateFlow.value)
+            }, onFailure = ::handle)
+        }
+    }
 
     fun removeMailboxesToUpdate() {
         mailboxesToUpdateStateFlow.value = null
@@ -118,6 +132,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     }
 
     private suspend fun handle(error: ApiError) {
+        loadingState.emit(false)
         val config = SnackbarConfiguration(
             message = error.description(context),
             type = SnackbarType.FAILURE

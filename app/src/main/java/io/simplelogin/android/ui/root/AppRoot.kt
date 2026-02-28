@@ -150,7 +150,10 @@ fun AppRoot(
                 AliasDetailScreen(
                     alias = key.alias,
                     onGoBack = viewModel::goBack,
-                    onViewContacts = { viewModel.viewAliasContacts(key.alias) }
+                    onViewContacts = { viewModel.viewAliasContacts(key.alias) },
+                    onAliasUpdated = {
+                        // TODO: Update alias list
+                    }
                 )
             }
 

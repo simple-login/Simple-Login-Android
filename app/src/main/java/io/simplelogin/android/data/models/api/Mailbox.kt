@@ -10,7 +10,9 @@ data class Mailbox(
     @SerializedName("creation_timestamp") val creationTimestamp: Double,
     @SerializedName("nb_alias") val aliasCount: Int,
     @SerializedName("verified") val verified: Boolean
-)
+) {
+    fun toMailboxLite() = MailboxLite(id = id, email = email)
+}
 
 data class Mailboxes(
     @SerializedName("mailboxes") val value: List<Mailbox>

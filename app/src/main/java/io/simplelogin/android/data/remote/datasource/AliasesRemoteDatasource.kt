@@ -6,9 +6,10 @@ import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.Stats
-import io.simplelogin.android.data.models.api.UpdateAliasOptions
+import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EnabledResponse
@@ -35,6 +36,11 @@ interface AliasesRemoteDatasource {
     ): Result<List<AliasActivity>, ApiError>
 
     suspend fun random(apiKey: ApiKey, mode: RandomMode, note: String?): Result<Alias, ApiError>
+    suspend fun updateMailboxes(
+        apiKey: ApiKey,
+        alias: Alias,
+        mailboxes: List<Mailbox>
+    ): Result<Unit, ApiError>
 }
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -80,7 +86,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             apiService.updateAlias(
                 apiKey = apiKey,
                 aliasId = aliasId,
-                body = UpdateAliasOptions(pinned = true)
+                body = UpdateAliasOption.Pinned(true)
             )
         }.mapValue {}
 
@@ -89,7 +95,7 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             apiService.updateAlias(
                 apiKey = apiKey,
                 aliasId = aliasId,
-                body = UpdateAliasOptions(pinned = false)
+                body = UpdateAliasOption.Pinned(false)
             )
         }.mapValue {}
 
@@ -120,4 +126,17 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
                 body = NoteBody(note)
             )
         }
+
+    override suspend fun updateMailboxes(
+        apiKey: ApiKey,
+        alias: Alias,
+        mailboxes: List<Mailbox>
+    ): Result<Unit, ApiError> =
+        safeApiCall {
+            apiService.updateAlias(
+                apiKey = apiKey,
+                aliasId = alias.id,
+                body = UpdateAliasOption.Mailboxes(mailboxes.map { it.id })
+            )
+        }.mapValue {}
 }
