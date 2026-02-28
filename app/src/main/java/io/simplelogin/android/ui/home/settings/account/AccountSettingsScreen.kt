@@ -34,6 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -60,10 +61,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -276,11 +279,31 @@ private fun LazyListScope.accountSettingsScreenContent(
             Column {
                 Text(
                     text = userInfo.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        lineHeight = TextUnit.Unspecified,
+                        platformStyle = PlatformTextStyle(includeFontPadding = false)
+                    )
                 )
 
-                Text(text = userInfo.email)
+                if (userInfo.isPremium) {
+                    Text(
+                        text = stringResource(R.string.premium),
+                        color = SlColor.Amber,
+                        style = LocalTextStyle.current.copy(
+                            lineHeight = TextUnit.Unspecified,
+                            platformStyle = PlatformTextStyle(includeFontPadding = false)
+                        )
+                    )
+                }
+
+                Text(
+                    text = userInfo.email,
+                    style = LocalTextStyle.current.copy(
+                        lineHeight = TextUnit.Unspecified,
+                        platformStyle = PlatformTextStyle(includeFontPadding = false)
+                    )
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))

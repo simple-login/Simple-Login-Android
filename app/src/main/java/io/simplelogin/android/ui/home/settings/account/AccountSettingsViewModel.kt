@@ -18,6 +18,7 @@ import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -33,6 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountSettingsViewModel @Inject constructor(
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
+    private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val datasource: AccountSettingsRemoteDatasource
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
@@ -59,7 +61,7 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun handleResults(
+    private suspend fun handleResults(
         userInfoResult: Result<UserInfo, ApiError>,
         userSettingsResult: Result<UserSettings, ApiError>,
         usableDomainsResult: Result<List<UsableDomain>, ApiError>
@@ -71,6 +73,7 @@ class AccountSettingsViewModel @Inject constructor(
                 val sortedUsableDomains = usableDomainsResult.value.sortedWith(
                     compareByDescending { it.isCustom }
                 )
+                updateSessionSettings { it.copy(userInfo = userInfoResult.value) }
                 _stateFlow.update {
                     it.copy(
                         settings = AccountSettings(
