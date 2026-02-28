@@ -189,6 +189,7 @@ class AccountSettingsViewModel @Inject constructor(
             _stateFlow.update { it.copy(isLoading = true) }
             datasource.updateUserInfo(apiKey = apiKey, option = option)
                 .fold(onSuccess = { result ->
+                    updateSessionSettings { it.copy(userInfo = result) }
                     _stateFlow.update {
                         it.copy(
                             isLoading = false,

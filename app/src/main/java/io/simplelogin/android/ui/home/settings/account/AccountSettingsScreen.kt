@@ -3,25 +3,19 @@ package io.simplelogin.android.ui.home.settings.account
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
@@ -34,7 +28,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -53,29 +46,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import coil.compose.AsyncImage
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
+import io.simplelogin.android.ui.home.shared.UserInfoCard
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -239,109 +228,45 @@ private fun LazyListScope.accountSettingsScreenContent(
     val userSettings = settings.userSettings
 
     item {
-        Row(
-            modifier = Modifier
-                .primaryContentBackground()
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .clickable(onClick = onShowEditUserInfoMenu)
-                .padding(Spacing.regular),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            userInfo.profilePictureUrl?.let {
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f)
-                        .clip(CircleShape),
-                    model = it,
-                    contentScale = ContentScale.Crop,
-                    contentDescription = stringResource(R.string.profile_picture)
-                )
-            } ?: Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = userInfo.initial.toString(),
-                    fontWeight = FontWeight.SemiBold,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White
-                )
-            }
-
-            Spacer(modifier = Modifier.width(Spacing.medium))
-
-            Column {
-                Text(
-                    text = userInfo.name,
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        lineHeight = TextUnit.Unspecified,
-                        platformStyle = PlatformTextStyle(includeFontPadding = false)
-                    )
-                )
-
-                if (userInfo.isPremium) {
-                    Text(
-                        text = stringResource(R.string.premium),
-                        color = SlColor.Amber,
-                        style = LocalTextStyle.current.copy(
-                            lineHeight = TextUnit.Unspecified,
-                            platformStyle = PlatformTextStyle(includeFontPadding = false)
+        UserInfoCard(
+            modifier = Modifier.primaryContentBackground(),
+            userInfo = userInfo,
+            onClick = onShowEditUserInfoMenu,
+            editMenu = {
+                Box {
+                    IconButton(onClick = onShowEditUserInfoMenu) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit_profile)
                         )
-                    )
-                }
+                    }
 
-                Text(
-                    text = userInfo.email,
-                    style = LocalTextStyle.current.copy(
-                        lineHeight = TextUnit.Unspecified,
-                        platformStyle = PlatformTextStyle(includeFontPadding = false)
-                    )
-                )
-            }
+                    DropdownMenu(
+                        expanded = showEditUserInfoMenu,
+                        onDismissRequest = onDismissEditUserInfoMenu
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.edit_display_name)) },
+                            onClick = onEditDisplayName
+                        )
 
-            Spacer(modifier = Modifier.weight(1f))
+                        HorizontalDivider()
 
-            Box {
-                IconButton(onClick = onShowEditUserInfoMenu) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(R.string.edit_profile)
-                    )
-                }
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.edit_profile_picture)) },
+                            onClick = onEditProfilePicture
+                        )
 
-                DropdownMenu(
-                    expanded = showEditUserInfoMenu,
-                    onDismissRequest = onDismissEditUserInfoMenu
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.edit_display_name)) },
-                        onClick = onEditDisplayName
-                    )
+                        HorizontalDivider()
 
-                    HorizontalDivider()
-
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.edit_profile_picture)) },
-                        onClick = onEditProfilePicture
-                    )
-
-                    HorizontalDivider()
-
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(R.string.remove_profile_picture)) },
-                        onClick = onRemoveProfilePicture
-                    )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.remove_profile_picture)) },
+                            onClick = onRemoveProfilePicture
+                        )
+                    }
                 }
             }
-
-        }
+        )
         SettingsSpacer()
     }
 

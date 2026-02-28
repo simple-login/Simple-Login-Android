@@ -63,30 +63,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.Theme
-import io.simplelogin.android.data.models.preferences.UserSessionPreferences
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
 import io.simplelogin.android.ui.home.lockscreen.LockScreen
+import io.simplelogin.android.ui.home.shared.UserInfoCard
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SimpleLoginTheme
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.clickableRippleDisabled
+import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -117,6 +119,7 @@ class MainActivity : AppCompatActivity() {
             val windowAdaptiveInfo = currentWindowAdaptiveInfo()
             val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
             val appRooState by appRootViewModel.stateFlow.collectAsState()
+            val userInfo by viewModel.userInfoStateFlow.collectAsState()
 
             DisposableEffect(darkTheme) {
                 enableEdgeToEdge(
@@ -139,6 +142,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            fun openAccountSettings() {
+                closeDrawerAndExecute {
+                    appRootViewModel.showAccountSettingsScreen(asDialog)
+                }
+            }
+
             SimpleLoginTheme(darkTheme = darkTheme) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     ModalNavigationDrawer(
@@ -146,6 +155,10 @@ class MainActivity : AppCompatActivity() {
                         drawerContent = {
                             Drawer(
                                 appVersion = appRootViewModel.appVersion,
+                                userInfo = userInfo,
+                                onUserInfoClick = {
+                                    openAccountSettings()
+                                },
                                 onMailboxesClick = {
                                     closeDrawerAndExecute {
                                         appRootViewModel.showMailboxesScreen(asDialog)
@@ -157,9 +170,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 },
                                 onAccountSettingsClick = {
-                                    closeDrawerAndExecute {
-                                        appRootViewModel.showAccountSettingsScreen(asDialog)
-                                    }
+                                    openAccountSettings()
                                 },
                                 onDeviceSettingsClick = {
                                     closeDrawerAndExecute {
@@ -209,7 +220,7 @@ class MainActivity : AppCompatActivity() {
 class MainViewModel @Inject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val baseUrlProvider: BaseUrlProvider,
-    private val userSessionPreferences: DataStore<UserSessionPreferences>,
+    private val observeSessionSettings: ObserveSessionSettingsUseCase,
     val snackbarManager: SnackbarManager,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
@@ -221,9 +232,17 @@ class MainViewModel @Inject constructor(
             DevicePreferences.Default
         )
 
+    val userInfoStateFlow = observeSessionSettings()
+        .map { it.userInfo }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            null
+        )
+
     fun observe() {
         viewModelScope.launch {
-            userSessionPreferences.data
+            observeSessionSettings()
                 .collect {
                     baseUrlProvider.updateBaseUrl(it.baseUrl)
                 }
@@ -317,6 +336,8 @@ private fun MainUi(
 @Composable
 private fun Drawer(
     appVersion: String,
+    userInfo: UserInfo?,
+    onUserInfoClick: () -> Unit,
     onMailboxesClick: () -> Unit,
     onCustomDomainsClick: () -> Unit,
     onAccountSettingsClick: () -> Unit,
@@ -326,6 +347,10 @@ private fun Drawer(
     ModalDrawerSheet(
         drawerShape = RectangleShape
     ) {
+        userInfo?.let {
+            UserInfoCard(userInfo = it, onClick = onUserInfoClick)
+        }
+
         NavigationDrawerItem(
             label = { Text(text = stringResource(R.string.mailboxes)) },
             icon = { Icon(imageVector = Icons.Outlined.AllInbox, contentDescription = null) },
