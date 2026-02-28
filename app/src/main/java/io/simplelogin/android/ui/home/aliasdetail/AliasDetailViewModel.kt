@@ -1,14 +1,24 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
+import io.simplelogin.android.di.LoadingState
+import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
+import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,9 +29,13 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasDetailViewModel.Factory::class)
 class AliasDetailViewModel @AssistedInject constructor(
-    @Assisted val alias: Alias,
+    @ApplicationContext private val context: Context,
+    @Assisted private val alias: Alias,
+    @LoadingState private val loadingState: LoadingStateFlow,
+    private val snackbarManager: SnackbarManager,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val remoteDatasource: AliasesRemoteDatasource,
+    private val aliasesRemoteDatasource: AliasesRemoteDatasource,
+    private val mailboxesRemoteDatasource: MailboxesRemoteDatasource,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     @AssistedFactory
@@ -32,13 +46,18 @@ class AliasDetailViewModel @AssistedInject constructor(
     private val activitiesStateFlow =
         MutableStateFlow<AliasActivitiesState>(AliasActivitiesState.Loading)
 
+    private val mailboxesToUpdateStateFlow = MutableStateFlow<List<Mailbox>?>(null)
+
     val stateFlow = combine(
         observeDeviceSettings(),
-        activitiesStateFlow
-    ) { deviceSettings, activities ->
+        activitiesStateFlow,
+        mailboxesToUpdateStateFlow
+    ) { deviceSettings, activities, mailboxes ->
         AliasDetailScreenState(
+            alias = alias,
             devicePreferences = deviceSettings,
-            activitiesState = activities
+            activitiesState = activities,
+            mailboxesToUpdate = mailboxes
         )
     }.stateIn(
         scope = viewModelScope,
@@ -53,7 +72,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     fun getActivities() {
         activitiesStateFlow.value = AliasActivitiesState.Loading
         withApiKey { apiKey ->
-            remoteDatasource.getActivities(
+            aliasesRemoteDatasource.getActivities(
                 apiKey = apiKey,
                 aliasId = alias.id,
                 page = 0
@@ -68,6 +87,26 @@ class AliasDetailViewModel @AssistedInject constructor(
         }
     }
 
+    fun getMailboxesToUpdate() {
+        withApiKey { apiKey ->
+            loadingState.emit(true)
+            mailboxesRemoteDatasource.getMailboxes(apiKey)
+                .fold(onSuccess = { mailboxes ->
+                    loadingState.emit(false)
+                    mailboxesToUpdateStateFlow.emit(mailboxes.value)
+                }, onFailure = { error ->
+                    loadingState.emit(false)
+                    handle(error)
+                })
+        }
+    }
+
+    fun updateMailboxes(mailboxes: List<Mailbox>) {}
+
+    fun removeMailboxesToUpdate() {
+        mailboxesToUpdateStateFlow.value = null
+    }
+
     private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
         viewModelScope.launch {
             observeSessionSettings().collect { settings ->
@@ -76,5 +115,13 @@ class AliasDetailViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun handle(error: ApiError) {
+        val config = SnackbarConfiguration(
+            message = error.description(context),
+            type = SnackbarType.FAILURE
+        )
+        snackbarManager.showSnackbar(config)
     }
 }

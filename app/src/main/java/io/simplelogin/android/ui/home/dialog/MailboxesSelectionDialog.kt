@@ -3,6 +3,7 @@ package io.simplelogin.android.ui.home.dialog
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Mailbox
@@ -33,17 +35,31 @@ import io.simplelogin.android.ui.util.clickableRippleDisabled
 
 @Composable
 fun MailboxesSelectionDialog(
+    title: String,
+    description: String? = null,
     mailboxes: List<Mailbox>,
-    initialSelected: Set<Mailbox>,
-    onSave: (Set<Mailbox>) -> Unit,
+    initialSelectedIds: List<Int>,
+    onSave: (List<Mailbox>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var tempSelection by rememberSaveable { mutableStateOf(initialSelected) }
+    var tempSelection by rememberSaveable { mutableStateOf(initialSelectedIds) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.select_mailboxes)) },
+        title = { Text(text = title) },
         text = {
             LazyColumn {
+                description?.let {
+                    item {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+
+                        Spacer(modifier = Modifier.height(Spacing.large))
+                    }
+                }
+
                 itemsIndexed(mailboxes) { index, mailbox ->
                     Row(
                         modifier = Modifier
@@ -52,10 +68,10 @@ fun MailboxesSelectionDialog(
                             .clickableRippleDisabled {
                                 if (mailbox.verified) {
                                     tempSelection =
-                                        if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
-                                            tempSelection - mailbox
+                                        if (tempSelection.contains(mailbox.id) && tempSelection.count() > 1) {
+                                            tempSelection - mailbox.id
                                         } else {
-                                            tempSelection + mailbox
+                                            tempSelection + mailbox.id
                                         }
                                 }
                             },
@@ -64,15 +80,15 @@ fun MailboxesSelectionDialog(
                         CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                             Checkbox(
                                 enabled = mailbox.verified,
-                                checked = tempSelection.contains(mailbox),
+                                checked = tempSelection.contains(mailbox.id),
                                 onCheckedChange = { checked ->
                                     if (!checked && tempSelection.count() == 1) {
                                         return@Checkbox
                                     }
                                     tempSelection = if (checked) {
-                                        tempSelection + mailbox
+                                        tempSelection + mailbox.id
                                     } else {
-                                        tempSelection - mailbox
+                                        tempSelection - mailbox.id
                                     }
                                 }
                             )
@@ -109,7 +125,9 @@ fun MailboxesSelectionDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onSave(tempSelection) }) {
+            TextButton(onClick = {
+                onSave(mailboxes.filter { tempSelection.contains(it.id) })
+            }) {
                 Text(text = stringResource(R.string.save))
             }
         }

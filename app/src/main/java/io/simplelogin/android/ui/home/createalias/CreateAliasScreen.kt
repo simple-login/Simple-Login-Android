@@ -89,7 +89,7 @@ fun CreateAliasScreen(
     val prefixValidation = prefix.text.validatePrefix()
     var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
     var showSuffixDialog by remember { mutableStateOf(false) }
-    var selectedMailboxes by remember { mutableStateOf<Set<Mailbox>>(emptySet()) }
+    var selectedMailboxes by remember { mutableStateOf<List<Mailbox>>(emptyList()) }
     var showMailboxesDialog by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
     val state by stateFlow.collectAsState()
@@ -221,8 +221,9 @@ fun CreateAliasScreen(
     if (showMailboxesDialog) {
         state.mailboxes?.let { mailboxes ->
             MailboxesSelectionDialog(
+                title = stringResource(R.string.select_mailboxes),
                 mailboxes = mailboxes,
-                initialSelected = selectedMailboxes,
+                initialSelectedIds = selectedMailboxes.map { it.id },
                 onSave = {
                     showMailboxesDialog = false
                     selectedMailboxes = it
@@ -241,7 +242,7 @@ private fun CustomAliasMainContent(
     prefixValidation: PrefixValidationResult,
     selectedSuffix: Suffix?,
     onShowSuffixSelection: () -> Unit,
-    selectedMailboxes: Set<Mailbox>,
+    selectedMailboxes: List<Mailbox>,
     onShowMailboxesSelection: () -> Unit,
     note: String,
     onNoteChanged: (String) -> Unit

@@ -40,6 +40,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
+import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
 import io.simplelogin.android.ui.home.shared.ActivityStats
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
@@ -60,11 +61,13 @@ fun AliasDetailScreen(
     onViewContacts: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel = hiltViewModel { factory: AliasDetailViewModel.Factory ->
-        factory.create(alias)
-    }
+    val viewModel =
+        hiltViewModel(key = "alias_detail_${alias.id}") { factory: AliasDetailViewModel.Factory ->
+            factory.create(alias)
+        }
 
     val state by viewModel.stateFlow.collectAsState()
+    val alias = state.alias ?: alias
     var showAliasOptions by remember { mutableStateOf(false) }
     val closeOptionsAndHandleAction: (AliasAction) -> Unit = {
         showAliasOptions = false
@@ -161,13 +164,29 @@ fun AliasDetailScreen(
                             contentDescription = null
                         )
                     }
+
+                    SettingsSpacer()
                 }
 
                 item {
-                    Text(text = stringResource(R.string.mailboxes))
+                    SettingsHeader(text = stringResource(R.string.mailboxes))
 
-                    alias.mailboxes.forEach {
-                        Text(text = it.email)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .primaryContentBackground()
+                            .clickable { viewModel.getMailboxesToUpdate() }
+                            .padding(Spacing.regular),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = alias.mailboxes.joinToString(separator = "\n") { it.email })
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null
+                        )
                     }
                 }
 
@@ -213,6 +232,22 @@ fun AliasDetailScreen(
             initialValue = alias.note,
             onSave = { showAliasNoteEditorDialog = false },
             onDismiss = { showAliasNoteEditorDialog = false }
+        )
+    }
+
+    state.mailboxesToUpdate?.let { mailboxes ->
+        MailboxesSelectionDialog(
+            title = stringResource(R.string.update_mailboxes),
+            description = alias.email,
+            mailboxes = mailboxes,
+            initialSelectedIds = alias.mailboxes.map { it.id },
+            onSave = {
+                viewModel.removeMailboxesToUpdate()
+                viewModel.updateMailboxes(it)
+            },
+            onDismiss = {
+                viewModel.removeMailboxesToUpdate()
+            }
         )
     }
 }
