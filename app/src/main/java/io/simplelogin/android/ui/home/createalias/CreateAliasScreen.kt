@@ -1,6 +1,6 @@
 package io.simplelogin.android.ui.home.createalias
 
-import android.annotation.SuppressLint
+import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -70,10 +69,7 @@ import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
@@ -226,9 +222,12 @@ fun CreateAliasScreen(
         state.mailboxes?.let { mailboxes ->
             MailboxesSelectionDialog(
                 mailboxes = mailboxes,
-                selected = selectedMailboxes,
-                onSelectionChanged = { selectedMailboxes = it },
-                onDismiss = { showMailboxesDialog = false }
+                initialSelected = selectedMailboxes,
+                onSave = {
+                    showMailboxesDialog = false
+                    selectedMailboxes = it
+                },
+                onDismiss = { showMailboxesDialog = false },
             )
         }
     }
@@ -478,85 +477,6 @@ private fun SuffixSelectionDialog(
                     }
 
                     if (index < suffixes.lastIndex) {
-                        HorizontalDivider()
-                    }
-                }
-            }
-        },
-        confirmButton = {}
-    )
-}
-
-@SuppressLint("RememberReturnType")
-@Composable
-private fun MailboxesSelectionDialog(
-    mailboxes: List<Mailbox>,
-    selected: Set<Mailbox>,
-    onSelectionChanged: (Set<Mailbox>) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var tempSelection by rememberSaveable { mutableStateOf(selected) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.select_mailboxes)) },
-        text = {
-            LazyColumn {
-                itemsIndexed(mailboxes) { index, mailbox ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = Spacing.medium)
-                            .clickableRippleDisabled {
-                                if (mailbox.verified) {
-                                    tempSelection =
-                                        if (tempSelection.contains(mailbox) && tempSelection.count() > 1) {
-                                            tempSelection - mailbox
-                                        } else {
-                                            tempSelection + mailbox
-                                        }
-                                    onSelectionChanged(tempSelection)
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
-                            Checkbox(
-                                enabled = mailbox.verified,
-                                checked = tempSelection.contains(mailbox),
-                                onCheckedChange = { checked ->
-                                    if (!checked && tempSelection.count() == 1) {
-                                        return@Checkbox
-                                    }
-                                    tempSelection = if (checked) {
-                                        tempSelection + mailbox
-                                    } else {
-                                        tempSelection - mailbox
-                                    }
-                                    onSelectionChanged(tempSelection)
-                                }
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.width(Spacing.small))
-
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = mailbox.email,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
-                        )
-
-                        Spacer(modifier = Modifier.width(Spacing.medium))
-
-                        if (mailbox.default) {
-                            DefaultBadge()
-                        }
-
-                        if (!mailbox.verified) {
-                            UnverifiedBadge()
-                        }
-                    }
-                    if (index < mailboxes.lastIndex) {
                         HorizontalDivider()
                     }
                 }

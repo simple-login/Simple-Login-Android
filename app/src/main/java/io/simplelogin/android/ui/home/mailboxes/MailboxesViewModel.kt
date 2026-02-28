@@ -10,7 +10,6 @@ import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -138,8 +137,7 @@ class MailboxesViewModel @Inject constructor(
             ?: viewModelScope.launch {
                 observeSessionSettings()
                     .mapNotNull { it.apiKey }
-                    .first()
-                    .let { fetchedApiKey ->
+                    .collect { fetchedApiKey ->
                         apiKey = fetchedApiKey
                         block(fetchedApiKey)
                     }
