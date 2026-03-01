@@ -4,7 +4,7 @@ import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.Mailboxes
-import io.simplelogin.android.data.models.api.UpdateMailboxOptions
+import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody
 import io.simplelogin.android.data.remote.TransferAliasesBody
@@ -23,7 +23,7 @@ interface MailboxesRemoteDatasource {
     suspend fun updateMailbox(
         apiKey: ApiKey,
         mailbox: Mailbox,
-        options: UpdateMailboxOptions
+        options: UpdateMailboxOption
     ): Result<Boolean, ApiError>
 }
 
@@ -51,7 +51,7 @@ class MailboxesRemoteDatasourceImpl @Inject constructor(private val apiService: 
     override suspend fun updateMailbox(
         apiKey: ApiKey,
         mailbox: Mailbox,
-        options: UpdateMailboxOptions
+        options: UpdateMailboxOption
     ): Result<Boolean, ApiError> =
         safeApiCall {
             apiService.updateMailbox(

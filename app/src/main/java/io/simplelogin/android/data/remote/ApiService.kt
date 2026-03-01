@@ -19,7 +19,7 @@ import io.simplelogin.android.data.models.api.Token
 import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.models.api.UpdateCustomDomainResponse
-import io.simplelogin.android.data.models.api.UpdateMailboxOptions
+import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
 import io.simplelogin.android.data.models.api.UsableDomain
@@ -220,7 +220,7 @@ interface ApiService {
     suspend fun updateMailbox(
         @Header(AUTH_HEADER) apiKey: ApiKey,
         @Path("id") mailboxId: Int,
-        @Body body: UpdateMailboxOptions
+        @Body body: UpdateMailboxOption
     ): Response<UpdateResponse>
 
     // Misc

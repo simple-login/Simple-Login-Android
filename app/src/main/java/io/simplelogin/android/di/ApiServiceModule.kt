@@ -11,6 +11,8 @@ import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.models.api.UpdateAliasOptionSerializer
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOptionSerializer
+import io.simplelogin.android.data.models.api.UpdateMailboxOption
+import io.simplelogin.android.data.models.api.UpdateMailboxOptionSerializer
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOptionSerializer
 import io.simplelogin.android.data.remote.ApiService
@@ -37,7 +39,7 @@ object ApiServiceModule {
             UpdateCustomDomainOption::class.java,
             UpdateCustomDomainOptionSerializer()
         )
-
+        .registerTypeAdapter(UpdateMailboxOption::class.java, UpdateMailboxOptionSerializer())
         .serializeNulls()
         .create()
 

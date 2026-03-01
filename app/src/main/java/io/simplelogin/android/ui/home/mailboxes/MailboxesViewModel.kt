@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
-import io.simplelogin.android.data.models.api.UpdateMailboxOptions
+import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,7 +77,7 @@ class MailboxesViewModel @Inject constructor(
             datasource.updateMailbox(
                 apiKey = apiKey,
                 mailbox = newDefaultMailbox,
-                options = UpdateMailboxOptions(default = true)
+                options = UpdateMailboxOption.Default(true)
             ).fold(onSuccess = {
                 val updatedMailboxes = _stateFlow.value.mailboxes?.map { mailbox ->
                     when {
