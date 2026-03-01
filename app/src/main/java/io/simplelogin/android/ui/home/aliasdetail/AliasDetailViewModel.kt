@@ -8,12 +8,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.updateMailboxes
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
@@ -107,11 +109,13 @@ class AliasDetailViewModel @AssistedInject constructor(
             loadingState.emit(true)
             aliasesRemoteDatasource.updateMailboxes(
                 apiKey = apiKey,
-                alias = alias,
+                aliasId = alias.id,
                 mailboxes = mailboxes
             ).fold(onSuccess = {
                 loadingState.emit(false)
                 aliasStateFlow.update { it.copy(mailboxes = mailboxes.map { it.toMailboxLite() }) }
+                val message = context.getString(R.string.mailboxes_updated)
+                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
                 onSuccess(aliasStateFlow.value)
             }, onFailure = ::handle)
         }

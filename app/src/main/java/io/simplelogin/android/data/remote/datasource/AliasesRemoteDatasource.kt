@@ -26,8 +26,13 @@ interface AliasesRemoteDatasource {
     ): Result<Aliases, ApiError>
 
     suspend fun toggle(apiKey: ApiKey, aliasId: AliasId): Result<EnabledResponse, ApiError>
-    suspend fun pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
-    suspend fun unpin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
+    suspend fun update(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        option: UpdateAliasOption
+    ): Result<Unit, ApiError>
+
+
     suspend fun delete(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError>
     suspend fun getActivities(
         apiKey: ApiKey,
@@ -36,12 +41,28 @@ interface AliasesRemoteDatasource {
     ): Result<List<AliasActivity>, ApiError>
 
     suspend fun random(apiKey: ApiKey, mode: RandomMode, note: String?): Result<Alias, ApiError>
-    suspend fun updateMailboxes(
-        apiKey: ApiKey,
-        alias: Alias,
-        mailboxes: List<Mailbox>
-    ): Result<Unit, ApiError>
+
 }
+
+suspend fun AliasesRemoteDatasource.pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
+    update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Pinned(true))
+
+suspend fun AliasesRemoteDatasource.unpin(
+    apiKey: ApiKey,
+    aliasId: AliasId
+): Result<Unit, ApiError> =
+    update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Pinned(false))
+
+suspend fun AliasesRemoteDatasource.updateMailboxes(
+    apiKey: ApiKey,
+    aliasId: AliasId,
+    mailboxes: List<Mailbox>
+) =
+    update(
+        apiKey = apiKey,
+        aliasId = aliasId,
+        option = UpdateAliasOption.Mailboxes(mailboxes.map { it.id })
+    )
 
 class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
     BaseRemoteDatasource(), AliasesRemoteDatasource {
@@ -81,23 +102,14 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
     ): Result<EnabledResponse, ApiError> =
         safeApiCall { apiService.toggleAlias(apiKey = apiKey, aliasId = aliasId) }
 
-    override suspend fun pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
+    override suspend fun update(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        option: UpdateAliasOption
+    ): Result<Unit, ApiError> =
         safeApiCall {
-            apiService.updateAlias(
-                apiKey = apiKey,
-                aliasId = aliasId,
-                body = UpdateAliasOption.Pinned(true)
-            )
-        }.mapValue {}
-
-    override suspend fun unpin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
-        safeApiCall {
-            apiService.updateAlias(
-                apiKey = apiKey,
-                aliasId = aliasId,
-                body = UpdateAliasOption.Pinned(false)
-            )
-        }.mapValue {}
+            apiService.updateAlias(apiKey = apiKey, aliasId = aliasId, body = option)
+        }.mapValue { }
 
     override suspend fun delete(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
         safeApiCall {
@@ -126,17 +138,4 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
                 body = NoteBody(note)
             )
         }
-
-    override suspend fun updateMailboxes(
-        apiKey: ApiKey,
-        alias: Alias,
-        mailboxes: List<Mailbox>
-    ): Result<Unit, ApiError> =
-        safeApiCall {
-            apiService.updateAlias(
-                apiKey = apiKey,
-                aliasId = alias.id,
-                body = UpdateAliasOption.Mailboxes(mailboxes.map { it.id })
-            )
-        }.mapValue {}
 }

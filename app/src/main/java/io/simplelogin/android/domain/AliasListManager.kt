@@ -9,6 +9,8 @@ import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.pin
+import io.simplelogin.android.data.remote.datasource.unpin
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.util.getAs
 import kotlinx.coroutines.CoroutineScope
