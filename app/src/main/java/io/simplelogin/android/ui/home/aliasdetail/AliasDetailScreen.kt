@@ -256,6 +256,7 @@ fun AliasDetailScreen(
     if (showNoteEditorDialog) {
         EditTextDialog(
             title = alias.email,
+            label = stringResource(R.string.note),
             initialValue = alias.note,
             onSave = { note ->
                 showNoteEditorDialog = false
@@ -268,6 +269,7 @@ fun AliasDetailScreen(
     if (showDisplayNameEditorDialog) {
         EditTextDialog(
             title = alias.email,
+            label = stringResource(R.string.display_name),
             initialValue = alias.name,
             onSave = { name ->
                 showDisplayNameEditorDialog = false

@@ -149,11 +149,9 @@ fun CustomDomainDetailsScreen(
 
     if (showEditDisplayNameDialog) {
         EditTextDialog(
+            title = domain.domainName,
+            label = stringResource(R.string.display_name),
             initialValue = domain.name,
-            title = stringResource(
-                if (domain.name == null) R.string.create_display_name
-                else R.string.edit_display_name
-            ),
             onSave = {
                 showEditDisplayNameDialog = false
                 viewModel.updateDisplayName(it)

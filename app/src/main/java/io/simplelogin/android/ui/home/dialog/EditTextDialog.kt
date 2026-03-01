@@ -25,8 +25,9 @@ import io.simplelogin.android.R
 
 @Composable
 fun EditTextDialog(
-    initialValue: String?,
     title: String,
+    label: String? = null,
+    initialValue: String?,
     onSave: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -55,6 +56,9 @@ fun EditTextDialog(
                     .focusRequester(focusRequester),
                 value = textFieldValue,
                 onValueChange = { textFieldValue = it },
+                label = {
+                    label?.let { Text(text = it) }
+                },
                 trailingIcon = {
                     IconButton(onClick = { textFieldValue = TextFieldValue(text = "") }) {
                         Icon(
