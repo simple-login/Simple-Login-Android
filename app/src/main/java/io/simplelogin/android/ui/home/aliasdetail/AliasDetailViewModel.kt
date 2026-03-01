@@ -16,6 +16,7 @@ import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.updateMailboxes
+import io.simplelogin.android.data.remote.datasource.updateName
 import io.simplelogin.android.data.remote.datasource.updateNote
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
@@ -105,6 +106,23 @@ class AliasDetailViewModel @AssistedInject constructor(
                 loadingState.emit(false)
                 aliasStateFlow.update { it.copy(note = note) }
                 val message = context.getString(R.string.note_updated)
+                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                onSuccess(aliasStateFlow.value)
+            }, onFailure = ::handle)
+        }
+    }
+
+    fun updateName(name: String, onSuccess: (Alias) -> Unit) {
+        withApiKey { apiKey ->
+            loadingState.emit(true)
+            aliasesRemoteDatasource.updateName(
+                apiKey = apiKey,
+                aliasId = alias.id,
+                name = name
+            ).fold(onSuccess = {
+                loadingState.emit(false)
+                aliasStateFlow.update { it.copy(name = name) }
+                val message = context.getString(R.string.display_name_updated)
                 snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
                 onSuccess(aliasStateFlow.value)
             }, onFailure = ::handle)

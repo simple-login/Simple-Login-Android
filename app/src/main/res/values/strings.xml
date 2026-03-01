@@ -109,6 +109,9 @@
     <string name="latest_activity">Latest activity</string>
     <string name="note">Note</string>
     <string name="note_updated">Note updated</string>
+    <string name="add_display_name">Add display name</string>
+    <string name="display_name">Display name</string>
+    <string name="display_name_updated">Display name updated</string>
     <string name="mailboxes">Mailboxes</string>
     <string name="edit_alias">Edit alias</string>
     <string name="alias_options_display">Alias options display</string>

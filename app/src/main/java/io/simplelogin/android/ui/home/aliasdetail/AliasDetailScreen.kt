@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,7 +74,8 @@ fun AliasDetailScreen(
     val closeOptionsAndHandleAction: (AliasAction) -> Unit = {
         showAliasOptions = false
     }
-    var showAliasNoteEditorDialog by remember { mutableStateOf(false) }
+    var showNoteEditorDialog by remember { mutableStateOf(false) }
+    var showDisplayNameEditorDialog by remember { mutableStateOf(false) }
 
     val optionsIconButton: @Composable () -> Unit = {
         IconButton(onClick = { showAliasOptions = true }) {
@@ -132,7 +134,7 @@ fun AliasDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .primaryContentBackground()
-                            .clickable { showAliasNoteEditorDialog = true }
+                            .clickable { showNoteEditorDialog = true }
                             .padding(Spacing.regular)) {
                         if (alias.note.isNullOrBlank()) {
                             Text(
@@ -142,6 +144,52 @@ fun AliasDetailScreen(
                         } else {
                             Text(text = alias.note, maxLines = 10)
                         }
+                    }
+
+                    SettingsSpacer()
+                }
+
+                item {
+                    SettingsHeader(text = stringResource(R.string.display_name))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .primaryContentBackground()
+                            .clickable { showDisplayNameEditorDialog = true }
+                            .padding(Spacing.regular)) {
+                        if (alias.name.isNullOrBlank()) {
+                            Text(
+                                text = stringResource(R.string.add_display_name),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        } else {
+                            Text(text = alias.name, maxLines = 10)
+                        }
+                    }
+
+                    SettingsSpacer()
+                }
+
+                item {
+                    SettingsHeader(text = stringResource(R.string.mailboxes))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .primaryContentBackground()
+                            .clickable { viewModel.getMailboxesToUpdate() }
+                            .padding(Spacing.regular),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = alias.mailboxes.joinToString(separator = "\n") { it.email })
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null
+                        )
                     }
 
                     SettingsSpacer()
@@ -167,28 +215,6 @@ fun AliasDetailScreen(
                     }
 
                     SettingsSpacer()
-                }
-
-                item {
-                    SettingsHeader(text = stringResource(R.string.mailboxes))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .primaryContentBackground()
-                            .clickable { viewModel.getMailboxesToUpdate() }
-                            .padding(Spacing.regular),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = alias.mailboxes.joinToString(separator = "\n") { it.email })
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = null
-                        )
-                    }
                 }
 
                 item {
@@ -227,15 +253,27 @@ fun AliasDetailScreen(
         )
     }
 
-    if (showAliasNoteEditorDialog) {
+    if (showNoteEditorDialog) {
         EditTextDialog(
             title = alias.email,
             initialValue = alias.note,
             onSave = { note ->
-                showAliasNoteEditorDialog = false
+                showNoteEditorDialog = false
                 viewModel.updateNote(note = note, onSuccess = onAliasUpdated)
             },
-            onDismiss = { showAliasNoteEditorDialog = false }
+            onDismiss = { showNoteEditorDialog = false }
+        )
+    }
+
+    if (showDisplayNameEditorDialog) {
+        EditTextDialog(
+            title = alias.email,
+            initialValue = alias.name,
+            onSave = { name ->
+                showDisplayNameEditorDialog = false
+                viewModel.updateName(name = name, onSuccess = onAliasUpdated)
+            },
+            onDismiss = { showDisplayNameEditorDialog = false }
         )
     }
 

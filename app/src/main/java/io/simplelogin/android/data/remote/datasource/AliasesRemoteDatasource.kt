@@ -46,6 +46,9 @@ interface AliasesRemoteDatasource {
 suspend fun AliasesRemoteDatasource.updateNote(apiKey: ApiKey, aliasId: AliasId, note: String) =
     update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Note(note))
 
+suspend fun AliasesRemoteDatasource.updateName(apiKey: ApiKey, aliasId: AliasId, name: String) =
+    update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Name(name))
+
 suspend fun AliasesRemoteDatasource.pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
     update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Pinned(true))
 
