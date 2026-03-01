@@ -341,53 +341,55 @@ fun AliasDetailContent(
             SettingsSpacer()
         }
 
-        item {
-            SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
+        if (alias.hasActivities) {
+            item {
+                SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
 
-            ActivityStats(
-                forward = alias.forwardCount,
-                reply = alias.replyCount,
-                block = alias.blockCount,
-                textStyle = MaterialTheme.typography.bodyMedium
-            )
-
-            activities.forEachIndexed { index, activity ->
-                val lastIndex = activities.lastIndex
-                AliasActivityRow(
-                    clipShape = RoundedCornerShape(
-                        topStart = if (index == 0) Spacing.regular else 0.dp,
-                        topEnd = if (index == 0) Spacing.regular else 0.dp,
-                        bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
-                        bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
-                    ),
-                    activity = activity
+                ActivityStats(
+                    forward = alias.forwardCount,
+                    reply = alias.replyCount,
+                    block = alias.blockCount,
+                    textStyle = MaterialTheme.typography.bodyMedium
                 )
 
-                if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {
-                    HorizontalDivider()
-                }
-            }
-
-            if (hasMoreActivities) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(
-                            RoundedCornerShape(
-                                bottomStart = Spacing.regular,
-                                bottomEnd = Spacing.regular
-                            )
-                        )
-                        .clickable { onViewAllActivities() }
-                        .background(SlColor.ContentContainerBackgroundColor)
-                        .padding(Spacing.regular)
-                ) {
-                    Text(text = stringResource(R.string.all_activities))
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null
+                activities.forEachIndexed { index, activity ->
+                    val lastIndex = activities.lastIndex
+                    AliasActivityRow(
+                        clipShape = RoundedCornerShape(
+                            topStart = if (index == 0) Spacing.regular else 0.dp,
+                            topEnd = if (index == 0) Spacing.regular else 0.dp,
+                            bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
+                            bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
+                        ),
+                        activity = activity
                     )
+
+                    if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {
+                        HorizontalDivider()
+                    }
+                }
+
+                if (hasMoreActivities) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = Spacing.regular,
+                                    bottomEnd = Spacing.regular
+                                )
+                            )
+                            .clickable { onViewAllActivities() }
+                            .background(SlColor.ContentContainerBackgroundColor)
+                            .padding(Spacing.regular)
+                    ) {
+                        Text(text = stringResource(R.string.all_activities))
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }
