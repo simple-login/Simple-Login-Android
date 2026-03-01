@@ -25,6 +25,7 @@ interface AliasesRemoteDatasource {
         pageId: Int
     ): Result<Aliases, ApiError>
 
+    suspend fun getAlias(apiKey: ApiKey, aliasId: AliasId): Result<Alias, ApiError>
     suspend fun toggle(apiKey: ApiKey, aliasId: AliasId): Result<EnabledResponse, ApiError>
     suspend fun update(
         apiKey: ApiKey,
@@ -100,6 +101,9 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             }
         }
     }
+
+    override suspend fun getAlias(apiKey: ApiKey, aliasId: AliasId): Result<Alias, ApiError> =
+        safeApiCall { apiService.getAlias(apiKey = apiKey, aliasId = aliasId) }
 
     override suspend fun toggle(
         apiKey: ApiKey,

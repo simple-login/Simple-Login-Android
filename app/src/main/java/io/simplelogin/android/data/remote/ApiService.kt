@@ -116,7 +116,10 @@ interface ApiService {
     ): Response<AliasActivities>
 
     @GET("api/aliases/{id}")
-    suspend fun getAlias(@Path("id") aliasId: AliasId): Response<Alias>
+    suspend fun getAlias(
+        @Header(AUTH_HEADER) apiKey: ApiKey,
+        @Path("id") aliasId: AliasId
+    ): Response<Alias>
 
     @GET("api/v2/aliases")
     suspend fun getAliases(

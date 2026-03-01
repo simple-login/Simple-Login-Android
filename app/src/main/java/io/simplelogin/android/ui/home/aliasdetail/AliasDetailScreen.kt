@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -27,24 +27,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
@@ -60,7 +62,6 @@ import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.primaryContentBackground
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,21 +72,23 @@ fun AliasDetailScreen(
     onAliasUpdated: (Alias) -> Unit,
     onViewAllActivities: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     val viewModel =
         hiltViewModel(key = "alias_detail_${alias.id}") { factory: AliasDetailViewModel.Factory ->
-            factory.create(alias)
+            factory.create(alias.id.value)
         }
 
-    val context = LocalContext.current
     val state by viewModel.stateFlow.collectAsState()
-    val alias = state.alias ?: alias
+    val isLoading = state is AliasDetailScreenState.Loading
+    val isLoaded = state is AliasDetailScreenState.Loaded
+    val devicePreferences by viewModel.devicePreferencesStateFlow.collectAsState()
+    val mailboxesToUpdate by viewModel.mailboxesToUpdateStateFlow.collectAsState()
     var showAliasOptions by remember { mutableStateOf(false) }
     val closeOptionsAndHandleAction: (AliasAction) -> Unit = {
         showAliasOptions = false
     }
     var showNoteEditorDialog by remember { mutableStateOf(false) }
     var showDisplayNameEditorDialog by remember { mutableStateOf(false) }
+    val pullToRefreshState = rememberPullToRefreshState()
 
     val optionsIconButton: @Composable () -> Unit = {
         IconButton(onClick = { showAliasOptions = true }) {
@@ -97,7 +100,7 @@ fun AliasDetailScreen(
     }
 
     LaunchedEffect(alias.id) {
-        viewModel.getActivities()
+        viewModel.refresh()
     }
 
     Surface(color = SlColor.BackgroundColor) {
@@ -116,18 +119,20 @@ fun AliasDetailScreen(
                         }
                     },
                     actions = {
-                        when (state.devicePreferences.aliasOptionsDisplay) {
-                            AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
+                        AnimatedVisibility(visible = isLoaded) {
+                            when (devicePreferences.aliasOptionsDisplay) {
+                                AliasOptionsDisplay.BOTTOM_SHEET -> optionsIconButton()
 
-                            AliasOptionsDisplay.DROPDOWN_MENU -> {
-                                Box {
-                                    optionsIconButton()
-                                    AliasOptionsDropdownMenu(
-                                        showMenu = showAliasOptions,
-                                        alias = alias,
-                                        onDismiss = { showAliasOptions = false },
-                                        onAction = closeOptionsAndHandleAction
-                                    )
+                                AliasOptionsDisplay.DROPDOWN_MENU -> {
+                                    Box {
+                                        optionsIconButton()
+                                        AliasOptionsDropdownMenu(
+                                            showMenu = showAliasOptions,
+                                            alias = alias,
+                                            onDismiss = { showAliasOptions = false },
+                                            onAction = closeOptionsAndHandleAction
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -135,178 +140,50 @@ fun AliasDetailScreen(
                 )
             }
         ) { innerPadding ->
-            LazyColumn(
+            Box(
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(innerPadding)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(Spacing.regular)
+                    .pullToRefresh(
+                        isRefreshing = isLoading,
+                        state = pullToRefreshState,
+                        enabled = isLoaded,
+                        onRefresh = viewModel::refresh
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                item {
-                    SettingsHeader(text = stringResource(R.string.note))
+                when (state) {
+                    is AliasDetailScreenState.Loading -> {}
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .primaryContentBackground()
-                            .clickable { showNoteEditorDialog = true }
-                            .padding(Spacing.regular)) {
-                        if (alias.note.isNullOrBlank()) {
-                            Text(
-                                text = stringResource(R.string.add_note),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        } else {
-                            Text(text = alias.note, maxLines = 10)
-                        }
-                    }
-
-                    SettingsSpacer()
-                }
-
-                item {
-                    SettingsHeader(text = stringResource(R.string.display_name))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .primaryContentBackground()
-                            .clickable { showDisplayNameEditorDialog = true }
-                            .padding(Spacing.regular)) {
-                        if (alias.name.isNullOrBlank()) {
-                            Text(
-                                text = stringResource(R.string.add_display_name),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        } else {
-                            Text(text = alias.name, maxLines = 10)
-                        }
-                    }
-
-                    SettingsSpacer()
-                }
-
-                item {
-                    SettingsHeader(text = stringResource(R.string.mailboxes))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .primaryContentBackground()
-                            .clickable { viewModel.getMailboxesToUpdate() }
-                            .padding(Spacing.regular),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = alias.mailboxes.joinToString(separator = "\n") { it.email })
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = null
+                    is AliasDetailScreenState.Error ->
+                        RetryButton(
+                            error = (state as AliasDetailScreenState.Error).error,
+                            onRetry = viewModel::refresh
                         )
-                    }
 
-                    SettingsSpacer()
-                }
-
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .primaryContentBackground()
-                            .clickable { onViewContacts() }
-                            .padding(Spacing.regular),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = stringResource(R.string.contacts))
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = null
+                    is AliasDetailScreenState.Loaded ->
+                        AliasDetailContent(
+                            alias = (state as AliasDetailScreenState.Loaded).alias,
+                            activities = (state as AliasDetailScreenState.Loaded).activities,
+                            hasMoreActivities = (state as AliasDetailScreenState.Loaded).hasMoreActivities,
+                            onEditNote = { showNoteEditorDialog = true },
+                            onEditDisplayName = { showDisplayNameEditorDialog = true },
+                            onEditMailboxes = { viewModel.getMailboxesToUpdate() },
+                            onViewContacts = onViewContacts,
+                            onViewAllActivities = onViewAllActivities
                         )
-                    }
-
-                    SettingsSpacer()
                 }
 
-                item {
-                    SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
-
-                    ActivityStats(
-                        forward = alias.forwardCount,
-                        reply = alias.replyCount,
-                        block = alias.blockCount,
-                        textStyle = MaterialTheme.typography.bodyMedium
-                    )
-
-                    when (state.activitiesState) {
-                        is AliasActivitiesState.Loading ->
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator()
-                            }
-
-                        is AliasActivitiesState.Loaded -> {
-                            val activities =
-                                (state.activitiesState as AliasActivitiesState.Loaded).activities
-                            val hasMoreActivities =
-                                (state.activitiesState as AliasActivitiesState.Loaded).hasMoreActivities
-                            activities.forEachIndexed { index, activity ->
-                                val lastIndex = activities.lastIndex
-                                AliasActivityRow(
-                                    clipShape = RoundedCornerShape(
-                                        topStart = if (index == 0) Spacing.regular else 0.dp,
-                                        topEnd = if (index == 0) Spacing.regular else 0.dp,
-                                        bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
-                                        bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
-                                    ),
-                                    activity = activity
-                                )
-
-                                if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {
-                                    HorizontalDivider()
-                                }
-                            }
-
-                            if (hasMoreActivities) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(
-                                            RoundedCornerShape(
-                                                bottomStart = Spacing.regular,
-                                                bottomEnd = Spacing.regular
-                                            )
-                                        )
-                                        .clickable { onViewAllActivities() }
-                                        .background(SlColor.ContentContainerBackgroundColor)
-                                        .padding(Spacing.regular)
-                                ) {
-                                    Text(text = stringResource(R.string.all_activities))
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Icon(
-                                        imageVector = Icons.Default.ChevronRight,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-
-                        is AliasActivitiesState.Error ->
-                            RetryButton(
-                                error = (state.activitiesState as AliasActivitiesState.Error).error,
-                                onRetry = { scope.launch { viewModel.getActivities() } })
-                    }
-                }
+                PullToRefreshDefaults.Indicator(
+                    state = pullToRefreshState,
+                    isRefreshing = isLoading,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
         }
     }
 
-    if (showAliasOptions && state.devicePreferences.aliasOptionsDisplay == AliasOptionsDisplay.BOTTOM_SHEET) {
+    if (showAliasOptions && devicePreferences.aliasOptionsDisplay == AliasOptionsDisplay.BOTTOM_SHEET) {
         AliasOptionBottomSheet(
             alias = alias,
             aliasDetails = true,
@@ -319,7 +196,7 @@ fun AliasDetailScreen(
         EditTextDialog(
             title = alias.email,
             label = stringResource(R.string.note),
-            initialValue = alias.note,
+            initialValue = state.alias?.note,
             onSave = { note ->
                 showNoteEditorDialog = false
                 viewModel.updateNote(note = note, onSuccess = onAliasUpdated)
@@ -332,7 +209,7 @@ fun AliasDetailScreen(
         EditTextDialog(
             title = alias.email,
             label = stringResource(R.string.display_name),
-            initialValue = alias.name,
+            initialValue = state.alias?.name,
             onSave = { name ->
                 showDisplayNameEditorDialog = false
                 viewModel.updateName(name = name, onSuccess = onAliasUpdated)
@@ -341,12 +218,12 @@ fun AliasDetailScreen(
         )
     }
 
-    state.mailboxesToUpdate?.let { mailboxes ->
+    mailboxesToUpdate?.let { mailboxes ->
         MailboxesSelectionDialog(
             title = stringResource(R.string.update_mailboxes),
             description = alias.email,
             mailboxes = mailboxes,
-            initialSelectedIds = alias.mailboxes.map { it.id },
+            initialSelectedIds = state.alias?.mailboxes?.map { it.id } ?: emptyList(),
             onSave = { mailboxes ->
                 viewModel.removeMailboxesToUpdate()
                 viewModel.updateMailboxes(mailboxes = mailboxes, onSuccess = onAliasUpdated)
@@ -355,5 +232,164 @@ fun AliasDetailScreen(
                 viewModel.removeMailboxesToUpdate()
             }
         )
+    }
+}
+
+@Composable
+fun AliasDetailContent(
+    modifier: Modifier = Modifier,
+    alias: Alias,
+    activities: List<AliasActivity>,
+    hasMoreActivities: Boolean,
+    onEditNote: () -> Unit,
+    onEditDisplayName: () -> Unit,
+    onEditMailboxes: () -> Unit,
+    onViewContacts: () -> Unit,
+    onViewAllActivities: () -> Unit
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(Spacing.regular)
+    ) {
+        item {
+            SettingsHeader(text = stringResource(R.string.note))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .primaryContentBackground()
+                    .clickable { onEditNote() }
+                    .padding(Spacing.regular)) {
+                if (alias.note.isNullOrBlank()) {
+                    Text(
+                        text = stringResource(R.string.add_note),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else {
+                    Text(text = alias.note, maxLines = 10)
+                }
+            }
+
+            SettingsSpacer()
+        }
+
+        item {
+            SettingsHeader(text = stringResource(R.string.display_name))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .primaryContentBackground()
+                    .clickable { onEditDisplayName() }
+                    .padding(Spacing.regular)) {
+                if (alias.name.isNullOrBlank()) {
+                    Text(
+                        text = stringResource(R.string.add_display_name),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else {
+                    Text(text = alias.name, maxLines = 10)
+                }
+            }
+
+            SettingsSpacer()
+        }
+
+        item {
+            SettingsHeader(text = stringResource(R.string.mailboxes))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .primaryContentBackground()
+                    .clickable { onEditMailboxes() }
+                    .padding(Spacing.regular),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = alias.mailboxes.joinToString(separator = "\n") { it.email })
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null
+                )
+            }
+
+            SettingsSpacer()
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .primaryContentBackground()
+                    .clickable { onViewContacts() }
+                    .padding(Spacing.regular),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = stringResource(R.string.contacts))
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null
+                )
+            }
+
+            SettingsSpacer()
+        }
+
+        item {
+            SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
+
+            ActivityStats(
+                forward = alias.forwardCount,
+                reply = alias.replyCount,
+                block = alias.blockCount,
+                textStyle = MaterialTheme.typography.bodyMedium
+            )
+
+            activities.forEachIndexed { index, activity ->
+                val lastIndex = activities.lastIndex
+                AliasActivityRow(
+                    clipShape = RoundedCornerShape(
+                        topStart = if (index == 0) Spacing.regular else 0.dp,
+                        topEnd = if (index == 0) Spacing.regular else 0.dp,
+                        bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
+                        bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
+                    ),
+                    activity = activity
+                )
+
+                if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {
+                    HorizontalDivider()
+                }
+            }
+
+            if (hasMoreActivities) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(
+                                bottomStart = Spacing.regular,
+                                bottomEnd = Spacing.regular
+                            )
+                        )
+                        .clickable { onViewAllActivities() }
+                        .background(SlColor.ContentContainerBackgroundColor)
+                        .padding(Spacing.regular)
+                ) {
+                    Text(text = stringResource(R.string.all_activities))
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
     }
 }

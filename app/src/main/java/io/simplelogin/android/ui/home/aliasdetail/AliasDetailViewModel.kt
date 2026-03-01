@@ -10,14 +10,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.AliasActivity
+import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
+import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.updateMailboxes
 import io.simplelogin.android.data.remote.datasource.updateName
 import io.simplelogin.android.data.remote.datasource.updateNote
+import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
@@ -25,17 +29,18 @@ import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasDetailViewModel.Factory::class)
 class AliasDetailViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
-    @Assisted private val alias: Alias,
+    @Assisted private val aliasIdValue: Int,
     @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
@@ -45,56 +50,62 @@ class AliasDetailViewModel @AssistedInject constructor(
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
-        fun create(alias: Alias): AliasDetailViewModel
+        fun create(aliasIdValue: Int): AliasDetailViewModel
     }
 
-    private val aliasStateFlow = MutableStateFlow(alias)
+    private val aliasId = AliasId(aliasIdValue)
 
-    private val activitiesStateFlow =
-        MutableStateFlow<AliasActivitiesState>(AliasActivitiesState.Loading)
+    private val _stateFlow =
+        MutableStateFlow<AliasDetailScreenState>(AliasDetailScreenState.Loading)
+    val stateFlow: StateFlow<AliasDetailScreenState> = _stateFlow
 
-    private val mailboxesToUpdateStateFlow = MutableStateFlow<List<Mailbox>?>(null)
+    private val _mailboxesToUpdateStateFlow = MutableStateFlow<List<Mailbox>?>(null)
+    val mailboxesToUpdateStateFlow: StateFlow<List<Mailbox>?> = _mailboxesToUpdateStateFlow
 
-    val stateFlow = combine(
-        observeDeviceSettings(),
-        aliasStateFlow,
-        activitiesStateFlow,
-        mailboxesToUpdateStateFlow
-    ) { deviceSettings, alias, activities, mailboxes ->
-        AliasDetailScreenState(
-            alias = alias,
-            devicePreferences = deviceSettings,
-            activitiesState = activities,
-            mailboxesToUpdate = mailboxes
-        )
-    }.stateIn(
+    val devicePreferencesStateFlow = observeDeviceSettings().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = AliasDetailScreenState.Default
+        initialValue = DevicePreferences.Default
     )
 
-    init {
-        getActivities()
+    fun refresh() {
+        withApiKey { apiKey ->
+            _stateFlow.value = AliasDetailScreenState.Loading
+            coroutineScope {
+                val alias =
+                    async {
+                        aliasesRemoteDatasource.getAlias(apiKey = apiKey, aliasId = aliasId)
+                    }
+                val activities =
+                    async {
+                        aliasesRemoteDatasource.getActivities(
+                            apiKey = apiKey,
+                            aliasId = aliasId,
+                            page = 0
+                        )
+                    }
+                handleResults(aliasResult = alias.await(), activitiesResult = activities.await())
+            }
+        }
     }
 
-    fun getActivities() {
-        activitiesStateFlow.value = AliasActivitiesState.Loading
-        withApiKey { apiKey ->
-            aliasesRemoteDatasource.getActivities(
-                apiKey = apiKey,
-                aliasId = alias.id,
-                page = 0
-            ).fold(
-                onSuccess = { activities ->
-                    activitiesStateFlow.value = AliasActivitiesState.Loaded(
-                        activities = activities,
-                        hasMoreActivities = activities.count() >= 20
-                    )
-                },
-                onFailure = {
-                    activitiesStateFlow.value = AliasActivitiesState.Error(it)
-                }
-            )
+    private fun handleResults(
+        aliasResult: Result<Alias, ApiError>,
+        activitiesResult: Result<List<AliasActivity>, ApiError>
+    ) {
+        when {
+            aliasResult is Result.Success && activitiesResult is Result.Success ->
+                _stateFlow.value = AliasDetailScreenState.Loaded(
+                    alias = aliasResult.value,
+                    activities = activitiesResult.value,
+                    hasMoreActivities = activitiesResult.value.count() >= 20
+                )
+
+            aliasResult is Result.Failure ->
+                _stateFlow.value = AliasDetailScreenState.Error(aliasResult.error)
+
+            activitiesResult is Result.Failure ->
+                _stateFlow.value = AliasDetailScreenState.Error(activitiesResult.error)
         }
     }
 
@@ -103,14 +114,17 @@ class AliasDetailViewModel @AssistedInject constructor(
             loadingState.emit(true)
             aliasesRemoteDatasource.updateNote(
                 apiKey = apiKey,
-                aliasId = alias.id,
+                aliasId = aliasId,
                 note = note
             ).fold(onSuccess = {
                 loadingState.emit(false)
-                aliasStateFlow.update { it.copy(note = note) }
+                updateStateAlias {
+                    val updated = it.copy(note = note)
+                    onSuccess(updated)
+                    updated
+                }
                 val message = context.getString(R.string.note_updated)
                 snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
-                onSuccess(aliasStateFlow.value)
             }, onFailure = ::handle)
         }
     }
@@ -120,14 +134,17 @@ class AliasDetailViewModel @AssistedInject constructor(
             loadingState.emit(true)
             aliasesRemoteDatasource.updateName(
                 apiKey = apiKey,
-                aliasId = alias.id,
+                aliasId = aliasId,
                 name = name
             ).fold(onSuccess = {
                 loadingState.emit(false)
-                aliasStateFlow.update { it.copy(name = name) }
+                updateStateAlias {
+                    val updated = it.copy(name = name)
+                    onSuccess(updated)
+                    updated
+                }
                 val message = context.getString(R.string.display_name_updated)
                 snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
-                onSuccess(aliasStateFlow.value)
             }, onFailure = ::handle)
         }
     }
@@ -138,7 +155,7 @@ class AliasDetailViewModel @AssistedInject constructor(
             mailboxesRemoteDatasource.getMailboxes(apiKey)
                 .fold(onSuccess = { mailboxes ->
                     loadingState.emit(false)
-                    mailboxesToUpdateStateFlow.emit(mailboxes.value)
+                    _mailboxesToUpdateStateFlow.value = mailboxes.value
                 }, onFailure = ::handle)
         }
     }
@@ -148,20 +165,24 @@ class AliasDetailViewModel @AssistedInject constructor(
             loadingState.emit(true)
             aliasesRemoteDatasource.updateMailboxes(
                 apiKey = apiKey,
-                aliasId = alias.id,
+                aliasId = aliasId,
                 mailboxes = mailboxes
             ).fold(onSuccess = {
                 loadingState.emit(false)
-                aliasStateFlow.update { it.copy(mailboxes = mailboxes.map { it.toMailboxLite() }) }
+                val mailboxLites = mailboxes.map { it.toMailboxLite() }
+                updateStateAlias {
+                    val updated = it.copy(mailboxes = mailboxLites)
+                    onSuccess(updated)
+                    updated
+                }
                 val message = context.getString(R.string.mailboxes_updated)
                 snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
-                onSuccess(aliasStateFlow.value)
             }, onFailure = ::handle)
         }
     }
 
     fun removeMailboxesToUpdate() {
-        mailboxesToUpdateStateFlow.value = null
+        _mailboxesToUpdateStateFlow.value = null
     }
 
     private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
@@ -171,6 +192,14 @@ class AliasDetailViewModel @AssistedInject constructor(
                     perform(it)
                 }
             }
+        }
+    }
+
+    private fun updateStateAlias(perform: (Alias) -> Alias) {
+        val value = _stateFlow.value
+        if (value is AliasDetailScreenState.Loaded) {
+            val updatedAlias = perform(value.alias)
+            _stateFlow.value = value.copy(alias = updatedAlias)
         }
     }
 
