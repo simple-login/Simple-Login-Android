@@ -231,7 +231,10 @@ fun AliasDetailScreen(
         EditTextDialog(
             title = alias.email,
             initialValue = alias.note,
-            onSave = { showAliasNoteEditorDialog = false },
+            onSave = { note ->
+                showAliasNoteEditorDialog = false
+                viewModel.updateNote(note = note, onSuccess = onAliasUpdated)
+            },
             onDismiss = { showAliasNoteEditorDialog = false }
         )
     }

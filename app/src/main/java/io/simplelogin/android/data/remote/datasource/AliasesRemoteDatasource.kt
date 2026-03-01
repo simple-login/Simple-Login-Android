@@ -41,8 +41,10 @@ interface AliasesRemoteDatasource {
     ): Result<List<AliasActivity>, ApiError>
 
     suspend fun random(apiKey: ApiKey, mode: RandomMode, note: String?): Result<Alias, ApiError>
-
 }
+
+suspend fun AliasesRemoteDatasource.updateNote(apiKey: ApiKey, aliasId: AliasId, note: String) =
+    update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Note(note))
 
 suspend fun AliasesRemoteDatasource.pin(apiKey: ApiKey, aliasId: AliasId): Result<Unit, ApiError> =
     update(apiKey = apiKey, aliasId = aliasId, option = UpdateAliasOption.Pinned(true))
