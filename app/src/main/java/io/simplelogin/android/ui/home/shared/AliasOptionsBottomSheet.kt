@@ -51,15 +51,15 @@ fun AliasOptionBottomSheet(
         ),
         dragHandle = null
     ) {
-        if (!aliasDetails) {
-            AliasEmailText(
-                modifier = Modifier.padding(
-                    horizontal = Spacing.large,
-                    vertical = Spacing.regular
-                ),
-                alias = alias
-            )
+        AliasEmailText(
+            modifier = Modifier.padding(
+                horizontal = Spacing.large,
+                vertical = Spacing.regular
+            ),
+            alias = alias
+        )
 
+        if (!aliasDetails) {
             AliasOptionRow(
                 icon = IconResource.ImageVector(Icons.Outlined.RemoveRedEye),
                 text = stringResource(R.string.view_details),
