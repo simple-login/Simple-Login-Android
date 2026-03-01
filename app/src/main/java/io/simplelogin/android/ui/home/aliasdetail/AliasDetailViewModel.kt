@@ -85,8 +85,11 @@ class AliasDetailViewModel @AssistedInject constructor(
                 aliasId = alias.id,
                 page = 0
             ).fold(
-                onSuccess = {
-                    activitiesStateFlow.value = AliasActivitiesState.Loaded(it)
+                onSuccess = { activities ->
+                    activitiesStateFlow.value = AliasActivitiesState.Loaded(
+                        activities = activities,
+                        hasMoreActivities = activities.count() >= 20
+                    )
                 },
                 onFailure = {
                     activitiesStateFlow.value = AliasActivitiesState.Error(it)

@@ -11,6 +11,7 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.theme.Spacing
 
@@ -29,8 +30,12 @@ fun AliasLatestActivity(activity: Alias.LatestActivity) = key(activity) {
             tint = activity.action.color
         )
 
-        Text(text = activity.contact.email)
-
+        Text(
+            modifier = Modifier.weight(1f, fill = false),
+            text = activity.contact.email,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
         Text(text = "(${activity.relativeTime})")
     }
 }

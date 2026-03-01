@@ -24,6 +24,10 @@ data class AliasDetailScreenState(
 
 sealed class AliasActivitiesState {
     object Loading : AliasActivitiesState()
-    data class Loaded(val activities: List<AliasActivity>) : AliasActivitiesState()
+    data class Loaded(
+        val activities: List<AliasActivity>,
+        val hasMoreActivities: Boolean
+    ) : AliasActivitiesState()
+
     data class Error(val error: ApiError) : AliasActivitiesState()
 }

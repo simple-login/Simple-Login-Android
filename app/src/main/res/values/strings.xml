@@ -107,6 +107,7 @@
     <string name="alias_address_only">Alias address only</string>
     <string name="creation_date">Creation date</string>
     <string name="latest_activity">Latest activity</string>
+    <string name="all_activities">All activities</string>
     <string name="note">Note</string>
     <string name="note_updated">Note updated</string>
     <string name="add_display_name">Add display name</string>

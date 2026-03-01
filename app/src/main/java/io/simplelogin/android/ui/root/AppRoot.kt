@@ -153,7 +153,8 @@ fun AppRoot(
                     onViewContacts = { viewModel.viewAliasContacts(key.alias) },
                     onAliasUpdated = {
                         // TODO: Update alias list
-                    }
+                    },
+                    onViewAllActivities = {}
                 )
             }
 

@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,8 +37,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
@@ -44,6 +50,7 @@ import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
 import io.simplelogin.android.ui.home.shared.ActivityStats
+import io.simplelogin.android.ui.home.shared.AliasActivityRow
 import io.simplelogin.android.ui.home.shared.AliasEmailText
 import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
 import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
@@ -61,7 +68,8 @@ fun AliasDetailScreen(
     alias: Alias,
     onGoBack: () -> Unit,
     onViewContacts: () -> Unit,
-    onAliasUpdated: (Alias) -> Unit
+    onAliasUpdated: (Alias) -> Unit,
+    onViewAllActivities: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val viewModel =
@@ -69,6 +77,7 @@ fun AliasDetailScreen(
             factory.create(alias)
         }
 
+    val context = LocalContext.current
     val state by viewModel.stateFlow.collectAsState()
     val alias = state.alias ?: alias
     var showAliasOptions by remember { mutableStateOf(false) }
@@ -223,7 +232,7 @@ fun AliasDetailScreen(
                 }
 
                 item {
-                    Text(text = stringResource(R.string.last_14_days))
+                    SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
 
                     ActivityStats(
                         forward = alias.forwardCount,
@@ -234,10 +243,58 @@ fun AliasDetailScreen(
 
                     when (state.activitiesState) {
                         is AliasActivitiesState.Loading ->
-                            CircularProgressIndicator()
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
 
-                        is AliasActivitiesState.Loaded ->
-                            Text("Loaded ${(state.activitiesState as AliasActivitiesState.Loaded).activities.count()}")
+                        is AliasActivitiesState.Loaded -> {
+                            val activities =
+                                (state.activitiesState as AliasActivitiesState.Loaded).activities
+                            val hasMoreActivities =
+                                (state.activitiesState as AliasActivitiesState.Loaded).hasMoreActivities
+                            activities.forEachIndexed { index, activity ->
+                                val lastIndex = activities.lastIndex
+                                AliasActivityRow(
+                                    clipShape = RoundedCornerShape(
+                                        topStart = if (index == 0) Spacing.regular else 0.dp,
+                                        topEnd = if (index == 0) Spacing.regular else 0.dp,
+                                        bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
+                                        bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
+                                    ),
+                                    activity = activity
+                                )
+
+                                if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {
+                                    HorizontalDivider()
+                                }
+                            }
+
+                            if (hasMoreActivities) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(
+                                            RoundedCornerShape(
+                                                bottomStart = Spacing.regular,
+                                                bottomEnd = Spacing.regular
+                                            )
+                                        )
+                                        .clickable { onViewAllActivities() }
+                                        .background(SlColor.ContentContainerBackgroundColor)
+                                        .padding(Spacing.regular)
+                                ) {
+                                    Text(text = stringResource(R.string.all_activities))
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Icon(
+                                        imageVector = Icons.Default.ChevronRight,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
 
                         is AliasActivitiesState.Error ->
                             RetryButton(
