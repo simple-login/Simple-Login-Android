@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.customdomains
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -59,6 +60,7 @@ import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.util.relativeDateTime
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDomainDetailsScreen(
@@ -80,6 +82,14 @@ fun CustomDomainDetailsScreen(
         state.updateError?.let {
             snackbarHostState.showSnackbar(message = it.description(context))
             viewModel.clearUpdateError()
+        }
+    }
+
+    LaunchedEffect(state.isUpdated) {
+        val message = context.getString(R.string.updated_successfully)
+        if (state.isUpdated) {
+            snackbarHostState.showSnackbar(message = message)
+            viewModel.clearIsUpdated()
         }
     }
 

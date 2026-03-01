@@ -5,7 +5,7 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.api.CustomDomains
 import io.simplelogin.android.data.models.api.DeletedAlias
-import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
+import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
@@ -15,7 +15,7 @@ interface CustomDomainsRemoteDatasource {
     suspend fun updateCustomDomains(
         apiKey: ApiKey,
         domain: CustomDomain,
-        options: UpdateCustomDomainOptions
+        option: UpdateCustomDomainOption
     ): Result<CustomDomain, ApiError>
 
     suspend fun getDeletedAliases(
@@ -32,13 +32,13 @@ class CustomDomainsRemoteDatasourceImpl @Inject constructor(private val apiServi
     override suspend fun updateCustomDomains(
         apiKey: ApiKey,
         domain: CustomDomain,
-        options: UpdateCustomDomainOptions
+        option: UpdateCustomDomainOption
     ): Result<CustomDomain, ApiError> =
         safeApiCall {
             apiService.updateCustomDomain(
                 apiKey = apiKey,
                 domainId = domain.id,
-                body = options
+                body = option
             )
         }.mapValue { it.customDomain }
 

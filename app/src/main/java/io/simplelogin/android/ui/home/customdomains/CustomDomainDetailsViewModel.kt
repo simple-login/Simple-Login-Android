@@ -8,7 +8,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
-import io.simplelogin.android.data.models.api.UpdateCustomDomainOptions
+import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,37 +31,42 @@ class CustomDomainDetailsViewModel @AssistedInject constructor(
         CustomDomainDetailsState(
             domain = domain,
             isUpdating = false,
-            updateError = null
+            updateError = null,
+            isUpdated = false
         )
     )
     val stateFlow: StateFlow<CustomDomainDetailsState> = _stateFlow
 
     fun updateDisplayName(displayName: String) {
-        updateDomain(UpdateCustomDomainOptions(name = displayName))
+        updateDomain(UpdateCustomDomainOption.Name(displayName))
     }
 
     fun updateCatchAll(catchAll: Boolean) {
-        updateDomain(UpdateCustomDomainOptions(catchAll = catchAll))
+        updateDomain(UpdateCustomDomainOption.CatchAll(catchAll))
     }
 
     fun updateRandomPrefixGeneration(random: Boolean) {
-        updateDomain(UpdateCustomDomainOptions(randomPrefixGeneration = random))
+        updateDomain(UpdateCustomDomainOption.RandomPrefixGeneration(random))
     }
 
     fun clearUpdateError() {
         _stateFlow.update { it.copy(updateError = null) }
     }
 
-    private fun updateDomain(options: UpdateCustomDomainOptions) {
+    fun clearIsUpdated() {
+        _stateFlow.update { it.copy(isUpdated = false) }
+    }
+
+    private fun updateDomain(option: UpdateCustomDomainOption) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isUpdating = true) }
             datasource.updateCustomDomains(
                 apiKey = apiKey,
                 domain = stateFlow.value.domain,
-                options = options
+                option = option
             ).fold(onSuccess = { result ->
                 _stateFlow.update {
-                    it.copy(domain = result, isUpdating = false)
+                    it.copy(domain = result, isUpdating = false, isUpdated = true)
                 }
             }, onFailure = { error ->
                 _stateFlow.update {

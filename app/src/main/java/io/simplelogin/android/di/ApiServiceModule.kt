@@ -9,6 +9,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.models.api.UpdateAliasOptionSerializer
+import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
+import io.simplelogin.android.data.models.api.UpdateCustomDomainOptionSerializer
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOptionSerializer
 import io.simplelogin.android.data.remote.ApiService
@@ -31,6 +33,11 @@ object ApiServiceModule {
         .setStrictness(Strictness.LENIENT)
         .registerTypeAdapter(UpdateUserInfoOption::class.java, UpdateUserInfoOptionSerializer())
         .registerTypeAdapter(UpdateAliasOption::class.java, UpdateAliasOptionSerializer())
+        .registerTypeAdapter(
+            UpdateCustomDomainOption::class.java,
+            UpdateCustomDomainOptionSerializer()
+        )
+
         .serializeNulls()
         .create()
 

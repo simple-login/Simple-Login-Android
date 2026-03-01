@@ -6,5 +6,6 @@ import io.simplelogin.android.data.models.api.CustomDomain
 data class CustomDomainDetailsState(
     val domain: CustomDomain,
     val isUpdating: Boolean,
-    val updateError: ApiError?
+    val updateError: ApiError?,
+    val isUpdated: Boolean
 )
