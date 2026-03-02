@@ -48,6 +48,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
@@ -170,6 +171,9 @@ fun AliasDetailScreen(
                             onEditDisplayName = { showDisplayNameEditorDialog = true },
                             onEditMailboxes = { viewModel.getMailboxesToUpdate() },
                             onViewContacts = onViewContacts,
+                            onActivityAction = { activity, action ->
+                                viewModel.handleActivityAction(activity = activity, action = action)
+                            },
                             onViewAllActivities = onViewAllActivities
                         )
                 }
@@ -245,6 +249,7 @@ fun AliasDetailContent(
     onEditDisplayName: () -> Unit,
     onEditMailboxes: () -> Unit,
     onViewContacts: () -> Unit,
+    onActivityAction: (AliasActivity, ActivityUiAction) -> Unit,
     onViewAllActivities: () -> Unit
 ) {
     LazyColumn(
@@ -361,7 +366,8 @@ fun AliasDetailContent(
                             bottomStart = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp,
                             bottomEnd = if (index == lastIndex && !hasMoreActivities) Spacing.regular else 0.dp
                         ),
-                        activity = activity
+                        activity = activity,
+                        onAction = { onActivityAction(activity, it) }
                     )
 
                     if (index < lastIndex || (index == lastIndex && hasMoreActivities)) {

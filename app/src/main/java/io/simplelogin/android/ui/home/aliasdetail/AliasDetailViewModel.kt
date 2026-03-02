@@ -16,6 +16,7 @@ import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.updateMailboxes
@@ -24,6 +25,7 @@ import io.simplelogin.android.data.remote.datasource.updateNote
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.domain.ActivityUiActionHandler
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.SnackbarType
@@ -46,6 +48,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val aliasesRemoteDatasource: AliasesRemoteDatasource,
     private val mailboxesRemoteDatasource: MailboxesRemoteDatasource,
+    private val activityUiActionHandler: ActivityUiActionHandler,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     @AssistedFactory
@@ -183,6 +186,12 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     fun removeMailboxesToUpdate() {
         _mailboxesToUpdateStateFlow.value = null
+    }
+
+    fun handleActivityAction(activity: AliasActivity, action: ActivityUiAction) {
+        viewModelScope.launch {
+            activityUiActionHandler.handleActivityAction(activity = activity, action = action)
+        }
     }
 
     private fun withApiKey(perform: suspend (ApiKey) -> Unit) {

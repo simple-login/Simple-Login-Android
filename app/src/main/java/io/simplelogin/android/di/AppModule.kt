@@ -6,6 +6,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.BuildConfig
+import io.simplelogin.android.domain.ActivityUiActionHandler
+import io.simplelogin.android.domain.ActivityUiActionHandlerImpl
 import io.simplelogin.android.domain.AliasListManager
 import io.simplelogin.android.domain.AliasListManagerImpl
 import io.simplelogin.android.domain.snackbar.SnackbarManager
@@ -28,6 +30,9 @@ typealias LoadingStateFlow = MutableStateFlow<Boolean>
 abstract class AppModule {
     @[Binds Singleton]
     abstract fun bindAliasListManager(impl: AliasListManagerImpl): AliasListManager
+
+    @[Binds Singleton]
+    abstract fun bindActivityUiActionHandler(impl: ActivityUiActionHandlerImpl): ActivityUiActionHandler
 
     companion object {
         @[Provides Singleton]

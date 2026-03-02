@@ -263,4 +263,7 @@
     <string name="copy_email_address">Copy email address</string>
     <string name="block_unblock">Block/unblock</string>
     <string name="open_default_email_client">Open default email client</string>
+    <string name="alias_activity">Alias activity</string>
+    <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>
+    <string name="email_address_copied">Email address copied to clipboard</string>
 </resources>
