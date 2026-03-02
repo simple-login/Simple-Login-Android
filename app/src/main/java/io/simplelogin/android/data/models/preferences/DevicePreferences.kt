@@ -17,7 +17,8 @@ data class DevicePreferences(
     val aliasDisplayInfos: List<AliasDisplayInfo> = AliasDisplayInfo.entries.toTypedArray()
         .toList(),
     val defaultPrefix: DefaultPrefix = DefaultPrefix.RANDOM_WORD,
-    val prefixRandomCharacterCount: Int = 5
+    val prefixRandomCharacterCount: Int = 5,
+    val contactCellSelection: ContactCellSelection = ContactCellSelection.Default
 ) {
     companion object {
         val Default = DevicePreferences()
@@ -99,5 +100,31 @@ enum class Theme {
         LIGHT -> context.getString(R.string.light)
         DARK -> context.getString(R.string.dark)
         MATCH_SYSTEM -> context.getString(R.string.device_default)
+    }
+}
+
+enum class ContactCellSelection {
+    COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME,
+    COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME,
+    COPY_ADDRESS,
+    BLOCK_UNBLOCK,
+    OPEN_DEFAULT_EMAIL_CLIENT,
+    VIEW_OPTIONS;
+
+    companion object {
+        val Default = VIEW_OPTIONS
+    }
+
+    fun title(context: Context) = when (this) {
+        COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME ->
+            context.getString(R.string.copy_reverse_alias_with_display_name)
+
+        COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME ->
+            context.getString(R.string.copy_reverse_alias_without_display_name)
+
+        COPY_ADDRESS -> context.getString(R.string.copy_email_address)
+        BLOCK_UNBLOCK -> context.getString(R.string.block_unblock)
+        OPEN_DEFAULT_EMAIL_CLIENT -> context.getString(R.string.open_default_email_client)
+        VIEW_OPTIONS -> context.getString(R.string.view_options)
     }
 }

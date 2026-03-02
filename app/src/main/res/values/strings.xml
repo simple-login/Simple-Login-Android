@@ -69,6 +69,7 @@
     <string name="forward">Forward</string>
     <string name="reply">Reply</string>
     <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
     <string name="alias_options">Alias options</string>
     <string name="view_details">View details</string>
     <string name="view_contacts">View contacts</string>
@@ -256,4 +257,10 @@
     <string name="unlock">Unlock</string>
     <string name="last_attempt_title">Final attempt</string>
     <string name="last_attempt_description">One more failed attempt will sign you out</string>
+    <string name="select_contact_action">Select contact action</string>
+    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
+    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
+    <string name="copy_email_address">Copy email address</string>
+    <string name="block_unblock">Block/unblock</string>
+    <string name="open_default_email_client">Open default email client</string>
 </resources>

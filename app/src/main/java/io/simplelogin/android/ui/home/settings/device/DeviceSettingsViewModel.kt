@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.ContactCellSelection
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.data.models.preferences.DevicePreferences
@@ -120,6 +121,10 @@ class DeviceSettingsViewModel @Inject constructor(
 
     fun updateTheme(theme: Theme) {
         updateSettings { it.copy(theme = theme) }
+    }
+
+    fun updateContactCellSelection(selection: ContactCellSelection) {
+        updateSettings { it.copy(contactCellSelection = selection) }
     }
 
     fun removeAutoLock() {

@@ -56,6 +56,7 @@ import io.simplelogin.android.data.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
+import io.simplelogin.android.data.models.preferences.ContactCellSelection
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.models.preferences.DeviceLockType
 import io.simplelogin.android.data.models.preferences.DevicePreferences
@@ -386,6 +387,7 @@ private fun DeviceSettingsContent(
 
         item {
             SettingsHeader(text = stringResource(R.string.alias_display_and_interaction))
+
             Column(modifier = Modifier.primaryContentBackground()) {
                 AliasCellSelectionSection(
                     modifier = Modifier,
@@ -414,6 +416,22 @@ private fun DeviceSettingsContent(
                     onSaveAliasDisplayInfos = ::updateAliasDisplayInfos
                 )
             }
+
+            SettingsSpacer()
+        }
+
+        item {
+            SettingsHeader(text = stringResource(R.string.contacts))
+
+            OptionRow(
+                modifier = Modifier.primaryContentBackground(),
+                paddingValues = PaddingValues(Spacing.regular),
+                title = stringResource(R.string.select_contact_action),
+                description = { Text(text = it.title(context = context)) },
+                options = ContactCellSelection.entries.toTypedArray(),
+                selected = settings.contactCellSelection,
+                onSelect = ::updateContactCellSelection
+            )
         }
     }
 
