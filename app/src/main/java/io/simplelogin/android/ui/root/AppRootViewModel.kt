@@ -10,7 +10,6 @@ import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
-import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +25,6 @@ import javax.inject.Inject
 class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
     observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val logOutUseCase: LogOutUseCase
 ) : ViewModel() {
 
@@ -216,11 +214,19 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun viewAliasContacts(alias: Alias) {
+        uniquelyAddDestination(AliasContactsDestination(alias))
+    }
+
+    fun viewAliasActivities(alias: Alias) {
+        uniquelyAddDestination(AliasActivitiesDestination(alias))
+    }
+    //endregion
+
+    private fun uniquelyAddDestination(navKey: NavKey) {
         _navBackStack.value.apply {
-            if (lastOrNull() != AliasContactsDestination(alias)) {
-                add(AliasContactsDestination(alias))
+            if (lastOrNull() != navKey) {
+                add(navKey)
             }
         }
     }
-    //endregion
 }

@@ -29,6 +29,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.ui.home.HomeScreen
+import io.simplelogin.android.ui.home.aliasactivities.AliasActivitiesScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
 import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
@@ -59,6 +60,9 @@ data class AliasDetailsDestination(val alias: Alias) : NavKey
 
 @Serializable
 data class AliasContactsDestination(val alias: Alias) : NavKey
+
+@Serializable
+data class AliasActivitiesDestination(val alias: Alias) : NavKey
 
 @Serializable
 data object DeviceSettingsDestination : NavKey
@@ -154,7 +158,7 @@ fun AppRoot(
                     onAliasUpdated = {
                         // TODO: Update alias list
                     },
-                    onViewAllActivities = {}
+                    onViewAllActivities = { viewModel.viewAliasActivities(key.alias) }
                 )
             }
 
@@ -162,6 +166,15 @@ fun AppRoot(
                 metadata = ListDetailSceneStrategy.extraPane()
             ) { key ->
                 AliasContactsScreen(
+                    alias = key.alias,
+                    onGoBack = viewModel::goBack
+                )
+            }
+
+            entry<AliasActivitiesDestination>(
+                metadata = ListDetailSceneStrategy.extraPane()
+            ) { key ->
+                AliasActivitiesScreen(
                     alias = key.alias,
                     onGoBack = viewModel::goBack
                 )
