@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.cell
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -45,17 +45,12 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.ui.home.dialog.DeleteAliasDialog
-import io.simplelogin.android.ui.home.shared.ActivityStats
-import io.simplelogin.android.ui.home.shared.AliasEmailText
-import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
-import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
 
 @Composable
-fun AliasCell(
+fun AliasRow(
     modifier: Modifier = Modifier,
     alias: Alias,
     cellSelection: AliasCellSelection,
@@ -263,7 +258,7 @@ private fun AliasCellContent(
 
         if (displayInfos.contains(AliasDisplayInfo.LATEST_ACTIVITY)) {
             alias.latestActivity?.let {
-                AliasLatestActivity(it)
+                AliasLatestActivityRow(it)
             }
         }
 

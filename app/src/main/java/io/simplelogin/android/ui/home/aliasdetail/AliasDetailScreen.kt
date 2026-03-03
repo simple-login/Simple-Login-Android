@@ -51,12 +51,11 @@ import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
-import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
-import io.simplelogin.android.ui.home.shared.ActivityStats
-import io.simplelogin.android.ui.home.shared.AliasActivityRow
-import io.simplelogin.android.ui.home.shared.AliasEmailText
-import io.simplelogin.android.ui.home.shared.AliasOptionBottomSheet
-import io.simplelogin.android.ui.home.shared.AliasOptionsDropdownMenu
+import io.simplelogin.android.ui.home.createalias.MailboxesSelectionDialog
+import io.simplelogin.android.ui.home.aliaslist.ActivityStats
+import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
+import io.simplelogin.android.ui.home.aliaslist.AliasOptionBottomSheet
+import io.simplelogin.android.ui.home.aliaslist.AliasOptionsDropdownMenu
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton

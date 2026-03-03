@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

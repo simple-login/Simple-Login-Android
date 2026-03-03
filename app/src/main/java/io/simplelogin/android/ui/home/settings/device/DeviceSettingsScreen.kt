@@ -64,7 +64,7 @@ import io.simplelogin.android.data.models.preferences.LockTimeOut
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.preferences.Theme
 import io.simplelogin.android.data.models.preferences.UserSessionPreferences
-import io.simplelogin.android.ui.home.cell.AliasCell
+import io.simplelogin.android.ui.home.aliaslist.AliasRow
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
@@ -597,7 +597,7 @@ private fun SwipeActionSelection(
         textAlign = TextAlign.Start
     )
 
-    AliasCell(
+    AliasRow(
         alias = Alias.sample,
         cellSelection = selectedAliasCellSelection,
         optionsDisplay = selectedOptionsDisplay,

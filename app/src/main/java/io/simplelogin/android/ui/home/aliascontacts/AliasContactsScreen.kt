@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.ui.home.dialog.EditEmailDialog
-import io.simplelogin.android.ui.home.shared.AliasEmailText
+import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.util.TitledFAB
 

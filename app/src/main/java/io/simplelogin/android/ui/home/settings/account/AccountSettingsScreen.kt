@@ -64,7 +64,6 @@ import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
-import io.simplelogin.android.ui.home.shared.UserInfoCard
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing

@@ -76,7 +76,7 @@ import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
 import io.simplelogin.android.ui.home.lockscreen.LockScreen
-import io.simplelogin.android.ui.home.shared.UserInfoCard
+import io.simplelogin.android.ui.home.settings.account.UserInfoCard
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes

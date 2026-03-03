@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.aliasdetail
 
 import android.graphics.Bitmap
 import android.graphics.Color

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -36,7 +36,6 @@ import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.data.models.ui.AliasFilterMode
-import io.simplelogin.android.ui.home.cell.AliasCell
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
@@ -44,7 +43,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AliasesList(
+fun AliasList(
     modifier: Modifier = Modifier,
     stats: Stats?,
     showStats: Boolean,
@@ -110,7 +109,7 @@ fun AliasesList(
             }
 
             itemsIndexed(aliases) { index, alias ->
-                AliasCell(
+                AliasRow(
                     modifier = Modifier
                         .clip(
                             RoundedCornerShape(

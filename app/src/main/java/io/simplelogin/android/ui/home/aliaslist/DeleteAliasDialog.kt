@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api

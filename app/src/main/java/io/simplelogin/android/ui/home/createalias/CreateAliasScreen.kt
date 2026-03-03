@@ -1,6 +1,5 @@
 package io.simplelogin.android.ui.home.createalias
 
-import io.simplelogin.android.ui.home.dialog.MailboxesSelectionDialog
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

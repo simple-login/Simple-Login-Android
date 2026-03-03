@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.shared
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy

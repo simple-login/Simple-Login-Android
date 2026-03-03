@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.android.ui.home.createalias
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

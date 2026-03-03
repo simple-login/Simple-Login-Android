@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.shared
+package io.simplelogin.android.ui.home.aliaslist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
