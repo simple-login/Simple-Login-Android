@@ -47,6 +47,7 @@ import io.simplelogin.android.util.relativeDateTime
 
 @Composable
 fun AliasActivityRow(
+    modifier: Modifier = Modifier,
     clipShape: Shape,
     activity: AliasActivity,
     onAction: (ActivityUiAction) -> Unit
@@ -58,7 +59,7 @@ fun AliasActivityRow(
     }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(clipShape)
             .background(SlColor.ContentContainerBackgroundColor)

@@ -1,5 +1,6 @@
 package io.simplelogin.android.domain
 
+import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
@@ -281,9 +282,5 @@ class AliasListManagerImpl @Inject constructor(private val datasource: AliasesRe
                 listOf(alias) + currentAliases
             }
         }
-    }
-
-    private companion object {
-        const val PAGE_SIZE = 20 // Per API set up
     }
 }

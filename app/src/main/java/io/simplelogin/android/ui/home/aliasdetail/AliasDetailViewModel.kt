@@ -8,6 +8,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
@@ -101,7 +102,7 @@ class AliasDetailViewModel @AssistedInject constructor(
                 _stateFlow.value = AliasDetailScreenState.Loaded(
                     alias = aliasResult.value,
                     activities = activitiesResult.value,
-                    hasMoreActivities = activitiesResult.value.count() >= 20
+                    hasMoreActivities = activitiesResult.value.count() >= PAGE_SIZE
                 )
 
             aliasResult is Result.Failure ->

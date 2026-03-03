@@ -209,8 +209,7 @@ class AccountSettingsViewModel @Inject constructor(
             ?: viewModelScope.launch {
                 observeSessionSettings()
                     .mapNotNull { it.apiKey }
-                    .first()
-                    .let { fetchedApiKey ->
+                    .collect { fetchedApiKey ->
                         apiKey = fetchedApiKey
                         block(fetchedApiKey)
                     }
