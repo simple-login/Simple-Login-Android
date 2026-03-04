@@ -10,14 +10,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.CheckCircleOutline
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoNotDisturbOn
+import androidx.compose.material.icons.outlined.MonitorHeart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -35,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -262,6 +266,26 @@ private fun AliasCellContent(
             }
         }
 
+        if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val fontSize = LocalTextStyle.current.fontSize
+                val iconSize = with(LocalDensity.current) { fontSize.toDp() }
+                Icon(
+                    modifier = Modifier.size(iconSize),
+                    imageVector = Icons.Outlined.MonitorHeart,
+                    contentDescription = null
+                )
+
+                ActivityStats(
+                    modifier = Modifier.fillMaxWidth(),
+                    showLabel = false,
+                    forward = alias.forwardCount,
+                    reply = alias.replyCount,
+                    block = alias.blockCount
+                )
+            }
+        }
+
         if (displayInfos.contains(AliasDisplayInfo.NOTE) && !alias.note.isNullOrEmpty()) {
             Text(
                 text = alias.note,
@@ -271,15 +295,6 @@ private fun AliasCellContent(
 
         if (displayInfos.contains(AliasDisplayInfo.MAILBOXES)) {
             Text(text = mailboxes)
-        }
-
-        if (displayInfos.contains(AliasDisplayInfo.LAST_14_DAYS) && alias.hasActivities) {
-            ActivityStats(
-                forward = alias.forwardCount,
-                reply = alias.replyCount,
-                block = alias.blockCount,
-                textStyle = MaterialTheme.typography.bodySmall
-            )
         }
     }
 

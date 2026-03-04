@@ -66,6 +66,7 @@
     <string name="password_reset_instructions_sent">We\'ve sent password reset instructions to %s</string>
     <string name="confirm_email_instructions_sent">We\'ve sent an activation link to %s</string>
     <string name="resend_activation_code_done">We\'ve sent a new activation code to %s</string>
+    <string name="total">Total</string>
     <string name="forward">Forward</string>
     <string name="reply">Reply</string>
     <string name="block">Block</string>

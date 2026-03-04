@@ -1,17 +1,19 @@
 package io.simplelogin.android.ui.home.aliaslist
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -20,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.ui.theme.SlColor
@@ -30,74 +32,108 @@ import io.simplelogin.android.ui.theme.Spacing
 @Composable
 fun ActivityStats(
     modifier: Modifier = Modifier,
+    showLabel: Boolean,
     forward: Int,
     reply: Int,
     block: Int,
-    textStyle: TextStyle
 ) {
+    val total = forward + reply + block
+
+    @Composable
+    fun Divider() {
+        VerticalDivider(modifier = Modifier.fillMaxHeight(0.6f))
+    }
     Row(
-        modifier = modifier.height(intrinsicSize = IntrinsicSize.Min)
+        modifier = modifier.height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        ActivityColumn(
+        StatItem(
+            modifier = Modifier.weight(1f),
+            showLabel = true,
+            title = stringResource(R.string.total),
+            titleColor = MaterialTheme.colorScheme.secondary,
+            value = total
+        )
+
+        Divider()
+
+        StatItem(
+            modifier = Modifier.weight(1f),
             icon = Icons.AutoMirrored.Filled.Send,
+            showLabel = showLabel,
             title = stringResource(R.string.forward),
             titleColor = SlColor.Green,
-            value = forward,
-            textStyle = textStyle
+            value = forward
         )
 
-        VerticalDivider(modifier = Modifier.padding(Spacing.medium))
+        Divider()
 
-        ActivityColumn(
+        StatItem(
+            modifier = Modifier.weight(1f),
             icon = Icons.AutoMirrored.Filled.Reply,
+            showLabel = showLabel,
             title = stringResource(R.string.reply),
             titleColor = SlColor.Blue,
-            value = reply,
-            textStyle = textStyle
+            value = reply
         )
 
-        VerticalDivider(modifier = Modifier.padding(Spacing.medium))
+        Divider()
 
-        ActivityColumn(
+        StatItem(
+            modifier = Modifier.weight(1f),
             icon = Icons.Default.Block,
+            showLabel = showLabel,
             title = stringResource(R.string.block),
             titleColor = SlColor.Red,
-            value = block,
-            textStyle = textStyle
+            value = block
         )
     }
 }
 
 @Composable
-private fun ActivityColumn(
+private fun StatItem(
     modifier: Modifier = Modifier,
-    icon: ImageVector,
+    icon: ImageVector? = null,
+    showLabel: Boolean,
     title: String,
     titleColor: Color,
-    value: Int,
-    textStyle: TextStyle
+    value: Int
 ) {
-    Column(
+    Box(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        Row {
-            Icon(
-                modifier = Modifier.size(textStyle.fontSize.value.dp),
-                imageVector = icon,
-                tint = titleColor,
-                contentDescription = null
-            )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Spacing.small)
+        ) {
+            icon?.let {
+                Icon(
+                    modifier = Modifier.size(LocalTextStyle.current.fontSize.value.dp),
+                    imageVector = icon,
+                    tint = titleColor,
+                    contentDescription = null
+                )
+            }
 
-            Spacer(modifier = Modifier.size((textStyle.fontSize.value / 3).dp))
+            if (showLabel) {
+                Text(
+                    text = "${title}:",
+                    color = titleColor,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible,
+                    softWrap = false
+                )
+            }
 
             Text(
-                text = title,
-                color = titleColor,
-                fontWeight = FontWeight.Medium,
-                style = textStyle
+                text = "$value",
+                maxLines = 1,
+                overflow = TextOverflow.Visible,
+                softWrap = false,
+                fontWeight = FontWeight.Bold
             )
         }
-        Text(text = "$value", fontWeight = FontWeight.Bold)
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -350,11 +351,17 @@ fun AliasDetailContent(
                 SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
 
                 ActivityStats(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(percent = 50))
+                        .background(MaterialTheme.colorScheme.surfaceBright)
+                        .padding(vertical = Spacing.medium),
+                    showLabel = true,
                     forward = alias.forwardCount,
                     reply = alias.replyCount,
-                    block = alias.blockCount,
-                    textStyle = MaterialTheme.typography.bodyMedium
+                    block = alias.blockCount
                 )
+
+                Spacer(modifier = Modifier.height(Spacing.medium))
 
                 activities.forEachIndexed { index, activity ->
                     val lastIndex = activities.lastIndex
