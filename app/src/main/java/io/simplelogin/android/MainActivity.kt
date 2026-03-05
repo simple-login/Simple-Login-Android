@@ -1,5 +1,6 @@
 package io.simplelogin.android
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ContactSupport
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.AllInbox
 import androidx.compose.material.icons.outlined.Language
@@ -92,6 +94,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -177,6 +180,9 @@ class MainActivity : AppCompatActivity() {
                                         appRootViewModel.showDeviceSettingsScreen(asDialog)
                                     }
                                 },
+                                onContactUsClick = {
+                                    closeDrawerAndExecute(::openContactUsPage)
+                                },
                                 onSignOutClick = {
                                     closeDrawerAndExecute(appRootViewModel::showLogOutDialog)
                                 }
@@ -212,6 +218,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
+    }
+
+    private fun openContactUsPage() {
+        val intent = Intent(Intent.ACTION_VIEW, "https://simplelogin.io/contact/".toUri())
+        startActivity(intent)
     }
 }
 
@@ -342,6 +353,7 @@ private fun Drawer(
     onCustomDomainsClick: () -> Unit,
     onAccountSettingsClick: () -> Unit,
     onDeviceSettingsClick: () -> Unit,
+    onContactUsClick: () -> Unit,
     onSignOutClick: () -> Unit
 ) {
     ModalDrawerSheet(
@@ -383,6 +395,21 @@ private fun Drawer(
             shape = RectangleShape,
             selected = false,
             onClick = onDeviceSettingsClick
+        )
+
+        HorizontalDivider()
+
+        NavigationDrawerItem(
+            label = { Text(text = stringResource(R.string.contact_us)) },
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ContactSupport,
+                    contentDescription = null
+                )
+            },
+            shape = RectangleShape,
+            selected = false,
+            onClick = onContactUsClick
         )
 
         HorizontalDivider()
