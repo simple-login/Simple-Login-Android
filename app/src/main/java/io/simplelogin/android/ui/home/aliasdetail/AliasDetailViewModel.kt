@@ -18,7 +18,7 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.updateMailboxes
 import io.simplelogin.android.data.remote.datasource.updateName
@@ -47,7 +47,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val aliasesRemoteDatasource: AliasesRemoteDatasource,
+    private val aliasDetailsRemoteDatasource: AliasDetailsRemoteDatasource,
     private val mailboxesRemoteDatasource: MailboxesRemoteDatasource,
     private val activityUiActionHandler: ActivityUiActionHandler,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
@@ -78,11 +78,11 @@ class AliasDetailViewModel @AssistedInject constructor(
             coroutineScope {
                 val alias =
                     async {
-                        aliasesRemoteDatasource.getAlias(apiKey = apiKey, aliasId = aliasId)
+                        aliasDetailsRemoteDatasource.getAlias(apiKey = apiKey, aliasId = aliasId)
                     }
                 val activities =
                     async {
-                        aliasesRemoteDatasource.getActivities(
+                        aliasDetailsRemoteDatasource.getActivities(
                             apiKey = apiKey,
                             aliasId = aliasId,
                             page = 0
@@ -116,7 +116,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     fun updateNote(note: String, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
             loadingState.emit(true)
-            aliasesRemoteDatasource.updateNote(
+            aliasDetailsRemoteDatasource.updateNote(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 note = note
@@ -136,7 +136,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     fun updateName(name: String, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
             loadingState.emit(true)
-            aliasesRemoteDatasource.updateName(
+            aliasDetailsRemoteDatasource.updateName(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 name = name
@@ -167,7 +167,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     fun updateMailboxes(mailboxes: List<Mailbox>, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
             loadingState.emit(true)
-            aliasesRemoteDatasource.updateMailboxes(
+            aliasDetailsRemoteDatasource.updateMailboxes(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 mailboxes = mailboxes

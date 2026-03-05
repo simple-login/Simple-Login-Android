@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasourceImpl
+import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasourceImpl
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
@@ -37,4 +39,7 @@ abstract class RemoteDatasourceModule {
 
     @[Binds Singleton]
     abstract fun bindCustomDomains(impl: CustomDomainsRemoteDatasourceImpl): CustomDomainsRemoteDatasource
+
+    @[Binds Singleton]
+    abstract fun bindAliasDetails(impl: AliasDetailsRemoteDatasourceImpl): AliasDetailsRemoteDatasource
 }

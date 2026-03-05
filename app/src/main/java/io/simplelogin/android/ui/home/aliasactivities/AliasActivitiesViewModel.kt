@@ -11,7 +11,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
+import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ActivityUiActionHandler
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ import kotlin.collections.plus
 class AliasActivitiesViewModel @AssistedInject constructor(
     @Assisted private val alias: Alias,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val datasource: AliasesRemoteDatasource,
+    private val datasource: AliasDetailsRemoteDatasource,
     private val actionHandler: ActivityUiActionHandler
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
