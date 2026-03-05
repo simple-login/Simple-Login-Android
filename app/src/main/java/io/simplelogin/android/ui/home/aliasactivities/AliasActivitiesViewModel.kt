@@ -73,7 +73,7 @@ class AliasActivitiesViewModel @AssistedInject constructor(
                         it.copy(
                             activities = processedActivities,
                             page = page,
-                            canLoadMore = activities.count() >= PAGE_SIZE,
+                            canLoadMore = activities.count() <= PAGE_SIZE,
                             isRefreshing = false,
                             isLoadingMore = false
                         )

@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,7 +22,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +51,23 @@ fun AliasActivitiesScreen(
         }
 
     val state by viewModel.stateFlow.collectAsState()
+    val listState = rememberLazyListState()
+
+    val reachedEnd by remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+            state.activities.count() > 0 &&
+                    lastVisibleItem != null &&
+                    lastVisibleItem.index >= layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    LaunchedEffect(reachedEnd) {
+        if (reachedEnd) {
+            viewModel.loadMoreIfNeed()
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.refresh()
@@ -75,29 +96,27 @@ fun AliasActivitiesScreen(
                 isRefreshing = state.isRefreshing,
                 onRefresh = viewModel::refresh
             ) {
-                LazyColumn {
-                    item {
-                        val lastIndex = state.activities.lastIndex
-                        state.activities.forEachIndexed { index, activity ->
-                            AliasActivityRow(
-                                clipShape = RoundedCornerShape(
-                                    topStart = if (index == 0) Spacing.regular else 0.dp,
-                                    topEnd = if (index == 0) Spacing.regular else 0.dp,
-                                    bottomStart = if (index == lastIndex) Spacing.regular else 0.dp,
-                                    bottomEnd = if (index == lastIndex) Spacing.regular else 0.dp
-                                ),
-                                activity = activity,
-                                onAction = {
-                                    viewModel.handleAction(
-                                        activity = activity,
-                                        action = it
-                                    )
-                                }
-                            )
-
-                            if (index < lastIndex) {
-                                HorizontalDivider()
+                LazyColumn(state = listState) {
+                    val lastIndex = state.activities.lastIndex
+                    itemsIndexed(state.activities) { index, activity ->
+                        AliasActivityRow(
+                            clipShape = RoundedCornerShape(
+                                topStart = if (index == 0) Spacing.regular else 0.dp,
+                                topEnd = if (index == 0) Spacing.regular else 0.dp,
+                                bottomStart = if (index == lastIndex) Spacing.regular else 0.dp,
+                                bottomEnd = if (index == lastIndex) Spacing.regular else 0.dp
+                            ),
+                            activity = activity,
+                            onAction = {
+                                viewModel.handleAction(
+                                    activity = activity,
+                                    action = it
+                                )
                             }
+                        )
+
+                        if (index < lastIndex) {
+                            HorizontalDivider()
                         }
                     }
 
