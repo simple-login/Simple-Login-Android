@@ -34,7 +34,7 @@ fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {
             modifier = Modifier.weight(1f, fill = false),
             text = activity.contact.email,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.MiddleEllipsis
         )
         Text(text = "(${activity.relativeTime})")
     }

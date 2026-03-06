@@ -1,12 +1,15 @@
 package io.simplelogin.android.ui.home.aliascontacts
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.PAGE_SIZE
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Contact
@@ -17,6 +20,10 @@ import io.simplelogin.android.domain.ContactUiActionResult
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.di.LoadingState
+import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
+import io.simplelogin.android.domain.snackbar.SnackbarManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,11 +34,14 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasContactsViewModel.Factory::class)
 class AliasContactsViewModel @AssistedInject constructor(
+    @ApplicationContext private val context: Context,
     @Assisted private val alias: Alias,
+    @LoadingState private val loadingState: LoadingStateFlow,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val observeDeviceSettings: ObserveDeviceSettingsUseCase,
     private val datasource: AliasDetailsRemoteDatasource,
-    private val actionHandler: ContactUiActionHandler
+    private val actionHandler: ContactUiActionHandler,
+    private val snackbarManager: SnackbarManager,
+    observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
 
@@ -145,6 +155,27 @@ class AliasContactsViewModel @AssistedInject constructor(
 
                 ContactUiActionResult.NONE -> {}
             }
+        }
+    }
+
+    fun createContact(email: String) {
+        withApiKey { apiKey ->
+            loadingState.value = true
+            datasource.createContact(apiKey = apiKey, aliasId = alias.id, email = email)
+                .fold(onSuccess = { contact ->
+                    loadingState.value = false
+                    if (contact.existed) {
+                        val message = context.getString(R.string.contact_exists, email)
+                        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                    } else {
+                        val message = context.getString(R.string.contact_created, email)
+                        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                        refresh()
+                    }
+                }, onFailure = { error ->
+                    loadingState.value = false
+                    _stateFlow.update { it.copy(error = error) }
+                })
         }
     }
 

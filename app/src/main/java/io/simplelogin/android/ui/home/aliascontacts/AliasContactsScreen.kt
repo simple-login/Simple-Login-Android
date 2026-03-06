@@ -118,7 +118,7 @@ fun AliasContactsScreen(
                     expanded = fabExpanded,
                     onClick = { fabExpanded = !fabExpanded },
                     onContactPicked = {},
-                    onCreate = {}
+                    onCreate = viewModel::createContact
                 )
             }
         ) { innerPadding ->

@@ -10,6 +10,7 @@ import io.simplelogin.android.data.models.api.Contact
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.remote.CreateContactBody
 import io.simplelogin.android.data.remote.DeletedResponse
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
@@ -37,6 +38,12 @@ interface AliasDetailsRemoteDatasource {
     suspend fun toggleContact(apiKey: ApiKey, contact: Contact): Result<BlockForward, ApiError>
 
     suspend fun deleteContact(apiKey: ApiKey, contact: Contact): Result<DeletedResponse, ApiError>
+
+    suspend fun createContact(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        email: String
+    ): Result<Contact, ApiError>
 }
 
 suspend fun AliasDetailsRemoteDatasource.updateNote(
@@ -119,4 +126,17 @@ class AliasDetailsRemoteDatasourceImpl @Inject constructor(private val apiServic
         contact: Contact
     ): Result<DeletedResponse, ApiError> =
         safeApiCall { apiService.deleteContact(apiKey = apiKey, contactId = contact.id) }
+
+    override suspend fun createContact(
+        apiKey: ApiKey,
+        aliasId: AliasId,
+        email: String
+    ): Result<Contact, ApiError> =
+        safeApiCall {
+            apiService.createContact(
+                apiKey = apiKey,
+                aliasId = aliasId,
+                body = CreateContactBody(contact = email)
+            )
+        }
 }

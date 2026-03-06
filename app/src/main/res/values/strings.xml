@@ -271,4 +271,6 @@
     <string name="contact_blocked">%s blocked</string>
     <string name="contact_unblocked">%s unblocked</string>
     <string name="contact_deleted">%s deleted</string>
+    <string name="contact_exists">%s already exists</string>
+    <string name="contact_created">%s created</string>
 </resources>
