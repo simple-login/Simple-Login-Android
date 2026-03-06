@@ -7,11 +7,14 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -81,8 +84,11 @@ fun NormalTopAppBar(
             Box {
                 IconButton(onClick = { showFilterOptions = true }) {
                     Icon(
-                        imageVector = Icons.Default.FilterAlt,
-                        contentDescription = stringResource(R.string.filter_options)
+                        imageVector = if (selectedAliasFilterMode == AliasFilterMode.ALL)
+                            Icons.Outlined.FilterAlt else Icons.Default.FilterAlt,
+                        contentDescription = stringResource(R.string.filter_options),
+                        tint = if (selectedAliasFilterMode == AliasFilterMode.ALL)
+                            LocalContentColor.current else MaterialTheme.colorScheme.primary
                     )
                 }
 

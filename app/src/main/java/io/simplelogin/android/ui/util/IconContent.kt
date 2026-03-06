@@ -3,7 +3,7 @@ package io.simplelogin.android.ui.util
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class IconContent() {
+sealed class IconContent {
     data class ImageVectorContent(
         val vector: ImageVector,
         val contentDescription: String? = null

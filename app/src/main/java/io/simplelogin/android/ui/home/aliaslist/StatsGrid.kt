@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Stats
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
 
@@ -45,14 +48,16 @@ fun StatsGrid(
                 title = stringResource(R.string.all_aliases),
                 description = stringResource(R.string.all_time),
                 value = stats.aliasCount,
-                icon = IconContent.ImageVectorContent(Icons.Default.AlternateEmail)
+                icon = IconContent.ImageVectorContent(Icons.Default.AlternateEmail),
+                tintColor = LocalContentColor.current
             )
 
             StatsCell(
                 title = stringResource(R.string.forward),
                 description = stringResource(R.string.last_14_days),
                 value = stats.forwardCount,
-                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Send)
+                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Send),
+                tintColor = SlColor.Green
             )
         }
 
@@ -64,14 +69,16 @@ fun StatsGrid(
                 title = stringResource(R.string.replies_send),
                 description = stringResource(R.string.last_14_days),
                 value = stats.replyCount,
-                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Reply)
+                icon = IconContent.ImageVectorContent(Icons.AutoMirrored.Filled.Reply),
+                tintColor = SlColor.Blue
             )
 
             StatsCell(
                 title = stringResource(R.string.blocked),
                 description = stringResource(R.string.last_14_days),
                 value = stats.blockCount,
-                icon = IconContent.ImageVectorContent(Icons.Default.Block)
+                icon = IconContent.ImageVectorContent(Icons.Default.Block),
+                tintColor = SlColor.Red
             )
         }
     }
@@ -83,7 +90,8 @@ private fun StatsCell(
     title: String,
     description: String,
     value: Int,
-    icon: IconContent
+    icon: IconContent,
+    tintColor: Color
 ) {
     Box(
         modifier = modifier
@@ -96,25 +104,23 @@ private fun StatsCell(
     ) {
         val iconModifier = Modifier
             .scale(2f)
-            .alpha(0.1f)
+            .alpha(0.2f)
             .align(Alignment.CenterEnd)
             .padding(end = Spacing.medium)
-
-        val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
 
         when (icon) {
             is IconContent.ImageVectorContent -> Icon(
                 modifier = iconModifier,
                 imageVector = icon.vector,
                 contentDescription = icon.contentDescription,
-                tint = iconTint
+                tint = tintColor
             )
 
             is IconContent.PainterContent -> Icon(
                 modifier = iconModifier,
                 painter = icon.painter,
                 contentDescription = icon.contentDescription,
-                tint = iconTint
+                tint = tintColor
             )
         }
 
@@ -123,7 +129,8 @@ private fun StatsCell(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = tintColor
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
