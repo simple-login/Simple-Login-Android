@@ -72,6 +72,7 @@ fun AliasContactsScreen(
         }
 
     val state by viewModel.stateFlow.collectAsState()
+    val deviceSettings by viewModel.deviceSettings.collectAsState()
     val listState = rememberLazyListState()
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -139,6 +140,7 @@ fun AliasContactsScreen(
                                 bottomEnd = if (index == lastIndex) Spacing.regular else 0.dp
                             ),
                             contact = contact,
+                            contactCellSelection = deviceSettings.contactCellSelection,
                             onAction = {
                                 viewModel.handleAction(contact = contact, action = it)
                             }

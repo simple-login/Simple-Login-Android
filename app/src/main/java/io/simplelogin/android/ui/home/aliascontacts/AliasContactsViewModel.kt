@@ -15,9 +15,13 @@ import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasourc
 import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionResult
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
+import io.simplelogin.android.data.models.preferences.DevicePreferences
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,10 +29,17 @@ import kotlinx.coroutines.launch
 class AliasContactsViewModel @AssistedInject constructor(
     @Assisted private val alias: Alias,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
+    private val observeDeviceSettings: ObserveDeviceSettingsUseCase,
     private val datasource: AliasDetailsRemoteDatasource,
     private val actionHandler: ContactUiActionHandler
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
+
+    val deviceSettings = observeDeviceSettings().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = DevicePreferences.Default
+    )
 
     private val _stateFlow = MutableStateFlow(AliasContactsState.Default)
     val stateFlow: StateFlow<AliasContactsState> = _stateFlow

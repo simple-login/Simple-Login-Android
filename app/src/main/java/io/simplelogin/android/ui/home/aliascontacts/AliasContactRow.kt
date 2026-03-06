@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Contact
+import io.simplelogin.android.data.models.preferences.ContactCellSelection
 import io.simplelogin.android.data.models.ui.ContactUiAction
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -52,6 +53,7 @@ fun AliasContactRow(
     modifier: Modifier = Modifier,
     clipShape: Shape,
     contact: Contact,
+    contactCellSelection: ContactCellSelection,
     onAction: (ContactUiAction) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -65,7 +67,30 @@ fun AliasContactRow(
             .fillMaxWidth()
             .clip(clipShape)
             .background(SlColor.ContentContainerBackgroundColor)
-            .clickable { showMenu = true }
+            .clickable {
+                when (contactCellSelection) {
+                    ContactCellSelection.COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME ->
+                        onAction(ContactUiAction.COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME)
+
+                    ContactCellSelection.COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME ->
+                        onAction(ContactUiAction.COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME)
+
+                    ContactCellSelection.COPY_ADDRESS ->
+                        onAction(ContactUiAction.COPY_ADDRESS)
+
+                    ContactCellSelection.BLOCK_UNBLOCK ->
+                        if (contact.blockForward) {
+                            onAction(ContactUiAction.UNBLOCK)
+                        } else {
+                            onAction(ContactUiAction.BLOCK)
+                        }
+
+                    ContactCellSelection.OPEN_DEFAULT_EMAIL_CLIENT ->
+                        onAction(ContactUiAction.OPEN_DEFAULT_EMAIL_CLIENT)
+
+                    ContactCellSelection.VIEW_OPTIONS -> showMenu = true
+                }
+            }
             .padding(horizontal = Spacing.regular)
             .padding(vertical = Spacing.medium),
         verticalAlignment = Alignment.CenterVertically
