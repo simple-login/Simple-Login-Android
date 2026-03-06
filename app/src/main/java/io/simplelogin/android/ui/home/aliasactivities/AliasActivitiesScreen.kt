@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.aliasactivities
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -92,7 +93,9 @@ fun AliasActivitiesScreen(
             containerColor = Color.Transparent
         ) { innerPadding ->
             PullToRefreshBox(
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
                 isRefreshing = state.isRefreshing,
                 onRefresh = viewModel::refresh
             ) {

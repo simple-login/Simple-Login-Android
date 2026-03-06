@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.simplelogin.android.R
 
-enum class ContactAction {
+enum class ContactUiAction {
     COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME,
     COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME,
     COPY_ADDRESS,

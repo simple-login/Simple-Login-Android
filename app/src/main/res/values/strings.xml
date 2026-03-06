@@ -268,4 +268,7 @@
     <string name="alias_activity">Alias activity</string>
     <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>
     <string name="email_address_copied">Email address copied to clipboard</string>
+    <string name="contact_blocked">%s blocked</string>
+    <string name="contact_unblocked">%s unblocked</string>
+    <string name="contact_deleted">%s deleted</string>
 </resources>

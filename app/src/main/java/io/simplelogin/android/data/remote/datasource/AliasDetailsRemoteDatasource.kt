@@ -5,10 +5,12 @@ import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.BlockForward
 import io.simplelogin.android.data.models.api.Contact
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.remote.DeletedResponse
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
@@ -31,6 +33,10 @@ interface AliasDetailsRemoteDatasource {
         aliasId: AliasId,
         option: UpdateAliasOption
     ): Result<Unit, ApiError>
+
+    suspend fun toggleContact(apiKey: ApiKey, contact: Contact): Result<BlockForward, ApiError>
+
+    suspend fun deleteContact(apiKey: ApiKey, contact: Contact): Result<DeletedResponse, ApiError>
 }
 
 suspend fun AliasDetailsRemoteDatasource.updateNote(
@@ -101,4 +107,16 @@ class AliasDetailsRemoteDatasourceImpl @Inject constructor(private val apiServic
         safeApiCall {
             apiService.updateAlias(apiKey = apiKey, aliasId = aliasId, body = option)
         }.mapValue { }
+
+    override suspend fun toggleContact(
+        apiKey: ApiKey,
+        contact: Contact
+    ): Result<BlockForward, ApiError> =
+        safeApiCall { apiService.toggleContact(apiKey = apiKey, contactId = contact.id) }
+
+    override suspend fun deleteContact(
+        apiKey: ApiKey,
+        contact: Contact
+    ): Result<DeletedResponse, ApiError> =
+        safeApiCall { apiService.deleteContact(apiKey = apiKey, contactId = contact.id) }
 }
