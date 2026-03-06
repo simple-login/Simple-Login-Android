@@ -62,6 +62,7 @@ import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.TitledFAB
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,6 +135,10 @@ fun AliasContactsScreen(
                 onRefresh = viewModel::refresh
             ) {
                 LazyColumn(state = listState) {
+                    stickyHeader {
+                        SettingsHeader(text = stringResource(R.string.contacts))
+                    }
+
                     val lastIndex = state.contacts.lastIndex
                     itemsIndexed(state.contacts) { index, contact ->
                         AliasContactRow(

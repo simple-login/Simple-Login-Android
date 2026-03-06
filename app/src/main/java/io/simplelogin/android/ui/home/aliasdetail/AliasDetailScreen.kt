@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -347,22 +348,28 @@ fun AliasDetailContent(
         }
 
         if (alias.hasActivities) {
+            stickyHeader {
+                Surface(color = SlColor.BackgroundColor) {
+                    Column {
+                        SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
+
+                        ActivityStats(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(percent = 50))
+                                .background(MaterialTheme.colorScheme.surfaceBright)
+                                .padding(vertical = Spacing.medium),
+                            showLabel = true,
+                            forward = alias.forwardCount,
+                            reply = alias.replyCount,
+                            block = alias.blockCount
+                        )
+
+                        Spacer(modifier = Modifier.height(Spacing.medium))
+                    }
+                }
+            }
+
             item {
-                SettingsHeader(text = stringResource(R.string.last_14_days).uppercase())
-
-                ActivityStats(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(percent = 50))
-                        .background(MaterialTheme.colorScheme.surfaceBright)
-                        .padding(vertical = Spacing.medium),
-                    showLabel = true,
-                    forward = alias.forwardCount,
-                    reply = alias.replyCount,
-                    block = alias.blockCount
-                )
-
-                Spacer(modifier = Modifier.height(Spacing.medium))
-
                 activities.forEachIndexed { index, activity ->
                     val lastIndex = activities.lastIndex
                     AliasActivityRow(

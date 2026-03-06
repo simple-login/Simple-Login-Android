@@ -39,6 +39,7 @@ import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,6 +101,10 @@ fun AliasActivitiesScreen(
                 onRefresh = viewModel::refresh
             ) {
                 LazyColumn(state = listState) {
+                    stickyHeader {
+                        SettingsHeader(text = stringResource(R.string.last_14_days))
+                    }
+
                     val lastIndex = state.activities.lastIndex
                     itemsIndexed(state.activities) { index, activity ->
                         AliasActivityRow(
