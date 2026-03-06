@@ -1,6 +1,8 @@
 package io.simplelogin.android.ui.home.aliascontacts
 
 import android.content.Context
+import android.net.Uri
+import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
@@ -156,6 +158,19 @@ class AliasContactsViewModel @AssistedInject constructor(
                 ContactUiActionResult.NONE -> {}
             }
         }
+    }
+
+    fun createContact(uri: Uri) {
+        val projection = arrayOf(ContactsContract.CommonDataKinds.Email.ADDRESS)
+        context.contentResolver.query(uri, projection, null, null, null)
+            ?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val email = cursor.getString(0)
+                    if (!email.isNullOrBlank()) {
+                        createContact(email)
+                    }
+                }
+            }
     }
 
     fun createContact(email: String) {

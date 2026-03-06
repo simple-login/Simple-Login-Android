@@ -1,8 +1,12 @@
 package io.simplelogin.android.ui.home.aliascontacts
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
+import android.provider.ContactsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.launch
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
@@ -117,7 +121,7 @@ fun AliasContactsScreen(
                 ContactsScreenFAB(
                     expanded = fabExpanded,
                     onClick = { fabExpanded = !fabExpanded },
-                    onContactPicked = {},
+                    onContactPicked = viewModel::createContact,
                     onCreate = viewModel::createContact
                 )
             }
@@ -190,9 +194,15 @@ private fun ContactsScreenFAB(
     )
 
     val pickContactsLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickContact()
-    ) { contactUri ->
-        contactUri?.let { onContactPicked(it) }
+        contract = object : ActivityResultContract<Unit, Uri?>() {
+            override fun createIntent(context: android.content.Context, input: Unit) =
+                Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
+
+            override fun parseResult(resultCode: Int, intent: Intent?) =
+                if (resultCode == Activity.RESULT_OK) intent?.data else null
+        }
+    ) { emailUri ->
+        emailUri?.let { onContactPicked(it) }
     }
 
     var showEmailDialog by remember { mutableStateOf(false) }
@@ -215,7 +225,7 @@ private fun ContactsScreenFAB(
                     imageVector = Icons.Default.Contacts,
                     onClick = {
                         onClick()
-                        pickContactsLauncher.launch(null)
+                        pickContactsLauncher.launch()
                     }
                 )
 
