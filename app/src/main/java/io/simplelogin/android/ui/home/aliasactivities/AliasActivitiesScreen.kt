@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.aliasactivities
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -100,7 +101,10 @@ fun AliasActivitiesScreen(
                 isRefreshing = state.isRefreshing,
                 onRefresh = viewModel::refresh
             ) {
-                LazyColumn(state = listState) {
+                LazyColumn(
+                    state = listState,
+                    contentPadding = PaddingValues(Spacing.regular)
+                ) {
                     stickyHeader {
                         SettingsHeader(text = stringResource(R.string.last_14_days))
                     }
