@@ -115,13 +115,13 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     fun updateNote(note: String, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
-            loadingState.emit(true)
+            loadingState.value = true
             aliasDetailsRemoteDatasource.updateNote(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 note = note
             ).fold(onSuccess = {
-                loadingState.emit(false)
+                loadingState.value = false
                 updateStateAlias {
                     val updated = it.copy(note = note)
                     onSuccess(updated)
@@ -135,13 +135,13 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     fun updateName(name: String, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
-            loadingState.emit(true)
+            loadingState.value = true
             aliasDetailsRemoteDatasource.updateName(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 name = name
             ).fold(onSuccess = {
-                loadingState.emit(false)
+                loadingState.value = false
                 updateStateAlias {
                     val updated = it.copy(name = name)
                     onSuccess(updated)
@@ -155,10 +155,10 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     fun getMailboxesToUpdate() {
         withApiKey { apiKey ->
-            loadingState.emit(true)
+            loadingState.value = true
             mailboxesRemoteDatasource.getMailboxes(apiKey)
                 .fold(onSuccess = { mailboxes ->
-                    loadingState.emit(false)
+                    loadingState.value = false
                     _mailboxesToUpdateStateFlow.value = mailboxes.value
                 }, onFailure = ::handle)
         }
@@ -166,13 +166,13 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     fun updateMailboxes(mailboxes: List<Mailbox>, onSuccess: (Alias) -> Unit) {
         withApiKey { apiKey ->
-            loadingState.emit(true)
+            loadingState.value = true
             aliasDetailsRemoteDatasource.updateMailboxes(
                 apiKey = apiKey,
                 aliasId = aliasId,
                 mailboxes = mailboxes
             ).fold(onSuccess = {
-                loadingState.emit(false)
+                loadingState.value = false
                 val mailboxLites = mailboxes.map { it.toMailboxLite() }
                 updateStateAlias {
                     val updated = it.copy(mailboxes = mailboxLites)
@@ -214,7 +214,7 @@ class AliasDetailViewModel @AssistedInject constructor(
     }
 
     private suspend fun handle(error: ApiError) {
-        loadingState.emit(false)
+        loadingState.value = false
         val config = SnackbarConfiguration(
             message = error.description(context),
             type = SnackbarType.FAILURE

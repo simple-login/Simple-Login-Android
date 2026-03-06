@@ -100,7 +100,7 @@ class HomeViewModel @Inject constructor(
     fun updateAliasFilterMode(newMode: AliasFilterMode) {
         viewModelScope.launch {
             if (aliasFilterModeFlow.value != newMode) {
-                aliasFilterModeFlow.emit(newMode)
+                aliasFilterModeFlow.value = newMode
             }
         }
     }

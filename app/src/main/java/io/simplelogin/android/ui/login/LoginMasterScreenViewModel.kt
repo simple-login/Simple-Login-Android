@@ -151,9 +151,9 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     private fun <T> launchLoading(doWork: suspend () -> T, handleResult: suspend (T) -> Unit) {
         viewModelScope.launch {
-            loadingState.emit(true)
+            loadingState.value = true
             val result = doWork()
-            loadingState.emit(false)
+            loadingState.value = false
             handleResult(result)
         }
     }
