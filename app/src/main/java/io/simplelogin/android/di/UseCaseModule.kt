@@ -16,6 +16,8 @@ import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCaseImpl
 import io.simplelogin.android.usecases.login.SignUpUseCase
 import io.simplelogin.android.usecases.login.SignUpUseCaseImpl
+import io.simplelogin.android.usecases.login.VerifyMfaUseCase
+import io.simplelogin.android.usecases.login.VerifyMfaUseCaseImpl
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCaseImpl
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
@@ -36,6 +38,9 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindLogInUseCase(impl: LogInUseCaseImpl): LogInUseCase
+
+    @[Binds Singleton]
+    abstract fun bindVerifyMfaUseCase(impl: VerifyMfaUseCaseImpl): VerifyMfaUseCase
 
     @[Binds Singleton]
     abstract fun bindForgotPassword(impl: ForgotPasswordUseCaseImpl): ForgotPasswordUseCase

@@ -15,15 +15,18 @@ import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
 import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
 import io.simplelogin.android.usecases.login.LogInError
 import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
 import io.simplelogin.android.usecases.login.SignUpUseCase
+import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.isValidPassword
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -37,6 +40,7 @@ class LoginMasterScreenViewModel @Inject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     private val snackbarManager: SnackbarManager,
     private val logIn: LogInUseCase,
+    private val verifyMfa: VerifyMfaUseCase,
     private val forgotPassword: ForgotPasswordUseCase,
     private val signUp: SignUpUseCase,
     private val resendActivationCode: ResendActivationCodeUseCase,
@@ -52,6 +56,9 @@ class LoginMasterScreenViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = Constants.DEFAULT_BASE_URL
         )
+
+    private val _mfaKeyStateFlow = MutableStateFlow<String?>(null)
+    val mfaKeyStateFlow: StateFlow<String?> = _mfaKeyStateFlow
 
     fun login(email: String, password: String) {
         val errorMessage = when {
@@ -72,7 +79,12 @@ class LoginMasterScreenViewModel @Inject constructor(
         }, handleResult = {
             when (it) {
                 is Result.Success -> {
-                    it.value
+                    val userLogin = it.value
+                    userLogin.apiKey?.let { apiKeyValue ->
+                        login(apiKey = ApiKey(value = apiKeyValue))
+                    } ?: userLogin.mfaKey?.let { mfaKey ->
+                        _mfaKeyStateFlow.value = mfaKey
+                    }
                 }
 
                 is Result.Failure -> {
@@ -84,6 +96,27 @@ class LoginMasterScreenViewModel @Inject constructor(
                 }
             }
         })
+    }
+
+    fun confirmMfa(token: String, key: String) {
+        launchLoading(doWork = {
+            verifyMfa(token = token, key = key)
+        }, handleResult = {
+            when (it) {
+                is Result.Success -> login(it.value)
+                is Result.Failure ->
+                    snackbarManager.showSnackbar(
+                        SnackbarConfiguration(
+                            message = it.error.description(context),
+                            type = SnackbarType.FAILURE
+                        )
+                    )
+            }
+        })
+    }
+
+    fun dismissMfaVerification() {
+        _mfaKeyStateFlow.value = null
     }
 
     fun login(apiKey: ApiKey) {

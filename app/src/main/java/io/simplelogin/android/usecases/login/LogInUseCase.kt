@@ -1,10 +1,10 @@
 package io.simplelogin.android.usecases.login
 
-import android.os.Build
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.UserLogin
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.di.DeviceName
 import javax.inject.Inject
 
 sealed class LogInError {
@@ -28,14 +28,15 @@ interface LogInUseCase {
     suspend operator fun invoke(email: String, password: String): Result<UserLogin, LogInError>
 }
 
-class LogInUseCaseImpl @Inject constructor(private val datasource: LogInSignUpRemoteDatasource) :
+class LogInUseCaseImpl @Inject constructor(
+    private val datasource: LogInSignUpRemoteDatasource,
+    @DeviceName private val deviceName: String
+) :
     LogInUseCase {
     override suspend operator fun invoke(
         email: String,
         password: String
-    ): Result<UserLogin, LogInError> {
-        val deviceName = "${Build.MANUFACTURER} ${Build.MODEL} ${Build.DEVICE}"
-        return datasource.logIn(email = email, password = password, deviceName = deviceName)
+    ): Result<UserLogin, LogInError> =
+        datasource.logIn(email = email, password = password, deviceName = deviceName)
             .mapError(LogInError::fromApiError)
-    }
 }

@@ -13,10 +13,13 @@ import io.simplelogin.android.ui.login.dialog.EditBaseUrlDialog
 import io.simplelogin.android.ui.login.dialog.ForgotPasswordDialog
 import io.simplelogin.android.ui.login.dialog.SetApiKeyDialog
 import io.simplelogin.android.ui.login.dialog.SignUpDialog
+import io.simplelogin.android.ui.login.dialog.VerificationDialog
+import io.simplelogin.android.ui.login.dialog.VerificationMode
 
 @Composable
 fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreenViewModel>()) {
     val baseUrl by baseUrlState.collectAsState()
+    val mfaKey by mfaKeyStateFlow.collectAsState()
 
     var showEditBaseUrlDialog by rememberSaveable { mutableStateOf(false) }
     var showSignInWithApiKeyDialog by rememberSaveable { mutableStateOf(false) }
@@ -77,6 +80,17 @@ fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreen
             onSignUp = { email, password ->
                 showSignUpDialog = false
                 signUp(email = email, password = password)
+            }
+        )
+    }
+
+    mfaKey?.let { key ->
+        VerificationDialog(
+            mode = VerificationMode.Mfa(key),
+            onDismiss = ::dismissMfaVerification,
+            onConfirm = {
+                dismissMfaVerification()
+                confirmMfa(token = it, key = key)
             }
         )
     }

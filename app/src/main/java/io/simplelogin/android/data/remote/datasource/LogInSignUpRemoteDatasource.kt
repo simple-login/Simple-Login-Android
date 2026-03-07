@@ -1,11 +1,13 @@
 package io.simplelogin.android.data.remote.datasource
 
 import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.UserLogin
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody
 import io.simplelogin.android.data.remote.LoginBody
 import io.simplelogin.android.data.remote.MessageResponse
+import io.simplelogin.android.data.remote.MfaAuthBody
 import io.simplelogin.android.data.remote.OkResponse
 import io.simplelogin.android.data.remote.RegisterBody
 import io.simplelogin.android.data.util.Result
@@ -18,6 +20,7 @@ interface LogInSignUpRemoteDatasource {
         deviceName: String
     ): Result<UserLogin, ApiError>
 
+    suspend fun mfaAuth(key: String, token: String, deviceName: String): Result<ApiKey, ApiError>
     suspend fun forgotPassword(email: String): Result<OkResponse, ApiError>
     suspend fun signUp(email: String, password: String): Result<MessageResponse, ApiError>
     suspend fun reactivate(email: String): Result<MessageResponse, ApiError>
@@ -29,30 +32,42 @@ class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService
         email: String,
         password: String,
         deviceName: String
-    ): Result<UserLogin, ApiError> {
-        val body = LoginBody(
-            email = email,
-            password = password,
-            device = deviceName
-        )
-        return safeApiCall { apiService.login(body) }
-    }
+    ): Result<UserLogin, ApiError> =
+        safeApiCall {
+            apiService.login(
+                LoginBody(
+                    email = email,
+                    password = password,
+                    device = deviceName
+                )
+            )
+        }
 
-    override suspend fun forgotPassword(email: String): Result<OkResponse, ApiError> {
-        val body = EmailBody(email)
-        return safeApiCall { apiService.forgotPassword(body) }
-    }
+    override suspend fun mfaAuth(
+        key: String,
+        token: String,
+        deviceName: String
+    ): Result<ApiKey, ApiError> =
+        safeApiCall {
+            apiService.mfaAuth(
+                MfaAuthBody(
+                    token = token,
+                    key = key,
+                    device = deviceName
+                )
+            )
+        }
+
+    override suspend fun forgotPassword(email: String): Result<OkResponse, ApiError> =
+        safeApiCall { apiService.forgotPassword(EmailBody(email)) }
 
     override suspend fun signUp(
         email: String,
         password: String
-    ): Result<MessageResponse, ApiError> {
-        val body = RegisterBody(email = email, password = password)
-        return safeApiCall { apiService.register(body) }
-    }
+    ): Result<MessageResponse, ApiError> =
+        safeApiCall { apiService.register(RegisterBody(email = email, password = password)) }
 
-    override suspend fun reactivate(email: String): Result<MessageResponse, ApiError> {
-        val body = EmailBody(email)
-        return safeApiCall { apiService.reactivate(body) }
-    }
+
+    override suspend fun reactivate(email: String): Result<MessageResponse, ApiError> =
+        safeApiCall { apiService.reactivate(EmailBody(email)) }
 }

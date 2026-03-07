@@ -1,5 +1,6 @@
 package io.simplelogin.android.di
 
+import android.os.Build
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,6 +27,10 @@ annotation class AppVersion
 @Retention(AnnotationRetention.BINARY)
 annotation class LoadingState
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DeviceName
+
 typealias LoadingStateFlow = MutableStateFlow<Boolean>
 
 @[Module InstallIn(SingletonComponent::class)]
@@ -48,5 +53,8 @@ abstract class AppModule {
 
         @[LoadingState Provides Singleton]
         fun provideLoadingState(): LoadingStateFlow = MutableStateFlow(false)
+
+        @[DeviceName Provides Singleton]
+        fun provideDeviceName() = "${Build.MANUFACTURER} ${Build.MODEL} ${Build.DEVICE}"
     }
 }
