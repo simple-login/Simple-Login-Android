@@ -14,10 +14,9 @@ import io.simplelogin.android.data.models.ui.ContactUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import javax.inject.Inject
 
 interface ContactUiActionHandler {
@@ -36,7 +35,8 @@ class ContactUiActionHandlerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val datasource: AliasDetailsRemoteDatasource,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val snackbarManager: SnackbarManager,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val copyToClipboard: CopyToClipboardUseCase
 ) : ContactUiActionHandler {
     override suspend fun handleContactAction(
@@ -50,9 +50,7 @@ class ContactUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.contacts),
                     content = contact.reverseAlias
                 )
-                snackbarManager.showSnackbar(
-                    SnackbarConfiguration(message = context.getString(R.string.reverse_alias_copied))
-                )
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
                 ContactUiActionResult.NONE
             }
 
@@ -61,9 +59,7 @@ class ContactUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.contacts),
                     content = contact.reverseAliasAddress
                 )
-                snackbarManager.showSnackbar(
-                    SnackbarConfiguration(message = context.getString(R.string.reverse_alias_copied))
-                )
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
                 ContactUiActionResult.NONE
             }
 
@@ -72,9 +68,7 @@ class ContactUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.contacts),
                     content = contact.email
                 )
-                snackbarManager.showSnackbar(
-                    SnackbarConfiguration(message = context.getString(R.string.email_address_copied))
-                )
+                showSnackbarInformation(context.getString(R.string.email_address_copied))
                 ContactUiActionResult.NONE
             }
 
@@ -93,7 +87,7 @@ class ContactUiActionHandlerImpl @Inject constructor(
                         loadingState.value = false
                         if (deleted.value) {
                             val message = context.getString(R.string.contact_deleted, contact.email)
-                            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                            showSnackbarInformation(message)
                             return@fold ContactUiActionResult.DELETED
                         } else {
                             return@fold ContactUiActionResult.NONE
@@ -109,11 +103,7 @@ class ContactUiActionHandlerImpl @Inject constructor(
                 try {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
-                    e.message?.let {
-                        snackbarManager.showSnackbar(
-                            SnackbarConfiguration(message = it, type = SnackbarType.FAILURE)
-                        )
-                    }
+                    e.message?.let { showSnackbarFailure(it) }
                 }
                 ContactUiActionResult.NONE
             }
@@ -127,21 +117,18 @@ class ContactUiActionHandlerImpl @Inject constructor(
         loadingState.value = false
         if (blockForward.value) {
             val message = context.getString(R.string.contact_blocked, contact.email)
-            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+            showSnackbarInformation(message)
             return ContactUiActionResult.BLOCKED
         } else {
             val message = context.getString(R.string.contact_unblocked, contact.email)
-            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+            showSnackbarInformation(message)
             return ContactUiActionResult.UNBLOCKED
         }
     }
 
     private suspend fun handleError(error: ApiError): ContactUiActionResult {
         loadingState.value = false
-        val message = error.description(context)
-        snackbarManager.showSnackbar(
-            SnackbarConfiguration(message = message, type = SnackbarType.FAILURE)
-        )
+        showSnackbarFailure(error.description(context))
         return ContactUiActionResult.NONE
     }
 }

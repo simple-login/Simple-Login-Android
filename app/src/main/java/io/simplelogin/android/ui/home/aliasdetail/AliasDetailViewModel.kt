@@ -27,9 +27,8 @@ import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.ActivityUiActionHandler
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarType
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.async
@@ -45,7 +44,8 @@ class AliasDetailViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @Assisted private val aliasIdValue: Int,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val snackbarManager: SnackbarManager,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val aliasDetailsRemoteDatasource: AliasDetailsRemoteDatasource,
     private val mailboxesRemoteDatasource: MailboxesRemoteDatasource,
@@ -127,8 +127,7 @@ class AliasDetailViewModel @AssistedInject constructor(
                     onSuccess(updated)
                     updated
                 }
-                val message = context.getString(R.string.note_updated)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.note_updated))
             }, onFailure = ::handle)
         }
     }
@@ -147,8 +146,7 @@ class AliasDetailViewModel @AssistedInject constructor(
                     onSuccess(updated)
                     updated
                 }
-                val message = context.getString(R.string.display_name_updated)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.display_name_updated))
             }, onFailure = ::handle)
         }
     }
@@ -179,8 +177,7 @@ class AliasDetailViewModel @AssistedInject constructor(
                     onSuccess(updated)
                     updated
                 }
-                val message = context.getString(R.string.mailboxes_updated)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.mailboxes_updated))
             }, onFailure = ::handle)
         }
     }
@@ -215,10 +212,6 @@ class AliasDetailViewModel @AssistedInject constructor(
 
     private suspend fun handle(error: ApiError) {
         loadingState.value = false
-        val config = SnackbarConfiguration(
-            message = error.description(context),
-            type = SnackbarType.FAILURE
-        )
-        snackbarManager.showSnackbar(config)
+        showSnackbarFailure(error.description(context))
     }
 }

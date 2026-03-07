@@ -9,15 +9,17 @@ import javax.inject.Inject
 
 sealed class LogInError {
     data object IncorrectEmailOrPassword : LogInError()
+    data object AccountNotActivated : LogInError()
     data class Api(val error: ApiError) : LogInError()
 
     companion object {
         fun fromApiError(error: ApiError): LogInError = when (error) {
-            is ApiError.HttpError -> if (error.code == 400) {
-                IncorrectEmailOrPassword
-            } else {
-                Api(error)
-            }
+            is ApiError.HttpError ->
+                when (error.code) {
+                    400 -> IncorrectEmailOrPassword
+                    422 -> AccountNotActivated
+                    else -> Api(error)
+                }
 
             is ApiError.UnknownError -> Api(error)
         }

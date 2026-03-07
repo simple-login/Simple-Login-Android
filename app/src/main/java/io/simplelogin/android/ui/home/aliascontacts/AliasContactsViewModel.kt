@@ -24,8 +24,7 @@ import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +41,7 @@ class AliasContactsViewModel @AssistedInject constructor(
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val datasource: AliasDetailsRemoteDatasource,
     private val actionHandler: ContactUiActionHandler,
-    private val snackbarManager: SnackbarManager,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
@@ -181,10 +180,10 @@ class AliasContactsViewModel @AssistedInject constructor(
                     loadingState.value = false
                     if (contact.existed) {
                         val message = context.getString(R.string.contact_exists, email)
-                        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                        showSnackbarInformation(message)
                     } else {
                         val message = context.getString(R.string.contact_created, email)
-                        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                        showSnackbarInformation(message)
                         refresh()
                     }
                 }, onFailure = { error ->

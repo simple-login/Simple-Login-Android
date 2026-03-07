@@ -13,9 +13,8 @@ import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarType
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
 import io.simplelogin.android.usecases.login.LogInError
 import io.simplelogin.android.usecases.login.LogInUseCase
@@ -38,11 +37,12 @@ import javax.inject.Inject
 class LoginMasterScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val snackbarManager: SnackbarManager,
     private val logIn: LogInUseCase,
     private val verifyMfa: VerifyMfaUseCase,
     private val forgotPassword: ForgotPasswordUseCase,
     private val signUp: SignUpUseCase,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val resendActivationCode: ResendActivationCodeUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val accountSettingsRemoteDatasource: AccountSettingsRemoteDatasource,
@@ -69,17 +69,17 @@ class LoginMasterScreenViewModel @Inject constructor(
 
         if (errorMessage != null) {
             viewModelScope.launch {
-                showSnackbar(errorMessage)
+                showSnackbarFailure(errorMessage)
             }
             return
         }
 
         launchLoading(doWork = {
             logIn(email = email, password = password)
-        }, handleResult = {
-            when (it) {
+        }, handleResult = { result ->
+            when (result) {
                 is Result.Success -> {
-                    val userLogin = it.value
+                    val userLogin = result.value
                     userLogin.apiKey?.let { apiKeyValue ->
                         login(apiKey = ApiKey(value = apiKeyValue))
                     } ?: userLogin.mfaKey?.let { mfaKey ->
@@ -88,11 +88,19 @@ class LoginMasterScreenViewModel @Inject constructor(
                 }
 
                 is Result.Failure -> {
-                    val message = when (it.error) {
-                        is LogInError.IncorrectEmailOrPassword -> context.getString(R.string.incorrect_email_or_password)
-                        is LogInError.Api -> it.error.error.description(context)
+                    when (result.error) {
+                        is LogInError.IncorrectEmailOrPassword -> {
+                            val message = context.getString(R.string.incorrect_email_or_password)
+                            showSnackbarFailure(message)
+                        }
+
+                        is LogInError.AccountNotActivated -> {}
+
+                        is LogInError.Api -> {
+                            val message = result.error.error.description(context)
+                            showSnackbarFailure(message)
+                        }
                     }
-                    snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
                 }
             }
         })
@@ -104,13 +112,7 @@ class LoginMasterScreenViewModel @Inject constructor(
         }, handleResult = {
             when (it) {
                 is Result.Success -> login(it.value)
-                is Result.Failure ->
-                    snackbarManager.showSnackbar(
-                        SnackbarConfiguration(
-                            message = it.error.description(context),
-                            type = SnackbarType.FAILURE
-                        )
-                    )
+                is Result.Failure -> showSnackbarFailure(it.error.description(context))
             }
         })
     }
@@ -126,7 +128,7 @@ class LoginMasterScreenViewModel @Inject constructor(
             result.fold(onSuccess = { userInfo ->
                 updateSessionSettings { it.copy(apiKey = apiKey, userInfo = userInfo) }
             }, onFailure = { error ->
-                showSnackbar(error.description(context))
+                showSnackbarFailure(error.description(context))
             })
         })
     }
@@ -135,13 +137,14 @@ class LoginMasterScreenViewModel @Inject constructor(
         launchLoading(doWork = {
             signUp.invoke(email = email, password = password)
         }, handleResult = {
-            val message = when (it) {
-                is Result.Success ->
-                    context.getString(R.string.confirm_email_instructions_sent, email)
+            when (it) {
+                is Result.Success -> {
+                    val message = context.getString(R.string.confirm_email_instructions_sent, email)
+                    showSnackbarInformation(message)
+                }
 
-                is Result.Failure -> it.error.description(context)
+                is Result.Failure -> showSnackbarFailure(it.error.description(context))
             }
-            showSnackbar(message)
         })
     }
 
@@ -149,13 +152,15 @@ class LoginMasterScreenViewModel @Inject constructor(
         launchLoading(doWork = {
             forgotPassword.invoke(email)
         }, handleResult = {
-            val message = when (it) {
-                is Result.Success ->
-                    context.getString(R.string.password_reset_instructions_sent, email)
+            when (it) {
+                is Result.Success -> {
+                    val message =
+                        context.getString(R.string.password_reset_instructions_sent, email)
+                    showSnackbarInformation(message)
+                }
 
-                is Result.Failure -> it.error.description(context)
+                is Result.Failure -> showSnackbarFailure(it.error.description(context))
             }
-            showSnackbar(message)
         })
     }
 
@@ -163,13 +168,14 @@ class LoginMasterScreenViewModel @Inject constructor(
         launchLoading(doWork = {
             resendActivationCode(email)
         }, handleResult = {
-            val message = when (it) {
-                is Result.Success ->
-                    context.getString(R.string.resend_activation_code_done, email)
+            when (it) {
+                is Result.Success -> {
+                    val message = context.getString(R.string.resend_activation_code_done, email)
+                    showSnackbarInformation(message)
+                }
 
-                is Result.Failure -> it.error.description(context)
+                is Result.Failure -> showSnackbarFailure(it.error.description(context))
             }
-            showSnackbar(message)
         })
     }
 
@@ -178,7 +184,7 @@ class LoginMasterScreenViewModel @Inject constructor(
             updateSessionSettings.invoke {
                 it.copy(baseUrl = baseUrl)
             }
-            showSnackbar(context.getString(R.string.api_url_updated))
+            showSnackbarInformation(context.getString(R.string.api_url_updated))
         }
     }
 
@@ -189,9 +195,5 @@ class LoginMasterScreenViewModel @Inject constructor(
             loadingState.value = false
             handleResult(result)
         }
-    }
-
-    private suspend fun showSnackbar(message: String) {
-        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
     }
 }

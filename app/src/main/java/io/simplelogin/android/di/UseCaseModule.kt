@@ -6,6 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.CopyToClipboardUseCaseImpl
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCaseImpl
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCaseImpl
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
 import io.simplelogin.android.usecases.login.ForgotPasswordUseCaseImpl
 import io.simplelogin.android.usecases.login.LogInUseCase
@@ -62,4 +66,10 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindLogOutUseCase(impl: LogOutImpl): LogOutUseCase
+
+    @[Binds Singleton]
+    abstract fun bindShowSnackbarInformation(impl: ShowSnackbarInformationUseCaseImpl): ShowSnackbarInformationUseCase
+
+    @[Binds Singleton]
+    abstract fun bindShowSnackbarFailure(impl: ShowSnackbarFailureUseCaseImpl): ShowSnackbarFailureUseCase
 }

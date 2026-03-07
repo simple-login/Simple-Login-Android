@@ -9,10 +9,9 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ActivityAction
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import javax.inject.Inject
 
 interface ActivityUiActionHandler {
@@ -21,7 +20,8 @@ interface ActivityUiActionHandler {
 
 class ActivityUiActionHandlerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val snackbarManager: SnackbarManager,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val copyToClipboard: CopyToClipboardUseCase
 ) : ActivityUiActionHandler {
     override suspend fun handleActivityAction(activity: AliasActivity, action: ActivityUiAction) {
@@ -31,8 +31,7 @@ class ActivityUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.alias_activity),
                     content = activity.reverseAlias
                 )
-                val message = context.getString(R.string.reverse_alias_copied)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
             }
 
             ActivityUiAction.COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME -> {
@@ -40,8 +39,7 @@ class ActivityUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.alias_activity),
                     content = activity.reverseAliasAddress
                 )
-                val message = context.getString(R.string.reverse_alias_copied)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
             }
 
             ActivityUiAction.COPY_ADDRESS -> {
@@ -53,8 +51,7 @@ class ActivityUiActionHandlerImpl @Inject constructor(
                     label = context.getString(R.string.alias_activity),
                     content = address
                 )
-                val message = context.getString(R.string.email_address_copied)
-                snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+                showSnackbarInformation(context.getString(R.string.email_address_copied))
             }
 
             ActivityUiAction.OPEN_DEFAULT_EMAIL_CLIENT -> {
@@ -71,14 +68,7 @@ class ActivityUiActionHandlerImpl @Inject constructor(
                 try {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
-                    e.message?.let {
-                        snackbarManager.showSnackbar(
-                            SnackbarConfiguration(
-                                message = it,
-                                type = SnackbarType.FAILURE
-                            )
-                        )
-                    }
+                    e.message?.let { showSnackbarFailure(it) }
                 }
             }
         }

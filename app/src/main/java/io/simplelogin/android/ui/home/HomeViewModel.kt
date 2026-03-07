@@ -13,10 +13,9 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.AliasListManager
-import io.simplelogin.android.domain.snackbar.SnackbarConfiguration
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarType
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
+import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,9 +30,10 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val snackbarManager: SnackbarManager,
     private val aliasListManager: AliasListManager,
     private val copyToClipboard: CopyToClipboardUseCase,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
@@ -93,7 +93,7 @@ class HomeViewModel @Inject constructor(
                 content = email
             )
             val message = context.getString(R.string.alias_address_copied, email)
-            snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+            showSnackbarInformation(message)
         }
     }
 
@@ -128,11 +128,7 @@ class HomeViewModel @Inject constructor(
                     } else {
                         context.getString(R.string.alias_is_disabled, alias.email)
                     }
-                    val config = SnackbarConfiguration(
-                        message = message,
-                        type = if (enabled.value) SnackbarType.SUCCESS else SnackbarType.INFORMATION
-                    )
-                    snackbarManager.showSnackbar(config)
+                    showSnackbarInformation(message)
                 }, onFailure = ::handle)
         }
     }
@@ -141,11 +137,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             aliasListManager.pin(aliasId = alias.id)
                 .fold(onSuccess = {
-                    val config = SnackbarConfiguration(
-                        message = context.getString(R.string.alias_is_pinned, alias.email),
-                        type = SnackbarType.SUCCESS
-                    )
-                    snackbarManager.showSnackbar(config)
+                    val message = context.getString(R.string.alias_is_pinned, alias.email)
+                    showSnackbarInformation(message)
                 }, onFailure = ::handle)
         }
     }
@@ -154,11 +147,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             aliasListManager.unpin(aliasId = alias.id)
                 .fold(onSuccess = {
-                    val config = SnackbarConfiguration(
-                        message = context.getString(R.string.alias_is_unpinned, alias.email),
-                        type = SnackbarType.INFORMATION
-                    )
-                    snackbarManager.showSnackbar(config)
+                    val message = context.getString(R.string.alias_is_unpinned, alias.email)
+                    showSnackbarInformation(message)
                 }, onFailure = ::handle)
         }
     }
@@ -167,10 +157,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             aliasListManager.delete(aliasId = alias.id)
                 .fold(onSuccess = {
-                    val config = SnackbarConfiguration(
-                        message = context.getString(R.string.alias_is_deleted, alias.email)
-                    )
-                    snackbarManager.showSnackbar(config)
+                    val message = context.getString(R.string.alias_is_deleted, alias.email)
+                    showSnackbarInformation(message)
                 }, onFailure = ::handle)
         }
     }
@@ -204,14 +192,10 @@ class HomeViewModel @Inject constructor(
             if (copyAfterCreating) R.string.alias_created_and_copied_to_clipboard else R.string.alias_created,
             alias.email
         )
-        snackbarManager.showSnackbar(SnackbarConfiguration(message = message))
+        showSnackbarInformation(message)
     }
 
     private suspend fun handle(error: ApiError) {
-        val config = SnackbarConfiguration(
-            message = error.description(context),
-            type = SnackbarType.FAILURE
-        )
-        snackbarManager.showSnackbar(config)
+        showSnackbarFailure(error.description(context))
     }
 }
