@@ -81,8 +81,12 @@ fun UserInfoCard(
 
         Spacer(modifier = Modifier.width(Spacing.medium))
 
-        Column(verticalArrangement = Arrangement.Center) {
-            if (userInfo.name.isNotEmpty()) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Default name is the email address so we check if it's equal to email or not
+            if (userInfo.name.isNotEmpty() && userInfo.name != userInfo.email) {
                 Text(
                     text = userInfo.name,
                     fontWeight = FontWeight.Medium,
@@ -90,15 +94,15 @@ fun UserInfoCard(
                         lineHeight = TextUnit.Unspecified,
                         platformStyle = PlatformTextStyle(includeFontPadding = false)
                     ),
-                    maxLines = 2,
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
 
-            if (userInfo.isPremium) {
+            if (userInfo.isPremiumOrTrial) {
                 Text(
-                    text = stringResource(R.string.premium),
-                    color = SlColor.Amber,
+                    text = stringResource(if (userInfo.inTrial) R.string.premium_trial else R.string.premium),
+                    color = if (userInfo.inTrial) SlColor.Green else SlColor.Amber,
                     style = LocalTextStyle.current.copy(
                         lineHeight = TextUnit.Unspecified,
                         platformStyle = PlatformTextStyle(includeFontPadding = false)
@@ -116,7 +120,6 @@ fun UserInfoCard(
         }
 
         editMenu?.let {
-            Spacer(modifier = Modifier.weight(1f))
             it()
         }
     }

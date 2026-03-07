@@ -69,6 +69,7 @@ import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.OptionRow
 import io.simplelogin.android.ui.util.RetryButton
+import io.simplelogin.android.ui.util.SettingsFooter
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
@@ -266,6 +267,11 @@ private fun LazyListScope.accountSettingsScreenContent(
                 }
             }
         )
+
+        if (userInfo.inTrial) {
+            SettingsFooter(text = stringResource(R.string.trial_description))
+        }
+
         SettingsSpacer()
     }
 
@@ -311,7 +317,7 @@ private fun LazyListScope.accountSettingsScreenContent(
             } else {
                 AnnotatedString(stringResource(R.string.not_linked_to_proton))
             },
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary
         )
 

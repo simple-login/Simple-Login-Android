@@ -172,6 +172,7 @@ private fun HomeScreenScaffold(
                 NormalTopAppBar(
                     theme = state.deviceSettings.theme,
                     isPremium = state.userInfo?.isPremium ?: false,
+                    inTrial = state.userInfo?.inTrial ?: false,
                     selectedAliasFilterMode = state.aliasFilterMode,
                     scrollBehavior = scrollBehavior,
                     onOpenDrawer = onOpenDrawer,

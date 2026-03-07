@@ -164,6 +164,8 @@
     <string name="ask_for_random_alias_note_description">Ask for note before creating random aliases</string>
     <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
     <string name="account_settings">Account settings</string>
+    <string name="premium_trial">Premium Trial</string>
+    <string name="trial_description">When you signed up, you have a free 7-day Premium trial. After that your account will automatically be downgraded to the Free plan. During the trial, the only limit is you can\'t create more than 10 aliases.</string>
     <string name="premium">Premium</string>
     <string name="newsletter">Newsletter</string>
     <string name="newsletter_description">We will occasionally send you emails with new feature announcements</string>

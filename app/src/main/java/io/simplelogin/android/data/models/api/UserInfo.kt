@@ -16,4 +16,7 @@ data class UserInfo(
 ) {
     val initial: Char?
         get() = (name.firstOrNull() ?: email.firstOrNull())?.uppercaseChar()
+
+    val isPremiumOrTrial: Boolean
+        get() = isPremium || inTrial
 }

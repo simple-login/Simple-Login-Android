@@ -37,6 +37,7 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 fun NormalTopAppBar(
     theme: Theme,
     isPremium: Boolean,
+    inTrial: Boolean,
     selectedAliasFilterMode: AliasFilterMode,
     scrollBehavior: TopAppBarScrollBehavior,
     onOpenDrawer: () -> Unit,
@@ -50,6 +51,15 @@ fun NormalTopAppBar(
         Theme.DARK -> true
         Theme.MATCH_SYSTEM -> isSystemInDarkTheme()
     }
+
+    val iconResId = when {
+        isDark && inTrial -> R.drawable.ic_premium_trial_menu_night
+        !isDark && inTrial -> R.drawable.ic_premium_trial_menu
+        isDark && isPremium -> R.drawable.ic_premium_menu_night
+        !isDark && isPremium -> R.drawable.ic_premium_menu
+        else -> null
+    }
+
     MediumTopAppBar(
         title = {
             Text(selectedAliasFilterMode.title(context))
@@ -57,11 +67,9 @@ fun NormalTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
         navigationIcon = {
             IconButton(onClick = onOpenDrawer) {
-                if (isPremium) {
+                if (iconResId != null) {
                     Icon(
-                        painter = painterResource(
-                            if (isDark) R.drawable.ic_premium_menu_night else R.drawable.ic_premium_menu
-                        ),
+                        painter = painterResource(iconResId),
                         contentDescription = stringResource(R.string.open_menu),
                         tint = Color.Unspecified
                     )
