@@ -15,6 +15,7 @@ class LogOutImpl @Inject constructor(private val updateSessionSettings: UpdateSe
         updateSessionSettings {
             it.copy(
                 apiKey = null,
+                userInfo = null,
                 lockType = DeviceLockType.DEFAULT,
                 lockTimeOut = LockTimeOut.DEFAULT,
                 pinCode = null,

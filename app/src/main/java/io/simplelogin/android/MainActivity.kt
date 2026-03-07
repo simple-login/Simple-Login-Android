@@ -155,6 +155,7 @@ class MainActivity : AppCompatActivity() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     ModalNavigationDrawer(
                         drawerState = drawerState,
+                        gesturesEnabled = userInfo != null,
                         drawerContent = {
                             Drawer(
                                 appVersion = appRootViewModel.appVersion,
