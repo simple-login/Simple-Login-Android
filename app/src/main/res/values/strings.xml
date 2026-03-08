@@ -279,4 +279,6 @@
     <string name="contact_deleted">%s deleted</string>
     <string name="contact_exists">%s already exists</string>
     <string name="contact_created">%s created</string>
+    <string name="settings_updated">Settings updated</string>
+    <string name="information_updated">Information updated</string>
 </resources>

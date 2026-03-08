@@ -21,7 +21,7 @@ import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.models.api.UpdateCustomDomainResponse
 import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
-import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserLogin
@@ -255,6 +255,6 @@ interface ApiService {
     @PATCH("api/setting")
     suspend fun updateUserSettings(
         @Header(AUTH_HEADER) apiKey: ApiKey,
-        @Body body: UpdateUserSettingsOptions
+        @Body body: UpdateUserSettingsOption
     ): Response<UserSettings>
 }

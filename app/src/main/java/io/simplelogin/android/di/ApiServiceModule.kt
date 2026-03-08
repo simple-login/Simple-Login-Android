@@ -15,6 +15,8 @@ import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.models.api.UpdateMailboxOptionSerializer
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserInfoOptionSerializer
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOptionSerializer
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.BaseUrlProviderImpl
@@ -34,6 +36,10 @@ object ApiServiceModule {
     fun provideGson(): Gson = GsonBuilder()
         .setStrictness(Strictness.LENIENT)
         .registerTypeAdapter(UpdateUserInfoOption::class.java, UpdateUserInfoOptionSerializer())
+        .registerTypeAdapter(
+            UpdateUserSettingsOption::class.java,
+            UpdateUserSettingsOptionSerializer()
+        )
         .registerTypeAdapter(UpdateAliasOption::class.java, UpdateAliasOptionSerializer())
         .registerTypeAdapter(
             UpdateCustomDomainOption::class.java,

@@ -13,7 +13,7 @@ import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
-import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
@@ -45,7 +45,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     private val _informationStateFlow = MutableStateFlow<String?>(null)
     val informationStateFlow: StateFlow<String?> = _informationStateFlow
-    
+
     fun refresh() {
         _stateFlow.update { AccountSettingsState.Default }
         withApiKey { apiKey ->
@@ -133,23 +133,23 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun updateNotification(notification: Boolean) {
-        updateSettings(UpdateUserSettingsOptions(notification = notification))
+        updateSettings(UpdateUserSettingsOption.Notification(notification))
     }
 
     fun updateRandomMode(mode: RandomMode) {
-        updateSettings(UpdateUserSettingsOptions(randomMode = mode))
+        updateSettings(UpdateUserSettingsOption.RandomModeOption(mode))
     }
 
     fun updateRandomAliasSuffix(suffix: RandomAliasSuffix) {
-        updateSettings(UpdateUserSettingsOptions(randomAliasSuffix = suffix))
+        updateSettings(UpdateUserSettingsOption.RandomAliasSuffixOption(suffix))
     }
 
     fun updateUsableDomain(domain: UsableDomain) {
-        updateSettings(UpdateUserSettingsOptions(randomAliasDefaultDomain = domain.name))
+        updateSettings(UpdateUserSettingsOption.RandomAliasDefaultDomain(domain.name))
     }
 
     fun updateSenderFormat(format: SenderFormat) {
-        updateSettings(UpdateUserSettingsOptions(senderFormat = format))
+        updateSettings(UpdateUserSettingsOption.SenderFormatOption(format))
     }
 
     fun unlinkProton() {
@@ -177,7 +177,7 @@ class AccountSettingsViewModel @Inject constructor(
         _informationStateFlow.value = null
     }
 
-    private fun updateSettings(options: UpdateUserSettingsOptions) {
+    private fun updateSettings(options: UpdateUserSettingsOption) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isLoading = true) }
             datasource.updateUserSettings(apiKey = apiKey, options = options)
@@ -188,6 +188,7 @@ class AccountSettingsViewModel @Inject constructor(
                             settings = it.settings?.copy(userSettings = result)
                         )
                     }
+                    _informationStateFlow.value = context.getString(R.string.settings_updated)
                 }, onFailure = ::handleError)
         }
     }
@@ -204,6 +205,7 @@ class AccountSettingsViewModel @Inject constructor(
                             settings = it.settings?.copy(userInfo = result)
                         )
                     }
+                    _informationStateFlow.value = context.getString(R.string.information_updated)
                 }, onFailure = ::handleError)
         }
     }

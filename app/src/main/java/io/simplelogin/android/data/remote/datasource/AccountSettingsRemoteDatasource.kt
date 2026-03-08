@@ -3,7 +3,7 @@ package io.simplelogin.android.data.remote.datasource
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
-import io.simplelogin.android.data.models.api.UpdateUserSettingsOptions
+import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
@@ -18,7 +18,7 @@ interface AccountSettingsRemoteDatasource {
     suspend fun getUsableDomains(apiKey: ApiKey): Result<List<UsableDomain>, ApiError>
     suspend fun updateUserSettings(
         apiKey: ApiKey,
-        options: UpdateUserSettingsOptions
+        options: UpdateUserSettingsOption
     ): Result<UserSettings, ApiError>
 
     suspend fun updateUserInfo(
@@ -43,7 +43,7 @@ class AccountSettingsRemoteDatasourceImpl @Inject constructor(private val apiSer
 
     override suspend fun updateUserSettings(
         apiKey: ApiKey,
-        options: UpdateUserSettingsOptions
+        options: UpdateUserSettingsOption
     ): Result<UserSettings, ApiError> =
         safeApiCall { apiService.updateUserSettings(apiKey = apiKey, body = options) }
 

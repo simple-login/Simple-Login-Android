@@ -36,6 +36,15 @@ enum class SenderFormat {
             AT_ONLY -> "john at example.com"
             NO_NAME -> context.getString(R.string.no_name_format_description)
         }
+
+    val value: String
+        get() = when (this) {
+            A -> "A"
+            AT -> "AT"
+            NAME_ONLY -> "NAME_ONLY"
+            AT_ONLY -> "AT_ONLY"
+            NO_NAME -> "NO_NAME"
+        }
 }
 
 enum class RandomAliasSuffix {
@@ -49,5 +58,11 @@ enum class RandomAliasSuffix {
         when (this) {
             WORD -> context.getString(R.string.random_word)
             RANDOM_STRING -> context.getString(R.string.random_5_characters)
+        }
+
+    val value: String
+        get() = when (this) {
+            WORD -> "word"
+            RANDOM_STRING -> "random_string"
         }
 }
