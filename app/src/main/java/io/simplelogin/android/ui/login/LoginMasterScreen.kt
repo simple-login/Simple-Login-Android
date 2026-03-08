@@ -20,6 +20,7 @@ import io.simplelogin.android.ui.login.dialog.VerificationMode
 fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreenViewModel>()) {
     val baseUrl by baseUrlState.collectAsState()
     val mfaKey by mfaKeyStateFlow.collectAsState()
+    val accountActivationPayload by accountActivationPayloadStateFlow.collectAsState()
 
     var showEditBaseUrlDialog by rememberSaveable { mutableStateOf(false) }
     var showSignInWithApiKeyDialog by rememberSaveable { mutableStateOf(false) }
@@ -80,6 +81,22 @@ fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreen
             onSignUp = { email, password ->
                 showSignUpDialog = false
                 signUp(email = email, password = password)
+            }
+        )
+    }
+
+    accountActivationPayload?.let { payload ->
+        VerificationDialog(
+            mode = VerificationMode.Activation(
+                email = payload.email,
+                onResend = {
+                    dismissAccountActivation()
+                    resentActivationCode(payload.email)
+                }),
+            onDismiss = ::dismissAccountActivation,
+            onConfirm = {
+                dismissAccountActivation()
+                activateAccount(email = payload.email, password = payload.password, code = it)
             }
         )
     }

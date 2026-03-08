@@ -20,6 +20,7 @@ import io.simplelogin.android.usecases.login.LogInError
 import io.simplelogin.android.usecases.login.LogInUseCase
 import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
 import io.simplelogin.android.usecases.login.SignUpUseCase
+import io.simplelogin.android.usecases.login.VerifyAccountUseCase
 import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
@@ -33,12 +34,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class AccountActivationPayload(
+    val email: String,
+    val password: String
+)
+
 @HiltViewModel
 class LoginMasterScreenViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
     private val logIn: LogInUseCase,
     private val verifyMfa: VerifyMfaUseCase,
+    private val verifyAccount: VerifyAccountUseCase,
     private val forgotPassword: ForgotPasswordUseCase,
     private val signUp: SignUpUseCase,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
@@ -59,6 +66,11 @@ class LoginMasterScreenViewModel @Inject constructor(
 
     private val _mfaKeyStateFlow = MutableStateFlow<String?>(null)
     val mfaKeyStateFlow: StateFlow<String?> = _mfaKeyStateFlow
+
+    private val _accountActivationPayloadStateFlow =
+        MutableStateFlow<AccountActivationPayload?>(null)
+    val accountActivationPayloadStateFlow: StateFlow<AccountActivationPayload?> =
+        _accountActivationPayloadStateFlow
 
     fun login(email: String, password: String) {
         val errorMessage = when {
@@ -94,7 +106,11 @@ class LoginMasterScreenViewModel @Inject constructor(
                             showSnackbarFailure(message)
                         }
 
-                        is LogInError.AccountNotActivated -> {}
+                        is LogInError.AccountNotActivated ->
+                            _accountActivationPayloadStateFlow.value = AccountActivationPayload(
+                                email = email,
+                                password = password
+                            )
 
                         is LogInError.Api -> {
                             val message = result.error.error.description(context)
@@ -102,6 +118,21 @@ class LoginMasterScreenViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+        })
+    }
+
+    fun dismissAccountActivation() {
+        _accountActivationPayloadStateFlow.value = null
+    }
+
+    fun activateAccount(email: String, password: String, code: String) {
+        launchLoading(doWork = {
+            verifyAccount(email = email, code = code)
+        }, handleResult = { result ->
+            when (result) {
+                is Result.Success -> login(email = email, password = password)
+                is Result.Failure -> showSnackbarFailure(result.error.description(context))
             }
         })
     }

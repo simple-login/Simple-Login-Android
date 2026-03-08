@@ -3,6 +3,7 @@ package io.simplelogin.android.data.remote.datasource
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.UserLogin
+import io.simplelogin.android.data.remote.ActivateAccountBody
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody
 import io.simplelogin.android.data.remote.LoginBody
@@ -23,6 +24,7 @@ interface LogInSignUpRemoteDatasource {
     suspend fun mfaAuth(key: String, token: String, deviceName: String): Result<ApiKey, ApiError>
     suspend fun forgotPassword(email: String): Result<OkResponse, ApiError>
     suspend fun signUp(email: String, password: String): Result<MessageResponse, ApiError>
+    suspend fun activate(email: String, code: String): Result<MessageResponse, ApiError>
     suspend fun reactivate(email: String): Result<MessageResponse, ApiError>
 }
 
@@ -67,6 +69,8 @@ class LogInSignUpRemoteDatasourceImpl @Inject constructor(private val apiService
     ): Result<MessageResponse, ApiError> =
         safeApiCall { apiService.register(RegisterBody(email = email, password = password)) }
 
+    override suspend fun activate(email: String, code: String): Result<MessageResponse, ApiError> =
+        safeApiCall { apiService.activate(ActivateAccountBody(email = email, code = code)) }
 
     override suspend fun reactivate(email: String): Result<MessageResponse, ApiError> =
         safeApiCall { apiService.reactivate(EmailBody(email)) }
