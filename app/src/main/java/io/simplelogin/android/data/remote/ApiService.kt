@@ -87,6 +87,9 @@ interface ApiService {
     @PATCH("api/user_info")
     suspend fun updateName(@Body body: UpdateNameBody): Response<UserInfo>
 
+    @DELETE("api/setting/unlink_proton_account")
+    suspend fun unlinkProton(@Header(AUTH_HEADER) apiKey: ApiKey): Response<OkResponse>
+
     // Alias
     @POST("api/v3/alias/custom/new")
     suspend fun createAlias(

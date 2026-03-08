@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
@@ -24,7 +26,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountSettingsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val datasource: AccountSettingsRemoteDatasource
@@ -41,10 +43,9 @@ class AccountSettingsViewModel @Inject constructor(
     private val _stateFlow = MutableStateFlow(AccountSettingsState.Default)
     val stateFlow: StateFlow<AccountSettingsState> = _stateFlow
 
-    init {
-        refresh()
-    }
-
+    private val _informationStateFlow = MutableStateFlow<String?>(null)
+    val informationStateFlow: StateFlow<String?> = _informationStateFlow
+    
     fun refresh() {
         _stateFlow.update { AccountSettingsState.Default }
         withApiKey { apiKey ->
@@ -105,20 +106,6 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    fun toggleProtonLink() {
-        val userInfo = _stateFlow.value.settings?.userInfo
-        if (userInfo != null) {
-            val updated = if (userInfo.connectedProtonAddress != null) {
-                userInfo.copy(connectedProtonAddress = null)
-            } else {
-                userInfo.copy(connectedProtonAddress = "john.doe@proton.me")
-            }
-            _stateFlow.update {
-                it.copy(settings = it.settings?.copy(userInfo = updated))
-            }
-        }
-    }
-
     fun updateDisplayName(displayName: String) {
         updateInfo(UpdateUserInfoOption.DisplayName(displayName))
     }
@@ -165,6 +152,31 @@ class AccountSettingsViewModel @Inject constructor(
         updateSettings(UpdateUserSettingsOptions(senderFormat = format))
     }
 
+    fun unlinkProton() {
+        withApiKey { apiKey ->
+            _stateFlow.update { it.copy(isLoading = true) }
+            datasource.unlinkProton(apiKey = apiKey)
+                .fold(onSuccess = {
+                    _stateFlow.update {
+                        it.copy(
+                            isLoading = false,
+                            settings = it.settings?.copy(
+                                userInfo = it.settings.userInfo.copy(
+                                    connectedProtonAddress = null
+                                )
+                            )
+                        )
+                    }
+                    _informationStateFlow.value =
+                        context.getString(R.string.proton_account_unlinked)
+                }, onFailure = ::handleError)
+        }
+    }
+
+    fun clearInformation() {
+        _informationStateFlow.value = null
+    }
+
     private fun updateSettings(options: UpdateUserSettingsOptions) {
         withApiKey { apiKey ->
             _stateFlow.update { it.copy(isLoading = true) }
@@ -176,11 +188,7 @@ class AccountSettingsViewModel @Inject constructor(
                             settings = it.settings?.copy(userSettings = result)
                         )
                     }
-                }, onFailure = { error ->
-                    _stateFlow.update {
-                        it.copy(isLoading = false, updateError = error)
-                    }
-                })
+                }, onFailure = ::handleError)
         }
     }
 
@@ -196,11 +204,7 @@ class AccountSettingsViewModel @Inject constructor(
                             settings = it.settings?.copy(userInfo = result)
                         )
                     }
-                }, onFailure = { error ->
-                    _stateFlow.update {
-                        it.copy(isLoading = false, updateError = error)
-                    }
-                })
+                }, onFailure = ::handleError)
         }
     }
 
@@ -214,5 +218,11 @@ class AccountSettingsViewModel @Inject constructor(
                         block(fetchedApiKey)
                     }
             }
+    }
+
+    private fun handleError(error: ApiError) {
+        _stateFlow.update {
+            it.copy(isLoading = false, updateError = error)
+        }
     }
 }

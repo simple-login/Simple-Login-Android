@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -87,19 +88,33 @@ fun AccountSettingsScreen(
     val updateError = state.updateError
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    var showUnlinkProtonDialog by remember { mutableStateOf(false) }
     var showUsableDomainsDialog by remember { mutableStateOf(false) }
     var showEditUserInfoMenu by remember { mutableStateOf(false) }
     var showEditDisplayNameDialog by remember { mutableStateOf(false) }
+
+    val information by informationStateFlow.collectAsState()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { updateProfilePicture(uri = it, context = context) }
     )
 
+    LaunchedEffect(Unit) {
+        refresh()
+    }
+
     LaunchedEffect(updateError) {
         updateError?.let {
             snackbarHostState.showSnackbar(message = it.description(context))
             clearUpdateError()
+        }
+    }
+
+    LaunchedEffect(information) {
+        information?.let {
+            snackbarHostState.showSnackbar(message = it)
+            clearInformation()
         }
     }
 
@@ -153,7 +168,8 @@ fun AccountSettingsScreen(
                             showEditUserInfoMenu = false
                             removeProfilePicture()
                         },
-                        onToggleProtonLink = ::toggleProtonLink,
+                        onLinkProton = {},
+                        onUnlinkProton = { showUnlinkProtonDialog = true },
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
                         onUpdateRandomAliasSuffix = ::updateRandomAliasSuffix,
@@ -178,6 +194,28 @@ fun AccountSettingsScreen(
             if (fetchError != null) {
                 RetryButton(error = fetchError, onRetry = ::refresh)
             }
+        }
+    }
+
+    if (showUnlinkProtonDialog) {
+        state.settings?.userInfo?.connectedProtonAddress?.let {
+            AlertDialog(
+                onDismissRequest = { showUnlinkProtonDialog = false },
+                title = { Text(text = stringResource(R.string.unlink_proton)) },
+                text = {
+                    Text(text = stringResource(R.string.unlink_proton_description, it))
+                },
+                confirmButton = {
+                    TextButton(onClick = ::unlinkProton) {
+                        Text(text = stringResource(R.string.yes_unlink_proton_account))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showUnlinkProtonDialog = false }) {
+                        Text(text = stringResource(R.string.cancel))
+                    }
+                }
+            )
         }
     }
 
@@ -216,7 +254,8 @@ private fun LazyListScope.accountSettingsScreenContent(
     onEditDisplayName: () -> Unit,
     onEditProfilePicture: () -> Unit,
     onRemoveProfilePicture: () -> Unit,
-    onToggleProtonLink: () -> Unit,
+    onLinkProton: () -> Unit,
+    onUnlinkProton: () -> Unit,
     onUpdateNotification: (Boolean) -> Unit,
     onUpdateRandomMode: (RandomMode) -> Unit,
     onUpdateRandomAliasSuffix: (RandomAliasSuffix) -> Unit,
@@ -281,7 +320,13 @@ private fun LazyListScope.accountSettingsScreenContent(
         Row(
             modifier = Modifier
                 .primaryContentBackground()
-                .clickable(onClick = onToggleProtonLink)
+                .clickable(onClick = {
+                    if (connectedProtonAddress != null) {
+                        onUnlinkProton()
+                    } else {
+                        onLinkProton()
+                    }
+                })
                 .padding(Spacing.regular),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -296,7 +341,7 @@ private fun LazyListScope.accountSettingsScreenContent(
                     .fillMaxWidth()
                     .padding(start = Spacing.medium),
                 text = if (connectedProtonAddress != null)
-                    stringResource(R.string.unlink_with_proton) else
+                    stringResource(R.string.unlink_proton) else
                     stringResource(R.string.link_with_proton),
                 color = ProtonPurple
             )

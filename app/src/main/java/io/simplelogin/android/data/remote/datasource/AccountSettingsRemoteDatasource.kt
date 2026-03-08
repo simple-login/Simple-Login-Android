@@ -8,6 +8,7 @@ import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.data.remote.ApiService
+import io.simplelogin.android.data.remote.OkResponse
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
@@ -24,6 +25,8 @@ interface AccountSettingsRemoteDatasource {
         apiKey: ApiKey,
         option: UpdateUserInfoOption
     ): Result<UserInfo, ApiError>
+
+    suspend fun unlinkProton(apiKey: ApiKey): Result<OkResponse, ApiError>
 }
 
 class AccountSettingsRemoteDatasourceImpl @Inject constructor(private val apiService: ApiService) :
@@ -49,4 +52,7 @@ class AccountSettingsRemoteDatasourceImpl @Inject constructor(private val apiSer
         option: UpdateUserInfoOption
     ): Result<UserInfo, ApiError> =
         safeApiCall { apiService.updateUserInfo(apiKey = apiKey, body = option) }
+
+    override suspend fun unlinkProton(apiKey: ApiKey): Result<OkResponse, ApiError> =
+        safeApiCall { apiService.unlinkProton(apiKey = apiKey) }
 }
