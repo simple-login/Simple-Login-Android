@@ -69,6 +69,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.util.ProtonLinkManager
 import io.simplelogin.android.util.ProtonLoginManager
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.preferences.DevicePreferences
@@ -104,6 +105,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var protonLoginManager: ProtonLoginManager
+
+    @Inject
+    lateinit var protonLinkManager: ProtonLinkManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,8 +223,13 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val apiKey = intent.data?.getQueryParameter("apikey") ?: return
-        protonLoginManager.pendingApiKey.tryEmit(apiKey)
+        when (intent.data?.path) {
+            "/login" -> {
+                val apiKey = intent.data?.getQueryParameter("apikey") ?: return
+                protonLoginManager.pendingApiKey.tryEmit(apiKey)
+            }
+            "/link" -> protonLinkManager.linkedEvents.tryEmit(Unit)
+        }
     }
 
     private fun setUpSplashScreen() {

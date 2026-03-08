@@ -168,7 +168,7 @@ fun AccountSettingsScreen(
                             showEditUserInfoMenu = false
                             removeProfilePicture()
                         },
-                        onLinkProton = {},
+                        onLinkProton = ::linkProton,
                         onUnlinkProton = { showUnlinkProtonDialog = true },
                         onUpdateNotification = ::updateNotification,
                         onUpdateRandomMode = ::updateRandomMode,
@@ -206,7 +206,10 @@ fun AccountSettingsScreen(
                     Text(text = stringResource(R.string.unlink_proton_description, it))
                 },
                 confirmButton = {
-                    TextButton(onClick = ::unlinkProton) {
+                    TextButton(onClick = {
+                        showUnlinkProtonDialog = false
+                        unlinkProton()
+                    }) {
                         Text(text = stringResource(R.string.yes_unlink_proton_account))
                     }
                 },

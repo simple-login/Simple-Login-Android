@@ -2,6 +2,7 @@ package io.simplelogin.android.data.remote.datasource
 
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.models.api.Token
 import io.simplelogin.android.data.models.api.UpdateUserInfoOption
 import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
@@ -26,6 +27,7 @@ interface AccountSettingsRemoteDatasource {
         option: UpdateUserInfoOption
     ): Result<UserInfo, ApiError>
 
+    suspend fun getTemporaryToken(apiKey: ApiKey): Result<Token, ApiError>
     suspend fun unlinkProton(apiKey: ApiKey): Result<OkResponse, ApiError>
 }
 
@@ -52,6 +54,9 @@ class AccountSettingsRemoteDatasourceImpl @Inject constructor(private val apiSer
         option: UpdateUserInfoOption
     ): Result<UserInfo, ApiError> =
         safeApiCall { apiService.updateUserInfo(apiKey = apiKey, body = option) }
+
+    override suspend fun getTemporaryToken(apiKey: ApiKey): Result<Token, ApiError> =
+        safeApiCall { apiService.getCookieToken(apiKey = apiKey) }
 
     override suspend fun unlinkProton(apiKey: ApiKey): Result<OkResponse, ApiError> =
         safeApiCall { apiService.unlinkProton(apiKey = apiKey) }

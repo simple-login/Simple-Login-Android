@@ -182,6 +182,7 @@
     <string name="unlink_proton">Unlink Proton account</string>
     <string name="unlink_proton_description">You will be unlinked from Proton account %s</string>
     <string name="yes_unlink_proton_account">Yes, unlink Proton account</string>
+    <string name="proton_account_linked">Proton account linked</string>
     <string name="proton_account_unlinked">Proton account unlinked</string>
     <string name="already_linked_to_proton">Your account is currently linked to the Proton account</string>
     <string name="not_linked_to_proton">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>

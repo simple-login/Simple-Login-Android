@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
@@ -17,10 +19,12 @@ import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserSettings
+import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import io.simplelogin.android.util.ProtonLinkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -37,7 +41,9 @@ class AccountSettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
-    private val datasource: AccountSettingsRemoteDatasource
+    private val datasource: AccountSettingsRemoteDatasource,
+    private val baseUrlProvider: BaseUrlProvider,
+    private val protonLinkManager: ProtonLinkManager
 ) : ViewModel() {
     private var apiKey: ApiKey? = null
     private val _stateFlow = MutableStateFlow(AccountSettingsState.Default)
@@ -45,6 +51,15 @@ class AccountSettingsViewModel @Inject constructor(
 
     private val _informationStateFlow = MutableStateFlow<String?>(null)
     val informationStateFlow: StateFlow<String?> = _informationStateFlow
+
+    init {
+        viewModelScope.launch {
+            protonLinkManager.linkedEvents.collect {
+                refresh()
+                _informationStateFlow.value = context.getString(R.string.proton_account_linked)
+            }
+        }
+    }
 
     fun refresh() {
         _stateFlow.update { AccountSettingsState.Default }
@@ -150,6 +165,25 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun updateSenderFormat(format: SenderFormat) {
         updateSettings(UpdateUserSettingsOption.SenderFormatOption(format))
+    }
+
+    fun linkProton() {
+        withApiKey { apiKey ->
+            _stateFlow.update { it.copy(isLoading = true) }
+            datasource.getTemporaryToken(apiKey = apiKey)
+                .fold(onSuccess = { token ->
+                    _stateFlow.update { it.copy(isLoading = false) }
+                    val baseUrl = baseUrlProvider.getBaseUrl()
+                    val scheme = context.getString(R.string.simplelogin_scheme)
+                    val nextQuery = "/auth/proton/login?action=link&next=/link&scheme=$scheme"
+                    val nextQueryEncoded = Uri.encode(nextQuery)
+                    val url =
+                        "$baseUrl/auth/api_to_cookie?token=${token.value}&next=$nextQueryEncoded"
+                    val customTabsIntent = CustomTabsIntent.Builder().build()
+                    customTabsIntent.intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                    customTabsIntent.launchUrl(context, url.toUri())
+                }, onFailure = ::handleError)
+        }
     }
 
     fun unlinkProton() {
