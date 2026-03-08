@@ -27,11 +27,11 @@ annotation class AppVersion
 @Retention(AnnotationRetention.BINARY)
 annotation class LoadingState
 
+typealias LoadingStateFlow = MutableStateFlow<Boolean>
+
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class DeviceName
-
-typealias LoadingStateFlow = MutableStateFlow<Boolean>
 
 @[Module InstallIn(SingletonComponent::class)]
 abstract class AppModule {

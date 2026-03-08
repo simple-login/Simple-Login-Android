@@ -1,12 +1,15 @@
 package io.simplelogin.android.ui.login
 
 import android.content.Context
+import android.webkit.CookieManager
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Result
@@ -24,6 +27,7 @@ import io.simplelogin.android.usecases.login.VerifyAccountUseCase
 import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import io.simplelogin.android.util.ProtonLoginManager
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.isValidPassword
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +37,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 data class AccountActivationPayload(
     val email: String,
@@ -53,6 +58,8 @@ class LoginMasterScreenViewModel @Inject constructor(
     private val resendActivationCode: ResendActivationCodeUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val accountSettingsRemoteDatasource: AccountSettingsRemoteDatasource,
+    private val baseUrlProvider: BaseUrlProvider,
+    private val protonLoginManager: ProtonLoginManager,
     @AppVersion val appVersion: String,
     observeSessionSettings: ObserveSessionSettingsUseCase
 ) : ViewModel() {
@@ -63,6 +70,24 @@ class LoginMasterScreenViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = Constants.DEFAULT_BASE_URL
         )
+
+    init {
+        viewModelScope.launch {
+            protonLoginManager.pendingApiKey.collect { apiKey ->
+                login(ApiKey(value = apiKey))
+            }
+        }
+    }
+
+    fun launchLoginWithProton() {
+        CookieManager.getInstance().removeAllCookies(null)
+        val baseUrl = baseUrlProvider.getBaseUrl()
+        val scheme = context.getString(R.string.simplelogin_scheme)
+        val url = "$baseUrl/auth/proton/login?mode=apikey&action=login&scheme=$scheme&next=/login"
+        val customTabsIntent = CustomTabsIntent.Builder().build()
+        customTabsIntent.intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        customTabsIntent.launchUrl(context, url.toUri())
+    }
 
     private val _mfaKeyStateFlow = MutableStateFlow<String?>(null)
     val mfaKeyStateFlow: StateFlow<String?> = _mfaKeyStateFlow

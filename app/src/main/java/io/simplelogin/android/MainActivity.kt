@@ -69,6 +69,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.util.ProtonLoginManager
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.preferences.Theme
@@ -100,6 +101,9 @@ import androidx.core.net.toUri
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val appRootViewModel: AppRootViewModel by viewModels()
+
+    @Inject
+    lateinit var protonLoginManager: ProtonLoginManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,6 +208,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * Callback for when the Login with Proton process is done.
+     * The Login with Proton will redirect the user to
+     * auth.simplelogin://**/login?apikey=YOUR_API_KEY
+     *
+     * (The intent-filter is registered in AndroidManifest.xml)
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val apiKey = intent.data?.getQueryParameter("apikey") ?: return
+        protonLoginManager.pendingApiKey.tryEmit(apiKey)
     }
 
     private fun setUpSplashScreen() {

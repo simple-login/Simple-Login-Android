@@ -14,6 +14,7 @@
     <string name="show_or_hide_password">Show or hide password</string>
     <string name="sign_in_with_api_key">Sign in with API key</string>
     <string name="or">or</string>
+    <string name="simplelogin_scheme" translatable="false">auth.simplelogin</string>
     <string name="log_in_with_proton">Log in with Proton</string>
     <string name="more">More</string>
     <string name="forgot_password">Forgot password</string>
