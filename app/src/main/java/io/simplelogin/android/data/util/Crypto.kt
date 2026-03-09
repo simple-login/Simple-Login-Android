@@ -20,7 +20,6 @@ object CryptoImpl : Crypto {
     private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
     private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
 
-    private val cipher = Cipher.getInstance(TRANSFORMATION)
     private val keyStore = KeyStore
         .getInstance("AndroidKeyStore")
         .apply {
@@ -52,6 +51,7 @@ object CryptoImpl : Crypto {
             .generateKey()
 
     override fun encrypt(bytes: ByteArray): ByteArray {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encrypted = cipher.doFinal(bytes)
@@ -59,8 +59,10 @@ object CryptoImpl : Crypto {
     }
 
     override fun decrypt(bytes: ByteArray): ByteArray {
-        val iv = bytes.copyOfRange(0, cipher.blockSize)
-        val data = bytes.copyOfRange(cipher.blockSize, bytes.size)
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        val blockSize = cipher.blockSize
+        val iv = bytes.copyOfRange(0, blockSize)
+        val data = bytes.copyOfRange(blockSize, bytes.size)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
         return cipher.doFinal(data)
     }
