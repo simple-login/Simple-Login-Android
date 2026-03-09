@@ -1,12 +1,10 @@
 package io.simplelogin.android.ui.home.aliaslist
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,10 +26,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +52,7 @@ import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
+import kotlinx.coroutines.launch
 
 @Composable
 fun AliasRow(
@@ -66,48 +67,45 @@ fun AliasRow(
 ) = key(alias, displayInfos, swipeFromStartToEndAction, swipeFromEndToStartAction) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { value ->
-            val action = when (value) {
+    val dismissState = rememberSwipeToDismissBoxState()
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(dismissState.targetValue) {
+        if (dismissState.targetValue != SwipeToDismissBoxValue.Settled) {
+            val action = when (dismissState.targetValue) {
                 SwipeToDismissBoxValue.StartToEnd -> swipeFromStartToEndAction
                 SwipeToDismissBoxValue.EndToStart -> swipeFromEndToStartAction
                 else -> null
             }
 
             when (action) {
-                SwipeAction.DISABLE_ENABLE ->
-                    if (alias.enabled) {
-                        onAction?.invoke(AliasAction.Disable(alias))
-                    } else {
-                        onAction?.invoke(AliasAction.Enable(alias))
-                    }
+                SwipeAction.DISABLE_ENABLE -> {
+                    if (alias.enabled) onAction?.invoke(AliasAction.Disable(alias))
+                    else onAction?.invoke(AliasAction.Enable(alias))
+                    dismissState.reset()
+                }
 
-                SwipeAction.PIN_UNPIN ->
-                    if (alias.pinned) {
-                        onAction?.invoke(AliasAction.Unpin(alias))
-                    } else {
-                        onAction?.invoke(AliasAction.Pin(alias))
-                    }
+                SwipeAction.PIN_UNPIN -> {
+                    if (alias.pinned) onAction?.invoke(AliasAction.Unpin(alias))
+                    else onAction?.invoke(AliasAction.Pin(alias))
+                    dismissState.reset()
+                }
 
-                SwipeAction.DELETE ->
-                    showDeleteDialog = onAction != null
+                SwipeAction.DELETE -> {
+                    if (onAction != null) showDeleteDialog = true
+                }
 
                 else -> Unit
             }
-            false
         }
-    )
+    }
 
     SwipeToDismissBox(
         modifier = modifier,
         state = dismissState,
         backgroundContent = {
             val direction = dismissState.dismissDirection
-            val progress = if (dismissState.targetValue == SwipeToDismissBoxValue.Settled) {
-                0f
-            } else {
-                dismissState.progress
-            }
+            val isSwiping = dismissState.progress > 0.01f
 
             val backgroundColor = when (direction) {
                 SwipeToDismissBoxValue.StartToEnd -> swipeFromStartToEndAction.color(alias)
@@ -121,36 +119,17 @@ fun AliasRow(
                 else -> Alignment.Center
             }
 
-            val animatedProgress by animateFloatAsState(
-                targetValue = progress
-            )
-
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(if (isSwiping) backgroundColor else Color.Transparent),
                 contentAlignment = alignment
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(animatedProgress)
-                        .align(alignment)
-                        .background(backgroundColor)
-                )
-                when (direction) {
-                    SwipeToDismissBoxValue.StartToEnd ->
-                        swipeFromStartToEndAction.Label(
-                            isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
-                            alias = alias
-                        )
+                if (isSwiping) {
+                    val action = if (direction == SwipeToDismissBoxValue.StartToEnd)
+                        swipeFromStartToEndAction else swipeFromEndToStartAction
 
-                    SwipeToDismissBoxValue.EndToStart ->
-                        swipeFromEndToStartAction.Label(
-                            isVisible = dismissState.targetValue != SwipeToDismissBoxValue.Settled,
-                            alias = alias
-                        )
-
-                    else -> Color.Transparent
-
+                    action.Label(alias = alias)
                 }
             }
         },
@@ -175,9 +154,17 @@ fun AliasRow(
             aliasEmail = alias.email,
             onDeleteClick = {
                 showDeleteDialog = false
+                scope.launch {
+                    dismissState.reset()
+                }
                 onAction?.invoke(AliasAction.Delete(alias))
             },
-            onCancelClick = { showDeleteDialog = false }
+            onCancelClick = {
+                showDeleteDialog = false
+                scope.launch {
+                    dismissState.reset()
+                }
+            }
         )
     }
 }
@@ -211,6 +198,7 @@ private fun AliasCellContent(
 
     Column(
         modifier = modifier
+            .background(SlColor.ContentContainerBackgroundColor)
             .clickable {
                 when (cellSelection) {
                     AliasCellSelection.VIEW_DETAILS -> onAction(
@@ -317,21 +305,18 @@ private fun SwipeAction.color(alias: Alias): Color =
     }
 
 @Composable
-private fun SwipeAction.Label(
-    isVisible: Boolean,
-    alias: Alias
-) {
+private fun SwipeAction.Label(alias: Alias) {
     when (this) {
         SwipeAction.DISABLE_ENABLE ->
             if (alias.enabled) {
                 SwipeActionLabel(
-                    isVisible = isVisible,
+                    isVisible = true,
                     title = stringResource(R.string.disable),
                     icon = IconContent.ImageVectorContent(Icons.Outlined.DoNotDisturbOn)
                 )
             } else {
                 SwipeActionLabel(
-                    isVisible = isVisible,
+                    isVisible = true,
                     title = stringResource(R.string.enable),
                     icon = IconContent.ImageVectorContent(Icons.Outlined.CheckCircleOutline)
                 )
@@ -340,13 +325,13 @@ private fun SwipeAction.Label(
         SwipeAction.PIN_UNPIN ->
             if (alias.pinned) {
                 SwipeActionLabel(
-                    isVisible = isVisible,
+                    isVisible = true,
                     title = stringResource(R.string.unpin),
                     icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep_off))
                 )
             } else {
                 SwipeActionLabel(
-                    isVisible = isVisible,
+                    isVisible = true,
                     title = stringResource(R.string.pin),
                     icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep))
                 )
@@ -354,7 +339,7 @@ private fun SwipeAction.Label(
 
         SwipeAction.DELETE ->
             SwipeActionLabel(
-                isVisible = isVisible,
+                isVisible = true,
                 title = stringResource(R.string.delete),
                 icon = IconContent.ImageVectorContent(Icons.Outlined.Delete)
             )
