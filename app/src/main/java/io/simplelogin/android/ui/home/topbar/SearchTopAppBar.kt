@@ -1,11 +1,15 @@
 package io.simplelogin.android.ui.home.topbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,6 +54,7 @@ fun SearchTopAppBar(
         },
         inputField = {
             SearchBarDefaults.InputField(
+                modifier = Modifier.fillMaxWidth(),
                 query = query,
                 onQueryChange = onQueryChange,
                 onSearch = { expanded = false },
@@ -62,6 +67,20 @@ fun SearchTopAppBar(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.exit_search)
                         )
+                    }
+                },
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = query.isNotEmpty(),
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        IconButton(onClick = { onQueryChange("") }) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = stringResource(R.string.clear_search_bar)
+                            )
+                        }
                     }
                 }
             )
