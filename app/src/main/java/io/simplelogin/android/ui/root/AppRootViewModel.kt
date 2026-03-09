@@ -73,11 +73,9 @@ class AppRootViewModel @Inject constructor(
                             return@collect
                         }
 
-                        if (it.apiKey != null) {
-                            add(HomeDestination)
-                        } else {
-                            add(LogInDestination)
-                        }
+                        it.apiKey?.let { apiKey ->
+                            add(HomeDestination(apiKey.value))
+                        } ?: add(LogInDestination)
                     }
                 }
         }

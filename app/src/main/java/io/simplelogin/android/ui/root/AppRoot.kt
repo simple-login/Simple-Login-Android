@@ -50,7 +50,8 @@ data object InitializationDestination : NavKey
 data object LogInDestination : NavKey
 
 @Serializable
-data object HomeDestination : NavKey
+// We pass API key as string instead ApiKey object because it's value class that has mangled suffixes
+data class HomeDestination(val apiKey: String) : NavKey
 
 @Serializable
 data object CreateAliasDestination : NavKey
@@ -133,6 +134,7 @@ fun AppRoot(
             ) {
                 HomeScreen(
                     modifier = modifier,
+                    apiKeyValue = it.apiKey,
                     onOpenDrawer = onOpenDrawer,
                     onViewDetails = ::viewAliasDetails,
                     onViewContacts = ::viewAliasContacts,

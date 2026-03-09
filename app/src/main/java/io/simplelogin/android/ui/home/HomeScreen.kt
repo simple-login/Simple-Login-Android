@@ -62,13 +62,17 @@ import kotlinx.coroutines.flow.emptyFlow
 @Composable
 fun HomeScreen(
     modifier: Modifier,
+    apiKeyValue: String,
     onOpenDrawer: () -> Unit,
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
     onCreateAlias: () -> Unit,
-    createdAliasFlow: Flow<Alias> = emptyFlow(),
-    viewModel: HomeViewModel = hiltViewModel()
+    createdAliasFlow: Flow<Alias> = emptyFlow()
 ) {
+    val viewModel = hiltViewModel { factory: HomeViewModel.Factory ->
+        factory.create(apiKeyValue)
+    }
+
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var showCreateAliasDialog by rememberSaveable { mutableStateOf(false) }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }

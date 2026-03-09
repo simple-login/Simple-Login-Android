@@ -1,5 +1,8 @@
 package io.simplelogin.android.domain
 
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasId
@@ -26,7 +29,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
 
 data class AliasListState(
     val stats: Stats?,
@@ -50,11 +52,7 @@ data class AliasListState(
 
 interface AliasListManager {
     val state: Flow<AliasListState>
-    suspend fun refresh(
-        apiKey: ApiKey? = null,
-        filterMode: AliasFilterMode? = null
-    ): Result<Unit, ApiError>
-
+    suspend fun refresh(filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
     suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError>
     suspend fun pin(aliasId: AliasId): Result<Unit, ApiError>
@@ -64,11 +62,18 @@ interface AliasListManager {
     suspend fun handleNewlyCreatedAlias(alias: Alias)
 }
 
-class AliasListManagerImpl @Inject constructor(
+@AssistedFactory
+interface AliasListManagerFactory {
+    fun create(apiKeyValue: String): AliasListManagerImpl
+}
+
+class AliasListManagerImpl @AssistedInject constructor(
+    @Assisted apiKeyValue: String,
     private val aliasesDatasource: AliasesRemoteDatasource,
     private val aliasDetailsDatasource: AliasDetailsRemoteDatasource
 ) :
     AliasListManager {
+    private val apiKey = ApiKey(value = apiKeyValue)
     private val stats = MutableStateFlow<Stats?>(null)
     private val aliases = MutableStateFlow<List<Alias>>(listOf())
     private val fetchError = MutableStateFlow<ApiError?>(null)
@@ -102,15 +107,10 @@ class AliasListManagerImpl @Inject constructor(
         )
 
     private var canFetchMore = true
-    private var apiKey: ApiKey? = null
     private var currentPage = 0
     private var filterMode: AliasFilterMode? = null
 
-    override suspend fun refresh(
-        apiKey: ApiKey?,
-        filterMode: AliasFilterMode?
-    ): Result<Unit, ApiError> {
-        apiKey?.let { this.apiKey = it }
+    override suspend fun refresh(filterMode: AliasFilterMode?): Result<Unit, ApiError> {
         filterMode?.let { this.filterMode = it }
         stats.value = null
         aliases.value = listOf()
@@ -126,7 +126,6 @@ class AliasListManagerImpl @Inject constructor(
         if (isFetching.value || isRefreshing.value || isModifying.value || !canFetchMore) {
             return Result.Success(Unit)
         }
-        val apiKey = apiKey ?: return Result.Success(Unit)
         val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
 
         fetchError.value = null
@@ -180,7 +179,6 @@ class AliasListManagerImpl @Inject constructor(
     }
 
     override suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError> {
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return aliasesDatasource.toggle(apiKey = apiKey, aliasId = aliasId)
             .fold(onSuccess = { enabled ->
@@ -202,7 +200,6 @@ class AliasListManagerImpl @Inject constructor(
     }
 
     override suspend fun pin(aliasId: AliasId): Result<Unit, ApiError> {
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return aliasDetailsDatasource.pin(apiKey = apiKey, aliasId = aliasId)
             .fold(onSuccess = {
@@ -224,7 +221,6 @@ class AliasListManagerImpl @Inject constructor(
     }
 
     override suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError> {
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return aliasDetailsDatasource.unpin(apiKey = apiKey, aliasId = aliasId)
             .fold(onSuccess = {
@@ -246,7 +242,6 @@ class AliasListManagerImpl @Inject constructor(
     }
 
     override suspend fun delete(aliasId: AliasId): Result<Unit, ApiError> {
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return aliasesDatasource.delete(apiKey = apiKey, aliasId = aliasId)
             .fold(onSuccess = {
@@ -263,7 +258,6 @@ class AliasListManagerImpl @Inject constructor(
     }
 
     override suspend fun randomAlias(mode: RandomMode, note: String?): Result<Alias, ApiError> {
-        val apiKey = requireNotNull(apiKey) { "API key is not set" }
         isModifying.value = true
         return aliasesDatasource.random(apiKey = apiKey, mode = mode, note = note)
             .fold(onSuccess = { randomAlias ->

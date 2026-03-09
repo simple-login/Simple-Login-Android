@@ -11,8 +11,6 @@ import io.simplelogin.android.domain.ActivityUiActionHandler
 import io.simplelogin.android.domain.ActivityUiActionHandlerImpl
 import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionHandlerImpl
-import io.simplelogin.android.domain.AliasListManager
-import io.simplelogin.android.domain.AliasListManagerImpl
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.SnackbarManagerImpl
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,9 +33,6 @@ annotation class DeviceName
 
 @[Module InstallIn(SingletonComponent::class)]
 abstract class AppModule {
-    @[Binds Singleton]
-    abstract fun bindAliasListManager(impl: AliasListManagerImpl): AliasListManager
-
     @[Binds Singleton]
     abstract fun bindActivityUiActionHandler(impl: ActivityUiActionHandlerImpl): ActivityUiActionHandler
 

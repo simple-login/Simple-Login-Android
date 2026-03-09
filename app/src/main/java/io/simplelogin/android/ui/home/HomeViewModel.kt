@@ -3,6 +3,9 @@ package io.simplelogin.android.ui.home
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
@@ -12,7 +15,7 @@ import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.domain.AliasListManager
+import io.simplelogin.android.domain.AliasListManagerFactory
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
@@ -24,40 +27,35 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = HomeViewModel.Factory::class)
+class HomeViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val aliasListManager: AliasListManager,
+    @Assisted private val apiKeyValue: String,
+    aliasListManagerFactory: AliasListManagerFactory,
     private val copyToClipboard: CopyToClipboardUseCase,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     private val showSnackbarFailure: ShowSnackbarFailureUseCase,
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
+    @AssistedFactory
+    interface Factory {
+        fun create(apiKeyValue: String): HomeViewModel
+    }
+
+    private val aliasListManager = aliasListManagerFactory.create(apiKeyValue)
+
     private val aliasFilterModeFlow = MutableStateFlow(AliasFilterMode.ALL)
 
     init {
         viewModelScope.launch {
-            combine(
-                observeSessionSettings(),
-                aliasFilterModeFlow
-            ) { settings, filterMode ->
-                settings to filterMode
+            aliasFilterModeFlow.collect { filterMode ->
+                aliasListManager.refresh(filterMode = filterMode)
+                    .onFailure(::handle)
             }
-                .collect { (settings, filterMode) ->
-                    settings.apiKey?.let {
-                        aliasListManager.refresh(apiKey = it, filterMode = filterMode)
-                            .onFailure(::handle)
-                    }
-                }
-        }
-    }
 
-    init {
-        viewModelScope.launch {
             aliasListManager.state.collect {
                 loadingState.value = it.isModifying
             }
