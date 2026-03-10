@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -46,6 +47,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.home.aliaslist.AliasList
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
@@ -56,7 +58,9 @@ import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.util.TitledFAB
 import io.simplelogin.android.ui.util.clickableRippleDisabled
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
@@ -143,7 +147,7 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 @Composable
 private fun HomeScreenScaffold(
     viewModel: HomeViewModel,
@@ -161,6 +165,17 @@ private fun HomeScreenScaffold(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val state by stateFlow.collectAsState()
+    val searchState by searchStateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { searchQuery }
+            .debounce(300)
+            .collect {
+                updateSearchQuery(query = it)
+                refresh(isSearching = true)
+            }
+    }
+
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -203,54 +218,98 @@ private fun HomeScreenScaffold(
             }
         }
     ) { innerPadding ->
-        AliasList(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            stats = state.stats,
-            showStats = state.deviceSettings.showStats,
-            aliases = state.aliases,
-            selectedAliasFilterMode = state.aliasFilterMode,
-            fetchError = state.fetchError,
-            isFetching = state.isFetching,
-            isRefreshing = state.isRefreshing,
-            optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
-            displayInfos = state.deviceSettings.aliasDisplayInfos,
-            aliasCellSelection = state.deviceSettings.aliasCellSelection,
-            swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
-            swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
-            onAction = {
-                when (it) {
-                    is AliasAction.ViewDetails -> onViewDetails(it.alias)
-
-                    is AliasAction.ViewContacts -> onViewContacts(it.alias)
-
-                    is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
-
-                    is AliasAction.EnterFullScreen -> onEnterFullScreen(it.alias)
-
-                    is AliasAction.Disable -> toggle(it.alias)
-
-                    is AliasAction.Enable -> toggle(it.alias)
-
-                    is AliasAction.Pin -> pin(it.alias)
-
-                    is AliasAction.Unpin -> unpin(it.alias)
-
-                    is AliasAction.Delete -> delete(it.alias)
-                }
-            },
-            onRetry = ::fetchMoreAliases,
-            onFetchMore = ::fetchMoreAliases,
-            onRefresh = ::refresh
-        )
-
-        if (fabExpanded) {
-            Box(
+        if (isSearching) {
+            AliasList(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickableRippleDisabled(onClick = onCollapseFAB)
+                    .padding(innerPadding),
+                stats = null,
+                showStats = false,
+                aliases = searchState.aliases,
+                selectedAliasFilterMode = AliasFilterMode.ALL,
+                fetchError = searchState.fetchError,
+                isFetching = searchState.isFetching,
+                isRefreshing = searchState.isRefreshing,
+                optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
+                displayInfos = state.deviceSettings.aliasDisplayInfos,
+                aliasCellSelection = state.deviceSettings.aliasCellSelection,
+                swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
+                swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
+                onAction = {
+                    when (it) {
+                        is AliasAction.ViewDetails -> onViewDetails(it.alias)
+
+                        is AliasAction.ViewContacts -> onViewContacts(it.alias)
+
+                        is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
+
+                        is AliasAction.EnterFullScreen -> onEnterFullScreen(it.alias)
+
+                        is AliasAction.Disable -> toggle(alias = it.alias, isSearching = true)
+
+                        is AliasAction.Enable -> toggle(alias = it.alias, isSearching = true)
+
+                        is AliasAction.Pin -> pin(alias = it.alias, isSearching = true)
+
+                        is AliasAction.Unpin -> unpin(alias = it.alias, isSearching = true)
+
+                        is AliasAction.Delete -> delete(alias = it.alias, isSearching = true)
+                    }
+                },
+                onRetry = { fetchMoreAliases(isSearching = true) },
+                onFetchMore = { fetchMoreAliases(isSearching = true) },
+                onRefresh = { refresh(isSearching = true) }
             )
+        } else {
+            AliasList(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                stats = state.stats,
+                showStats = state.deviceSettings.showStats,
+                aliases = state.aliases,
+                selectedAliasFilterMode = state.aliasFilterMode,
+                fetchError = state.fetchError,
+                isFetching = state.isFetching,
+                isRefreshing = state.isRefreshing,
+                optionsDisplay = state.deviceSettings.aliasOptionsDisplay,
+                displayInfos = state.deviceSettings.aliasDisplayInfos,
+                aliasCellSelection = state.deviceSettings.aliasCellSelection,
+                swipeFromStartToEndAction = state.deviceSettings.swipeFromLeftToRightAction,
+                swipeFromEndToStartAction = state.deviceSettings.swipeFromRightToLeftAction,
+                onAction = {
+                    when (it) {
+                        is AliasAction.ViewDetails -> onViewDetails(it.alias)
+
+                        is AliasAction.ViewContacts -> onViewContacts(it.alias)
+
+                        is AliasAction.CopyEmailAddress -> copyAliasAddress(it.alias.email)
+
+                        is AliasAction.EnterFullScreen -> onEnterFullScreen(it.alias)
+
+                        is AliasAction.Disable -> toggle(alias = it.alias, isSearching = false)
+
+                        is AliasAction.Enable -> toggle(alias = it.alias, isSearching = false)
+
+                        is AliasAction.Pin -> pin(alias = it.alias, isSearching = false)
+
+                        is AliasAction.Unpin -> unpin(alias = it.alias, isSearching = false)
+
+                        is AliasAction.Delete -> delete(alias = it.alias, isSearching = false)
+                    }
+                },
+                onRetry = { fetchMoreAliases(isSearching = false) },
+                onFetchMore = { fetchMoreAliases(isSearching = false) },
+                onRefresh = { refresh(isSearching = false) }
+            )
+
+            if (fabExpanded) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickableRippleDisabled(onClick = onCollapseFAB)
+                )
+            }
         }
     }
 }

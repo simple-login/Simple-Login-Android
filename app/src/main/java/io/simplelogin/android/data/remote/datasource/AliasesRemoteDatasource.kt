@@ -11,6 +11,7 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.remote.NoteBody
+import io.simplelogin.android.data.remote.SearchBody
 import io.simplelogin.android.data.util.Result
 import javax.inject.Inject
 
@@ -19,6 +20,12 @@ interface AliasesRemoteDatasource {
     suspend fun fetchAliases(
         apiKey: ApiKey,
         filterMode: AliasFilterMode,
+        pageId: Int
+    ): Result<Aliases, ApiError>
+
+    suspend fun searchAliases(
+        apiKey: ApiKey,
+        query: String,
         pageId: Int
     ): Result<Aliases, ApiError>
 
@@ -60,6 +67,19 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             }
         }
     }
+
+    override suspend fun searchAliases(
+        apiKey: ApiKey,
+        query: String,
+        pageId: Int
+    ): Result<Aliases, ApiError> =
+        safeApiCall {
+            apiService.searchAliases(
+                apiKey = apiKey,
+                pageId = pageId,
+                searchBody = SearchBody(query = query)
+            )
+        }
 
     override suspend fun toggle(
         apiKey: ApiKey,

@@ -16,6 +16,7 @@ import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.AliasListManagerFactory
+import io.simplelogin.android.domain.AliasSearchManagerFactory
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
@@ -34,6 +35,7 @@ class HomeViewModel @AssistedInject constructor(
     @LoadingState private val loadingState: LoadingStateFlow,
     @Assisted private val apiKeyValue: String,
     aliasListManagerFactory: AliasListManagerFactory,
+    aliasSearchManagerFactory: AliasSearchManagerFactory,
     private val copyToClipboard: CopyToClipboardUseCase,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     private val showSnackbarFailure: ShowSnackbarFailureUseCase,
@@ -46,6 +48,8 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private val aliasListManager = aliasListManagerFactory.create(apiKeyValue)
+    private val aliasSearchManager = aliasSearchManagerFactory.create(apiKeyValue)
+    val searchStateFlow = aliasSearchManager.state
 
     private val aliasFilterModeFlow = MutableStateFlow(AliasFilterMode.ALL)
 
@@ -103,61 +107,111 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    fun fetchMoreAliases() {
+    fun updateSearchQuery(query: String) {
+        aliasSearchManager.updateQuery(query = query)
+    }
+
+    fun fetchMoreAliases(isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.fetchMore()
-                .onFailure(::handle)
+            if (isSearching) {
+                aliasSearchManager.fetchMore()
+                    .onFailure(::handle)
+            } else {
+                aliasListManager.fetchMore()
+                    .onFailure(::handle)
+            }
         }
     }
 
-    fun refresh() {
+    fun refresh(isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.refresh()
-                .onFailure(::handle)
+            if (isSearching) {
+                aliasSearchManager.refresh()
+                    .onFailure(::handle)
+            } else {
+                aliasListManager.refresh()
+                    .onFailure(::handle)
+            }
         }
     }
 
-    fun toggle(alias: Alias) {
+    fun toggle(alias: Alias, isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.toggle(aliasId = alias.id)
-                .fold(onSuccess = { enabled ->
-                    val message = if (enabled.value) {
-                        context.getString(R.string.alias_is_enabled, alias.email)
-                    } else {
-                        context.getString(R.string.alias_is_disabled, alias.email)
-                    }
-                    showSnackbarInformation(message)
-                }, onFailure = ::handle)
+            if (isSearching) {
+                aliasSearchManager.toggle(aliasId = alias.id)
+                    .fold(onSuccess = { enabled ->
+                        val message = if (enabled.value) {
+                            context.getString(R.string.alias_is_enabled, alias.email)
+                        } else {
+                            context.getString(R.string.alias_is_disabled, alias.email)
+                        }
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            } else {
+                aliasListManager.toggle(aliasId = alias.id)
+                    .fold(onSuccess = { enabled ->
+                        val message = if (enabled.value) {
+                            context.getString(R.string.alias_is_enabled, alias.email)
+                        } else {
+                            context.getString(R.string.alias_is_disabled, alias.email)
+                        }
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            }
         }
     }
 
-    fun pin(alias: Alias) {
+    fun pin(alias: Alias, isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.pin(aliasId = alias.id)
-                .fold(onSuccess = {
-                    val message = context.getString(R.string.alias_is_pinned, alias.email)
-                    showSnackbarInformation(message)
-                }, onFailure = ::handle)
+            if (isSearching) {
+                aliasSearchManager.pin(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_pinned, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            } else {
+                aliasListManager.pin(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_pinned, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            }
         }
     }
 
-    fun unpin(alias: Alias) {
+    fun unpin(alias: Alias, isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.unpin(aliasId = alias.id)
-                .fold(onSuccess = {
-                    val message = context.getString(R.string.alias_is_unpinned, alias.email)
-                    showSnackbarInformation(message)
-                }, onFailure = ::handle)
+            if (isSearching) {
+                aliasSearchManager.unpin(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_unpinned, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            } else {
+                aliasListManager.unpin(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_unpinned, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            }
         }
     }
 
-    fun delete(alias: Alias) {
+    fun delete(alias: Alias, isSearching: Boolean) {
         viewModelScope.launch {
-            aliasListManager.delete(aliasId = alias.id)
-                .fold(onSuccess = {
-                    val message = context.getString(R.string.alias_is_deleted, alias.email)
-                    showSnackbarInformation(message)
-                }, onFailure = ::handle)
+            if (isSearching) {
+                aliasSearchManager.delete(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_deleted, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            } else {
+                aliasListManager.delete(aliasId = alias.id)
+                    .fold(onSuccess = {
+                        val message = context.getString(R.string.alias_is_deleted, alias.email)
+                        showSnackbarInformation(message)
+                    }, onFailure = ::handle)
+            }
         }
     }
 
