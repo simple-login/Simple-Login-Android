@@ -51,6 +51,7 @@
     <string name="search">Search</string>
     <string name="exit_search">Exit search</string>
     <string name="clear_search_bar">Clear search bar</string>
+    <string name="no_search_results">No results for \"%s\"</string>
     <string name="filter_options">Filter options</string>
     <string name="device_settings">Device settings</string>
     <string name="contact_us">Contact us</string>

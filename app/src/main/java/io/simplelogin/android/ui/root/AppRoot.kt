@@ -136,6 +136,7 @@ fun AppRoot(
                     modifier = modifier,
                     apiKeyValue = it.apiKey,
                     onOpenDrawer = onOpenDrawer,
+                    onEnterSearch = viewModel::removeAliasDetails,
                     onViewDetails = ::viewAliasDetails,
                     onViewContacts = ::viewAliasContacts,
                     onCreateAlias = ::showCreateAliasScreen,

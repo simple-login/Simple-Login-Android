@@ -201,6 +201,12 @@ class AppRootViewModel @Inject constructor(
         goBack()
     }
 
+    fun removeAliasDetails() {
+        _navBackStack.value.apply {
+            removeIf { it is AliasDetailsDestination }
+        }
+    }
+
     fun viewAliasDetails(alias: Alias) {
         _navBackStack.value.apply {
             // When viewing details of an alias, we remove all previous details

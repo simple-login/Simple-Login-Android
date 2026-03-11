@@ -11,7 +11,7 @@ data class HomeScreenState(
     val userInfo: UserInfo?,
     val deviceSettings: DevicePreferences,
     val aliasFilterMode: AliasFilterMode,
-    val stats: Stats?,
+    private val stats: Stats?,
     val aliases: List<Alias>,
     val fetchError: ApiError?,
     val isFetching: Boolean,
@@ -29,4 +29,7 @@ data class HomeScreenState(
             isRefreshing = false
         )
     }
+
+    val displayedStats: Stats?
+        get() = if (deviceSettings.showStats && aliasFilterMode == AliasFilterMode.ALL) stats else null
 }

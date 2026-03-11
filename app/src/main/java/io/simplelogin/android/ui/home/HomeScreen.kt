@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -47,7 +48,6 @@ import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.home.aliaslist.AliasList
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
@@ -68,6 +68,7 @@ fun HomeScreen(
     modifier: Modifier,
     apiKeyValue: String,
     onOpenDrawer: () -> Unit,
+    onEnterSearch: () -> Unit,
     onViewDetails: (Alias) -> Unit,
     onViewContacts: (Alias) -> Unit,
     onCreateAlias: () -> Unit,
@@ -107,7 +108,10 @@ fun HomeScreen(
             viewModel = viewModel,
             isSearching = isSearching,
             fabExpanded = fabExpanded,
-            onSearchClick = { isSearching = true },
+            onEnterSearch = {
+                isSearching = true
+                onEnterSearch()
+            },
             onExitSearch = { isSearching = false },
             onCollapseFAB = { fabExpanded = !fabExpanded },
             onOpenDrawer = onOpenDrawer,
@@ -153,7 +157,7 @@ private fun HomeScreenScaffold(
     viewModel: HomeViewModel,
     isSearching: Boolean,
     fabExpanded: Boolean,
-    onSearchClick: () -> Unit,
+    onEnterSearch: () -> Unit,
     onExitSearch: () -> Unit,
     onCollapseFAB: () -> Unit,
     onOpenDrawer: () -> Unit,
@@ -162,6 +166,7 @@ private fun HomeScreenScaffold(
     onEnterFullScreen: (Alias) -> Unit,
     onCustomAliasClick: () -> Unit
 ) = with(viewModel) {
+    val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val state by stateFlow.collectAsState()
@@ -171,7 +176,6 @@ private fun HomeScreenScaffold(
         snapshotFlow { searchQuery }
             .debounce(300)
             .collect {
-                updateSearchQuery(query = it)
                 refresh(isSearching = true)
             }
     }
@@ -184,8 +188,15 @@ private fun HomeScreenScaffold(
             if (isSearching) {
                 SearchTopAppBar(
                     query = searchQuery,
-                    onQueryChange = { searchQuery = it },
-                    onExitSearch = onExitSearch
+                    onQueryChange = {
+                        searchQuery = it
+                        updateSearchQuery(query = it)
+                    },
+                    onExitSearch = {
+                        searchQuery = ""
+                        updateSearchQuery(query = "")
+                        onExitSearch()
+                    }
                 )
             } else {
                 NormalTopAppBar(
@@ -195,7 +206,7 @@ private fun HomeScreenScaffold(
                     selectedAliasFilterMode = state.aliasFilterMode,
                     scrollBehavior = scrollBehavior,
                     onOpenDrawer = onOpenDrawer,
-                    onSearchClick = onSearchClick,
+                    onSearchClick = onEnterSearch,
                     onSelectAliasFilterMode = ::updateAliasFilterMode
                 )
             }
@@ -224,9 +235,11 @@ private fun HomeScreenScaffold(
                     .fillMaxSize()
                     .padding(innerPadding),
                 stats = null,
-                showStats = false,
                 aliases = searchState.aliases,
-                selectedAliasFilterMode = AliasFilterMode.ALL,
+                noAliasesMessage = if (searchQuery.isEmpty()) null else stringResource(
+                    R.string.no_search_results,
+                    searchQuery
+                ),
                 fetchError = searchState.fetchError,
                 isFetching = searchState.isFetching,
                 isRefreshing = searchState.isRefreshing,
@@ -265,10 +278,9 @@ private fun HomeScreenScaffold(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                stats = state.stats,
-                showStats = state.deviceSettings.showStats,
+                stats = state.displayedStats,
                 aliases = state.aliases,
-                selectedAliasFilterMode = state.aliasFilterMode,
+                noAliasesMessage = state.aliasFilterMode.noAliasesMessage(context),
                 fetchError = state.fetchError,
                 isFetching = state.isFetching,
                 isRefreshing = state.isRefreshing,

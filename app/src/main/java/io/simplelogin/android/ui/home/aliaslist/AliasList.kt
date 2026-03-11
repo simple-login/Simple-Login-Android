@@ -35,7 +35,6 @@ import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
@@ -46,9 +45,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 fun AliasList(
     modifier: Modifier = Modifier,
     stats: Stats?,
-    showStats: Boolean,
     aliases: List<Alias>,
-    selectedAliasFilterMode: AliasFilterMode,
+    noAliasesMessage: String?,
     fetchError: ApiError?,
     isFetching: Boolean,
     isRefreshing: Boolean,
@@ -62,7 +60,6 @@ fun AliasList(
     onFetchMore: () -> Unit,
     onRefresh: () -> Unit
 ) {
-    val context = LocalContext.current
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
@@ -92,9 +89,9 @@ fun AliasList(
             ),
             state = listState
         ) {
-            item {
-                if (selectedAliasFilterMode == AliasFilterMode.ALL && stats != null && showStats) {
-                    StatsGrid(stats = stats)
+            stats?.let {
+                item {
+                    StatsGrid(stats = it)
                 }
             }
 
@@ -102,9 +99,11 @@ fun AliasList(
                 Spacer(modifier = Modifier.height(Spacing.regular))
             }
 
-            item {
-                if (aliases.isEmpty() && !isFetching && fetchError == null) {
-                    Text(selectedAliasFilterMode.noAliasesMessage(context))
+            noAliasesMessage?.let {
+                item {
+                    if (aliases.isEmpty() && !isFetching && fetchError == null) {
+                        Text(text = it)
+                    }
                 }
             }
 
