@@ -67,6 +67,7 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.TitledFAB
+import io.simplelogin.android.ui.util.clickableRippleDisabled
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -198,6 +199,14 @@ fun AliasContactsScreen(
                         }
                     }
                 }
+            }
+
+            if (fabExpanded) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickableRippleDisabled(onClick = { fabExpanded = false })
+                )
             }
         }
     }
