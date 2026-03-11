@@ -101,7 +101,7 @@ fun AliasList(
 
             noAliasesMessage?.let {
                 item {
-                    if (aliases.isEmpty() && !isFetching && fetchError == null) {
+                    if (aliases.isEmpty() && !isRefreshing && !isFetching && fetchError == null) {
                         Text(text = it)
                     }
                 }
