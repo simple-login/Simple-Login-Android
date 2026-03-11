@@ -118,4 +118,8 @@ class CreateAliasViewModel @Inject constructor(
                 })
         }
     }
+
+    fun dismissCreateError() {
+        _stateFlow.update { it.copy(createError = null) }
+    }
 }

@@ -84,6 +84,7 @@ fun CreateAliasScreen(
     onDismiss: () -> Unit
 ) = with(viewModel) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var prefix by remember { mutableStateOf(TextFieldValue("")) }
     val prefixValidation = prefix.text.validatePrefix()
     var selectedSuffix by remember { mutableStateOf<Suffix?>(null) }
@@ -230,6 +231,19 @@ fun CreateAliasScreen(
                 onDismiss = { showMailboxesDialog = false },
             )
         }
+    }
+
+    state.createError?.let {
+        AlertDialog(
+            onDismissRequest = viewModel::dismissCreateError,
+            title = { Text(text = stringResource(R.string.an_error_occurred)) },
+            text = { Text(text = it.description(context)) },
+            confirmButton = {
+                TextButton(onClick = viewModel::dismissCreateError) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 }
 
