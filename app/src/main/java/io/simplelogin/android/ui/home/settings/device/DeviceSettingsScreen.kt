@@ -1,6 +1,7 @@
 package io.simplelogin.android.ui.home.settings.device
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -309,6 +310,18 @@ private fun DeviceSettingsContent(
                     selected = settings.theme,
                     onSelect = ::updateTheme
                 )
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    HorizontalDivider()
+
+                    ToggleOption(
+                        paddingValues = PaddingValues(Spacing.regular),
+                        checked = settings.dynamicColor,
+                        onCheckedChange = ::updateDynamicColor,
+                        title = stringResource(R.string.dynamic_color),
+                        description = stringResource(R.string.dynamic_color_description)
+                    )
+                }
 
                 HorizontalDivider()
 

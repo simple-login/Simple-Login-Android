@@ -123,6 +123,10 @@ class DeviceSettingsViewModel @Inject constructor(
         updateSettings { it.copy(theme = theme) }
     }
 
+    fun updateDynamicColor(dynamic: Boolean) {
+        updateSettings { it.copy(dynamicColor = dynamic) }
+    }
+
     fun updateContactCellSelection(selection: ContactCellSelection) {
         updateSettings { it.copy(contactCellSelection = selection) }
     }

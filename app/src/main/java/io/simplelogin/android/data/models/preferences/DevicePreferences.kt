@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DevicePreferences(
     val theme: Theme = Theme.MATCH_SYSTEM,
+    val dynamicColor: Boolean = false,
     val showStats: Boolean = true,
     val copyAfterCreating: Boolean = true,
     val askForRandomAliasNote: Boolean = false,

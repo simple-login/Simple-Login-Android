@@ -223,6 +223,8 @@
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    <string name="dynamic_color">Dynamic color</string>
+    <string name="dynamic_color_description">Use colors from your device wallpaper</string>
     <string name="device_default">Device default</string>
     <string name="catch_all_header">Auto create/on the fly alias</string>
     <string name="catch_all">Catch all</string>

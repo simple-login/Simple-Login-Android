@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            SimpleLoginTheme(darkTheme = darkTheme) {
+            SimpleLoginTheme(darkTheme = darkTheme, dynamicColor = devicePreferences.dynamicColor) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     ModalNavigationDrawer(
                         drawerState = drawerState,
@@ -228,6 +228,7 @@ class MainActivity : AppCompatActivity() {
                 val apiKey = intent.data?.getQueryParameter("apikey") ?: return
                 protonLoginManager.pendingApiKey.tryEmit(apiKey)
             }
+
             "/link" -> protonLinkManager.linkedEvents.tryEmit(Unit)
         }
     }
