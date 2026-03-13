@@ -14,6 +14,7 @@ import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ActivityUiActionHandler
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
@@ -97,13 +98,16 @@ class AliasActivitiesViewModel @AssistedInject constructor(
         }
     }
 
-    private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
-        viewModelScope.launch {
-            apiKey?.let { perform(it) } ?: observeSessionSettings()
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        scope.launch {
+            apiKey?.let { block(it) } ?: observeSessionSettings()
                 .mapNotNull { it.apiKey }
                 .collect {
                     apiKey = it
-                    perform(it)
+                    block(it)
                 }
         }
     }

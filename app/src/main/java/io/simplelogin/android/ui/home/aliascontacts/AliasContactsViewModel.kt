@@ -25,6 +25,7 @@ import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -193,13 +194,16 @@ class AliasContactsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
-        viewModelScope.launch {
-            apiKey?.let { perform(it) } ?: observeSessionSettings()
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        scope.launch {
+            apiKey?.let { block(it) } ?: observeSessionSettings()
                 .mapNotNull { it.apiKey }
                 .collect {
                     apiKey = it
-                    perform(it)
+                    block(it)
                 }
         }
     }

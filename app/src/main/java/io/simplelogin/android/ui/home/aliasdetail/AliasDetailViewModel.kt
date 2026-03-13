@@ -31,8 +31,9 @@ import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -75,21 +76,19 @@ class AliasDetailViewModel @AssistedInject constructor(
     fun refresh() {
         withApiKey { apiKey ->
             _stateFlow.value = AliasDetailScreenState.Loading
-            coroutineScope {
-                val alias =
-                    async {
-                        aliasDetailsRemoteDatasource.getAlias(apiKey = apiKey, aliasId = aliasId)
-                    }
-                val activities =
-                    async {
-                        aliasDetailsRemoteDatasource.getActivities(
-                            apiKey = apiKey,
-                            aliasId = aliasId,
-                            page = 0
-                        )
-                    }
-                handleResults(aliasResult = alias.await(), activitiesResult = activities.await())
-            }
+            val alias =
+                async(Dispatchers.IO) {
+                    aliasDetailsRemoteDatasource.getAlias(apiKey = apiKey, aliasId = aliasId)
+                }
+            val activities =
+                async(Dispatchers.IO) {
+                    aliasDetailsRemoteDatasource.getActivities(
+                        apiKey = apiKey,
+                        aliasId = aliasId,
+                        page = 0
+                    )
+                }
+            handleResults(aliasResult = alias.await(), activitiesResult = activities.await())
         }
     }
 
@@ -192,20 +191,23 @@ class AliasDetailViewModel @AssistedInject constructor(
         }
     }
 
-    private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
-        viewModelScope.launch {
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        scope.launch {
             observeSessionSettings().collect { settings ->
                 settings.apiKey?.let {
-                    perform(it)
+                    block(it)
                 }
             }
         }
     }
 
-    private fun updateStateAlias(perform: (Alias) -> Alias) {
+    private fun updateStateAlias(block: (Alias) -> Alias) {
         val value = _stateFlow.value
         if (value is AliasDetailScreenState.Loaded) {
-            val updatedAlias = perform(value.alias)
+            val updatedAlias = block(value.alias)
             _stateFlow.value = value.copy(alias = updatedAlias)
         }
     }

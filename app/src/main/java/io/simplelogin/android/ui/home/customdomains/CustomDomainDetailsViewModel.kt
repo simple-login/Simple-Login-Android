@@ -11,6 +11,7 @@ import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -76,11 +77,14 @@ class CustomDomainDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun withApiKey(perform: suspend (ApiKey) -> Unit) {
-        viewModelScope.launch {
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        scope.launch {
             observeSessionSettings().collect { settings ->
                 settings.apiKey?.let {
-                    perform(it)
+                    block(it)
                 }
             }
         }

@@ -8,6 +8,7 @@ import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
@@ -132,9 +133,12 @@ class MailboxesViewModel @Inject constructor(
 
     fun clearNewDefaultMailbox() = _stateFlow.update { it.copy(newDefaultMailbox = null) }
 
-    private fun withApiKey(block: suspend (ApiKey) -> Unit) {
-        apiKey?.let { viewModelScope.launch { block(it) } }
-            ?: viewModelScope.launch {
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        apiKey?.let { scope.launch { block(it) } }
+            ?: scope.launch {
                 observeSessionSettings()
                     .mapNotNull { it.apiKey }
                     .collect { fetchedApiKey ->

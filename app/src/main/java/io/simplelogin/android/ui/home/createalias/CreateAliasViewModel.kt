@@ -15,8 +15,9 @@ import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,14 +43,12 @@ class CreateAliasViewModel @Inject constructor(
     fun fetchOptions() {
         _stateFlow.update { CreateAliasState.Default }
         withApiKey { apiKey ->
-            coroutineScope {
-                val mailboxes = async { datasource.getMailboxes(apiKey = apiKey) }
-                val options = async { datasource.getAliasOptions(apiKey = apiKey) }
-                handleResults(
-                    mailboxesResult = mailboxes.await(),
-                    optionsResult = options.await()
-                )
-            }
+            val mailboxes = async(Dispatchers.IO) { datasource.getMailboxes(apiKey = apiKey) }
+            val options = async(Dispatchers.IO) { datasource.getAliasOptions(apiKey = apiKey) }
+            handleResults(
+                mailboxesResult = mailboxes.await(),
+                optionsResult = options.await()
+            )
         }
     }
 
@@ -95,9 +94,12 @@ class CreateAliasViewModel @Inject constructor(
         }
     }
 
-    private fun withApiKey(block: suspend (ApiKey) -> Unit) {
-        apiKey?.let { viewModelScope.launch { block(it) } }
-            ?: viewModelScope.launch {
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        apiKey?.let { scope.launch { block(it) } }
+            ?: scope.launch {
                 observeSessionSettings()
                     .mapNotNull { it.apiKey }
                     .collect { fetchedApiKey ->

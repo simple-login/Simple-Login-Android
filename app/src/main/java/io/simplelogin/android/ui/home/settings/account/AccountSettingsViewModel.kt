@@ -25,9 +25,9 @@ import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapNotNull
@@ -64,16 +64,14 @@ class AccountSettingsViewModel @Inject constructor(
     fun refresh() {
         _stateFlow.update { AccountSettingsState.Default }
         withApiKey { apiKey ->
-            coroutineScope {
-                val userInfo = async { datasource.getUserInfo(apiKey) }
-                val userSettings = async { datasource.getUserSettings(apiKey) }
-                val usableDomains = async { datasource.getUsableDomains(apiKey) }
-                handleResults(
-                    userInfoResult = userInfo.await(),
-                    userSettingsResult = userSettings.await(),
-                    usableDomainsResult = usableDomains.await()
-                )
-            }
+            val userInfo = async(Dispatchers.IO) { datasource.getUserInfo(apiKey) }
+            val userSettings = async(Dispatchers.IO) { datasource.getUserSettings(apiKey) }
+            val usableDomains = async(Dispatchers.IO) { datasource.getUsableDomains(apiKey) }
+            handleResults(
+                userInfoResult = userInfo.await(),
+                userSettingsResult = userSettings.await(),
+                usableDomainsResult = usableDomains.await()
+            )
         }
     }
 
@@ -244,9 +242,12 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun withApiKey(block: suspend (ApiKey) -> Unit) {
-        apiKey?.let { viewModelScope.launch { block(it) } }
-            ?: viewModelScope.launch {
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: suspend CoroutineScope.(ApiKey) -> Unit
+    ) {
+        apiKey?.let { scope.launch { block(it) } }
+            ?: scope.launch {
                 observeSessionSettings()
                     .mapNotNull { it.apiKey }
                     .collect { fetchedApiKey ->
