@@ -9,6 +9,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomAliasSuffix
@@ -22,7 +25,6 @@ import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Result
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager
 import kotlinx.coroutines.CoroutineScope
@@ -30,22 +32,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Base64
-import javax.inject.Inject
 
-@HiltViewModel
-class AccountSettingsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = AccountSettingsViewModel.Factory::class)
+class AccountSettingsViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase,
+    @Assisted private val apiKeyValue: String,
     private val updateSessionSettings: UpdateSessionSettingsUseCase,
     private val datasource: AccountSettingsRemoteDatasource,
     private val baseUrlProvider: BaseUrlProvider,
     private val protonLinkManager: ProtonLinkManager
 ) : ViewModel() {
-    private var apiKey: ApiKey? = null
+
+    @AssistedFactory
+    interface Factory {
+        fun create(apiKeyValue: String): AccountSettingsViewModel
+    }
+
+    private val apiKey = ApiKey(apiKeyValue)
     private val _stateFlow = MutableStateFlow(AccountSettingsState.Default)
     val stateFlow: StateFlow<AccountSettingsState> = _stateFlow
 
@@ -245,17 +251,8 @@ class AccountSettingsViewModel @Inject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        apiKey?.let { scope.launch { block(it) } }
-            ?: scope.launch {
-                observeSessionSettings()
-                    .mapNotNull { it.apiKey }
-                    .collect { fetchedApiKey ->
-                        apiKey = fetchedApiKey
-                        block(fetchedApiKey)
-                    }
-            }
-    }
+    ) = scope.launch { block(apiKey) }
+
 
     private fun handleError(error: ApiError) {
         _stateFlow.update {

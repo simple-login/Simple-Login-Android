@@ -80,9 +80,14 @@ import io.simplelogin.android.ui.util.primaryContentBackground
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettingsScreen(
+    apiKeyValue: String,
     onDismiss: () -> Unit
-) = with(hiltViewModel<AccountSettingsViewModel>()) {
-    val state by stateFlow.collectAsState()
+) {
+    val viewModel = hiltViewModel { factory: AccountSettingsViewModel.Factory ->
+        factory.create(apiKeyValue)
+    }
+
+    val state by viewModel.stateFlow.collectAsState()
     val settings = state.settings
     val fetchError = state.fetchError
     val updateError = state.updateError
@@ -93,28 +98,28 @@ fun AccountSettingsScreen(
     var showEditUserInfoMenu by remember { mutableStateOf(false) }
     var showEditDisplayNameDialog by remember { mutableStateOf(false) }
 
-    val information by informationStateFlow.collectAsState()
+    val information by viewModel.informationStateFlow.collectAsState()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { updateProfilePicture(uri = it, context = context) }
+        onResult = { viewModel.updateProfilePicture(uri = it, context = context) }
     )
 
     LaunchedEffect(Unit) {
-        refresh()
+        viewModel.refresh()
     }
 
     LaunchedEffect(updateError) {
         updateError?.let {
             snackbarHostState.showSnackbar(message = it.description(context))
-            clearUpdateError()
+            viewModel.clearUpdateError()
         }
     }
 
     LaunchedEffect(information) {
         information?.let {
             snackbarHostState.showSnackbar(message = it)
-            clearInformation()
+            viewModel.clearInformation()
         }
     }
 
@@ -166,15 +171,15 @@ fun AccountSettingsScreen(
                         },
                         onRemoveProfilePicture = {
                             showEditUserInfoMenu = false
-                            removeProfilePicture()
+                            viewModel.removeProfilePicture()
                         },
-                        onLinkProton = ::linkProton,
+                        onLinkProton = viewModel::linkProton,
                         onUnlinkProton = { showUnlinkProtonDialog = true },
-                        onUpdateNotification = ::updateNotification,
-                        onUpdateRandomMode = ::updateRandomMode,
-                        onUpdateRandomAliasSuffix = ::updateRandomAliasSuffix,
+                        onUpdateNotification = viewModel::updateNotification,
+                        onUpdateRandomMode = viewModel::updateRandomMode,
+                        onUpdateRandomAliasSuffix = viewModel::updateRandomAliasSuffix,
                         onShowUsableDomainsSelector = { showUsableDomainsDialog = true },
-                        onUpdateSenderFormat = ::updateSenderFormat
+                        onUpdateSenderFormat = viewModel::updateSenderFormat
                     )
                 }
             }
@@ -192,7 +197,7 @@ fun AccountSettingsScreen(
             }
 
             if (fetchError != null) {
-                RetryButton(error = fetchError, onRetry = ::refresh)
+                RetryButton(error = fetchError, onRetry = viewModel::refresh)
             }
         }
     }
@@ -208,7 +213,7 @@ fun AccountSettingsScreen(
                 confirmButton = {
                     TextButton(onClick = {
                         showUnlinkProtonDialog = false
-                        unlinkProton()
+                        viewModel.unlinkProton()
                     }) {
                         Text(text = stringResource(R.string.yes_unlink_proton_account))
                     }
@@ -229,7 +234,7 @@ fun AccountSettingsScreen(
                 selected = settings.userSettings.randomAliasDefaultDomain,
                 onSelect = {
                     showUsableDomainsDialog = false
-                    updateUsableDomain(it)
+                    viewModel.updateUsableDomain(it)
                 },
                 onDismiss = { showUsableDomainsDialog = false }
             )
@@ -242,7 +247,7 @@ fun AccountSettingsScreen(
             title = stringResource(R.string.edit_display_name),
             onSave = {
                 showEditDisplayNameDialog = false
-                updateDisplayName(it)
+                viewModel.updateDisplayName(it)
             },
             onDismiss = { showEditDisplayNameDialog = false }
         )

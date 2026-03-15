@@ -1,15 +1,22 @@
 package io.simplelogin.android.ui.root
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
+import io.simplelogin.android.data.models.ui.DialogPayload
 import io.simplelogin.android.di.AppVersion
+import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,8 +31,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AppRootViewModel @Inject constructor(
     @AppVersion val appVersion: String,
-    observeSessionSettings: ObserveSessionSettingsUseCase,
-    private val logOutUseCase: LogOutUseCase
+    @ApplicationContext private val context: Context,
+    private val observeSessionSettings: ObserveSessionSettingsUseCase,
+    private val logOutUseCase: LogOutUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
 ) : ViewModel() {
 
     private val _navBackStack =
@@ -39,7 +48,7 @@ class AppRootViewModel @Inject constructor(
 
     var showDeviceSettingsDialog = MutableStateFlow(false)
 
-    var showAccountSettingsDialog = MutableStateFlow(false)
+    var accountSettingsDialogPayload = MutableStateFlow<DialogPayload?>(null)
 
     var showMailboxesDialog = MutableStateFlow(false)
 
@@ -118,17 +127,19 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun showAccountSettingsScreen(asDialog: Boolean) {
-        if (asDialog) {
-            showAccountSettingsDialog.value = true
-        } else {
-            _navBackStack.value.apply {
-                add(AccountSettingsDestination)
+        withApiKey { apiKey ->
+            if (asDialog) {
+                accountSettingsDialogPayload.value = DialogPayload(apiKey)
+            } else {
+                _navBackStack.value.apply {
+                    add(AccountSettingsDestination(apiKey.value))
+                }
             }
         }
     }
 
     fun dismissAccountSettingsDialog() {
-        showAccountSettingsDialog.value = false
+        accountSettingsDialogPayload.value = null
     }
 
     fun showMailboxesScreen(asDialog: Boolean) {
@@ -230,6 +241,21 @@ class AppRootViewModel @Inject constructor(
         _navBackStack.value.apply {
             if (lastOrNull() != navKey) {
                 add(navKey)
+            }
+        }
+    }
+
+    private fun withApiKey(
+        scope: CoroutineScope = viewModelScope,
+        block: (ApiKey) -> Unit
+    ) {
+        scope.launch {
+            observeSessionSettings().collect { settings ->
+                settings.apiKey?.let {
+                    block(it)
+                } ?: scope.launch {
+                    showSnackbarFailure(context.getString(R.string.missing_api_key))
+                }
             }
         }
     }

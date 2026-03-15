@@ -69,7 +69,7 @@ data class AliasActivitiesDestination(val alias: Alias) : NavKey
 data object DeviceSettingsDestination : NavKey
 
 @Serializable
-data object AccountSettingsDestination : NavKey
+data class AccountSettingsDestination(val apiKey: String) : NavKey
 
 @Serializable
 data object MailboxesDestination : NavKey
@@ -96,7 +96,7 @@ fun AppRoot(
 
     val showLogOutDialog by showLogOutDialog.collectAsState()
     val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
-    val showAccountSettingsDialog by showAccountSettingsDialog.collectAsState()
+    val accountSettingsDialogPayload by accountSettingsDialogPayload.collectAsState()
     val showMailboxesDialog by showMailboxesDialog.collectAsState()
     val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
     val customDomainDetailsAsDialog by customDomainDetailsAsDialog.collectAsState()
@@ -187,8 +187,11 @@ fun AppRoot(
                 DeviceSettingsScreen(onDismiss = viewModel::goBack)
             }
 
-            entry<AccountSettingsDestination> {
-                AccountSettingsScreen(onDismiss = viewModel::goBack)
+            entry<AccountSettingsDestination> { key ->
+                AccountSettingsScreen(
+                    apiKeyValue = key.apiKey,
+                    onDismiss = viewModel::goBack
+                )
             }
 
             entry<MailboxesDestination> {
@@ -247,12 +250,15 @@ fun AppRoot(
         }
     }
 
-    if (showAccountSettingsDialog) {
+    accountSettingsDialogPayload?.let { payload ->
         Dialog(onDismissRequest = ::dismissAccountSettingsDialog) {
-            AccountSettingsScreen(onDismiss = ::dismissAccountSettingsDialog)
+            AccountSettingsScreen(
+                apiKeyValue = payload.apiKey.value,
+                onDismiss = ::dismissAccountSettingsDialog
+            )
         }
     }
-
+    
     if (showMailboxesDialog) {
         Dialog(onDismissRequest = ::dismissMailboxesDialog) {
             MailboxesScreen(onDismiss = ::dismissMailboxesDialog)
