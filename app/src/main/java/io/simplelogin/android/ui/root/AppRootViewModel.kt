@@ -221,12 +221,14 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun viewAliasDetails(alias: Alias) {
-        _navBackStack.value.apply {
-            // When viewing details of an alias, we remove all previous details
-            // from navigation stack
-            removeIf { it is AliasDetailsDestination }
-            removeIf { it is AliasContactsDestination }
-            add(AliasDetailsDestination(alias))
+        withApiKey { apiKey ->
+            _navBackStack.value.apply {
+                // When viewing details of an alias, we remove all previous details
+                // from navigation stack
+                removeIf { it is AliasDetailsDestination }
+                removeIf { it is AliasContactsDestination }
+                add(AliasDetailsDestination(alias = alias, apiKey = apiKey.value))
+            }
         }
     }
 

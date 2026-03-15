@@ -69,6 +69,7 @@ import io.simplelogin.android.ui.util.primaryContentBackground
 @Composable
 fun AliasDetailScreen(
     alias: Alias,
+    apiKeyValue: String,
     onGoBack: () -> Unit,
     onViewContacts: () -> Unit,
     onAliasUpdated: (Alias) -> Unit,
@@ -76,7 +77,7 @@ fun AliasDetailScreen(
 ) {
     val viewModel =
         hiltViewModel(key = "alias_detail_${alias.id}") { factory: AliasDetailViewModel.Factory ->
-            factory.create(alias.id.value)
+            factory.create(aliasIdValue = alias.id.value, apiKeyValue = apiKeyValue)
         }
 
     val state by viewModel.stateFlow.collectAsState()

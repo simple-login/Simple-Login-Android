@@ -44,6 +44,7 @@ import kotlinx.coroutines.launch
 class AliasDetailViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @Assisted private val aliasIdValue: Int,
+    @Assisted private val apiKeyValue: String,
     @LoadingState private val loadingState: LoadingStateFlow,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     private val showSnackbarFailure: ShowSnackbarFailureUseCase,
@@ -55,7 +56,7 @@ class AliasDetailViewModel @AssistedInject constructor(
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
-        fun create(aliasIdValue: Int): AliasDetailViewModel
+        fun create(aliasIdValue: Int, apiKeyValue: String): AliasDetailViewModel
     }
 
     private val aliasId = AliasId(aliasIdValue)
