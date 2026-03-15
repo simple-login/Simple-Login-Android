@@ -57,7 +57,8 @@ class AppRootViewModel @Inject constructor(
 
     var customDomainDetailsDialogPayload =
         MutableStateFlow<ObjectDialogPayload<CustomDomain>?>(null)
-    var customDomainDeletedAliasesAsDialog = MutableStateFlow<CustomDomain?>(null)
+    var customDomainDeletedAliasesDialogPayload =
+        MutableStateFlow<ObjectDialogPayload<CustomDomain>?>(null)
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettings()
         .map {
@@ -194,17 +195,25 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {
-        if (asDialog) {
-            customDomainDeletedAliasesAsDialog.value = domain
-        } else {
-            _navBackStack.value.apply {
-                add(CustomDomainDeletedAliasesDestination(domain))
+        withApiKey { apiKey ->
+            if (asDialog) {
+                customDomainDeletedAliasesDialogPayload.value =
+                    ObjectDialogPayload(apiKey = apiKey, value = domain)
+            } else {
+                _navBackStack.value.apply {
+                    add(
+                        CustomDomainDeletedAliasesDestination(
+                            domain = domain,
+                            apiKey = apiKey.value
+                        )
+                    )
+                }
             }
         }
     }
 
     fun dismissCustomDomainDeletedAliasesDialog() {
-        customDomainDeletedAliasesAsDialog.value = null
+        customDomainDeletedAliasesDialogPayload.value = null
     }
 
     //endregion

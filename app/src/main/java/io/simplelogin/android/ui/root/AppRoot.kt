@@ -81,7 +81,8 @@ data class CustomDomainsDestination(val apiKey: String) : NavKey
 data class CustomDomainDetailsDestination(val domain: CustomDomain, val apiKey: String) : NavKey
 
 @Serializable
-data class CustomDomainDeletedAliasesDestination(val domain: CustomDomain) : NavKey
+data class CustomDomainDeletedAliasesDestination(val domain: CustomDomain, val apiKey: String) :
+    NavKey
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -100,7 +101,7 @@ fun AppRoot(
     val mailboxesDialogPayload by mailboxesDialogPayload.collectAsState()
     val customDomainsDialogPayload by customDomainsDialogPayload.collectAsState()
     val customDomainDetailsAsDialog by customDomainDetailsDialogPayload.collectAsState()
-    val customDomainDeletedAliasesAsDialog by customDomainDeletedAliasesAsDialog.collectAsState()
+    val customDomainDeletedAliasesDialogPayload by customDomainDeletedAliasesDialogPayload.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -232,8 +233,12 @@ fun AppRoot(
                 )
             }
 
-            entry<CustomDomainDeletedAliasesDestination> {
-                CustomDomainDeletedAliasesScreen(domain = it.domain, onDismiss = viewModel::goBack)
+            entry<CustomDomainDeletedAliasesDestination> { key ->
+                CustomDomainDeletedAliasesScreen(
+                    domain = key.domain,
+                    apiKeyValue = key.apiKey,
+                    onDismiss = viewModel::goBack
+                )
             }
         }
     )
@@ -305,10 +310,11 @@ fun AppRoot(
         }
     }
 
-    customDomainDeletedAliasesAsDialog?.let {
+    customDomainDeletedAliasesDialogPayload?.let { payload ->
         Dialog(onDismissRequest = ::dismissCustomDomainDeletedAliasesDialog) {
             CustomDomainDeletedAliasesScreen(
-                domain = it,
+                domain = payload.value,
+                apiKeyValue = payload.apiKey.value,
                 onDismiss = ::dismissCustomDomainDeletedAliasesDialog
             )
         }

@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.remote.datasource.CustomDomainsRemoteDatasource
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,12 +18,12 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = CustomDomainDeletedAliasesViewModel.Factory::class)
 class CustomDomainDeletedAliasesViewModel @AssistedInject constructor(
     @Assisted private val domain: CustomDomain,
-    private val datasource: CustomDomainsRemoteDatasource,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase
+    @Assisted private val apiKeyValue: String,
+    private val datasource: CustomDomainsRemoteDatasource
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
-        fun create(domain: CustomDomain): CustomDomainDeletedAliasesViewModel
+        fun create(domain: CustomDomain, apiKeyValue: String): CustomDomainDeletedAliasesViewModel
     }
 
     private val _stateFlow = MutableStateFlow(CustomDomainDeletedAliasesState.Default)
@@ -53,13 +52,5 @@ class CustomDomainDeletedAliasesViewModel @AssistedInject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        scope.launch {
-            observeSessionSettings().collect { settings ->
-                settings.apiKey?.let {
-                    block(it)
-                }
-            }
-        }
-    }
+    ) = scope.launch { block(ApiKey(apiKeyValue)) }
 }

@@ -50,11 +50,12 @@ import io.simplelogin.android.util.relativeDateTime
 @Composable
 fun CustomDomainDeletedAliasesScreen(
     domain: CustomDomain,
+    apiKeyValue: String,
     onDismiss: () -> Unit
 ) {
     val viewModel =
         hiltViewModel(key = "custom_domain_deleted_aliases_${domain.id}") { factory: CustomDomainDeletedAliasesViewModel.Factory ->
-            factory.create(domain)
+            factory.create(domain = domain, apiKeyValue = apiKeyValue)
         }
     val context = LocalContext.current
     val state by viewModel.stateFlow.collectAsState()
