@@ -72,7 +72,7 @@ data object DeviceSettingsDestination : NavKey
 data class AccountSettingsDestination(val apiKey: String) : NavKey
 
 @Serializable
-data object MailboxesDestination : NavKey
+data class MailboxesDestination(val apiKey: String) : NavKey
 
 @Serializable
 data object CustomDomainsDestination : NavKey
@@ -97,7 +97,7 @@ fun AppRoot(
     val showLogOutDialog by showLogOutDialog.collectAsState()
     val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
     val accountSettingsDialogPayload by accountSettingsDialogPayload.collectAsState()
-    val showMailboxesDialog by showMailboxesDialog.collectAsState()
+    val mailboxesDialogPayload by mailboxesDialogPayload.collectAsState()
     val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
     val customDomainDetailsAsDialog by customDomainDetailsAsDialog.collectAsState()
     val customDomainDeletedAliasesAsDialog by customDomainDeletedAliasesAsDialog.collectAsState()
@@ -198,8 +198,11 @@ fun AppRoot(
                 )
             }
 
-            entry<MailboxesDestination> {
-                MailboxesScreen(onDismiss = viewModel::goBack)
+            entry<MailboxesDestination> { key ->
+                MailboxesScreen(
+                    apiKeyValue = key.apiKey,
+                    onDismiss = viewModel::goBack
+                )
             }
 
             entry<CustomDomainsDestination> {
@@ -263,9 +266,12 @@ fun AppRoot(
         }
     }
 
-    if (showMailboxesDialog) {
+    mailboxesDialogPayload?.let { payload ->
         Dialog(onDismissRequest = ::dismissMailboxesDialog) {
-            MailboxesScreen(onDismiss = ::dismissMailboxesDialog)
+            MailboxesScreen(
+                apiKeyValue = payload.apiKey.value,
+                onDismiss = ::dismissMailboxesDialog
+            )
         }
     }
 

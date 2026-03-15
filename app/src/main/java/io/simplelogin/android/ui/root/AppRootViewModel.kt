@@ -50,7 +50,7 @@ class AppRootViewModel @Inject constructor(
 
     var accountSettingsDialogPayload = MutableStateFlow<DialogPayload?>(null)
 
-    var showMailboxesDialog = MutableStateFlow(false)
+    var mailboxesDialogPayload = MutableStateFlow<DialogPayload?>(null)
 
     var showCustomDomainsDialog = MutableStateFlow(false)
 
@@ -143,17 +143,19 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun showMailboxesScreen(asDialog: Boolean) {
-        if (asDialog) {
-            showMailboxesDialog.value = true
-        } else {
-            _navBackStack.value.apply {
-                add(MailboxesDestination)
+        withApiKey { apiKey ->
+            if (asDialog) {
+                mailboxesDialogPayload.value = DialogPayload(apiKey)
+            } else {
+                _navBackStack.value.apply {
+                    add(MailboxesDestination(apiKey.value))
+                }
             }
         }
     }
 
     fun dismissMailboxesDialog() {
-        showMailboxesDialog.value = false
+        mailboxesDialogPayload.value = null
     }
 
     fun showCustomDomainsScreen(asDialog: Boolean) {

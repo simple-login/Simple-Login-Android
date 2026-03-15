@@ -72,10 +72,15 @@ import io.simplelogin.android.util.relativeDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MailboxesScreen(
+    apiKeyValue: String,
     onDismiss: () -> Unit
-) = with(hiltViewModel<MailboxesViewModel>()) {
+) {
+    val viewModel = hiltViewModel { factory: MailboxesViewModel.Factory ->
+        factory.create(apiKeyValue)
+    }
+
     val context = LocalContext.current
-    val state by stateFlow.collectAsState()
+    val state by viewModel.stateFlow.collectAsState()
     val mailboxes = state.mailboxes
     val fetchError = state.fetchError
     val updateError = state.updateError
@@ -87,7 +92,7 @@ fun MailboxesScreen(
     LaunchedEffect(updateError) {
         updateError?.let {
             snackbarHostState.showSnackbar(it.description(context))
-            clearUpdateError()
+            viewModel.clearUpdateError()
         }
     }
 
@@ -109,7 +114,7 @@ fun MailboxesScreen(
                     it.email
                 )
             )
-            clearAddedMailbox()
+            viewModel.clearAddedMailbox()
         }
     }
 
@@ -121,7 +126,7 @@ fun MailboxesScreen(
                     it.email
                 )
             )
-            clearDeletedMailbox()
+            viewModel.clearDeletedMailbox()
         }
     }
 
@@ -133,7 +138,7 @@ fun MailboxesScreen(
                     it.email
                 )
             )
-            clearNewDefaultMailbox()
+            viewModel.clearNewDefaultMailbox()
         }
     }
 
@@ -172,7 +177,7 @@ fun MailboxesScreen(
             if (mailboxes != null) {
                 PullToRefreshBox(
                     isRefreshing = state.isFetching,
-                    onRefresh = ::fetchMailboxes
+                    onRefresh = viewModel::fetchMailboxes
                 ) {
                     LazyColumn(
                         modifier = Modifier
@@ -196,7 +201,7 @@ fun MailboxesScreen(
                                     )
                                     .background(SlColor.ContentContainerBackgroundColor),
                                 mailbox = mailbox,
-                                onSetAsDefault = { setAsDefault(mailbox) },
+                                onSetAsDefault = { viewModel.setAsDefault(mailbox) },
                                 onDelete = { mailboxToDelete = mailbox }
                             )
                             if (index < mailboxes.lastIndex) {
@@ -220,7 +225,7 @@ fun MailboxesScreen(
             }
 
             if (fetchError != null) {
-                RetryButton(error = fetchError, onRetry = ::fetchMailboxes)
+                RetryButton(error = fetchError, onRetry = viewModel::fetchMailboxes)
             }
         }
     }
@@ -232,7 +237,7 @@ fun MailboxesScreen(
             ctaTitle = stringResource(R.string.add),
             onAdd = {
                 showAddMailboxDialog = false
-                add(it)
+                viewModel.add(it)
             },
             onDismiss = { showAddMailboxDialog = false }
         )
@@ -244,7 +249,7 @@ fun MailboxesScreen(
             mailboxes = state.mailboxes ?: listOf(),
             onDelete = {
                 mailboxToDelete = null
-                deleteMailbox(mailbox, it)
+                viewModel.deleteMailbox(mailbox, it)
             },
             onDismiss = { mailboxToDelete = null }
         )

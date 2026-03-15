@@ -2,26 +2,30 @@ package io.simplelogin.android.ui.home.mailboxes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MailboxesViewModel @Inject constructor(
-    private val datasource: MailboxesRemoteDatasource,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase
+@HiltViewModel(assistedFactory = MailboxesViewModel.Factory::class)
+class MailboxesViewModel @AssistedInject constructor(
+    @Assisted private val apiKeyValue: String,
+    private val datasource: MailboxesRemoteDatasource
 ) : ViewModel() {
-    private var apiKey: ApiKey? = null
+    @AssistedFactory
+    interface Factory {
+        fun create(apiKeyValue: String): MailboxesViewModel
+    }
+
     private val _stateFlow = MutableStateFlow(MailboxesState.Default)
     val stateFlow: StateFlow<MailboxesState> = _stateFlow
 
@@ -136,15 +140,5 @@ class MailboxesViewModel @Inject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        apiKey?.let { scope.launch { block(it) } }
-            ?: scope.launch {
-                observeSessionSettings()
-                    .mapNotNull { it.apiKey }
-                    .collect { fetchedApiKey ->
-                        apiKey = fetchedApiKey
-                        block(fetchedApiKey)
-                    }
-            }
-    }
+    ) = scope.launch { block(ApiKey(apiKeyValue)) }
 }
