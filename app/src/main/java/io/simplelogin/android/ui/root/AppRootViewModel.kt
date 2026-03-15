@@ -202,8 +202,10 @@ class AppRootViewModel @Inject constructor(
 
     //region Home
     fun showCreateAliasScreen() {
-        _navBackStack.value.apply {
-            add(CreateAliasDestination)
+        withApiKey { apiKey ->
+            _navBackStack.value.apply {
+                add(CreateAliasDestination(apiKey.value))
+            }
         }
     }
 

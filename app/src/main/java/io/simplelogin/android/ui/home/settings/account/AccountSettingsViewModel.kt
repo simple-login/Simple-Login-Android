@@ -51,7 +51,6 @@ class AccountSettingsViewModel @AssistedInject constructor(
         fun create(apiKeyValue: String): AccountSettingsViewModel
     }
 
-    private val apiKey = ApiKey(apiKeyValue)
     private val _stateFlow = MutableStateFlow(AccountSettingsState.Default)
     val stateFlow: StateFlow<AccountSettingsState> = _stateFlow
 
@@ -251,7 +250,7 @@ class AccountSettingsViewModel @AssistedInject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) = scope.launch { block(apiKey) }
+    ) = scope.launch { block(ApiKey(apiKeyValue)) }
 
 
     private fun handleError(error: ApiError) {

@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @LoadingState private val loadingState: LoadingStateFlow,
-    @Assisted private val apiKeyValue: String,
+    @Assisted val apiKeyValue: String,
     aliasListManagerFactory: AliasListManagerFactory,
     aliasSearchManagerFactory: AliasSearchManagerFactory,
     private val copyToClipboard: CopyToClipboardUseCase,

@@ -46,8 +46,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.data.models.ui.DialogPayload
 import io.simplelogin.android.ui.home.aliaslist.AliasList
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
@@ -79,7 +81,7 @@ fun HomeScreen(
     }
 
     var isSearching by rememberSaveable { mutableStateOf(false) }
-    var showCreateAliasDialog by rememberSaveable { mutableStateOf(false) }
+    var createAliasDialogPayload by rememberSaveable { mutableStateOf<DialogPayload?>(null) }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -120,7 +122,7 @@ fun HomeScreen(
             onEnterFullScreen = { fullScreenAlias = it },
             onCustomAliasClick = {
                 if (windowAdaptiveInfo.supportsMultiplePanes()) {
-                    showCreateAliasDialog = true
+                    createAliasDialogPayload = DialogPayload(ApiKey(viewModel.apiKeyValue))
                 } else {
                     onCreateAlias()
                 }
@@ -135,17 +137,18 @@ fun HomeScreen(
         )
     }
 
-    if (showCreateAliasDialog) {
+    createAliasDialogPayload?.let { payload ->
         Dialog(
-            onDismissRequest = { showCreateAliasDialog = false },
+            onDismissRequest = { createAliasDialogPayload = null },
             properties = DialogProperties(usePlatformDefaultWidth = windowAdaptiveInfo.supportsMultiplePanes())
         ) {
             CreateAliasScreen(
+                apiKeyValue = payload.apiKey.value,
                 onAliasCreated = {
-                    showCreateAliasDialog = false
+                    createAliasDialogPayload = null
                     viewModel.handleCreatedAlias(it)
                 },
-                onDismiss = { showCreateAliasDialog = false }
+                onDismiss = { createAliasDialogPayload = null }
             )
         }
     }

@@ -41,7 +41,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -72,18 +71,20 @@ import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
-import kotlinx.coroutines.launch
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAliasScreen(
+    apiKeyValue: String,
     key: String = rememberSaveable { UUID.randomUUID().toString() },
-    viewModel: CreateAliasViewModel = hiltViewModel(key = key),
     onAliasCreated: (Alias) -> Unit,
     onDismiss: () -> Unit
-) = with(viewModel) {
-    val scope = rememberCoroutineScope()
+) {
+    val viewModel = hiltViewModel(key = key) { factory: CreateAliasViewModel.Factory ->
+        factory.create(apiKeyValue)
+    }
+
     val context = LocalContext.current
     var prefix by remember { mutableStateOf(TextFieldValue("")) }
     val prefixValidation = prefix.text.validatePrefix()
@@ -92,7 +93,7 @@ fun CreateAliasScreen(
     var selectedMailboxes by remember { mutableStateOf<List<Mailbox>>(emptyList()) }
     var showMailboxesDialog by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
-    val state by stateFlow.collectAsState()
+    val state by viewModel.stateFlow.collectAsState()
     val fetchError = state.fetchError
 
     LaunchedEffect(state.aliasOptions) {
@@ -168,9 +169,7 @@ fun CreateAliasScreen(
             if (fetchError != null) {
                 RetryButton(
                     error = fetchError,
-                    onRetry = {
-                        scope.launch { fetchOptions() }
-                    }
+                    onRetry = viewModel::fetchOptions
                 )
             }
 

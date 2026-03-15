@@ -2,6 +2,9 @@ package io.simplelogin.android.ui.home.createalias
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.ApiError
@@ -12,9 +15,7 @@ import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
 import io.simplelogin.android.data.util.Result
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
-import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -22,17 +23,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class CreateAliasViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CreateAliasViewModel.Factory::class)
+class CreateAliasViewModel @AssistedInject constructor(
+    @Assisted private val apiKeyValue: String,
     private val datasource: CreationRemoteDatasource,
-    private val observeDeviceSettings: ObserveDeviceSettingsUseCase,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase
+    private val observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
-    private var apiKey: ApiKey? = null
+    @AssistedFactory
+    interface Factory {
+        fun create(apiKeyValue: String): CreateAliasViewModel
+    }
+
     private val _stateFlow = MutableStateFlow(CreateAliasState.Default)
     val stateFlow: StateFlow<CreateAliasState> = _stateFlow.asStateFlow()
 
@@ -97,18 +101,10 @@ class CreateAliasViewModel @Inject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        apiKey?.let { scope.launch { block(it) } }
-            ?: scope.launch {
-                observeSessionSettings()
-                    .mapNotNull { it.apiKey }
-                    .collect { fetchedApiKey ->
-                        apiKey = fetchedApiKey
-                        block(fetchedApiKey)
-                    }
-            }
+    ) = scope.launch {
+        block(ApiKey(apiKeyValue))
     }
-
+    
     fun create(body: CreateAliasBody) {
         _stateFlow.update { it.copy(isLoading = true) }
         withApiKey { apiKey ->

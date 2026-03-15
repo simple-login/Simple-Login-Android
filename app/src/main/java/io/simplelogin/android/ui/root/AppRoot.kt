@@ -54,7 +54,7 @@ data object LogInDestination : NavKey
 data class HomeDestination(val apiKey: String) : NavKey
 
 @Serializable
-data object CreateAliasDestination : NavKey
+data class CreateAliasDestination(val apiKey: String) : NavKey
 
 @Serializable
 data class AliasDetailsDestination(val alias: Alias) : NavKey
@@ -144,8 +144,9 @@ fun AppRoot(
                 )
             }
 
-            entry<CreateAliasDestination> {
+            entry<CreateAliasDestination> { key ->
                 CreateAliasScreen(
+                    apiKeyValue = key.apiKey,
                     onAliasCreated = viewModel::handleCreatedAlias,
                     onDismiss = viewModel::goBack
                 )
@@ -258,7 +259,7 @@ fun AppRoot(
             )
         }
     }
-    
+
     if (showMailboxesDialog) {
         Dialog(onDismissRequest = ::dismissMailboxesDialog) {
             MailboxesScreen(onDismiss = ::dismissMailboxesDialog)
