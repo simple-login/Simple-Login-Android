@@ -12,6 +12,7 @@ import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.ui.DialogPayload
+import io.simplelogin.android.data.models.ui.ObjectDialogPayload
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.login.LogOutUseCase
@@ -52,9 +53,10 @@ class AppRootViewModel @Inject constructor(
 
     var mailboxesDialogPayload = MutableStateFlow<DialogPayload?>(null)
 
-    var showCustomDomainsDialog = MutableStateFlow(false)
+    var customDomainsDialogPayload = MutableStateFlow<DialogPayload?>(null)
 
-    var customDomainDetailsAsDialog = MutableStateFlow<CustomDomain?>(null)
+    var customDomainDetailsDialogPayload =
+        MutableStateFlow<ObjectDialogPayload<CustomDomain>?>(null)
     var customDomainDeletedAliasesAsDialog = MutableStateFlow<CustomDomain?>(null)
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettings()
@@ -159,31 +161,36 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun showCustomDomainsScreen(asDialog: Boolean) {
-        if (asDialog) {
-            showCustomDomainsDialog.value = true
-        } else {
-            _navBackStack.value.apply {
-                add(CustomDomainsDestination)
+        withApiKey { apiKey ->
+            if (asDialog) {
+                customDomainsDialogPayload.value = DialogPayload(apiKey)
+            } else {
+                _navBackStack.value.apply {
+                    add(CustomDomainsDestination(apiKey.value))
+                }
             }
         }
     }
 
     fun dismissCustomDomainsDialog() {
-        showCustomDomainsDialog.value = false
+        customDomainsDialogPayload.value = null
     }
 
     fun showCustomDomainDetails(domain: CustomDomain, asDialog: Boolean) {
-        if (asDialog) {
-            customDomainDetailsAsDialog.value = domain
-        } else {
-            _navBackStack.value.apply {
-                add(CustomDomainDetailsDestination(domain))
+        withApiKey { apiKey ->
+            if (asDialog) {
+                customDomainDetailsDialogPayload.value =
+                    ObjectDialogPayload(apiKey = apiKey, value = domain)
+            } else {
+                _navBackStack.value.apply {
+                    add(CustomDomainDetailsDestination(domain = domain, apiKey = apiKey.value))
+                }
             }
         }
     }
 
     fun dismissCustomDomainDetailsDialog() {
-        customDomainDetailsAsDialog.value = null
+        customDomainDetailsDialogPayload.value = null
     }
 
     fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {

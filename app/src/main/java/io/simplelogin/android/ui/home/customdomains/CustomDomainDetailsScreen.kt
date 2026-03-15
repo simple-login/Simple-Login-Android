@@ -65,12 +65,13 @@ import io.simplelogin.android.util.relativeDateTime
 @Composable
 fun CustomDomainDetailsScreen(
     domain: CustomDomain,
+    apiKeyValue: String,
     onViewDeletedAliases: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val viewModel =
         hiltViewModel(key = "custom_domain_${domain.id}") { factory: CustomDomainDetailsViewModel.Factory ->
-            factory.create(domain)
+            factory.create(domain = domain, apiKeyValue = apiKeyValue)
         }
     val context = LocalContext.current
     val state by viewModel.stateFlow.collectAsState()

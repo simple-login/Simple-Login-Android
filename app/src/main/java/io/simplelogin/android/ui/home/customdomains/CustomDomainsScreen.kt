@@ -56,10 +56,14 @@ import io.simplelogin.android.util.relativeDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDomainsScreen(
+    apiKeyValue: String,
     onViewDetails: (CustomDomain) -> Unit,
     onDismiss: () -> Unit
-) = with(hiltViewModel<CustomDomainsViewModel>()) {
-    val state by stateFlow.collectAsState()
+) {
+    val viewModel = hiltViewModel { factory: CustomDomainsViewModel.Factory ->
+        factory.create(apiKeyValue)
+    }
+    val state by viewModel.stateFlow.collectAsState()
     val domains = state.domains
 
     Scaffold(
@@ -126,7 +130,7 @@ fun CustomDomainsScreen(
             }
 
             state.fetchError?.let {
-                RetryButton(error = it, onRetry = ::fetchCustomDomains)
+                RetryButton(error = it, onRetry = viewModel::fetchCustomDomains)
             }
         }
     }

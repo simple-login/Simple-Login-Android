@@ -75,10 +75,10 @@ data class AccountSettingsDestination(val apiKey: String) : NavKey
 data class MailboxesDestination(val apiKey: String) : NavKey
 
 @Serializable
-data object CustomDomainsDestination : NavKey
+data class CustomDomainsDestination(val apiKey: String) : NavKey
 
 @Serializable
-data class CustomDomainDetailsDestination(val domain: CustomDomain) : NavKey
+data class CustomDomainDetailsDestination(val domain: CustomDomain, val apiKey: String) : NavKey
 
 @Serializable
 data class CustomDomainDeletedAliasesDestination(val domain: CustomDomain) : NavKey
@@ -98,8 +98,8 @@ fun AppRoot(
     val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
     val accountSettingsDialogPayload by accountSettingsDialogPayload.collectAsState()
     val mailboxesDialogPayload by mailboxesDialogPayload.collectAsState()
-    val showCustomDomainsDialog by showCustomDomainsDialog.collectAsState()
-    val customDomainDetailsAsDialog by customDomainDetailsAsDialog.collectAsState()
+    val customDomainsDialogPayload by customDomainsDialogPayload.collectAsState()
+    val customDomainDetailsAsDialog by customDomainDetailsDialogPayload.collectAsState()
     val customDomainDeletedAliasesAsDialog by customDomainDeletedAliasesAsDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
@@ -205,22 +205,27 @@ fun AppRoot(
                 )
             }
 
-            entry<CustomDomainsDestination> {
-                CustomDomainsScreen(onViewDetails = {
-                    viewModel.showCustomDomainDetails(
-                        domain = it,
-                        asDialog = false
-                    )
-                }, onDismiss = viewModel::goBack)
+            entry<CustomDomainsDestination> { key ->
+                CustomDomainsScreen(
+                    apiKeyValue = key.apiKey,
+                    onViewDetails = {
+                        viewModel.showCustomDomainDetails(
+                            domain = it,
+                            asDialog = false
+                        )
+                    },
+                    onDismiss = viewModel::goBack
+                )
             }
 
-            entry<CustomDomainDetailsDestination> {
+            entry<CustomDomainDetailsDestination> { key ->
                 CustomDomainDetailsScreen(
-                    domain = it.domain,
+                    domain = key.domain,
+                    apiKeyValue = key.apiKey,
                     onDismiss = viewModel::goBack,
                     onViewDeletedAliases = {
                         viewModel.showCustomDomainDeletedAliases(
-                            domain = it.domain,
+                            domain = key.domain,
                             asDialog = false
                         )
                     }
@@ -275,23 +280,25 @@ fun AppRoot(
         }
     }
 
-    if (showCustomDomainsDialog) {
+    customDomainsDialogPayload?.let { payload ->
         Dialog(onDismissRequest = ::dismissCustomDomainsDialog) {
             CustomDomainsScreen(
+                apiKeyValue = payload.apiKey.value,
                 onViewDetails = { showCustomDomainDetails(domain = it, asDialog = true) },
                 onDismiss = ::dismissCustomDomainsDialog
             )
         }
     }
 
-    customDomainDetailsAsDialog?.let {
+    customDomainDetailsAsDialog?.let { payload ->
         Dialog(onDismissRequest = ::dismissCustomDomainDetailsDialog) {
             CustomDomainDetailsScreen(
-                domain = it,
+                domain = payload.value,
+                apiKeyValue = payload.apiKey.value,
                 onDismiss = ::dismissCustomDomainDetailsDialog,
                 onViewDeletedAliases = {
                     viewModel.showCustomDomainDeletedAliases(
-                        domain = it,
+                        domain = payload.value,
                         asDialog = true
                     )
                 })
