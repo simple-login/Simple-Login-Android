@@ -239,7 +239,9 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun viewAliasActivities(alias: Alias) {
-        uniquelyAddDestination(AliasActivitiesDestination(alias))
+        withApiKey { apiKey ->
+            uniquelyAddDestination(AliasActivitiesDestination(alias = alias, apiKey = apiKey.value))
+        }
     }
     //endregion
 

@@ -63,7 +63,7 @@ data class AliasDetailsDestination(val alias: Alias, val apiKey: String) : NavKe
 data class AliasContactsDestination(val alias: Alias, val apiKey: String) : NavKey
 
 @Serializable
-data class AliasActivitiesDestination(val alias: Alias) : NavKey
+data class AliasActivitiesDestination(val alias: Alias, val apiKey: String) : NavKey
 
 @Serializable
 data object DeviceSettingsDestination : NavKey
@@ -182,6 +182,7 @@ fun AppRoot(
             ) { key ->
                 AliasActivitiesScreen(
                     alias = key.alias,
+                    apiKeyValue = key.apiKey,
                     onGoBack = viewModel::goBack
                 )
             }

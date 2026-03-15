@@ -13,11 +13,9 @@ import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ActivityUiActionHandler
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.collections.plus
@@ -25,18 +23,16 @@ import kotlin.collections.plus
 @HiltViewModel(assistedFactory = AliasActivitiesViewModel.Factory::class)
 class AliasActivitiesViewModel @AssistedInject constructor(
     @Assisted private val alias: Alias,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase,
+    @Assisted private val apiKeyValue: String,
     private val datasource: AliasDetailsRemoteDatasource,
     private val actionHandler: ActivityUiActionHandler
 ) : ViewModel() {
-    private var apiKey: ApiKey? = null
-
     private val _stateFlow = MutableStateFlow(AliasActivitiesState.Default)
     val stateFlow: StateFlow<AliasActivitiesState> = _stateFlow
 
     @AssistedFactory
     interface Factory {
-        fun create(alias: Alias): AliasActivitiesViewModel
+        fun create(alias: Alias, apiKeyValue: String): AliasActivitiesViewModel
     }
 
     fun refresh() {
@@ -101,14 +97,5 @@ class AliasActivitiesViewModel @AssistedInject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        scope.launch {
-            apiKey?.let { block(it) } ?: observeSessionSettings()
-                .mapNotNull { it.apiKey }
-                .collect {
-                    apiKey = it
-                    block(it)
-                }
-        }
-    }
+    ) = scope.launch { block(ApiKey(apiKeyValue)) }
 }

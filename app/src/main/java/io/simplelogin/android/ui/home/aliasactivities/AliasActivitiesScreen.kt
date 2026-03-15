@@ -46,11 +46,12 @@ import io.simplelogin.android.ui.util.SettingsHeader
 @Composable
 fun AliasActivitiesScreen(
     alias: Alias,
+    apiKeyValue: String,
     onGoBack: () -> Unit
 ) {
     val viewModel =
         hiltViewModel(key = "alias_contacts_${alias.id.value}") { factory: AliasActivitiesViewModel.Factory ->
-            factory.create(alias)
+            factory.create(alias = alias, apiKeyValue = apiKeyValue)
         }
 
     val state by viewModel.stateFlow.collectAsState()
