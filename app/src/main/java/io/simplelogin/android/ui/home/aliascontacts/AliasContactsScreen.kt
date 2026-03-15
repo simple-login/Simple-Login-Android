@@ -73,11 +73,12 @@ import io.simplelogin.android.ui.util.clickableRippleDisabled
 @Composable
 fun AliasContactsScreen(
     alias: Alias,
+    apiKeyValue: String,
     onGoBack: () -> Unit
 ) {
     val viewModel =
         hiltViewModel(key = "alias_contacts_${alias.id.value}") { factory: AliasContactsViewModel.Factory ->
-            factory.create(alias)
+            factory.create(alias = alias, apiKeyValue = apiKeyValue)
         }
 
     val state by viewModel.stateFlow.collectAsState()

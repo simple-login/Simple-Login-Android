@@ -233,7 +233,9 @@ class AppRootViewModel @Inject constructor(
     }
 
     fun viewAliasContacts(alias: Alias) {
-        uniquelyAddDestination(AliasContactsDestination(alias))
+        withApiKey { apiKey ->
+            uniquelyAddDestination(AliasContactsDestination(alias = alias, apiKey = apiKey.value))
+        }
     }
 
     fun viewAliasActivities(alias: Alias) {

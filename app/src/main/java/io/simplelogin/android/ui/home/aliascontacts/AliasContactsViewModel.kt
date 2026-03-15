@@ -19,7 +19,6 @@ import io.simplelogin.android.data.models.ui.ContactUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionResult
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.di.LoadingState
@@ -29,7 +28,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,15 +36,13 @@ import kotlinx.coroutines.launch
 class AliasContactsViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @Assisted private val alias: Alias,
+    @Assisted private val apiKeyValue: String,
     @LoadingState private val loadingState: LoadingStateFlow,
-    private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val datasource: AliasDetailsRemoteDatasource,
     private val actionHandler: ContactUiActionHandler,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     observeDeviceSettings: ObserveDeviceSettingsUseCase
 ) : ViewModel() {
-    private var apiKey: ApiKey? = null
-
     val deviceSettings = observeDeviceSettings().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -58,7 +54,7 @@ class AliasContactsViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(alias: Alias): AliasContactsViewModel
+        fun create(alias: Alias, apiKeyValue: String): AliasContactsViewModel
     }
 
     fun refresh() {
@@ -197,14 +193,5 @@ class AliasContactsViewModel @AssistedInject constructor(
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
-    ) {
-        scope.launch {
-            apiKey?.let { block(it) } ?: observeSessionSettings()
-                .mapNotNull { it.apiKey }
-                .collect {
-                    apiKey = it
-                    block(it)
-                }
-        }
-    }
+    ) = scope.launch { block(ApiKey(apiKeyValue)) }
 }
