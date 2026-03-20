@@ -76,6 +76,7 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.util.timeAndFullDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -315,7 +316,8 @@ private fun LazyListScope.accountSettingsScreenContent(
             }
         )
 
-        if (userInfo.inTrial) {
+        userInfo.trialEndTimestamp?.let {
+            SettingsFooter(text = stringResource(R.string.trial_end_date, it.timeAndFullDate()))
             SettingsFooter(text = stringResource(R.string.trial_description))
         }
 

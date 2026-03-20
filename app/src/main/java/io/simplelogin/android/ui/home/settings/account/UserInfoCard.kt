@@ -115,7 +115,8 @@ fun UserInfoCard(
                 style = LocalTextStyle.current.copy(
                     lineHeight = TextUnit.Unspecified,
                     platformStyle = PlatformTextStyle(includeFontPadding = false)
-                )
+                ),
+                overflow = TextOverflow.MiddleEllipsis
             )
         }
 
