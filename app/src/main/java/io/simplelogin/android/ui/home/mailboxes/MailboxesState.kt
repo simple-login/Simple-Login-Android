@@ -1,6 +1,6 @@
 package io.simplelogin.android.ui.home.mailboxes
 
-import io.simplelogin.android.data.models.api.ApiError
+import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.Mailbox
 
 data class MailboxesState(

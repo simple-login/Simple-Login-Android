@@ -76,6 +76,7 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.util.description
 import io.simplelogin.android.util.timeAndFullDate
 
 @OptIn(ExperimentalMaterial3Api::class)

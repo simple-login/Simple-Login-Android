@@ -66,6 +66,7 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
+import io.simplelogin.android.util.description
 import io.simplelogin.android.util.relativeDateTime
 
 @SuppressLint("LocalContextGetResourceValueCall")

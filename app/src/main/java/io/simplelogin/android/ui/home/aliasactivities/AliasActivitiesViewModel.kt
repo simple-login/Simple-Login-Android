@@ -7,18 +7,17 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.PAGE_SIZE
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ActivityUiActionHandler
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.AliasActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.plus
 
 @HiltViewModel(assistedFactory = AliasActivitiesViewModel.Factory::class)
 class AliasActivitiesViewModel @AssistedInject constructor(

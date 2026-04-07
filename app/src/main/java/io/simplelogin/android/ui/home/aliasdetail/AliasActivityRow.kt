@@ -38,9 +38,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.ActivityAction
-import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.ui.ActivityUiAction
+import io.simplelogin.android.models.api.ActivityAction
+import io.simplelogin.android.models.api.AliasActivity
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.util.relativeDateTime

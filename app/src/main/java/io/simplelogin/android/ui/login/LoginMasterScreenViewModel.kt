@@ -3,6 +3,7 @@ package io.simplelogin.android.ui.login
 import android.content.Context
 import android.webkit.CookieManager
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,7 @@ import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLoginManager
+import io.simplelogin.android.util.description
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.isValidPassword
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +39,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 data class AccountActivationPayload(
     val email: String,

@@ -1,8 +1,8 @@
 package io.simplelogin.android.data.remote.datasource
 
 import com.google.gson.Gson
-import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.api.ApiError
 import retrofit2.Response
 
 open class BaseRemoteDatasource {

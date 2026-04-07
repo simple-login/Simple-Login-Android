@@ -1,6 +1,5 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.api.CustomDomains
@@ -8,6 +7,7 @@ import io.simplelogin.android.data.models.api.DeletedAlias
 import io.simplelogin.android.data.models.api.UpdateCustomDomainOption
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.api.ApiError
 import javax.inject.Inject
 
 interface CustomDomainsRemoteDatasource {

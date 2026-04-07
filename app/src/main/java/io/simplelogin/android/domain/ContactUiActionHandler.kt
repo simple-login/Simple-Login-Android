@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.BlockForward
 import io.simplelogin.android.data.models.api.Contact
@@ -14,9 +13,11 @@ import io.simplelogin.android.data.models.ui.ContactUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.usecases.CopyToClipboardUseCase
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
+import io.simplelogin.android.util.description
 import javax.inject.Inject
 
 interface ContactUiActionHandler {

@@ -1,13 +1,13 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.data.models.api.AliasOptions
-import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
-import io.simplelogin.android.models.api.Mailboxes
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.AliasOptions
+import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.models.api.Mailboxes
 import javax.inject.Inject
 
 interface CreationRemoteDatasource {

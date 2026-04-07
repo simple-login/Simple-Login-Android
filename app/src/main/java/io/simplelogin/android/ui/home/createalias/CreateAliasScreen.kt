@@ -60,16 +60,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.Mailbox
-import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.models.preferences.DefaultPrefix
 import io.simplelogin.android.data.remote.CreateAliasBody
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.api.Suffix
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
+import io.simplelogin.android.util.description
 import io.simplelogin.android.util.validatePrefix
 import java.util.UUID
 

@@ -1,9 +1,5 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.AliasId
-import io.simplelogin.android.models.api.Aliases
-import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.Stats
@@ -13,6 +9,10 @@ import io.simplelogin.android.data.remote.EnabledResponse
 import io.simplelogin.android.data.remote.NoteBody
 import io.simplelogin.android.data.remote.SearchBody
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.AliasId
+import io.simplelogin.android.models.api.Aliases
+import io.simplelogin.android.models.api.ApiError
 import javax.inject.Inject
 
 interface AliasesRemoteDatasource {
