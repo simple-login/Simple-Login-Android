@@ -64,6 +64,7 @@ import io.simplelogin.android.data.models.api.RandomAliasSuffix
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
+import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor
@@ -76,7 +77,6 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
-import io.simplelogin.android.util.description
 import io.simplelogin.android.util.timeAndFullDate
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -28,4 +28,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "SimpleLogin"
 include(":app")
+include(":designsystem")
 include(":models")

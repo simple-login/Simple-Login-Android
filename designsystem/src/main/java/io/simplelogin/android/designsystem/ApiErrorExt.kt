@@ -1,7 +1,6 @@
-package io.simplelogin.android.util
+package io.simplelogin.android.designsystem
 
 import android.content.Context
-import io.simplelogin.android.R
 import io.simplelogin.android.models.api.ApiError
 
 fun ApiError.description(context: Context): String = when (this) {

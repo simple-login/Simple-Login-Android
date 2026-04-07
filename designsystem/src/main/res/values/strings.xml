@@ -1,0 +1,7 @@
+<resources>
+    <string name="too_many_requests">Too many requests</string>
+    <string name="client_error">Client error (%1$d)</string>
+    <string name="internal_server_error">Internal server error (%1$d)</string>
+    <string name="unknown_http_error">Unknown HTTP error (%1$d)</string>
+    <string name="generic_error">An error occurred (%s)</string>
+</resources>

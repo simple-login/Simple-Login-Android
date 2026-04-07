@@ -19,6 +19,7 @@ import io.simplelogin.android.data.remote.datasource.updateMailboxes
 import io.simplelogin.android.data.remote.datasource.updateName
 import io.simplelogin.android.data.remote.datasource.updateNote
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.ActivityUiActionHandler
@@ -31,7 +32,6 @@ import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
-import io.simplelogin.android.util.description
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

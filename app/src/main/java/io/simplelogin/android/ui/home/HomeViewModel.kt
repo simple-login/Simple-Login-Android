@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.AliasListManagerFactory
@@ -22,7 +23,6 @@ import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
-import io.simplelogin.android.util.description
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

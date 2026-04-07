@@ -14,6 +14,7 @@ import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
@@ -29,7 +30,6 @@ import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLoginManager
-import io.simplelogin.android.util.description
 import io.simplelogin.android.util.isValidEmail
 import io.simplelogin.android.util.isValidPassword
 import kotlinx.coroutines.flow.MutableStateFlow
