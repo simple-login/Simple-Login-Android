@@ -1,9 +1,6 @@
-package io.simplelogin.android.data.models.api
+package io.simplelogin.android.models.api
 
-import android.content.Context
 import com.google.gson.annotations.SerializedName
-import io.simplelogin.android.util.relativeDateTime
-import io.simplelogin.android.util.relativeTimeSpan
 import kotlinx.serialization.Serializable
 
 @[JvmInline Serializable]
@@ -39,8 +36,6 @@ data class Alias(
             @SerializedName("reverse_alias") val reverseAlias: String
         )
 
-        val relativeTime: String
-            get() = timestamp.relativeTimeSpan()
     }
 
     val hasActivities: Boolean
@@ -56,8 +51,6 @@ data class Alias(
             // Break just before "@" to make multi-lines emails more readable
             return email.replace("@", "\u200B@")
         }
-
-    fun relativeCreationTime(context: Context) = creationTimestamp.relativeDateTime(context)
 
     companion object
 }

@@ -12,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.Contact
 import io.simplelogin.android.data.models.ui.ContactUiAction

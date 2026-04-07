@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.ActivityAction
+import io.simplelogin.android.models.api.ActivityAction
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.usecases.CopyToClipboardUseCase

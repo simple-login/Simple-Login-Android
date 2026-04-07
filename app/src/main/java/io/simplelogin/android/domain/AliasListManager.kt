@@ -4,8 +4,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.simplelogin.android.PAGE_SIZE
-import io.simplelogin.android.data.models.api.Alias
-import io.simplelogin.android.data.models.api.AliasId
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.AliasId
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.RandomMode

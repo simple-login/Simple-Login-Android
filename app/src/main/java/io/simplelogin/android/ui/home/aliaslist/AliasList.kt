@@ -25,9 +25,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.preferences.AliasCellSelection

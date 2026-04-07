@@ -56,7 +56,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.ui.theme.Spacing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

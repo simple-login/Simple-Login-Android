@@ -7,7 +7,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.ApiKey
-import io.simplelogin.android.data.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailbox
 import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import kotlinx.coroutines.CoroutineScope

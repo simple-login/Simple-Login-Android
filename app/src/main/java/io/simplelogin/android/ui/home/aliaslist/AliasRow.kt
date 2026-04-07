@@ -1,5 +1,6 @@
 package io.simplelogin.android.ui.home.aliaslist
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -43,15 +44,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.Alias
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
+import io.simplelogin.android.util.relativeDateTime
 import kotlinx.coroutines.launch
 
 @Composable
@@ -274,9 +276,10 @@ private fun AliasCellContent(
             }
         }
 
-        if (displayInfos.contains(AliasDisplayInfo.NOTE) && !alias.note.isNullOrEmpty()) {
+        val note = alias.note
+        if (displayInfos.contains(AliasDisplayInfo.NOTE) && !note.isNullOrEmpty()) {
             Text(
-                text = alias.note,
+                text = note,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -380,3 +383,6 @@ fun SwipeActionLabel(
         )
     }
 }
+
+private fun Alias.relativeCreationTime(context: Context) =
+    creationTimestamp.relativeDateTime(context)

@@ -1,6 +1,6 @@
 package io.simplelogin.android.ui.home
 
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.UserInfo

@@ -1,6 +1,7 @@
 package io.simplelogin.android.data.models.api
 
 import com.google.gson.annotations.SerializedName
+import io.simplelogin.android.models.api.ActivityAction
 
 data class AliasActivity(
     @SerializedName("action") val action: ActivityAction,

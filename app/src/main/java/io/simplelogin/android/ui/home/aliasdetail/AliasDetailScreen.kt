@@ -47,7 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay
 import io.simplelogin.android.data.models.ui.ActivityUiAction
@@ -267,13 +267,14 @@ fun AliasDetailContent(
                     .primaryContentBackground()
                     .clickable { onEditNote() }
                     .padding(Spacing.regular)) {
-                if (alias.note.isNullOrBlank()) {
+                val note = alias.note
+                if (note.isNullOrBlank()) {
                     Text(
                         text = stringResource(R.string.add_note),
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    Text(text = alias.note, maxLines = 10)
+                    Text(text = note, maxLines = 10)
                 }
             }
 
@@ -289,13 +290,14 @@ fun AliasDetailContent(
                     .primaryContentBackground()
                     .clickable { onEditDisplayName() }
                     .padding(Spacing.regular)) {
-                if (alias.name.isNullOrBlank()) {
+                val name = alias.name
+                if (name.isNullOrBlank()) {
                     Text(
                         text = stringResource(R.string.add_display_name),
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    Text(text = alias.name, maxLines = 10)
+                    Text(text = name, maxLines = 10)
                 }
             }
 

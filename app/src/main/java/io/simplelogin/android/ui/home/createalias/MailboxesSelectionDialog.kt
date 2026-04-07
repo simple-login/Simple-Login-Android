@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailbox
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.UnverifiedBadge

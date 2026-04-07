@@ -50,10 +50,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.ActivityAction
-import io.simplelogin.android.data.models.api.Alias
-import io.simplelogin.android.data.models.api.AliasId
-import io.simplelogin.android.data.models.api.MailboxLite
+import io.simplelogin.android.models.api.ActivityAction
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.AliasId
+import io.simplelogin.android.models.api.MailboxLite
 import io.simplelogin.android.data.models.preferences.AliasCellSelection
 import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.data.models.preferences.AliasOptionsDisplay

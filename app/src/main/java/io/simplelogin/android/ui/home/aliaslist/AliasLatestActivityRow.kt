@@ -3,6 +3,11 @@ package io.simplelogin.android.ui.home.aliaslist
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
+import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -12,8 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.ActivityAction
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.util.relativeTimeSpan
 
 @Composable
 fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {
@@ -39,3 +47,22 @@ fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {
         Text(text = "(${activity.relativeTime})")
     }
 }
+
+private val ActivityAction.icon
+    get() = when (this) {
+        ActivityAction.BLOCK -> Icons.Default.Block
+        ActivityAction.BOUNCED -> Icons.Default.Warning
+        ActivityAction.FORWARD -> Icons.AutoMirrored.Filled.ForwardToInbox
+        ActivityAction.REPLY -> Icons.AutoMirrored.Filled.Reply
+    }
+
+private val ActivityAction.color
+    get() = when (this) {
+        ActivityAction.BLOCK -> SlColor.Red
+        ActivityAction.BOUNCED -> SlColor.Amber
+        ActivityAction.FORWARD -> SlColor.Green
+        ActivityAction.REPLY -> SlColor.Blue
+    }
+
+private val Alias.LatestActivity.relativeTime
+    get() = timestamp.relativeTimeSpan()

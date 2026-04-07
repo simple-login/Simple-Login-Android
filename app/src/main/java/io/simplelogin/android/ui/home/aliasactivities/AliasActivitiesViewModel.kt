@@ -7,7 +7,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.PAGE_SIZE
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivity
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.ui.ActivityUiAction

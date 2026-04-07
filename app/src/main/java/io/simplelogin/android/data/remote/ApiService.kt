@@ -1,19 +1,19 @@
 package io.simplelogin.android.data.remote
 
 import com.google.gson.annotations.SerializedName
-import io.simplelogin.android.data.models.api.Alias
+import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.data.models.api.AliasActivities
-import io.simplelogin.android.data.models.api.AliasId
+import io.simplelogin.android.models.api.AliasId
 import io.simplelogin.android.data.models.api.AliasOptions
-import io.simplelogin.android.data.models.api.Aliases
+import io.simplelogin.android.models.api.Aliases
 import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.BlockForward
 import io.simplelogin.android.data.models.api.Contact
 import io.simplelogin.android.data.models.api.Contacts
 import io.simplelogin.android.data.models.api.CustomDomains
 import io.simplelogin.android.data.models.api.DeletedAliases
-import io.simplelogin.android.data.models.api.Mailbox
-import io.simplelogin.android.data.models.api.Mailboxes
+import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.api.Token
 import io.simplelogin.android.data.models.api.UpdateAliasOption

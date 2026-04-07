@@ -9,8 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.data.models.api.AliasOptions
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
-import io.simplelogin.android.data.models.api.Mailbox
-import io.simplelogin.android.data.models.api.Mailboxes
+import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.Suffix
 import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
@@ -104,7 +104,7 @@ class CreateAliasViewModel @AssistedInject constructor(
     ) = scope.launch {
         block(ApiKey(apiKeyValue))
     }
-    
+
     fun create(body: CreateAliasBody) {
         _stateFlow.update { it.copy(isLoading = true) }
         withApiKey { apiKey ->

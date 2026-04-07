@@ -2,8 +2,8 @@ package io.simplelogin.android.data.remote.datasource
 
 import io.simplelogin.android.data.models.api.ApiError
 import io.simplelogin.android.data.models.api.ApiKey
-import io.simplelogin.android.data.models.api.Mailbox
-import io.simplelogin.android.data.models.api.Mailboxes
+import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailboxes
 import io.simplelogin.android.data.models.api.UpdateMailboxOption
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody

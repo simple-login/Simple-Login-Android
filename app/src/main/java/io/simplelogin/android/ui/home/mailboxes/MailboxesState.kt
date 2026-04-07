@@ -1,7 +1,7 @@
 package io.simplelogin.android.ui.home.mailboxes
 
 import io.simplelogin.android.data.models.api.ApiError
-import io.simplelogin.android.data.models.api.Mailbox
+import io.simplelogin.android.models.api.Mailbox
 
 data class MailboxesState(
     val mailboxes: List<Mailbox>?,
