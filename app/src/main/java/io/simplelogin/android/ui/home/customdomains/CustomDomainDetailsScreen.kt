@@ -48,8 +48,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.designsystem.description
+import io.simplelogin.android.models.api.CustomDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing

@@ -2,9 +2,9 @@ package io.simplelogin.android.data.models.preferences
 
 import android.content.Context
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.ApiKey
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.models.api.ApiKey
 import kotlinx.serialization.Serializable
 
 @Serializable

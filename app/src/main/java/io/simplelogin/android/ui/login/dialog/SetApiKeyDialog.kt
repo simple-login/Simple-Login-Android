@@ -21,7 +21,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.ApiKey
+import io.simplelogin.android.models.api.ApiKey
 import kotlinx.coroutines.launch
 
 @Composable

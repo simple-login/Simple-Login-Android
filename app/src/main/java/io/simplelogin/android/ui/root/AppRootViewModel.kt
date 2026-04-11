@@ -8,12 +8,12 @@ import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.data.models.api.ApiKey
-import io.simplelogin.android.data.models.api.CustomDomain
 import io.simplelogin.android.data.models.ui.DialogPayload
 import io.simplelogin.android.data.models.ui.ObjectDialogPayload
 import io.simplelogin.android.di.AppVersion
+import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.CustomDomain
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
