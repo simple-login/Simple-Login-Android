@@ -21,7 +21,6 @@
     <string name="forgot_password">Forgot password</string>
     <string name="forgot_password_instruction">Enter your email address to reset your password</string>
     <string name="reset_password">Reset password</string>
-    <string name="reset_password_confirmation">Password reset instructions sent to \"%s\"</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_up_for_sl">Sign up for SimpleLogin</string>
     <string name="create_account">Create account</string>
@@ -84,8 +83,6 @@
     <string name="delete_alias_dialog_content">You\'re about to delete \"%s\", if you don\'t want to receive any emails from this alias, you could disable it.</string>
     <string name="alias_address_label">Alias address</string>
     <string name="alias_address_copied">Copied \"%s\" to clipboard</string>
-    <string name="aliases">Aliases</string>
-    <string name="forwarded">Forwarded</string>
     <string name="replies_send">Replies/send</string>
     <string name="blocked">Blocked</string>
     <string name="all_time">All time</string>
