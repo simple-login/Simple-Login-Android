@@ -1,10 +1,10 @@
 package io.simplelogin.android.usecases.login
 
-import io.simplelogin.android.data.models.api.UserLogin
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.di.DeviceName
 import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.models.api.UserLogin
 import javax.inject.Inject
 
 sealed class LogInError {

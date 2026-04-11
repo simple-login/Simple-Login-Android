@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.UserInfo
+import io.simplelogin.android.models.api.UserInfo
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 

@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.models.api
+package io.simplelogin.android.models.api
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement

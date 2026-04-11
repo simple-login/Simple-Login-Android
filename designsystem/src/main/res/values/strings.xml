@@ -30,4 +30,13 @@
     <string name="copy_email_address">Copy email address</string>
     <string name="block_unblock">Block/unblock</string>
     <string name="open_default_email_client">Open default email client</string>
+    <string name="none">None</string>
+    <string name="biometric">Biometric</string>
+    <string name="pin_code">PIN code</string>
+    <string name="immediately">Immediately</string>
+    <string name="after_one_minute">After 1 minute</string>
+    <string name="after_two_minutes">After 2 minutes</string>
+    <string name="after_five_minutes">After 5 minutes</string>
+    <string name="after_ten_minutes">After 10 minutes</string>
+    <string name="after_one_hour">After 1 hour</string>
 </resources>

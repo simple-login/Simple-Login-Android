@@ -1,6 +1,5 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.models.api.UserLogin
 import io.simplelogin.android.data.remote.ActivateAccountBody
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.EmailBody
@@ -12,6 +11,7 @@ import io.simplelogin.android.data.remote.RegisterBody
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.UserLogin
 import javax.inject.Inject
 
 interface LogInSignUpRemoteDatasource {

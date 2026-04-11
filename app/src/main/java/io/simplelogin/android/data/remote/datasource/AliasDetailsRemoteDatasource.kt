@@ -1,6 +1,5 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.models.api.UpdateAliasOption
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.CreateContactBody
 import io.simplelogin.android.data.remote.DeletedResponse
@@ -13,6 +12,7 @@ import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.BlockForward
 import io.simplelogin.android.models.api.Contact
 import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.api.UpdateAliasOption
 import javax.inject.Inject
 
 interface AliasDetailsRemoteDatasource {

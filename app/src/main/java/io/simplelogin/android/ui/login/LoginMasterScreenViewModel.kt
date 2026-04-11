@@ -11,12 +11,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
-import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
+import io.simplelogin.android.models.Constants
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase

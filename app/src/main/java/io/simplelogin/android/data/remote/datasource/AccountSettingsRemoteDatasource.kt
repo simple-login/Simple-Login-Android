@@ -1,15 +1,15 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.models.api.Token
-import io.simplelogin.android.data.models.api.UpdateUserInfoOption
-import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
-import io.simplelogin.android.data.models.api.UsableDomain
-import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.remote.ApiService
 import io.simplelogin.android.data.remote.OkResponse
 import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.Token
+import io.simplelogin.android.models.api.UpdateUserInfoOption
+import io.simplelogin.android.models.api.UpdateUserSettingsOption
+import io.simplelogin.android.models.api.UsableDomain
+import io.simplelogin.android.models.api.UserInfo
 import io.simplelogin.android.models.api.UserSettings
 import javax.inject.Inject
 

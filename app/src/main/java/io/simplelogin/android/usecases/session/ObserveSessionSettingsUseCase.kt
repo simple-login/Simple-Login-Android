@@ -1,7 +1,7 @@
 package io.simplelogin.android.usecases.session
 
 import androidx.datastore.core.DataStore
-import io.simplelogin.android.data.models.preferences.UserSessionPreferences
+import io.simplelogin.android.models.preferences.UserSessionPreferences
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

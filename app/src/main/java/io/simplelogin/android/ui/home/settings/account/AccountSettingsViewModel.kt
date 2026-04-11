@@ -12,10 +12,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.UpdateUserInfoOption
-import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
-import io.simplelogin.android.data.models.api.UsableDomain
-import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
 import io.simplelogin.android.data.util.Result
@@ -24,6 +20,10 @@ import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.RandomAliasSuffix
 import io.simplelogin.android.models.api.RandomMode
 import io.simplelogin.android.models.api.SenderFormat
+import io.simplelogin.android.models.api.UpdateUserInfoOption
+import io.simplelogin.android.models.api.UpdateUserSettingsOption
+import io.simplelogin.android.models.api.UsableDomain
+import io.simplelogin.android.models.api.UserInfo
 import io.simplelogin.android.models.api.UserSettings
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager

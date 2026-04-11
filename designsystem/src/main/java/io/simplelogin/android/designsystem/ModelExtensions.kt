@@ -36,6 +36,17 @@ import io.simplelogin.android.models.preferences.DefaultPrefix
 import io.simplelogin.android.models.preferences.DefaultPrefix.EMPTY
 import io.simplelogin.android.models.preferences.DefaultPrefix.RANDOM_CHARACTERS
 import io.simplelogin.android.models.preferences.DefaultPrefix.RANDOM_WORD
+import io.simplelogin.android.models.preferences.DeviceLockType
+import io.simplelogin.android.models.preferences.DeviceLockType.BIOMETRIC
+import io.simplelogin.android.models.preferences.DeviceLockType.NONE
+import io.simplelogin.android.models.preferences.DeviceLockType.PIN
+import io.simplelogin.android.models.preferences.LockTimeOut
+import io.simplelogin.android.models.preferences.LockTimeOut.FIVE_MINUTES
+import io.simplelogin.android.models.preferences.LockTimeOut.IMMEDIATE
+import io.simplelogin.android.models.preferences.LockTimeOut.ONE_HOUR
+import io.simplelogin.android.models.preferences.LockTimeOut.ONE_MINUTE
+import io.simplelogin.android.models.preferences.LockTimeOut.TEN_MINUTES
+import io.simplelogin.android.models.preferences.LockTimeOut.TWO_MINUTES
 import io.simplelogin.android.models.preferences.SwipeAction
 import io.simplelogin.android.models.preferences.SwipeAction.DELETE
 import io.simplelogin.android.models.preferences.SwipeAction.DISABLE_ENABLE
@@ -129,4 +140,19 @@ fun ContactCellSelection.title(context: Context) = when (this) {
     BLOCK_UNBLOCK -> context.getString(R.string.block_unblock)
     OPEN_DEFAULT_EMAIL_CLIENT -> context.getString(R.string.open_default_email_client)
     ContactCellSelection.VIEW_OPTIONS -> context.getString(R.string.view_options)
+}
+
+fun DeviceLockType.title(context: Context) = when (this) {
+    NONE -> context.getString(R.string.none)
+    BIOMETRIC -> context.getString(R.string.biometric)
+    PIN -> context.getString(R.string.pin_code)
+}
+
+fun LockTimeOut.title(context: Context) = when (this) {
+    IMMEDIATE -> context.getString(R.string.immediately)
+    ONE_MINUTE -> context.getString(R.string.after_one_minute)
+    TWO_MINUTES -> context.getString(R.string.after_two_minutes)
+    FIVE_MINUTES -> context.getString(R.string.after_five_minutes)
+    TEN_MINUTES -> context.getString(R.string.after_ten_minutes)
+    ONE_HOUR -> context.getString(R.string.after_one_hour)
 }

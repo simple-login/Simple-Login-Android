@@ -26,10 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.models.api.Stats
 import io.simplelogin.android.models.preferences.AliasCellSelection
 import io.simplelogin.android.models.preferences.AliasDisplayInfo
 import io.simplelogin.android.models.preferences.AliasOptionsDisplay

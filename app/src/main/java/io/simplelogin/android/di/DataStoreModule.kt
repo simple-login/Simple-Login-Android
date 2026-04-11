@@ -9,12 +9,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.simplelogin.android.data.models.preferences.UserSessionPreferences
-import io.simplelogin.android.data.util.Constants
 import io.simplelogin.android.data.util.Crypto
 import io.simplelogin.android.data.util.CryptoImpl
 import io.simplelogin.android.data.util.EncryptingSerializer
+import io.simplelogin.android.models.Constants
 import io.simplelogin.android.models.preferences.DevicePreferences
+import io.simplelogin.android.models.preferences.UserSessionPreferences
 import java.io.File
 import javax.inject.Singleton
 

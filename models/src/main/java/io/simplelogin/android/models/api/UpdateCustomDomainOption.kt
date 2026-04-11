@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.models.api
+package io.simplelogin.android.models.api
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -6,7 +6,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.annotations.SerializedName
-import io.simplelogin.android.models.api.CustomDomain
 import java.lang.reflect.Type
 
 sealed class UpdateCustomDomainOption {

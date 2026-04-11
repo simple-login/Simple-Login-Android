@@ -1,10 +1,8 @@
-package io.simplelogin.android.data.models.preferences
+package io.simplelogin.android.models.preferences
 
-import android.content.Context
-import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.UserInfo
-import io.simplelogin.android.data.util.Constants
+import io.simplelogin.android.models.Constants
 import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.UserInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,12 +23,6 @@ enum class DeviceLockType {
     companion object {
         val DEFAULT: DeviceLockType = NONE
     }
-
-    fun title(context: Context) = when (this) {
-        NONE -> context.getString(R.string.none)
-        BIOMETRIC -> context.getString(R.string.biometric)
-        PIN -> context.getString(R.string.pin_code)
-    }
 }
 
 enum class LockTimeOut {
@@ -38,15 +30,6 @@ enum class LockTimeOut {
 
     companion object {
         val DEFAULT: LockTimeOut = IMMEDIATE
-    }
-
-    fun title(context: Context) = when (this) {
-        IMMEDIATE -> context.getString(R.string.immediately)
-        ONE_MINUTE -> context.getString(R.string.after_one_minute)
-        TWO_MINUTES -> context.getString(R.string.after_two_minutes)
-        FIVE_MINUTES -> context.getString(R.string.after_five_minutes)
-        TEN_MINUTES -> context.getString(R.string.after_ten_minutes)
-        ONE_HOUR -> context.getString(R.string.after_one_hour)
     }
 
     fun toMillis(): Long = when (this) {

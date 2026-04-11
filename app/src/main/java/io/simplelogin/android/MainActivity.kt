@@ -70,12 +70,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
+import io.simplelogin.android.models.api.UserInfo
 import io.simplelogin.android.models.preferences.DevicePreferences
 import io.simplelogin.android.models.preferences.Theme
 import io.simplelogin.android.ui.home.lockscreen.LockScreen
