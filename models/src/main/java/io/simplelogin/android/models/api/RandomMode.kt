@@ -1,8 +1,6 @@
-package io.simplelogin.android.data.models.api
+package io.simplelogin.android.models.api
 
-import android.content.Context
 import com.google.gson.annotations.SerializedName
-import io.simplelogin.android.R
 
 enum class RandomMode {
     @SerializedName("uuid")
@@ -10,11 +8,6 @@ enum class RandomMode {
 
     @SerializedName("word")
     WORD;
-
-    fun title(context: Context) = when (this) {
-        UUID -> "UUID"
-        WORD -> context.getString(R.string.random_word)
-    }
 
     val value: String
         get() = when (this) {

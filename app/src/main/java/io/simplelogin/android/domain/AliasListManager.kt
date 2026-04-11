@@ -4,7 +4,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.simplelogin.android.PAGE_SIZE
-import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.api.Stats
 import io.simplelogin.android.data.models.ui.AliasFilterMode
 import io.simplelogin.android.data.remote.EnabledResponse
@@ -17,6 +16,7 @@ import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.AliasId
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.RandomMode
 import io.simplelogin.android.util.getAs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

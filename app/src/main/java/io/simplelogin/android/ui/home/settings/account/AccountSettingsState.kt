@@ -2,8 +2,8 @@ package io.simplelogin.android.ui.home.settings.account
 
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
-import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.models.api.UserSettings
 
 data class AccountSettings(
     val userInfo: UserInfo,

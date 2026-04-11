@@ -2,7 +2,7 @@
 
 # Configuration
 URL="https://raw.githubusercontent.com/simple-login/app/master/local_data/words.txt"
-OUTPUT_FILE="app/src/main/java/io/simplelogin/android/data/models/preferences/WordList.kt"
+OUTPUT_FILE="models/src/main/java/io/simplelogin/android/models/preferences/WordList.kt"
 PACKAGE_NAME="io.simplelogin.android.data.models.preferences"
 
 # 1. Ensure the directory exists before writing

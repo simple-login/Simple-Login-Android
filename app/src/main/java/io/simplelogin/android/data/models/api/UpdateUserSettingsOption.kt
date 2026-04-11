@@ -4,6 +4,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import io.simplelogin.android.models.api.RandomAliasSuffix
+import io.simplelogin.android.models.api.RandomMode
+import io.simplelogin.android.models.api.SenderFormat
 import java.lang.reflect.Type
 
 sealed class UpdateUserSettingsOption {

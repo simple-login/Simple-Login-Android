@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.ui.ContactUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.di.LoadingState
@@ -22,6 +21,7 @@ import io.simplelogin.android.domain.ContactUiActionResult
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.Contact
+import io.simplelogin.android.models.preferences.DevicePreferences
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.CoroutineScope

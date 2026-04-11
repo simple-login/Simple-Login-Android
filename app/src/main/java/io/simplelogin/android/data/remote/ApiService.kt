@@ -12,7 +12,6 @@ import io.simplelogin.android.data.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.data.models.api.UserInfo
 import io.simplelogin.android.data.models.api.UserLogin
-import io.simplelogin.android.data.models.api.UserSettings
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.AliasActivities
 import io.simplelogin.android.models.api.AliasId
@@ -26,6 +25,7 @@ import io.simplelogin.android.models.api.CustomDomains
 import io.simplelogin.android.models.api.DeletedAliases
 import io.simplelogin.android.models.api.Mailbox
 import io.simplelogin.android.models.api.Mailboxes
+import io.simplelogin.android.models.api.UserSettings
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

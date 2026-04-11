@@ -1,10 +1,10 @@
-package io.simplelogin.android.data.models.preferences
+package io.simplelogin.android.models.preferences
 
 /**
  * Automatically generated word list.
  * Do not modify but run generate_words.sh instead
  */
-object WordList {
+internal object WordList {
     val words: List<String> = listOf(
         "abacus",
         "abide",

@@ -10,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.DevicePreferences
 import io.simplelogin.android.data.models.ui.ActivityUiAction
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
@@ -28,6 +27,7 @@ import io.simplelogin.android.models.api.AliasId
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.models.preferences.DevicePreferences
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase

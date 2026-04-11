@@ -60,11 +60,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.RandomAliasSuffix
-import io.simplelogin.android.data.models.api.RandomMode
-import io.simplelogin.android.data.models.api.SenderFormat
 import io.simplelogin.android.data.models.api.UsableDomain
 import io.simplelogin.android.designsystem.description
+import io.simplelogin.android.designsystem.title
+import io.simplelogin.android.models.api.RandomAliasSuffix
+import io.simplelogin.android.models.api.RandomMode
+import io.simplelogin.android.models.api.SenderFormat
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.theme.ProtonPurple
 import io.simplelogin.android.ui.theme.SlColor

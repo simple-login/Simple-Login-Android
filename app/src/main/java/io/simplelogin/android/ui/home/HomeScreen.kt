@@ -45,11 +45,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.api.RandomMode
 import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.data.models.ui.DialogPayload
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.models.api.RandomMode
 import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
 import io.simplelogin.android.ui.home.aliaslist.AliasList
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen

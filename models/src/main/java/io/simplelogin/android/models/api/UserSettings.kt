@@ -1,8 +1,6 @@
-package io.simplelogin.android.data.models.api
+package io.simplelogin.android.models.api
 
-import android.content.Context
 import com.google.gson.annotations.SerializedName
-import io.simplelogin.android.R
 
 data class UserSettings(
     @SerializedName("alias_generator") val randomMode: RandomMode,
@@ -28,15 +26,6 @@ enum class SenderFormat {
     @SerializedName("NO_NAME")
     NO_NAME;
 
-    fun description(context: Context): String =
-        when (this) {
-            A -> "John Doe - john.doe(a)example.com"
-            AT -> "John Doe - john.doe at example.com"
-            NAME_ONLY -> "John Doe"
-            AT_ONLY -> "john at example.com"
-            NO_NAME -> context.getString(R.string.no_name_format_description)
-        }
-
     val value: String
         get() = when (this) {
             A -> "A"
@@ -53,12 +42,6 @@ enum class RandomAliasSuffix {
 
     @SerializedName("random_string")
     RANDOM_STRING;
-
-    fun title(context: Context): String =
-        when (this) {
-            WORD -> context.getString(R.string.random_word)
-            RANDOM_STRING -> context.getString(R.string.random_5_characters)
-        }
 
     val value: String
         get() = when (this) {

@@ -1,7 +1,7 @@
 package io.simplelogin.android.usecases.settings
 
 import androidx.datastore.core.DataStore
-import io.simplelogin.android.data.models.preferences.DevicePreferences
+import io.simplelogin.android.models.preferences.DevicePreferences
 import javax.inject.Inject
 
 interface UpdateDeviceSettingsUseCase {

@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.data.models.preferences.AliasDisplayInfo
+import io.simplelogin.android.designsystem.title
+import io.simplelogin.android.models.preferences.AliasDisplayInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
