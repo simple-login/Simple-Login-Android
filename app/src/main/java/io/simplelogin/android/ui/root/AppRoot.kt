@@ -122,7 +122,7 @@ fun AppRoot(
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        sceneStrategy = listDetailSceneStrategy,
+        sceneStrategies = listOf(listDetailSceneStrategy),
         entryProvider = entryProvider {
             entry<InitializationDestination> {}
 

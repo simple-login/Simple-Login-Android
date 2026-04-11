@@ -92,8 +92,6 @@
     <string name="select_alias_action">Select alias action</string>
     <string name="swipe_from_left_to_right">Swipe from left to right</string>
     <string name="swipe_from_right_to_left">Swipe from right to left</string>
-    <string name="disable_enable">Disable/Enable</string>
-    <string name="pin_unpin">Pin/Unpin</string>
     <string name="alias_is_enabled">\"%s\" is enabled</string>
     <string name="alias_is_disabled">\"%s\" is disabled</string>
     <string name="alias_is_pinned">\"%s\" is pinned</string>
@@ -105,8 +103,6 @@
     <string name="alias_information">Alias information</string>
     <string name="all_information">All information</string>
     <string name="alias_address_only">Alias address only</string>
-    <string name="creation_date">Creation date</string>
-    <string name="latest_activity">Latest activity</string>
     <string name="all_activities">All activities</string>
     <string name="note">Note</string>
     <string name="note_updated">Note updated</string>
@@ -116,8 +112,6 @@
     <string name="mailboxes">Mailboxes</string>
     <string name="edit_alias">Edit alias</string>
     <string name="alias_options_display">Alias options display</string>
-    <string name="bottom_sheet">Bottom sheet</string>
-    <string name="drop_down_menu">Drop-down menu</string>
     <string name="contacts">Contacts</string>
     <string name="no_contacts">No contacts</string>
     <string name="no_aliases">No aliases</string>
@@ -144,7 +138,6 @@
     <string name="public_domain">Public domain</string>
     <string name="premium_domain">Premium domain</string>
     <string name="default_prefix">Default prefix</string>
-    <string name="empty">Empty</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
     <string name="alias_creation">Alias creation</string>
@@ -213,11 +206,8 @@
     <string name="use_web_app_to_add_custom_domains">To add new domains, please use your web application.</string>
     <string name="display">Display</string>
     <string name="theme">Theme</string>
-    <string name="light">Light</string>
-    <string name="dark">Dark</string>
     <string name="dynamic_color">Dynamic color</string>
     <string name="dynamic_color_description">Use colors from your device wallpaper</string>
-    <string name="device_default">Device default</string>
     <string name="catch_all_header">Auto create/on the fly alias</string>
     <string name="catch_all">Catch all</string>
     <string name="catch_all_footer">Simply use anything@%s next time you need an alias. It will be automatically created the first time it receives an email. To have more fine-grained control, you can also define auto create rules.</string>
@@ -239,15 +229,8 @@
     <string name="unlock_with">Unlock with</string>
     <string name="automatic_lock">Automatic lock</string>
     <string name="none">None</string>
-    <string name="biometric">Biometric</string>
     <string name="pin_code">PIN code</string>
     <string name="change_pin_code">Change PIN code</string>
-    <string name="immediately">Immediately</string>
-    <string name="after_one_minute">After 1 minute</string>
-    <string name="after_two_minutes">After 2 minutes</string>
-    <string name="after_five_minutes">After 5 minutes</string>
-    <string name="after_ten_minutes">After 10 minutes</string>
-    <string name="after_one_hour">After 1 hour</string>
     <string name="choose_a_pin_code">Choose a PIN code</string>
     <string name="repeat_pin_code">Repeat PIN code</string>
     <string name="enter_current_pin_code">Enter current PIN code</string>
@@ -268,7 +251,6 @@
     <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
     <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
     <string name="copy_email_address">Copy email address</string>
-    <string name="block_unblock">Block/unblock</string>
     <string name="open_default_email_client">Open default email client</string>
     <string name="alias_activity">Alias activity</string>
     <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>

@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "io.simplelogin.android"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "io.simplelogin.android"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "2.0.0"
 
@@ -42,13 +42,19 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    lint {
+        checkDependencies = true
     }
 }
 
