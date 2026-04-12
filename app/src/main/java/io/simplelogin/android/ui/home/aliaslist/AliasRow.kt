@@ -45,16 +45,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
 import io.simplelogin.android.core.common.relativeDateTime
+import io.simplelogin.android.core.designsystem.IconContent
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.preferences.AliasCellSelection
 import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
 import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.android.core.model.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.IconContent
 import kotlinx.coroutines.launch
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @Composable
 fun AliasRow(
@@ -330,13 +331,13 @@ private fun SwipeAction.Label(alias: Alias) {
                 SwipeActionLabel(
                     isVisible = true,
                     title = stringResource(R.string.unpin),
-                    icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep_off))
+                    icon = IconContent.PainterContent(painterResource(DesignSystemR.drawable.ic_keep_off))
                 )
             } else {
                 SwipeActionLabel(
                     isVisible = true,
                     title = stringResource(R.string.pin),
-                    icon = IconContent.PainterContent(painterResource(R.drawable.ic_keep))
+                    icon = IconContent.PainterContent(painterResource(DesignSystemR.drawable.ic_keep))
                 )
             }
 

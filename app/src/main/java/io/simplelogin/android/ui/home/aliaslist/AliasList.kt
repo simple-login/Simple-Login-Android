@@ -26,6 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import io.simplelogin.android.core.designsystem.RetryButton
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.ApiError
 import io.simplelogin.android.core.model.api.Stats
@@ -34,9 +37,6 @@ import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
 import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.android.core.model.preferences.SwipeAction
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.RetryButton
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)

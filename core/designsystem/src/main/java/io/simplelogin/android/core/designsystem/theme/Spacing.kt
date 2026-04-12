@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.theme
+package io.simplelogin.android.core.designsystem.theme
 
 import androidx.compose.ui.unit.dp
 

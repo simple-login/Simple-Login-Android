@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.theme
+package io.simplelogin.android.core.designsystem.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 
 @Composable
 fun Modifier.primaryContentBackground(): Modifier =

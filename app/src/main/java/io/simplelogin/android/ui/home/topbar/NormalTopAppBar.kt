@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
 import io.simplelogin.android.core.model.preferences.Theme
 import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,10 +54,10 @@ fun NormalTopAppBar(
     }
 
     val iconResId = when {
-        isDark && inTrial -> R.drawable.ic_premium_trial_menu_night
-        !isDark && inTrial -> R.drawable.ic_premium_trial_menu
-        isDark && isPremium -> R.drawable.ic_premium_menu_night
-        !isDark && isPremium -> R.drawable.ic_premium_menu
+        isDark && inTrial -> DesignSystemR.drawable.ic_premium_trial_menu_night
+        !isDark && inTrial -> DesignSystemR.drawable.ic_premium_trial_menu
+        isDark && isPremium -> DesignSystemR.drawable.ic_premium_menu_night
+        !isDark && isPremium -> DesignSystemR.drawable.ic_premium_menu
         else -> null
     }
 

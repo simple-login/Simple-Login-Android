@@ -38,10 +38,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.rememberBiometricAuthenticator
 import io.simplelogin.android.ui.home.settings.device.CreateOrConfirmPinDialog
 import io.simplelogin.android.ui.home.settings.device.CreateOrEditPinMode
-import io.simplelogin.android.ui.util.rememberBiometricAuthenticator
 import kotlinx.coroutines.launch
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -149,7 +150,7 @@ fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {
                             verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_logo_with_name),
+                                painter = painterResource(id = DesignSystemR.drawable.ic_logo_with_name),
                                 contentDescription = null,
                                 modifier = Modifier.size(120.dp),
                                 tint = Color.Gray

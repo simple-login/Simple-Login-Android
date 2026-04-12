@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.model.api.ApiError
 
 @Composable

@@ -42,9 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.theme.ProtonPurple
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.theme.ProtonPurple
+import io.simplelogin.android.core.designsystem.theme.Spacing
+import io.simplelogin.android.core.designsystem.R as DesignsSystemR
 
 @Composable
 fun LoginContentScreen(
@@ -160,7 +161,7 @@ private fun LoginColumn(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_proton),
+                            painter = painterResource(DesignsSystemR.drawable.ic_proton),
                             tint = Color.Unspecified,
                             contentDescription = null
                         )

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width

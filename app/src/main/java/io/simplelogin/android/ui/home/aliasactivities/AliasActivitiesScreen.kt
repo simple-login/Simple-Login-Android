@@ -34,13 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.RetryButton
+import io.simplelogin.android.core.designsystem.SettingsHeader
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.ui.home.aliasdetail.AliasActivityRow
 import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.SettingsHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -4,7 +4,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import io.simplelogin.android.ui.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.SlColor
 
 class SnackbarVisualsSuccess(
     override val actionLabel: String?,

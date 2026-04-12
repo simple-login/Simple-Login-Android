@@ -45,6 +45,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.TitledFAB
+import io.simplelogin.android.core.designsystem.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.theme.SlColor
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.model.api.RandomMode
@@ -57,9 +60,6 @@ import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 import io.simplelogin.android.ui.root.supportsMultiplePanes
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.util.TitledFAB
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce

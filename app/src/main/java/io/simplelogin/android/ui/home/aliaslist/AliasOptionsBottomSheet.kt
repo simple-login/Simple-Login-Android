@@ -29,12 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.IconResource
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.IconResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,13 +106,13 @@ fun AliasOptionBottomSheet(
 
         if (alias.pinned) {
             AliasOptionRow(
-                icon = IconResource.Painter(painterResource(R.drawable.ic_keep_off)),
+                icon = IconResource.Painter(painterResource(DesignSystemR.drawable.ic_keep_off)),
                 text = stringResource(R.string.unpin),
                 onClick = { onAction(AliasAction.Unpin(alias)) }
             )
         } else {
             AliasOptionRow(
-                icon = IconResource.Painter(painterResource(R.drawable.ic_keep)),
+                icon = IconResource.Painter(painterResource(DesignSystemR.drawable.ic_keep)),
                 text = stringResource(R.string.pin),
                 onClick = { onAction(AliasAction.Pin(alias)) }
             )

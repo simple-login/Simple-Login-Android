@@ -99,7 +99,6 @@
     <string name="alias_is_deleted">\"%s\" is deleted</string>
     <string name="full_screen_text_mode">Text mode</string>
     <string name="full_screen_qr_code_mode">QR code mode</string>
-    <string name="retry">Retry</string>
     <string name="alias_information">Alias information</string>
     <string name="all_information">All information</string>
     <string name="alias_address_only">Alias address only</string>
@@ -147,7 +146,6 @@
     <string name="select_mailboxes">Select mailboxes</string>
     <string name="update_mailboxes">Update mailboxes</string>
     <string name="mailboxes_updated">Mailboxes updated</string>
-    <string name="default_mailbox">Default</string>
     <string name="show_stats">Show statistics</string>
     <string name="show_stats_description">Display total aliases, block, forward and reply numbers</string>
     <string name="copy_after_creating">Copy email address after creating aliases</string>
@@ -181,7 +179,6 @@
     <string name="edit_profile_picture">Edit profile picture</string>
     <string name="remove_profile_picture">Remove profile picture</string>
     <string name="mailbox_options">Mailbox options</string>
-    <string name="unverified">Unverified</string>
     <string name="set_as_default">Set as default</string>
     <plurals name="number_of_aliases">
         <item quantity="one">%d alias</item>

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -25,8 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import io.simplelogin.android.R
-import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.core.designsystem.theme.Spacing
 
 @Composable
 fun <T> OptionRow(

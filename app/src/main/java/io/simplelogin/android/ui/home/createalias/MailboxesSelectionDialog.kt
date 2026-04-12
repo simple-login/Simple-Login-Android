@@ -27,11 +27,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.DefaultBadge
+import io.simplelogin.android.core.designsystem.UnverifiedBadge
+import io.simplelogin.android.core.designsystem.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Mailbox
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.DefaultBadge
-import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 
 @Composable
 fun MailboxesSelectionDialog(

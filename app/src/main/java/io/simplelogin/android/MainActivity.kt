@@ -70,6 +70,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.core.designsystem.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.theme.SimpleLoginTheme
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.UserInfo
 import io.simplelogin.android.core.model.preferences.DevicePreferences
 import io.simplelogin.android.core.model.preferences.Theme
@@ -83,20 +86,18 @@ import io.simplelogin.android.ui.home.settings.account.UserInfoCard
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
-import io.simplelogin.android.ui.theme.SimpleLoginTheme
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager
 import io.simplelogin.android.util.ProtonLoginManager
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -463,7 +464,7 @@ private fun Drawer(
         ) {
             Icon(
                 modifier = Modifier.widthIn(max = 180.dp),
-                painter = painterResource(R.drawable.ic_logo_powered_by_proton),
+                painter = painterResource(DesignSystemR.drawable.ic_logo_powered_by_proton),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 contentDescription = null
             )

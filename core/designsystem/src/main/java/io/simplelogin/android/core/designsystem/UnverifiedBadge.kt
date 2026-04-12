@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
@@ -9,8 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.R
-import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.core.designsystem.theme.Spacing
 
 @Composable
 fun UnverifiedBadge() {

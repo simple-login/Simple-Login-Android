@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.min
-import io.simplelogin.android.R
-import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.core.designsystem.theme.Spacing
 
 sealed class NumericKeypadKey {
     data class Number(val value: Int) : NumericKeypadKey()
@@ -36,7 +36,7 @@ sealed class NumericKeypadKey {
 }
 
 @get:Composable
-private val KeyTextStyle: androidx.compose.ui.text.TextStyle
+private val KeyTextStyle: TextStyle
     get() = MaterialTheme.typography.headlineLarge
 
 private const val COLUMNS = 3

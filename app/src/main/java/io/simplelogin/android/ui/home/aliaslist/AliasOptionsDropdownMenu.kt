@@ -24,6 +24,7 @@ import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.data.models.ui.AliasAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @Composable
 fun AliasOptionsDropdownMenu(
@@ -120,7 +121,7 @@ fun AliasOptionsDropdownMenu(
             DropdownMenuItem(
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_keep_off),
+                        painter = painterResource(DesignSystemR.drawable.ic_keep_off),
                         contentDescription = null
                     )
                 },
@@ -131,7 +132,7 @@ fun AliasOptionsDropdownMenu(
             DropdownMenuItem(
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(R.drawable.ic_keep),
+                        painter = painterResource(DesignSystemR.drawable.ic_keep),
                         contentDescription = null
                     )
                 },

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 
 @Composable
 fun SettingsHeader(

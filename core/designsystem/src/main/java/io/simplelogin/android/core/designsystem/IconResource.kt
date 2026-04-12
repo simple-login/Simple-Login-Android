@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 sealed class IconResource {
     data class ImageVector(val value: androidx.compose.ui.graphics.vector.ImageVector) :

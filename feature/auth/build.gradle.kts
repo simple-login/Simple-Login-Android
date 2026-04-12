@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.core.designsystem"
+    namespace = "io.simplelogin.android.feature.auth"
     compileSdk {
         version = release(37)
     }
@@ -30,25 +30,11 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.model)
+    implementation(projects.core.designsystem)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.compose.material.icons.extended)
-    implementation(libs.androidx.compose.ui)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(libs.androidx.biometric)
-    implementation(libs.androidx.activity.compose)
 }

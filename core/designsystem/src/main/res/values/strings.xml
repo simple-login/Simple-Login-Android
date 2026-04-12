@@ -39,4 +39,7 @@
     <string name="after_five_minutes">After 5 minutes</string>
     <string name="after_ten_minutes">After 10 minutes</string>
     <string name="after_one_hour">After 1 hour</string>
+    <string name="unverified">Unverified</string>
+    <string name="retry">Retry</string>
+    <string name="default_mailbox">Default</string>
 </resources>

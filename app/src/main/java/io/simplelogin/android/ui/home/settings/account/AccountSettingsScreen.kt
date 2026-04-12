@@ -61,24 +61,25 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.core.common.timeAndFullDate
+import io.simplelogin.android.core.designsystem.OptionRow
+import io.simplelogin.android.core.designsystem.RetryButton
+import io.simplelogin.android.core.designsystem.SettingsFooter
+import io.simplelogin.android.core.designsystem.SettingsHeader
+import io.simplelogin.android.core.designsystem.SettingsSpacer
+import io.simplelogin.android.core.designsystem.ToggleOption
+import io.simplelogin.android.core.designsystem.clickableRippleDisabled
 import io.simplelogin.android.core.designsystem.description
+import io.simplelogin.android.core.designsystem.primaryContentBackground
+import io.simplelogin.android.core.designsystem.theme.ProtonPurple
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.designsystem.title
 import io.simplelogin.android.core.model.api.RandomAliasSuffix
 import io.simplelogin.android.core.model.api.RandomMode
 import io.simplelogin.android.core.model.api.SenderFormat
 import io.simplelogin.android.core.model.api.UsableDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
-import io.simplelogin.android.ui.theme.ProtonPurple
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.OptionRow
-import io.simplelogin.android.ui.util.RetryButton
-import io.simplelogin.android.ui.util.SettingsFooter
-import io.simplelogin.android.ui.util.SettingsHeader
-import io.simplelogin.android.ui.util.SettingsSpacer
-import io.simplelogin.android.ui.util.ToggleOption
-import io.simplelogin.android.ui.util.clickableRippleDisabled
-import io.simplelogin.android.ui.util.primaryContentBackground
+import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -343,7 +344,7 @@ private fun LazyListScope.accountSettingsScreenContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_proton),
+                painter = painterResource(DesignSystemR.drawable.ic_proton),
                 tint = Color.Unspecified,
                 contentDescription = null
             )

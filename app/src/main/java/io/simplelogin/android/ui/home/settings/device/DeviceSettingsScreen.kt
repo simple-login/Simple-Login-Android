@@ -50,6 +50,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.OptionRow
+import io.simplelogin.android.core.designsystem.SettingsHeader
+import io.simplelogin.android.core.designsystem.SettingsSpacer
+import io.simplelogin.android.core.designsystem.ToggleOption
+import io.simplelogin.android.core.designsystem.primaryContentBackground
+import io.simplelogin.android.core.designsystem.rememberBiometricAuthenticator
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.designsystem.title
 import io.simplelogin.android.core.model.api.ActivityAction
 import io.simplelogin.android.core.model.api.Alias
@@ -67,19 +75,11 @@ import io.simplelogin.android.core.model.preferences.SwipeAction
 import io.simplelogin.android.core.model.preferences.Theme
 import io.simplelogin.android.core.model.preferences.UserSessionPreferences
 import io.simplelogin.android.ui.home.aliaslist.AliasRow
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.OptionRow
-import io.simplelogin.android.ui.util.SettingsHeader
-import io.simplelogin.android.ui.util.SettingsSpacer
-import io.simplelogin.android.ui.util.ToggleOption
-import io.simplelogin.android.ui.util.primaryContentBackground
-import io.simplelogin.android.ui.util.rememberBiometricAuthenticator
+import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

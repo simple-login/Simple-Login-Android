@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.NumericKeypad
-import io.simplelogin.android.ui.util.NumericKeypadKey
+import io.simplelogin.android.core.designsystem.NumericKeypad
+import io.simplelogin.android.core.designsystem.NumericKeypadKey
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import kotlinx.coroutines.launch
 
 sealed class VerificationMode {

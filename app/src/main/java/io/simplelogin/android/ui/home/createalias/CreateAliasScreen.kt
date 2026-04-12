@@ -63,15 +63,15 @@ import io.simplelogin.android.R
 import io.simplelogin.android.core.common.InvalidPrefixReason
 import io.simplelogin.android.core.common.PrefixValidationResult
 import io.simplelogin.android.core.common.validatePrefix
+import io.simplelogin.android.core.designsystem.RetryButton
 import io.simplelogin.android.core.designsystem.description
+import io.simplelogin.android.core.designsystem.theme.SlColor
+import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.core.model.api.Suffix
 import io.simplelogin.android.core.model.preferences.DefaultPrefix
 import io.simplelogin.android.core.network.CreateAliasBody
-import io.simplelogin.android.ui.theme.SlColor
-import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.ui.util.RetryButton
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)

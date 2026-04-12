@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.core.datastore) // TODO: Remove later on
     implementation(projects.core.network) // TODO: Remove later on
     implementation(projects.core.designsystem)
+    implementation(projects.feature.auth)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -109,5 +110,4 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.nav3)
 
     implementation(libs.coil.compose)
-    implementation(libs.androidx.biometric)
 }

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.util
+package io.simplelogin.android.core.designsystem
 
 import androidx.activity.compose.LocalActivity
 import androidx.biometric.BiometricManager
