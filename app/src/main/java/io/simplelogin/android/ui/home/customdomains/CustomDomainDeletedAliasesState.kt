@@ -1,7 +1,7 @@
 package io.simplelogin.android.ui.home.customdomains
 
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.DeletedAlias
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.DeletedAlias
 
 data class CustomDomainDeletedAliasesState(
     val aliases: List<DeletedAlias>? = null,

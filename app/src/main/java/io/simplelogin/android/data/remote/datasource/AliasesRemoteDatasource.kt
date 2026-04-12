@@ -1,18 +1,18 @@
 package io.simplelogin.android.data.remote.datasource
 
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.AliasId
+import io.simplelogin.android.core.model.api.Aliases
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.RandomMode
+import io.simplelogin.android.core.model.api.Stats
+import io.simplelogin.android.core.network.ApiService
+import io.simplelogin.android.core.network.EnabledResponse
+import io.simplelogin.android.core.network.NoteBody
+import io.simplelogin.android.core.network.SearchBody
 import io.simplelogin.android.data.models.ui.AliasFilterMode
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.AliasId
-import io.simplelogin.android.models.api.Aliases
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.RandomMode
-import io.simplelogin.android.models.api.Stats
-import io.simplelogin.android.data.network.ApiService
-import io.simplelogin.android.data.network.EnabledResponse
-import io.simplelogin.android.data.network.NoteBody
-import io.simplelogin.android.data.network.SearchBody
 import javax.inject.Inject
 
 interface AliasesRemoteDatasource {

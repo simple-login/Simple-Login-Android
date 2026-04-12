@@ -50,22 +50,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.designsystem.title
-import io.simplelogin.android.models.api.ActivityAction
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.AliasId
-import io.simplelogin.android.models.api.MailboxLite
-import io.simplelogin.android.models.preferences.AliasCellSelection
-import io.simplelogin.android.models.preferences.AliasDisplayInfo
-import io.simplelogin.android.models.preferences.AliasOptionsDisplay
-import io.simplelogin.android.models.preferences.ContactCellSelection
-import io.simplelogin.android.models.preferences.DefaultPrefix
-import io.simplelogin.android.models.preferences.DeviceLockType
-import io.simplelogin.android.models.preferences.DevicePreferences
-import io.simplelogin.android.models.preferences.LockTimeOut
-import io.simplelogin.android.models.preferences.SwipeAction
-import io.simplelogin.android.models.preferences.Theme
-import io.simplelogin.android.models.preferences.UserSessionPreferences
+import io.simplelogin.android.core.designsystem.title
+import io.simplelogin.android.core.model.api.ActivityAction
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.AliasId
+import io.simplelogin.android.core.model.api.MailboxLite
+import io.simplelogin.android.core.model.preferences.AliasCellSelection
+import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
+import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
+import io.simplelogin.android.core.model.preferences.ContactCellSelection
+import io.simplelogin.android.core.model.preferences.DefaultPrefix
+import io.simplelogin.android.core.model.preferences.DeviceLockType
+import io.simplelogin.android.core.model.preferences.DevicePreferences
+import io.simplelogin.android.core.model.preferences.LockTimeOut
+import io.simplelogin.android.core.model.preferences.SwipeAction
+import io.simplelogin.android.core.model.preferences.Theme
+import io.simplelogin.android.core.model.preferences.UserSessionPreferences
 import io.simplelogin.android.ui.home.aliaslist.AliasRow
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
@@ -75,11 +75,11 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.primaryContentBackground
 import io.simplelogin.android.ui.util.rememberBiometricAuthenticator
-import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

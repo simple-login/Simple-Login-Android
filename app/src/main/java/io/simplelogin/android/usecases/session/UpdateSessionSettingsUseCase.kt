@@ -1,7 +1,7 @@
 package io.simplelogin.android.usecases.session
 
 import androidx.datastore.core.DataStore
-import io.simplelogin.android.models.preferences.UserSessionPreferences
+import io.simplelogin.android.core.model.preferences.UserSessionPreferences
 import javax.inject.Inject
 
 interface UpdateSessionSettingsUseCase {

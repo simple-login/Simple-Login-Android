@@ -26,8 +26,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.CustomDomain
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.CustomDomain
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliasactivities.AliasActivitiesScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen

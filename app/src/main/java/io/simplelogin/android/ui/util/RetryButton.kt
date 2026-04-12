@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import io.simplelogin.android.R
-import io.simplelogin.android.designsystem.description
-import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.core.designsystem.description
+import io.simplelogin.android.core.model.api.ApiError
 
 @Composable
 fun RetryButton(

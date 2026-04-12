@@ -1,7 +1,7 @@
 package io.simplelogin.android.usecases.login
 
-import io.simplelogin.android.models.preferences.DeviceLockType
-import io.simplelogin.android.models.preferences.LockTimeOut
+import io.simplelogin.android.core.model.preferences.DeviceLockType
+import io.simplelogin.android.core.model.preferences.LockTimeOut
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import javax.inject.Inject
 

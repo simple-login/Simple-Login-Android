@@ -60,18 +60,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.designsystem.description
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.Mailbox
-import io.simplelogin.android.models.api.Suffix
-import io.simplelogin.android.models.preferences.DefaultPrefix
+import io.simplelogin.android.core.designsystem.description
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.Mailbox
+import io.simplelogin.android.core.model.api.Suffix
+import io.simplelogin.android.core.model.preferences.DefaultPrefix
+import io.simplelogin.android.core.network.CreateAliasBody
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
-import io.simplelogin.android.data.network.CreateAliasBody
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)

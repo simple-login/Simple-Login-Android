@@ -8,15 +8,16 @@ import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.CustomDomain
 import io.simplelogin.android.data.models.ui.DialogPayload
 import io.simplelogin.android.data.models.ui.ObjectDialogPayload
 import io.simplelogin.android.di.AppVersion
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.CustomDomain
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.login.LogOutUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class AppRootViewModel @Inject constructor(

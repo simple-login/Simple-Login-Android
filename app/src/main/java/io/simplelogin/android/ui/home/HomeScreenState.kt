@@ -1,11 +1,11 @@
 package io.simplelogin.android.ui.home
 
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.Stats
+import io.simplelogin.android.core.model.api.UserInfo
+import io.simplelogin.android.core.model.preferences.DevicePreferences
 import io.simplelogin.android.data.models.ui.AliasFilterMode
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.Stats
-import io.simplelogin.android.models.api.UserInfo
-import io.simplelogin.android.models.preferences.DevicePreferences
 
 data class HomeScreenState(
     val userInfo: UserInfo?,

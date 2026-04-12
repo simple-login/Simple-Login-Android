@@ -1,16 +1,16 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.network.ApiService
-import io.simplelogin.android.data.network.OkResponse
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.Token
-import io.simplelogin.android.models.api.UpdateUserInfoOption
-import io.simplelogin.android.models.api.UpdateUserSettingsOption
-import io.simplelogin.android.models.api.UsableDomain
-import io.simplelogin.android.models.api.UserInfo
-import io.simplelogin.android.models.api.UserSettings
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.Token
+import io.simplelogin.android.core.model.api.UpdateUserInfoOption
+import io.simplelogin.android.core.model.api.UpdateUserSettingsOption
+import io.simplelogin.android.core.model.api.UsableDomain
+import io.simplelogin.android.core.model.api.UserInfo
+import io.simplelogin.android.core.model.api.UserSettings
+import io.simplelogin.android.core.network.ApiService
+import io.simplelogin.android.core.network.OkResponse
 import javax.inject.Inject
 
 interface AccountSettingsRemoteDatasource {

@@ -12,20 +12,22 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.RandomAliasSuffix
+import io.simplelogin.android.core.model.api.RandomMode
+import io.simplelogin.android.core.model.api.SenderFormat
+import io.simplelogin.android.core.model.api.UpdateUserInfoOption
+import io.simplelogin.android.core.model.api.UpdateUserSettingsOption
+import io.simplelogin.android.core.model.api.UsableDomain
+import io.simplelogin.android.core.model.api.UserInfo
+import io.simplelogin.android.core.model.api.UserSettings
+import io.simplelogin.android.core.network.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.RandomAliasSuffix
-import io.simplelogin.android.models.api.RandomMode
-import io.simplelogin.android.models.api.SenderFormat
-import io.simplelogin.android.models.api.UpdateUserInfoOption
-import io.simplelogin.android.models.api.UpdateUserSettingsOption
-import io.simplelogin.android.models.api.UsableDomain
-import io.simplelogin.android.models.api.UserInfo
-import io.simplelogin.android.models.api.UserSettings
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager
+import java.util.Base64
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -33,8 +35,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import io.simplelogin.android.data.network.BaseUrlProvider
-import java.util.Base64
 
 @HiltViewModel(assistedFactory = AccountSettingsViewModel.Factory::class)
 class AccountSettingsViewModel @AssistedInject constructor(

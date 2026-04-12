@@ -1,10 +1,10 @@
 package io.simplelogin.android.ui.home.createalias
 
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.AliasOptions
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.Mailbox
-import io.simplelogin.android.models.preferences.DevicePreferences
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.AliasOptions
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.Mailbox
+import io.simplelogin.android.core.model.preferences.DevicePreferences
 
 data class CreateAliasState(
     val isLoading: Boolean = true,

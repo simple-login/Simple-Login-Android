@@ -1,17 +1,17 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.UserLogin
-import io.simplelogin.android.data.network.ActivateAccountBody
-import io.simplelogin.android.data.network.ApiService
-import io.simplelogin.android.data.network.EmailBody
-import io.simplelogin.android.data.network.LoginBody
-import io.simplelogin.android.data.network.MessageResponse
-import io.simplelogin.android.data.network.MfaAuthBody
-import io.simplelogin.android.data.network.OkResponse
-import io.simplelogin.android.data.network.RegisterBody
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.UserLogin
+import io.simplelogin.android.core.network.ActivateAccountBody
+import io.simplelogin.android.core.network.ApiService
+import io.simplelogin.android.core.network.EmailBody
+import io.simplelogin.android.core.network.LoginBody
+import io.simplelogin.android.core.network.MessageResponse
+import io.simplelogin.android.core.network.MfaAuthBody
+import io.simplelogin.android.core.network.OkResponse
+import io.simplelogin.android.core.network.RegisterBody
 import javax.inject.Inject
 
 interface LogInSignUpRemoteDatasource {

@@ -3,26 +3,26 @@ package io.simplelogin.android.ui.home.settings.device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.models.preferences.AliasCellSelection
-import io.simplelogin.android.models.preferences.AliasDisplayInfo
-import io.simplelogin.android.models.preferences.AliasOptionsDisplay
-import io.simplelogin.android.models.preferences.ContactCellSelection
-import io.simplelogin.android.models.preferences.DefaultPrefix
-import io.simplelogin.android.models.preferences.DeviceLockType
-import io.simplelogin.android.models.preferences.DevicePreferences
-import io.simplelogin.android.models.preferences.LockTimeOut
-import io.simplelogin.android.models.preferences.SwipeAction
-import io.simplelogin.android.models.preferences.Theme
-import io.simplelogin.android.models.preferences.UserSessionPreferences
+import io.simplelogin.android.core.model.preferences.AliasCellSelection
+import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
+import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
+import io.simplelogin.android.core.model.preferences.ContactCellSelection
+import io.simplelogin.android.core.model.preferences.DefaultPrefix
+import io.simplelogin.android.core.model.preferences.DeviceLockType
+import io.simplelogin.android.core.model.preferences.DevicePreferences
+import io.simplelogin.android.core.model.preferences.LockTimeOut
+import io.simplelogin.android.core.model.preferences.SwipeAction
+import io.simplelogin.android.core.model.preferences.Theme
+import io.simplelogin.android.core.model.preferences.UserSessionPreferences
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 sealed class DeviceSettingsState {
     data object Loading : DeviceSettingsState()

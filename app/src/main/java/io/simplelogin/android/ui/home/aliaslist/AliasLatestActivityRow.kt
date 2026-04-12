@@ -17,8 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import io.simplelogin.android.models.api.ActivityAction
-import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.core.model.api.ActivityAction
+import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.util.relativeTimeSpan

@@ -8,7 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.models.Constants
+import io.simplelogin.android.core.model.Constants
 import io.simplelogin.android.ui.login.dialog.EditBaseUrlDialog
 import io.simplelogin.android.ui.login.dialog.ForgotPasswordDialog
 import io.simplelogin.android.ui.login.dialog.SetApiKeyDialog

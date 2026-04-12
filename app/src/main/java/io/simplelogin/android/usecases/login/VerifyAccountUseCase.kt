@@ -1,9 +1,9 @@
 package io.simplelogin.android.usecases.login
 
-import io.simplelogin.android.data.network.MessageResponse
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.network.MessageResponse
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.ApiError
 import javax.inject.Inject
 
 interface VerifyAccountUseCase {

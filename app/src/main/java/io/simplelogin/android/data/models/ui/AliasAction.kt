@@ -1,6 +1,6 @@
 package io.simplelogin.android.data.models.ui
 
-import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.core.model.api.Alias
 
 sealed class AliasAction(open val alias: Alias) {
     data class ViewDetails(override val alias: Alias) : AliasAction(alias)

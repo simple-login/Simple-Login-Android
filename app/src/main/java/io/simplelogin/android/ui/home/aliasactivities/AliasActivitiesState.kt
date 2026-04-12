@@ -1,7 +1,7 @@
 package io.simplelogin.android.ui.home.aliasactivities
 
-import io.simplelogin.android.models.api.AliasActivity
-import io.simplelogin.android.models.api.ApiError
+import io.simplelogin.android.core.model.api.AliasActivity
+import io.simplelogin.android.core.model.api.ApiError
 
 data class AliasActivitiesState(
     val activities: List<AliasActivity> = emptyList(),

@@ -70,13 +70,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.core.model.api.UserInfo
+import io.simplelogin.android.core.model.preferences.DevicePreferences
+import io.simplelogin.android.core.model.preferences.Theme
+import io.simplelogin.android.core.network.BaseUrlProvider
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.colors
-import io.simplelogin.android.models.api.UserInfo
-import io.simplelogin.android.models.preferences.DevicePreferences
-import io.simplelogin.android.models.preferences.Theme
 import io.simplelogin.android.ui.home.lockscreen.LockScreen
 import io.simplelogin.android.ui.home.settings.account.UserInfoCard
 import io.simplelogin.android.ui.root.AppRoot
@@ -89,14 +90,13 @@ import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.util.ProtonLinkManager
 import io.simplelogin.android.util.ProtonLoginManager
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import io.simplelogin.android.data.network.BaseUrlProvider
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

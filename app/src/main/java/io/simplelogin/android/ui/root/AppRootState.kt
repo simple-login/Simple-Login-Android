@@ -1,6 +1,6 @@
 package io.simplelogin.android.ui.root
 
-import io.simplelogin.android.models.api.ApiKey
+import io.simplelogin.android.core.model.api.ApiKey
 
 data class AppRootState(
     val isReady: Boolean,

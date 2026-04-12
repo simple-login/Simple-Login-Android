@@ -1,8 +1,8 @@
 package io.simplelogin.android.util
 
-import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 @Singleton
 class ProtonLinkManager @Inject constructor() {

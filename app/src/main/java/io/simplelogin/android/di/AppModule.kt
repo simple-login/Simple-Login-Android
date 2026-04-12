@@ -13,9 +13,9 @@ import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionHandlerImpl
 import io.simplelogin.android.domain.snackbar.SnackbarManager
 import io.simplelogin.android.domain.snackbar.SnackbarManagerImpl
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

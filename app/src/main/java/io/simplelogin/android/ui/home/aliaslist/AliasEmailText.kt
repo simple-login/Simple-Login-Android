@@ -9,7 +9,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Alias
+import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.ui.util.TextWithInlineIcon
 
 @Composable

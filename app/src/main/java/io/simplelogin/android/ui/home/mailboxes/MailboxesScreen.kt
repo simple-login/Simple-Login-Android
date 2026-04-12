@@ -59,8 +59,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.designsystem.description
-import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.core.designsystem.description
+import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.ui.home.dialog.EditEmailDialog
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing

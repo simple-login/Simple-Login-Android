@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Stats
+import io.simplelogin.android.core.model.api.Stats
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent

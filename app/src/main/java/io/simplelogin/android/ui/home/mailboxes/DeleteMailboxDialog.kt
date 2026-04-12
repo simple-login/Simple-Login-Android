@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.models.api.Mailbox
+import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.ui.theme.Spacing
 
 @Composable

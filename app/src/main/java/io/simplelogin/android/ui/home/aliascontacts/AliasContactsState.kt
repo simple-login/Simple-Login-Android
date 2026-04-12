@@ -1,7 +1,7 @@
 package io.simplelogin.android.ui.home.aliascontacts
 
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.Contact
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.Contact
 
 data class AliasContactsState(
     val contacts: List<Contact> = emptyList(),

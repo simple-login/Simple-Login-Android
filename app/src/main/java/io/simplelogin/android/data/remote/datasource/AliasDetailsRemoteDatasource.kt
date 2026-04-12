@@ -1,18 +1,18 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.models.Result
-import io.simplelogin.android.models.api.Alias
-import io.simplelogin.android.models.api.AliasActivity
-import io.simplelogin.android.models.api.AliasId
-import io.simplelogin.android.models.api.ApiError
-import io.simplelogin.android.models.api.ApiKey
-import io.simplelogin.android.models.api.BlockForward
-import io.simplelogin.android.models.api.Contact
-import io.simplelogin.android.models.api.Mailbox
-import io.simplelogin.android.models.api.UpdateAliasOption
-import io.simplelogin.android.data.network.ApiService
-import io.simplelogin.android.data.network.CreateContactBody
-import io.simplelogin.android.data.network.DeletedResponse
+import io.simplelogin.android.core.model.Result
+import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.android.core.model.api.AliasActivity
+import io.simplelogin.android.core.model.api.AliasId
+import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.android.core.model.api.ApiKey
+import io.simplelogin.android.core.model.api.BlockForward
+import io.simplelogin.android.core.model.api.Contact
+import io.simplelogin.android.core.model.api.Mailbox
+import io.simplelogin.android.core.model.api.UpdateAliasOption
+import io.simplelogin.android.core.network.ApiService
+import io.simplelogin.android.core.network.CreateContactBody
+import io.simplelogin.android.core.network.DeletedResponse
 import javax.inject.Inject
 
 interface AliasDetailsRemoteDatasource {

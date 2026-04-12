@@ -59,10 +59,10 @@ android {
 }
 
 dependencies {
-    implementation(projects.data.datastore) // TODO: Remove later on
-    implementation(projects.data.network) // TODO: Remove later on
-    implementation(projects.designsystem)
-    implementation(projects.models)
+    implementation(projects.core.datastore) // TODO: Remove later on
+    implementation(projects.core.network) // TODO: Remove later on
+    implementation(projects.core.designsystem)
+    implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

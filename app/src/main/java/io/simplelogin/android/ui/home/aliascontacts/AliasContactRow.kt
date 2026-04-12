@@ -41,9 +41,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
+import io.simplelogin.android.core.model.api.Contact
+import io.simplelogin.android.core.model.preferences.ContactCellSelection
 import io.simplelogin.android.data.models.ui.ContactUiAction
-import io.simplelogin.android.models.api.Contact
-import io.simplelogin.android.models.preferences.ContactCellSelection
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.util.relativeDateTime
