@@ -1,4 +1,4 @@
-package io.simplelogin.android.di
+package io.simplelogin.android.data.network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -7,10 +7,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.simplelogin.android.data.remote.ApiService
-import io.simplelogin.android.data.remote.BaseUrlProvider
-import io.simplelogin.android.data.remote.BaseUrlProviderImpl
-import io.simplelogin.android.data.remote.DynamicBaseUrlInterceptor
 import io.simplelogin.android.models.api.UpdateAliasOption
 import io.simplelogin.android.models.api.UpdateAliasOptionSerializer
 import io.simplelogin.android.models.api.UpdateCustomDomainOption
@@ -21,12 +17,12 @@ import io.simplelogin.android.models.api.UpdateUserInfoOption
 import io.simplelogin.android.models.api.UpdateUserInfoOptionSerializer
 import io.simplelogin.android.models.api.UpdateUserSettingsOption
 import io.simplelogin.android.models.api.UpdateUserSettingsOptionSerializer
+import jakarta.inject.Singleton
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -60,7 +60,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.Mailbox
@@ -72,6 +71,7 @@ import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.util.InvalidPrefixReason
 import io.simplelogin.android.util.PrefixValidationResult
 import io.simplelogin.android.util.validatePrefix
+import io.simplelogin.android.data.network.CreateAliasBody
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)

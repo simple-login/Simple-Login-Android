@@ -9,14 +9,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.android.data.remote.BaseUrlProvider
 import io.simplelogin.android.data.remote.datasource.AccountSettingsRemoteDatasource
-import io.simplelogin.android.data.util.Result
 import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.AppVersion
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow
 import io.simplelogin.android.models.Constants
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
 import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
@@ -38,6 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import io.simplelogin.android.data.network.BaseUrlProvider
 import javax.inject.Inject
 
 data class AccountActivationPayload(
@@ -139,7 +139,8 @@ class LoginMasterScreenViewModel @Inject constructor(
                             )
 
                         is LogInError.Api -> {
-                            val message = result.error.error.description(context)
+                            val message =
+                                (result.error as LogInError.Api).error.description(context)
                             showSnackbarFailure(message)
                         }
                     }

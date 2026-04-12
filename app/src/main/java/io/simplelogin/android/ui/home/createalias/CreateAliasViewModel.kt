@@ -6,9 +6,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.data.remote.CreateAliasBody
 import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.AliasOptions
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import io.simplelogin.android.data.network.CreateAliasBody
 
 @HiltViewModel(assistedFactory = CreateAliasViewModel.Factory::class)
 class CreateAliasViewModel @AssistedInject constructor(

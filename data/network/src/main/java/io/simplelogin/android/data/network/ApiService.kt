@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.remote
+package io.simplelogin.android.data.network
 
 import com.google.gson.annotations.SerializedName
 import io.simplelogin.android.models.api.Alias

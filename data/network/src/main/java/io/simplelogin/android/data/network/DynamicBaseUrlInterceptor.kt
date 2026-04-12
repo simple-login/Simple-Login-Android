@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.remote
+package io.simplelogin.android.data.network
 
 import io.simplelogin.android.models.Constants
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull

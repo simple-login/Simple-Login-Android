@@ -1,7 +1,7 @@
 package io.simplelogin.android.usecases.login
 
 import io.simplelogin.android.data.remote.datasource.LogInSignUpRemoteDatasource
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.ApiError
 import javax.inject.Inject
 

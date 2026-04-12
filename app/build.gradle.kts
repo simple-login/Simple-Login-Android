@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.data.network) // TODO: Remove later on
     implementation(projects.designsystem)
     implementation(projects.models)
     implementation(libs.androidx.core.ktx)
@@ -95,6 +96,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // Retrofit
+    // TODO: Remove later on
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.okhttp.logging.interceptor)

@@ -16,7 +16,7 @@ import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.updateMailboxes
 import io.simplelogin.android.data.remote.datasource.updateName
 import io.simplelogin.android.data.remote.datasource.updateNote
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.designsystem.description
 import io.simplelogin.android.di.LoadingState
 import io.simplelogin.android.di.LoadingStateFlow

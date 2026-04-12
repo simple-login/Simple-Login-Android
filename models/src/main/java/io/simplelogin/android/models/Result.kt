@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.util
+package io.simplelogin.android.models
 
 sealed class Result<out T, out E> {
     data class Success<T>(val value: T) : Result<T, Nothing>()

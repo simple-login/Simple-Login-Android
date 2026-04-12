@@ -5,12 +5,12 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.data.models.ui.AliasFilterMode
-import io.simplelogin.android.data.remote.EnabledResponse
+import io.simplelogin.android.data.network.EnabledResponse
 import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
 import io.simplelogin.android.data.remote.datasource.pin
 import io.simplelogin.android.data.remote.datasource.unpin
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.Alias
 import io.simplelogin.android.models.api.AliasId
 import io.simplelogin.android.models.api.ApiError

@@ -1,8 +1,8 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.remote.ApiService
-import io.simplelogin.android.data.remote.OkResponse
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.data.network.ApiService
+import io.simplelogin.android.data.network.OkResponse
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.Token

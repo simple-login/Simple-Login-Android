@@ -1,14 +1,14 @@
 package io.simplelogin.android.data.remote.datasource
 
-import io.simplelogin.android.data.remote.ApiService
-import io.simplelogin.android.data.remote.EmailBody
-import io.simplelogin.android.data.remote.TransferAliasesBody
-import io.simplelogin.android.data.util.Result
+import io.simplelogin.android.models.Result
 import io.simplelogin.android.models.api.ApiError
 import io.simplelogin.android.models.api.ApiKey
 import io.simplelogin.android.models.api.Mailbox
 import io.simplelogin.android.models.api.Mailboxes
 import io.simplelogin.android.models.api.UpdateMailboxOption
+import io.simplelogin.android.data.network.ApiService
+import io.simplelogin.android.data.network.EmailBody
+import io.simplelogin.android.data.network.TransferAliasesBody
 import javax.inject.Inject
 
 interface MailboxesRemoteDatasource {
