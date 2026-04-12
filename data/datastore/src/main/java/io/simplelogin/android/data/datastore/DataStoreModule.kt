@@ -1,4 +1,4 @@
-package io.simplelogin.android.di
+package io.simplelogin.android.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -9,9 +9,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.simplelogin.android.data.util.Crypto
-import io.simplelogin.android.data.util.CryptoImpl
-import io.simplelogin.android.data.util.EncryptingSerializer
 import io.simplelogin.android.models.Constants
 import io.simplelogin.android.models.preferences.DevicePreferences
 import io.simplelogin.android.models.preferences.UserSessionPreferences
@@ -21,12 +18,15 @@ import javax.inject.Singleton
 private typealias UserSessionPreferencesSerializer = EncryptingSerializer<UserSessionPreferences>
 private typealias DevicePreferencesSerializer = EncryptingSerializer<DevicePreferences>
 
-@[Module InstallIn(SingletonComponent::class)]
+@Module
+@InstallIn(SingletonComponent::class)
 object DataStoreModule {
-    @[Provides Singleton]
+    @Provides
+    @Singleton
     fun provideCrypto(): Crypto = CryptoImpl
 
-    @[Provides Singleton]
+    @Provides
+    @Singleton
     fun provideUserSessionPreferencesSerializer(crypto: Crypto): UserSessionPreferencesSerializer =
         EncryptingSerializer(
             crypto,
@@ -34,7 +34,8 @@ object DataStoreModule {
             UserSessionPreferences()
         )
 
-    @[Provides Singleton]
+    @Provides
+    @Singleton
     fun provideUserSessionPreferencesDataStore(
         @ApplicationContext context: Context,
         serializer: UserSessionPreferencesSerializer
@@ -49,7 +50,8 @@ object DataStoreModule {
             }
         )
 
-    @[Provides Singleton]
+    @Provides
+    @Singleton
     fun provideDevicePreferencesSerializer(crypto: Crypto): DevicePreferencesSerializer =
         EncryptingSerializer(
             crypto,
@@ -57,7 +59,8 @@ object DataStoreModule {
             DevicePreferences()
         )
 
-    @[Provides Singleton]
+    @Provides
+    @Singleton
     fun provideDevicePreferencesDataStore(
         @ApplicationContext context: Context,
         serializer: DevicePreferencesSerializer

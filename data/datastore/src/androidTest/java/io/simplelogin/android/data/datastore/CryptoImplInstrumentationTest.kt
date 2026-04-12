@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.util
+package io.simplelogin.android.data.datastore
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before

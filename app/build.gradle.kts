@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.data.datastore) // TODO: Remove later on
     implementation(projects.data.network) // TODO: Remove later on
     implementation(projects.designsystem)
     implementation(projects.models)
@@ -100,10 +101,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.okhttp.logging.interceptor)
-
-    // Datastore
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.kotlinx.serialization.json)
 
     // Nav 3
     implementation(libs.nav3.runtime)

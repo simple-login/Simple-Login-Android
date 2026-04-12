@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.util
+package io.simplelogin.android.data.datastore
 
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.Dispatchers
@@ -22,11 +22,11 @@ class EncryptingSerializer<T>(
         val encryptedBytesDecoded = Base64.getDecoder().decode(encryptedBytes)
         val decryptedBytes = crypto.decrypt(encryptedBytesDecoded)
         val decodedJsonString = decryptedBytes.decodeToString()
-        return Json.Default.decodeFromString(serializer, decodedJsonString)
+        return Json.decodeFromString(serializer, decodedJsonString)
     }
 
     override suspend fun writeTo(t: T, output: OutputStream) {
-        val json = Json.Default.encodeToString(serializer, t)
+        val json = Json.encodeToString(serializer, t)
         val bytes = json.toByteArray()
         val encryptedBytes = crypto.encrypt(bytes)
         val encryptedBytesBase64 = Base64.getEncoder().encode(encryptedBytes)

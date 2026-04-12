@@ -1,4 +1,4 @@
-package io.simplelogin.android.data.util
+package io.simplelogin.android.data.datastore
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
