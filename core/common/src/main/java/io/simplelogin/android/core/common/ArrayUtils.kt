@@ -1,4 +1,4 @@
-package io.simplelogin.android.util
+package io.simplelogin.android.core.common
 
 inline fun <reified T> Array<Any?>.getAs(index: Int): T? =
     getOrNull(index)?.let { value ->

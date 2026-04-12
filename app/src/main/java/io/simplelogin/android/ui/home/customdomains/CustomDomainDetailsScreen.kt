@@ -48,6 +48,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.relativeDateTime
 import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.model.api.CustomDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
@@ -59,7 +60,6 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
-import io.simplelogin.android.util.relativeDateTime
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)

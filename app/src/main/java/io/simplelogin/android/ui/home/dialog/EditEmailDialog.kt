@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.isValidEmail
 import io.simplelogin.android.ui.theme.Spacing
-import io.simplelogin.android.util.isValidEmail
 
 @Composable
 fun EditEmailDialog(

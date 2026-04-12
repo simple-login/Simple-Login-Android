@@ -60,6 +60,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.timeAndFullDate
 import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.designsystem.title
 import io.simplelogin.android.core.model.api.RandomAliasSuffix
@@ -78,7 +79,6 @@ import io.simplelogin.android.ui.util.SettingsSpacer
 import io.simplelogin.android.ui.util.ToggleOption
 import io.simplelogin.android.ui.util.clickableRippleDisabled
 import io.simplelogin.android.ui.util.primaryContentBackground
-import io.simplelogin.android.util.timeAndFullDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

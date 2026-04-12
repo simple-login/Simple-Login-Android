@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import io.simplelogin.android.R
-import io.simplelogin.android.util.isValidEmail
-import io.simplelogin.android.util.isValidPassword
+import io.simplelogin.android.core.common.isValidEmail
+import io.simplelogin.android.core.common.isValidPassword
 
 @Composable
 fun EmailTextField(

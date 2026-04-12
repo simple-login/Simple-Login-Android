@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import io.simplelogin.android.R
-import io.simplelogin.android.util.isValidUrl
+import io.simplelogin.android.core.common.isValidUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package io.simplelogin.android.util
+package io.simplelogin.android.core.common
 
 import android.content.Context
 import android.text.format.DateUtils

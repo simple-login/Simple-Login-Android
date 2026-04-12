@@ -38,13 +38,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.relativeDateTime
 import io.simplelogin.android.core.model.api.CustomDomain
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.SettingsHeader
 import io.simplelogin.android.ui.util.clickableRippleDisabled
-import io.simplelogin.android.util.relativeDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

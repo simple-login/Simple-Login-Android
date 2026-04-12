@@ -44,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.relativeDateTime
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.preferences.AliasCellSelection
 import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
@@ -53,7 +54,6 @@ import io.simplelogin.android.data.models.ui.AliasAction
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.IconContent
-import io.simplelogin.android.util.relativeDateTime
 import kotlinx.coroutines.launch
 
 @Composable

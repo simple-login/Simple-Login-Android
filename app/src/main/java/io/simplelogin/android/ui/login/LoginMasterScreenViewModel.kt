@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.isValidEmail
+import io.simplelogin.android.core.common.isValidPassword
 import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.model.Constants
 import io.simplelogin.android.core.model.Result
@@ -30,15 +32,13 @@ import io.simplelogin.android.usecases.login.VerifyMfaUseCase
 import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
 import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
 import io.simplelogin.android.util.ProtonLoginManager
-import io.simplelogin.android.util.isValidEmail
-import io.simplelogin.android.util.isValidPassword
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class AccountActivationPayload(
     val email: String,

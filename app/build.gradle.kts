@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
     implementation(projects.core.datastore) // TODO: Remove later on
     implementation(projects.core.network) // TODO: Remove later on
     implementation(projects.core.designsystem)

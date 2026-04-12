@@ -45,13 +45,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.relativeDateTime
 import io.simplelogin.android.core.model.api.CustomDomain
 import io.simplelogin.android.ui.theme.SlColor
 import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.SettingsFooter
 import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.util.relativeDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

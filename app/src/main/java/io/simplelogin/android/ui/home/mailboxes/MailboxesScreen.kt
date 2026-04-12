@@ -59,6 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.relativeDateTime
 import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.ui.home.dialog.EditEmailDialog
@@ -67,7 +68,6 @@ import io.simplelogin.android.ui.theme.Spacing
 import io.simplelogin.android.ui.util.DefaultBadge
 import io.simplelogin.android.ui.util.RetryButton
 import io.simplelogin.android.ui.util.UnverifiedBadge
-import io.simplelogin.android.util.relativeDateTime
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)

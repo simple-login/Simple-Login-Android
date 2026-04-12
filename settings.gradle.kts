@@ -28,7 +28,8 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "SimpleLogin"
 include(":app")
+include(":core:common")
 include(":core:datastore")
-include(":core:network")
 include(":core:designsystem")
+include(":core:network")
 include(":core:model")
