@@ -14,7 +14,7 @@ import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.core.model.api.Mailboxes
 import io.simplelogin.android.core.model.api.Suffix
 import io.simplelogin.android.core.network.CreateAliasBody
-import io.simplelogin.android.data.remote.datasource.CreationRemoteDatasource
+import io.simplelogin.android.core.network.datasource.CreationRemoteDatasource
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

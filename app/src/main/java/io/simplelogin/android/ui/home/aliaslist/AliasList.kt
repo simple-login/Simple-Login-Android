@@ -36,7 +36,7 @@ import io.simplelogin.android.core.model.preferences.AliasCellSelection
 import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
 import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.android.core.model.preferences.SwipeAction
-import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.core.model.ui.AliasAction
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,7 +5,7 @@ import io.simplelogin.android.core.model.api.ApiError
 import io.simplelogin.android.core.model.api.Stats
 import io.simplelogin.android.core.model.api.UserInfo
 import io.simplelogin.android.core.model.preferences.DevicePreferences
-import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.core.model.ui.AliasFilterMode
 
 data class HomeScreenState(
     val userInfo: UserInfo?,

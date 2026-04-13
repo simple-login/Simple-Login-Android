@@ -7,29 +7,18 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.BuildConfig
+import io.simplelogin.android.core.common.di.AppVersion
+import io.simplelogin.android.core.common.di.DeviceName
+import io.simplelogin.android.core.common.di.LoadingState
+import io.simplelogin.android.core.common.di.LoadingStateFlow
+import io.simplelogin.android.core.designsystem.snackbar.SnackbarManager
+import io.simplelogin.android.core.designsystem.snackbar.SnackbarManagerImpl
 import io.simplelogin.android.domain.ActivityUiActionHandler
 import io.simplelogin.android.domain.ActivityUiActionHandlerImpl
 import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionHandlerImpl
-import io.simplelogin.android.domain.snackbar.SnackbarManager
-import io.simplelogin.android.domain.snackbar.SnackbarManagerImpl
-import javax.inject.Qualifier
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AppVersion
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class LoadingState
-
-typealias LoadingStateFlow = MutableStateFlow<Boolean>
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class DeviceName
+import javax.inject.Singleton
 
 @[Module InstallIn(SingletonComponent::class)]
 abstract class AppModule {

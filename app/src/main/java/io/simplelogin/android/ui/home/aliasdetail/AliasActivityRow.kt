@@ -43,7 +43,7 @@ import io.simplelogin.android.core.designsystem.theme.SlColor
 import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.ActivityAction
 import io.simplelogin.android.core.model.api.AliasActivity
-import io.simplelogin.android.data.models.ui.ActivityUiAction
+import io.simplelogin.android.core.model.ui.ActivityUiAction
 
 @Composable
 fun AliasActivityRow(

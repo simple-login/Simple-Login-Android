@@ -6,18 +6,18 @@ import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
+import io.simplelogin.android.core.common.di.LoadingState
+import io.simplelogin.android.core.common.di.LoadingStateFlow
+import io.simplelogin.android.core.common.usecase.CopyToClipboardUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
 import io.simplelogin.android.core.designsystem.description
 import io.simplelogin.android.core.model.api.ApiError
 import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.model.api.BlockForward
 import io.simplelogin.android.core.model.api.Contact
-import io.simplelogin.android.data.models.ui.ContactUiAction
-import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
-import io.simplelogin.android.di.LoadingState
-import io.simplelogin.android.di.LoadingStateFlow
-import io.simplelogin.android.usecases.CopyToClipboardUseCase
-import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
-import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
+import io.simplelogin.android.core.model.ui.ContactUiAction
+import io.simplelogin.android.core.network.datasource.AliasDetailsRemoteDatasource
 import javax.inject.Inject
 
 interface ContactUiActionHandler {

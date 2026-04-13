@@ -3,8 +3,8 @@ package io.simplelogin.android.ui.home.lockscreen
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.core.model.preferences.DeviceLockType
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
-import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCase
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

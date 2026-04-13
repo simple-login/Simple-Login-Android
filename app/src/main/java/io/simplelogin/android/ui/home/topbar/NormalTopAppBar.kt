@@ -29,8 +29,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
+import io.simplelogin.android.core.designsystem.title
 import io.simplelogin.android.core.model.preferences.Theme
-import io.simplelogin.android.data.models.ui.AliasFilterMode
+import io.simplelogin.android.core.model.ui.AliasFilterMode
 import io.simplelogin.android.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)

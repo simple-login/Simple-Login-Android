@@ -42,4 +42,12 @@
     <string name="unverified">Unverified</string>
     <string name="retry">Retry</string>
     <string name="default_mailbox">Default</string>
+    <string name="all_aliases">All aliases</string>
+    <string name="pinned_aliases">Pinned aliases</string>
+    <string name="active_aliases">Active aliases</string>
+    <string name="disabled_aliases">Disabled aliases</string>
+    <string name="no_aliases">No aliases</string>
+    <string name="no_pinned_aliases">No pinned aliases</string>
+    <string name="no_active_aliases">No active aliases</string>
+    <string name="no_disabled_aliases">No disabled aliases</string>
 </resources>

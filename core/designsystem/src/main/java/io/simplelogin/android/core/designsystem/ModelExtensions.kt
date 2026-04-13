@@ -55,6 +55,7 @@ import io.simplelogin.android.core.model.preferences.Theme
 import io.simplelogin.android.core.model.preferences.Theme.DARK
 import io.simplelogin.android.core.model.preferences.Theme.LIGHT
 import io.simplelogin.android.core.model.preferences.Theme.MATCH_SYSTEM
+import io.simplelogin.android.core.model.ui.AliasFilterMode
 
 fun ApiError.description(context: Context): String = when (this) {
     is ApiError.HttpError -> {
@@ -156,3 +157,19 @@ fun LockTimeOut.title(context: Context) = when (this) {
     TEN_MINUTES -> context.getString(R.string.after_ten_minutes)
     ONE_HOUR -> context.getString(R.string.after_one_hour)
 }
+
+fun AliasFilterMode.title(context: Context) =
+    when (this) {
+        AliasFilterMode.ALL -> context.getString(R.string.all_aliases)
+        AliasFilterMode.PINNED -> context.getString(R.string.pinned_aliases)
+        AliasFilterMode.ENABLED -> context.getString(R.string.active_aliases)
+        AliasFilterMode.DISABLED -> context.getString(R.string.disabled_aliases)
+    }
+
+fun AliasFilterMode.noAliasesMessage(context: Context) =
+    when (this) {
+        AliasFilterMode.ALL -> context.getString(R.string.no_aliases)
+        AliasFilterMode.PINNED -> context.getString(R.string.no_pinned_aliases)
+        AliasFilterMode.ENABLED -> context.getString(R.string.no_active_aliases)
+        AliasFilterMode.DISABLED -> context.getString(R.string.no_disabled_aliases)
+    }

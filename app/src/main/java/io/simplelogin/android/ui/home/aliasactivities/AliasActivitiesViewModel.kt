@@ -10,8 +10,8 @@ import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.AliasActivity
 import io.simplelogin.android.core.model.api.ApiKey
-import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
+import io.simplelogin.android.core.network.datasource.AliasDetailsRemoteDatasource
+import io.simplelogin.android.core.model.ui.ActivityUiAction
 import io.simplelogin.android.domain.ActivityUiActionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

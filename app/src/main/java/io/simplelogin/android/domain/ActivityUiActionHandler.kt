@@ -8,10 +8,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
 import io.simplelogin.android.core.model.api.ActivityAction
 import io.simplelogin.android.core.model.api.AliasActivity
-import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.usecases.CopyToClipboardUseCase
-import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
-import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
+import io.simplelogin.android.core.model.ui.ActivityUiAction
+import io.simplelogin.android.core.common.usecase.CopyToClipboardUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
 import javax.inject.Inject
 
 interface ActivityUiActionHandler {

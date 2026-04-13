@@ -47,12 +47,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.core.designsystem.TitledFAB
 import io.simplelogin.android.core.designsystem.clickableRippleDisabled
+import io.simplelogin.android.core.designsystem.noAliasesMessage
 import io.simplelogin.android.core.designsystem.theme.SlColor
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.model.api.RandomMode
-import io.simplelogin.android.data.models.ui.AliasAction
-import io.simplelogin.android.data.models.ui.DialogPayload
+import io.simplelogin.android.core.model.ui.AliasAction
+import io.simplelogin.android.core.model.ui.DialogPayload
 import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
 import io.simplelogin.android.ui.home.aliaslist.AliasList
 import io.simplelogin.android.ui.home.createalias.CreateAliasScreen

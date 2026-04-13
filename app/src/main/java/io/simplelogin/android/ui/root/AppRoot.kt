@@ -28,6 +28,7 @@ import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOW
 import io.simplelogin.android.R
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.CustomDomain
+import io.simplelogin.android.feature.auth.ui.LoginMasterScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliasactivities.AliasActivitiesScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
@@ -40,7 +41,6 @@ import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
 import io.simplelogin.android.ui.home.settings.account.AccountSettingsScreen
 import io.simplelogin.android.ui.home.settings.device.DeviceSettingsScreen
-import io.simplelogin.android.ui.login.LoginMasterScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

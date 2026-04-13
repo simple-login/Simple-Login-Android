@@ -32,7 +32,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.core.designsystem.IconResource
 import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
-import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.core.model.ui.AliasAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import io.simplelogin.android.core.designsystem.R as DesignSystemR

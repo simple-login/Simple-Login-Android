@@ -11,10 +11,10 @@ import io.simplelogin.android.core.model.api.AliasId
 import io.simplelogin.android.core.model.api.ApiError
 import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.network.EnabledResponse
-import io.simplelogin.android.data.remote.datasource.AliasDetailsRemoteDatasource
-import io.simplelogin.android.data.remote.datasource.AliasesRemoteDatasource
-import io.simplelogin.android.data.remote.datasource.pin
-import io.simplelogin.android.data.remote.datasource.unpin
+import io.simplelogin.android.core.network.datasource.AliasDetailsRemoteDatasource
+import io.simplelogin.android.core.network.datasource.AliasesRemoteDatasource
+import io.simplelogin.android.core.network.datasource.pin
+import io.simplelogin.android.core.network.datasource.unpin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

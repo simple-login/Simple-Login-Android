@@ -56,8 +56,8 @@ import io.simplelogin.android.core.designsystem.theme.Spacing
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.AliasActivity
 import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
-import io.simplelogin.android.data.models.ui.ActivityUiAction
-import io.simplelogin.android.data.models.ui.AliasAction
+import io.simplelogin.android.core.model.ui.ActivityUiAction
+import io.simplelogin.android.core.model.ui.AliasAction
 import io.simplelogin.android.ui.home.aliaslist.ActivityStats
 import io.simplelogin.android.ui.home.aliaslist.AliasEmailText
 import io.simplelogin.android.ui.home.aliaslist.AliasOptionBottomSheet

@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.core.model.api.UpdateMailboxOption
-import io.simplelogin.android.data.remote.datasource.MailboxesRemoteDatasource
+import io.simplelogin.android.core.network.datasource.MailboxesRemoteDatasource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

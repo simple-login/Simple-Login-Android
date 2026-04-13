@@ -4,30 +4,18 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.simplelogin.android.usecases.CopyToClipboardUseCase
-import io.simplelogin.android.usecases.CopyToClipboardUseCaseImpl
-import io.simplelogin.android.usecases.ShowSnackbarFailureUseCase
-import io.simplelogin.android.usecases.ShowSnackbarFailureUseCaseImpl
-import io.simplelogin.android.usecases.ShowSnackbarInformationUseCase
-import io.simplelogin.android.usecases.ShowSnackbarInformationUseCaseImpl
-import io.simplelogin.android.usecases.login.ForgotPasswordUseCase
-import io.simplelogin.android.usecases.login.ForgotPasswordUseCaseImpl
-import io.simplelogin.android.usecases.login.LogInUseCase
-import io.simplelogin.android.usecases.login.LogInUseCaseImpl
-import io.simplelogin.android.usecases.login.LogOutImpl
-import io.simplelogin.android.usecases.login.LogOutUseCase
-import io.simplelogin.android.usecases.login.ResendActivationCodeUseCase
-import io.simplelogin.android.usecases.login.ResendActivationCodeUseCaseImpl
-import io.simplelogin.android.usecases.login.SignUpUseCase
-import io.simplelogin.android.usecases.login.SignUpUseCaseImpl
-import io.simplelogin.android.usecases.login.VerifyAccountUseCase
-import io.simplelogin.android.usecases.login.VerifyAccountUseCaseImpl
-import io.simplelogin.android.usecases.login.VerifyMfaUseCase
-import io.simplelogin.android.usecases.login.VerifyMfaUseCaseImpl
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCaseImpl
-import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
-import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCaseImpl
+import io.simplelogin.android.core.common.usecase.CopyToClipboardUseCase
+import io.simplelogin.android.core.common.usecase.CopyToClipboardUseCaseImpl
+import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCaseImpl
+import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCaseImpl
+import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
+import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCaseImpl
+import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCaseImpl
+import io.simplelogin.android.feature.auth.usecase.LogOutImpl
+import io.simplelogin.android.feature.auth.usecase.LogOutUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCaseImpl
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
@@ -41,24 +29,6 @@ abstract class UseCaseModule {
 
     @[Binds Singleton]
     abstract fun bindUpdateSessionSettingsUseCase(impl: UpdateSessionSettingsUseCaseImpl): UpdateSessionSettingsUseCase
-
-    @[Binds Singleton]
-    abstract fun bindLogInUseCase(impl: LogInUseCaseImpl): LogInUseCase
-
-    @[Binds Singleton]
-    abstract fun bindVerifyMfaUseCase(impl: VerifyMfaUseCaseImpl): VerifyMfaUseCase
-
-    @[Binds Singleton]
-    abstract fun bindVerifyAccountUseCase(impl: VerifyAccountUseCaseImpl): VerifyAccountUseCase
-
-    @[Binds Singleton]
-    abstract fun bindForgotPassword(impl: ForgotPasswordUseCaseImpl): ForgotPasswordUseCase
-
-    @[Binds Singleton]
-    abstract fun bindSignUpUseCase(impl: SignUpUseCaseImpl): SignUpUseCase
-
-    @[Binds Singleton]
-    abstract fun bindResendActivationCodeUseCase(impl: ResendActivationCodeUseCaseImpl): ResendActivationCodeUseCase
 
     @[Binds Singleton]
     abstract fun bindCopyToClipboardUseCase(impl: CopyToClipboardUseCaseImpl): CopyToClipboardUseCase

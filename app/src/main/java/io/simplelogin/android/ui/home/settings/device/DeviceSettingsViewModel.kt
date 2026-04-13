@@ -14,8 +14,8 @@ import io.simplelogin.android.core.model.preferences.LockTimeOut
 import io.simplelogin.android.core.model.preferences.SwipeAction
 import io.simplelogin.android.core.model.preferences.Theme
 import io.simplelogin.android.core.model.preferences.UserSessionPreferences
-import io.simplelogin.android.usecases.session.ObserveSessionSettingsUseCase
-import io.simplelogin.android.usecases.session.UpdateSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCase
 import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
 import javax.inject.Inject
