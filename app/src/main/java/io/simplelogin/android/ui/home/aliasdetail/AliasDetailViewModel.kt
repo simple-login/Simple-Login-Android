@@ -12,6 +12,7 @@ import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
 import io.simplelogin.android.core.common.di.LoadingState
 import io.simplelogin.android.core.common.di.LoadingStateFlow
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCase
 import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
@@ -31,7 +32,6 @@ import io.simplelogin.android.core.network.datasource.updateMailboxes
 import io.simplelogin.android.core.network.datasource.updateName
 import io.simplelogin.android.core.network.datasource.updateNote
 import io.simplelogin.android.domain.ActivityUiActionHandler
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

@@ -14,6 +14,7 @@ import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
 import io.simplelogin.android.core.common.di.LoadingState
 import io.simplelogin.android.core.common.di.LoadingStateFlow
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
 import io.simplelogin.android.core.model.api.Alias
 import io.simplelogin.android.core.model.api.ApiKey
@@ -23,7 +24,6 @@ import io.simplelogin.android.core.model.ui.ContactUiAction
 import io.simplelogin.android.core.network.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.android.domain.ContactUiActionHandler
 import io.simplelogin.android.domain.ContactUiActionResult
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

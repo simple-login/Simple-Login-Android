@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.createalias
+package io.simplelogin.android.feature.createalias
 
 import android.content.Context
 import androidx.compose.foundation.clickable
@@ -59,7 +59,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.android.core.common.InvalidPrefixReason
 import io.simplelogin.android.core.common.PrefixValidationResult
 import io.simplelogin.android.core.common.validatePrefix

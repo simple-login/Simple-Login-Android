@@ -74,6 +74,7 @@ import io.simplelogin.android.core.common.ProtonLinkManager
 import io.simplelogin.android.core.common.ProtonLoginManager
 import io.simplelogin.android.core.common.di.LoadingState
 import io.simplelogin.android.core.common.di.LoadingStateFlow
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
 import io.simplelogin.android.core.designsystem.clickableRippleDisabled
 import io.simplelogin.android.core.designsystem.snackbar.SnackbarManager
@@ -89,7 +90,6 @@ import io.simplelogin.android.ui.home.settings.account.UserInfoCard
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

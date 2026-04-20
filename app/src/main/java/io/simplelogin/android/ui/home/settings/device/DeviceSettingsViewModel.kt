@@ -3,6 +3,10 @@ package io.simplelogin.android.ui.home.settings.device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
+import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
+import io.simplelogin.android.core.common.usecase.UpdateDeviceSettingsUseCase
+import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCase
 import io.simplelogin.android.core.model.preferences.AliasCellSelection
 import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
 import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
@@ -14,15 +18,11 @@ import io.simplelogin.android.core.model.preferences.LockTimeOut
 import io.simplelogin.android.core.model.preferences.SwipeAction
 import io.simplelogin.android.core.model.preferences.Theme
 import io.simplelogin.android.core.model.preferences.UserSessionPreferences
-import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
-import io.simplelogin.android.core.common.usecase.UpdateSessionSettingsUseCase
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
-import io.simplelogin.android.usecases.settings.UpdateDeviceSettingsUseCase
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class DeviceSettingsState {
     data object Loading : DeviceSettingsState()

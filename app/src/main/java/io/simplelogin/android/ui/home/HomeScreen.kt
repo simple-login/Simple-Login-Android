@@ -54,9 +54,9 @@ import io.simplelogin.android.core.model.api.ApiKey
 import io.simplelogin.android.core.model.api.RandomMode
 import io.simplelogin.android.core.model.ui.AliasAction
 import io.simplelogin.android.core.model.ui.DialogPayload
+import io.simplelogin.android.feature.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
 import io.simplelogin.android.ui.home.aliaslist.AliasList
-import io.simplelogin.android.ui.home.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar

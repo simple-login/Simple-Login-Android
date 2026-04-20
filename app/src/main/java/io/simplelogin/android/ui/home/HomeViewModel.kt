@@ -12,6 +12,7 @@ import io.simplelogin.android.R
 import io.simplelogin.android.core.common.di.LoadingState
 import io.simplelogin.android.core.common.di.LoadingStateFlow
 import io.simplelogin.android.core.common.usecase.CopyToClipboardUseCase
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ObserveSessionSettingsUseCase
 import io.simplelogin.android.core.common.usecase.ShowSnackbarFailureUseCase
 import io.simplelogin.android.core.common.usecase.ShowSnackbarInformationUseCase
@@ -22,7 +23,6 @@ import io.simplelogin.android.core.model.api.RandomMode
 import io.simplelogin.android.core.model.ui.AliasFilterMode
 import io.simplelogin.android.domain.AliasListManagerFactory
 import io.simplelogin.android.domain.AliasSearchManagerFactory
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

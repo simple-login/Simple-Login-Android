@@ -1,4 +1,4 @@
-package io.simplelogin.android.usecases.settings
+package io.simplelogin.android.core.common.usecase
 
 import androidx.datastore.core.DataStore
 import io.simplelogin.android.core.model.preferences.DevicePreferences

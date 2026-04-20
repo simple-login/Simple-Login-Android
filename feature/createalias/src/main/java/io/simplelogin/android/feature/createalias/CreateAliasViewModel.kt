@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.createalias
+package io.simplelogin.android.feature.createalias
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.simplelogin.android.core.common.usecase.ObserveDeviceSettingsUseCase
 import io.simplelogin.android.core.model.Result
 import io.simplelogin.android.core.model.api.AliasOptions
 import io.simplelogin.android.core.model.api.ApiError
@@ -15,7 +16,6 @@ import io.simplelogin.android.core.model.api.Mailboxes
 import io.simplelogin.android.core.model.api.Suffix
 import io.simplelogin.android.core.network.CreateAliasBody
 import io.simplelogin.android.core.network.datasource.CreationRemoteDatasource
-import io.simplelogin.android.usecases.settings.ObserveDeviceSettingsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

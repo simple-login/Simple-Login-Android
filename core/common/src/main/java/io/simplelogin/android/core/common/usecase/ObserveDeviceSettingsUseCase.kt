@@ -1,9 +1,9 @@
-package io.simplelogin.android.usecases.settings
+package io.simplelogin.android.core.common.usecase
 
 import androidx.datastore.core.DataStore
 import io.simplelogin.android.core.model.preferences.DevicePreferences
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 interface ObserveDeviceSettingsUseCase {
     operator fun invoke(): Flow<DevicePreferences>
