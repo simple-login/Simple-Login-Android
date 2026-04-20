@@ -59,7 +59,7 @@ import io.simplelogin.core.designsystem.primaryContentBackground
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.CustomDomain
-import io.simplelogin.android.ui.home.dialog.EditTextDialog
+import io.simplelogin.core.ui.EditTextDialog
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)

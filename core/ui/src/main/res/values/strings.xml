@@ -1,4 +1,7 @@
 <resources>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="email_address">Email address</string>
+    <string name="invalid_email_error">Invalid email address</string>
+    <string name="clear">Clear</string>
 </resources>

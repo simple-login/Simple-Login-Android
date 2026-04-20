@@ -2,12 +2,8 @@
     <string name="app_name">SimpleLogin</string>
     <string name="settings">Settings</string>
     <string name="missing_api_key">Missing API key</string>
-    <string name="save">Save</string>
     <string name="sign_in">Sign in</string>
-    <string name="email_address">Email address</string>
-    <string name="password">Password</string>
     <string name="simplelogin_scheme" translatable="false">auth.simplelogin</string>
-    <string name="invalid_email_error">Invalid email address</string>
     <string name="delete">Delete</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_out_message">Are you sure you want to sign out of your account?</string>
@@ -23,7 +19,6 @@
     <string name="device_settings">Device settings</string>
     <string name="contact_us">Contact us</string>
     <string name="close">Close</string>
-    <string name="clear">Clear</string>
     <string name="back">Back</string>
     <string name="security">Security</string>
     <string name="total">Total</string>

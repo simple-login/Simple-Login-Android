@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.core.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -21,7 +21,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import io.simplelogin.android.R
 
 @Composable
 fun EditTextDialog(

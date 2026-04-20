@@ -45,6 +45,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
+import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
+import io.simplelogin.android.ui.home.aliaslist.AliasList
+import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
+import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
+import io.simplelogin.android.ui.root.supportsMultiplePanes
 import io.simplelogin.core.designsystem.TitledFAB
 import io.simplelogin.core.designsystem.clickableRippleDisabled
 import io.simplelogin.core.designsystem.noAliasesMessage
@@ -54,13 +59,8 @@ import io.simplelogin.core.model.api.ApiKey
 import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.ui.AliasAction
 import io.simplelogin.core.model.ui.DialogPayload
+import io.simplelogin.core.ui.EditTextDialog
 import io.simplelogin.feature.createalias.CreateAliasScreen
-import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
-import io.simplelogin.android.ui.home.aliaslist.AliasList
-import io.simplelogin.android.ui.home.dialog.EditTextDialog
-import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
-import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
-import io.simplelogin.android.ui.root.supportsMultiplePanes
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.dialog
+package io.simplelogin.core.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +21,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import io.simplelogin.android.R
 import io.simplelogin.core.common.isValidEmail
 import io.simplelogin.core.designsystem.theme.Spacing
 

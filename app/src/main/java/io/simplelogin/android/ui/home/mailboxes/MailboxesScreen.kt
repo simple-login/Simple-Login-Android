@@ -67,7 +67,7 @@ import io.simplelogin.core.designsystem.description
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Mailbox
-import io.simplelogin.android.ui.home.dialog.EditEmailDialog
+import io.simplelogin.core.ui.EditEmailDialog
 
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)

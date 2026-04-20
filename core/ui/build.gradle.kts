@@ -30,6 +30,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
     implementation(projects.core.designsystem)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
@@ -41,4 +42,5 @@ dependencies {
     implementation(libs.androidx.material3)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
+    implementation(libs.compose.material.icons.extended)
 }
