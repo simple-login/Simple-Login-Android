@@ -44,18 +44,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.core.common.relativeDateTime
-import io.simplelogin.android.core.designsystem.IconContent
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Alias
-import io.simplelogin.android.core.model.preferences.AliasCellSelection
-import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
-import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
-import io.simplelogin.android.core.model.preferences.SwipeAction
-import io.simplelogin.android.core.model.ui.AliasAction
+import io.simplelogin.core.common.relativeDateTime
+import io.simplelogin.core.designsystem.IconContent
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.model.preferences.AliasCellSelection
+import io.simplelogin.core.model.preferences.AliasDisplayInfo
+import io.simplelogin.core.model.preferences.AliasOptionsDisplay
+import io.simplelogin.core.model.preferences.SwipeAction
+import io.simplelogin.core.model.ui.AliasAction
 import kotlinx.coroutines.launch
-import io.simplelogin.android.core.designsystem.R as DesignSystemR
+import io.simplelogin.core.designsystem.R as DesignSystemR
 
 @Composable
 fun AliasRow(

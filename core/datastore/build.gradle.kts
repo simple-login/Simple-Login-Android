@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.core.datastore"
+    namespace = "io.simplelogin.core.datastore"
     compileSdk {
         version = release(37)
     }

@@ -19,9 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.NumericKeypad
-import io.simplelogin.android.core.designsystem.NumericKeypadKey
-import io.simplelogin.android.core.designsystem.theme.Spacing
+import io.simplelogin.core.designsystem.NumericKeypad
+import io.simplelogin.core.designsystem.NumericKeypadKey
+import io.simplelogin.core.designsystem.theme.Spacing
 
 sealed class CreateOrEditPinMode {
     data object Create : CreateOrEditPinMode()

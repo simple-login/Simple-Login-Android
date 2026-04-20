@@ -27,10 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.IconContent
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Stats
+import io.simplelogin.core.designsystem.IconContent
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Stats
 
 @Composable
 fun StatsGrid(

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.core.common"
+    namespace = "io.simplelogin.core.common"
     compileSdk {
         version = release(37)
     }

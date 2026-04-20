@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.UserInfo
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.UserInfo
 
 @Composable
 fun UserInfoCard(

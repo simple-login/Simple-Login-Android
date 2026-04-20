@@ -41,12 +41,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.simplelogin.android.R
-import io.simplelogin.android.core.common.relativeDateTime
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Contact
-import io.simplelogin.android.core.model.preferences.ContactCellSelection
-import io.simplelogin.android.core.model.ui.ContactUiAction
+import io.simplelogin.core.common.relativeDateTime
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Contact
+import io.simplelogin.core.model.preferences.ContactCellSelection
+import io.simplelogin.core.model.ui.ContactUiAction
 
 @Composable
 fun AliasContactRow(

@@ -6,9 +6,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.core.model.api.ApiKey
-import io.simplelogin.android.core.model.api.CustomDomain
-import io.simplelogin.android.core.network.datasource.CustomDomainsRemoteDatasource
+import io.simplelogin.core.model.api.ApiKey
+import io.simplelogin.core.model.api.CustomDomain
+import io.simplelogin.core.network.datasource.CustomDomainsRemoteDatasource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

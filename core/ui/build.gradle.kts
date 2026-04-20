@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.core.ui"
+    namespace = "io.simplelogin.core.ui"
     compileSdk {
         version = release(36)
     }

@@ -26,17 +26,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.core.designsystem.RetryButton
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Alias
-import io.simplelogin.android.core.model.api.ApiError
-import io.simplelogin.android.core.model.api.Stats
-import io.simplelogin.android.core.model.preferences.AliasCellSelection
-import io.simplelogin.android.core.model.preferences.AliasDisplayInfo
-import io.simplelogin.android.core.model.preferences.AliasOptionsDisplay
-import io.simplelogin.android.core.model.preferences.SwipeAction
-import io.simplelogin.android.core.model.ui.AliasAction
+import io.simplelogin.core.designsystem.RetryButton
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.model.api.ApiError
+import io.simplelogin.core.model.api.Stats
+import io.simplelogin.core.model.preferences.AliasCellSelection
+import io.simplelogin.core.model.preferences.AliasDisplayInfo
+import io.simplelogin.core.model.preferences.AliasOptionsDisplay
+import io.simplelogin.core.model.preferences.SwipeAction
+import io.simplelogin.core.model.ui.AliasAction
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)

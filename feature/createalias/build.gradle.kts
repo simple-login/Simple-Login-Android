@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.feature.createalias"
+    namespace = "io.simplelogin.feature.createalias"
     compileSdk {
         version = release(37)
     }

@@ -59,14 +59,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.core.common.relativeDateTime
-import io.simplelogin.android.core.designsystem.DefaultBadge
-import io.simplelogin.android.core.designsystem.RetryButton
-import io.simplelogin.android.core.designsystem.UnverifiedBadge
-import io.simplelogin.android.core.designsystem.description
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Mailbox
+import io.simplelogin.core.common.relativeDateTime
+import io.simplelogin.core.designsystem.DefaultBadge
+import io.simplelogin.core.designsystem.RetryButton
+import io.simplelogin.core.designsystem.UnverifiedBadge
+import io.simplelogin.core.designsystem.description
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Mailbox
 import io.simplelogin.android.ui.home.dialog.EditEmailDialog
 
 @SuppressLint("LocalContextGetResourceValueCall")

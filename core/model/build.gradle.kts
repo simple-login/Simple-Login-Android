@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.core.model"
+    namespace = "io.simplelogin.core.model"
     compileSdk {
         version = release(37)
     }

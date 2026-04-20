@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "io.simplelogin.android.feature.auth"
+    namespace = "io.simplelogin.feature.auth"
     compileSdk {
         version = release(37)
     }

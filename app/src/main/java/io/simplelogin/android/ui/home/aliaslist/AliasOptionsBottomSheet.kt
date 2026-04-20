@@ -29,13 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.IconResource
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Alias
-import io.simplelogin.android.core.model.ui.AliasAction
+import io.simplelogin.core.designsystem.IconResource
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.model.ui.AliasAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import io.simplelogin.android.core.designsystem.R as DesignSystemR
+import io.simplelogin.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

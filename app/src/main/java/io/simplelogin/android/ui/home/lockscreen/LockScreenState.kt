@@ -1,6 +1,6 @@
 package io.simplelogin.android.ui.home.lockscreen
 
-import io.simplelogin.android.core.model.preferences.DeviceLockType
+import io.simplelogin.core.model.preferences.DeviceLockType
 
 sealed class LockScreenState {
     data object Loading : LockScreenState()

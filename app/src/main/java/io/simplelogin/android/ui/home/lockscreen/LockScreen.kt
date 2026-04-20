@@ -38,11 +38,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.rememberBiometricAuthenticator
+import io.simplelogin.core.designsystem.rememberBiometricAuthenticator
 import io.simplelogin.android.ui.home.settings.device.CreateOrConfirmPinDialog
 import io.simplelogin.android.ui.home.settings.device.CreateOrEditPinMode
 import kotlinx.coroutines.launch
-import io.simplelogin.android.core.designsystem.R as DesignSystemR
+import io.simplelogin.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

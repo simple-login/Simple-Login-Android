@@ -17,11 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import io.simplelogin.android.core.common.relativeTimeSpan
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.ActivityAction
-import io.simplelogin.android.core.model.api.Alias
+import io.simplelogin.core.common.relativeTimeSpan
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.ActivityAction
+import io.simplelogin.core.model.api.Alias
 
 @Composable
 fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {

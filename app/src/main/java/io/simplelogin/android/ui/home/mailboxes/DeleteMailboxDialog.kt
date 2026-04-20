@@ -28,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.simplelogin.android.R
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.model.api.Mailbox
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.model.api.Mailbox
 
 @Composable
 fun DeleteMailboxDialog(

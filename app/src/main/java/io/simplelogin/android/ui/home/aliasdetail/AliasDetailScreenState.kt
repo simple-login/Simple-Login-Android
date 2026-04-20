@@ -1,8 +1,8 @@
 package io.simplelogin.android.ui.home.aliasdetail
 
-import io.simplelogin.android.core.model.api.Alias
-import io.simplelogin.android.core.model.api.AliasActivity
-import io.simplelogin.android.core.model.api.ApiError
+import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.model.api.AliasActivity
+import io.simplelogin.core.model.api.ApiError
 
 sealed class AliasDetailScreenState(open val alias: Alias?) {
     data object Loading : AliasDetailScreenState(null)

@@ -1,7 +1,7 @@
 package io.simplelogin.android.ui.home.customdomains
 
-import io.simplelogin.android.core.model.api.ApiError
-import io.simplelogin.android.core.model.api.CustomDomain
+import io.simplelogin.core.model.api.ApiError
+import io.simplelogin.core.model.api.CustomDomain
 
 data class CustomDomainDetailsState(
     val domain: CustomDomain,

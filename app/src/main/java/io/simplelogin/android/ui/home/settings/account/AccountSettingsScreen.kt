@@ -60,26 +60,26 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.core.common.timeAndFullDate
-import io.simplelogin.android.core.designsystem.OptionRow
-import io.simplelogin.android.core.designsystem.RetryButton
-import io.simplelogin.android.core.designsystem.SettingsFooter
-import io.simplelogin.android.core.designsystem.SettingsHeader
-import io.simplelogin.android.core.designsystem.SettingsSpacer
-import io.simplelogin.android.core.designsystem.ToggleOption
-import io.simplelogin.android.core.designsystem.clickableRippleDisabled
-import io.simplelogin.android.core.designsystem.description
-import io.simplelogin.android.core.designsystem.primaryContentBackground
-import io.simplelogin.android.core.designsystem.theme.ProtonPurple
-import io.simplelogin.android.core.designsystem.theme.SlColor
-import io.simplelogin.android.core.designsystem.theme.Spacing
-import io.simplelogin.android.core.designsystem.title
-import io.simplelogin.android.core.model.api.RandomAliasSuffix
-import io.simplelogin.android.core.model.api.RandomMode
-import io.simplelogin.android.core.model.api.SenderFormat
-import io.simplelogin.android.core.model.api.UsableDomain
+import io.simplelogin.core.common.timeAndFullDate
+import io.simplelogin.core.designsystem.OptionRow
+import io.simplelogin.core.designsystem.RetryButton
+import io.simplelogin.core.designsystem.SettingsFooter
+import io.simplelogin.core.designsystem.SettingsHeader
+import io.simplelogin.core.designsystem.SettingsSpacer
+import io.simplelogin.core.designsystem.ToggleOption
+import io.simplelogin.core.designsystem.clickableRippleDisabled
+import io.simplelogin.core.designsystem.description
+import io.simplelogin.core.designsystem.primaryContentBackground
+import io.simplelogin.core.designsystem.theme.ProtonPurple
+import io.simplelogin.core.designsystem.theme.SlColor
+import io.simplelogin.core.designsystem.theme.Spacing
+import io.simplelogin.core.designsystem.title
+import io.simplelogin.core.model.api.RandomAliasSuffix
+import io.simplelogin.core.model.api.RandomMode
+import io.simplelogin.core.model.api.SenderFormat
+import io.simplelogin.core.model.api.UsableDomain
 import io.simplelogin.android.ui.home.dialog.EditTextDialog
-import io.simplelogin.android.core.designsystem.R as DesignSystemR
+import io.simplelogin.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
