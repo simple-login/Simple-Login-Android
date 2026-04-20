@@ -72,6 +72,7 @@ import io.simplelogin.android.core.model.api.Mailbox
 import io.simplelogin.android.core.model.api.Suffix
 import io.simplelogin.android.core.model.preferences.DefaultPrefix
 import io.simplelogin.android.core.network.CreateAliasBody
+import io.simplelogin.android.core.ui.MailboxesSelectionDialog
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)

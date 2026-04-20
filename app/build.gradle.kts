@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.core.datastore) // TODO: Remove later on
     implementation(projects.core.network) // TODO: Remove later on
     implementation(projects.core.designsystem)
+    implementation(projects.core.ui) // TODO: Remove later on
     implementation(projects.feature.auth)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
