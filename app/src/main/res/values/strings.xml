@@ -91,10 +91,8 @@
     <string name="ask_for_random_alias_note_description">Ask for note before creating random aliases</string>
     <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
     <string name="account_settings">Account settings</string>
-    <string name="premium_trial">Premium Trial</string>
     <string name="trial_end_date">Your trial will end at %s</string>
     <string name="trial_description">When you signed up, you have a free 7-day Premium trial. After that your account will automatically be downgraded to the Free plan. During the trial, the only limit is you can\'t create more than 10 aliases.</string>
-    <string name="premium">Premium</string>
     <string name="newsletter">Newsletter</string>
     <string name="newsletter_description">We will occasionally send you emails with new feature announcements</string>
     <string name="random_mode">Random mode</string>
@@ -111,7 +109,6 @@
     <string name="proton_account_unlinked">Proton account unlinked</string>
     <string name="already_linked_to_proton">Your account is currently linked to the Proton account</string>
     <string name="not_linked_to_proton">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>
-    <string name="profile_picture">Profile picture</string>
     <string name="edit_profile">Edit profile</string>
     <string name="edit_display_name">Edit display name</string>
     <string name="edit_profile_picture">Edit profile picture</string>

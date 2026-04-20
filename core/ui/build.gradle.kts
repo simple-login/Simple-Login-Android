@@ -43,4 +43,5 @@ dependencies {
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     implementation(libs.compose.material.icons.extended)
+    implementation(libs.coil.compose)
 }

@@ -4,4 +4,7 @@
     <string name="email_address">Email address</string>
     <string name="invalid_email_error">Invalid email address</string>
     <string name="clear">Clear</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="premium_trial">Premium Trial</string>
+    <string name="premium">Premium</string>
 </resources>

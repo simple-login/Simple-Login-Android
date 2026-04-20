@@ -79,6 +79,7 @@ import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.api.SenderFormat
 import io.simplelogin.core.model.api.UsableDomain
 import io.simplelogin.core.ui.EditTextDialog
+import io.simplelogin.core.ui.UserInfoCard
 import io.simplelogin.core.designsystem.R as DesignSystemR
 
 @OptIn(ExperimentalMaterial3Api::class)
