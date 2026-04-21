@@ -64,6 +64,7 @@ dependencies {
     implementation(projects.core.network) // TODO: Remove later on
     implementation(projects.core.designsystem)
     implementation(projects.core.ui) // TODO: Remove later on
+    implementation(projects.feature.accountsettings)
     implementation(projects.feature.auth)
     implementation(projects.feature.createalias)
     implementation(projects.core.model)

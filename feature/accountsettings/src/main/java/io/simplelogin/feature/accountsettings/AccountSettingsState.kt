@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.account
+package io.simplelogin.feature.accountsettings
 
 import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.UsableDomain

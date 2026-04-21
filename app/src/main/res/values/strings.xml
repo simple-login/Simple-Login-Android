@@ -76,7 +76,6 @@
     <string name="alias_created">\"%s\" is created</string>
     <string name="alias_created_and_copied_to_clipboard">\"%s\" is created and copied to clipboard</string>
     <string name="create">Create</string>
-    <string name="your_domain">Your domain</string>
     <string name="default_prefix">Default prefix</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
@@ -91,28 +90,8 @@
     <string name="ask_for_random_alias_note_description">Ask for note before creating random aliases</string>
     <string name="test_with_sample_alias">Interact with sample alias below to test your settings</string>
     <string name="account_settings">Account settings</string>
-    <string name="trial_end_date">Your trial will end at %s</string>
-    <string name="trial_description">When you signed up, you have a free 7-day Premium trial. After that your account will automatically be downgraded to the Free plan. During the trial, the only limit is you can\'t create more than 10 aliases.</string>
-    <string name="newsletter">Newsletter</string>
-    <string name="newsletter_description">We will occasionally send you emails with new feature announcements</string>
-    <string name="random_mode">Random mode</string>
-    <string name="random_suffix">Random suffix</string>
-    <string name="default_domain_for_random_aliases">Default domain for random aliases</string>
     <string name="alias_display_and_interaction">Alias display &amp; interaction</string>
-    <string name="sender_address_format">Sender address format</string>
-    <string name="random_aliases">Random aliases</string>
-    <string name="link_with_proton">Connect with Proton</string>
-    <string name="unlink_proton">Unlink Proton account</string>
-    <string name="unlink_proton_description">You will be unlinked from Proton account %s</string>
-    <string name="yes_unlink_proton_account">Yes, unlink Proton account</string>
-    <string name="proton_account_linked">Proton account linked</string>
-    <string name="proton_account_unlinked">Proton account unlinked</string>
-    <string name="already_linked_to_proton">Your account is currently linked to the Proton account</string>
-    <string name="not_linked_to_proton">You can connect your Proton and SimpleLogin accounts.\nYou can then quickly log in to your SimpleLogin account using the Proton one.\nIf you have Proton Unlimited, Business or Visionary, you can have SimpleLogin premium for free.</string>
-    <string name="edit_profile">Edit profile</string>
     <string name="edit_display_name">Edit display name</string>
-    <string name="edit_profile_picture">Edit profile picture</string>
-    <string name="remove_profile_picture">Remove profile picture</string>
     <string name="mailbox_options">Mailbox options</string>
     <string name="set_as_default">Set as default</string>
     <plurals name="number_of_aliases">
@@ -192,6 +171,4 @@
     <string name="contact_deleted">%s deleted</string>
     <string name="contact_exists">%s already exists</string>
     <string name="contact_created">%s created</string>
-    <string name="settings_updated">Settings updated</string>
-    <string name="information_updated">Information updated</string>
 </resources>

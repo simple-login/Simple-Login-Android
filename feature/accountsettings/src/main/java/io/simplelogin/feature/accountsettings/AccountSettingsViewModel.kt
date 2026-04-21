@@ -1,6 +1,7 @@
-package io.simplelogin.android.ui.home.settings.account
+package io.simplelogin.feature.accountsettings
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
@@ -11,7 +12,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.R
 import io.simplelogin.core.common.ProtonLinkManager
 import io.simplelogin.core.common.usecase.UpdateSessionSettingsUseCase
 import io.simplelogin.core.model.Result
@@ -183,7 +183,7 @@ class AccountSettingsViewModel @AssistedInject constructor(
                     val url =
                         "$baseUrl/auth/api_to_cookie?token=${token.value}&next=$nextQueryEncoded"
                     val customTabsIntent = CustomTabsIntent.Builder().build()
-                    customTabsIntent.intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                    customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     customTabsIntent.launchUrl(context, url.toUri())
                 }, onFailure = ::handleError)
         }

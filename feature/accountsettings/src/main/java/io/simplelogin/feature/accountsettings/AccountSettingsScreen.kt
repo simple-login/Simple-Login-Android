@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.account
+package io.simplelogin.feature.accountsettings
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -59,7 +59,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.common.timeAndFullDate
 import io.simplelogin.core.designsystem.OptionRow
 import io.simplelogin.core.designsystem.RetryButton

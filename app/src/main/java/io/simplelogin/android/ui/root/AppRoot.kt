@@ -26,10 +26,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
-import io.simplelogin.core.model.api.Alias
-import io.simplelogin.core.model.api.CustomDomain
-import io.simplelogin.feature.auth.ui.LoginMasterScreen
-import io.simplelogin.feature.createalias.CreateAliasScreen
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliasactivities.AliasActivitiesScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
@@ -39,8 +35,12 @@ import io.simplelogin.android.ui.home.customdomains.CustomDomainDeletedAliasesSc
 import io.simplelogin.android.ui.home.customdomains.CustomDomainDetailsScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
-import io.simplelogin.android.ui.home.settings.account.AccountSettingsScreen
 import io.simplelogin.android.ui.home.settings.device.DeviceSettingsScreen
+import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.model.api.CustomDomain
+import io.simplelogin.feature.accountsettings.AccountSettingsScreen
+import io.simplelogin.feature.auth.ui.LoginMasterScreen
+import io.simplelogin.feature.createalias.CreateAliasScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
