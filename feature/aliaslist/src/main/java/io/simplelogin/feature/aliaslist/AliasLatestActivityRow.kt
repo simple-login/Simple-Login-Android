@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,7 +24,7 @@ import io.simplelogin.core.model.api.ActivityAction
 import io.simplelogin.core.model.api.Alias
 
 @Composable
-fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {
+internal fun AliasLatestActivityRow(activity: Alias.LatestActivity) = key(activity) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
         verticalAlignment = Alignment.CenterVertically

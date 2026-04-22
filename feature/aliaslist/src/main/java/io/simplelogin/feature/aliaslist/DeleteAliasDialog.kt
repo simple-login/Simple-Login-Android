@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -6,11 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import io.simplelogin.android.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeleteAliasDialog(
+internal fun DeleteAliasDialog(
     aliasEmail: String,
     onDeleteClick: () -> Unit,
     onCancelClick: () -> Unit

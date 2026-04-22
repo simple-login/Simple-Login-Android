@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.R
 import io.simplelogin.core.common.relativeDateTime
 import io.simplelogin.core.designsystem.IconContent
 import io.simplelogin.core.designsystem.theme.SlColor

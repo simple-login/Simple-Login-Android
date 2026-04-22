@@ -74,7 +74,7 @@ import io.simplelogin.core.model.preferences.LockTimeOut
 import io.simplelogin.core.model.preferences.SwipeAction
 import io.simplelogin.core.model.preferences.Theme
 import io.simplelogin.core.model.preferences.UserSessionPreferences
-import io.simplelogin.android.ui.home.aliaslist.AliasRow
+import io.simplelogin.feature.aliaslist.AliasRow
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days

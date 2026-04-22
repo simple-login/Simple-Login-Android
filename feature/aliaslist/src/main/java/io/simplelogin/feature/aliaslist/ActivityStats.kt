@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 

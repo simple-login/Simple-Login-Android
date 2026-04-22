@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,14 +26,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.IconContent
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Stats
 
 @Composable
-fun StatsGrid(
+internal fun StatsGrid(
     modifier: Modifier = Modifier,
     stats: Stats
 ) {

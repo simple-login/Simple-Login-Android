@@ -65,8 +65,10 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.ui) // TODO: Remove later on
     implementation(projects.feature.accountsettings)
+    implementation(projects.feature.aliaslist)
     implementation(projects.feature.auth)
     implementation(projects.feature.createalias)
+    implementation(projects.feature.devicesettings)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

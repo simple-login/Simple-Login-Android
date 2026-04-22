@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import io.simplelogin.android.R
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.ui.AliasAction
 import kotlinx.coroutines.delay

@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliaslist
+package io.simplelogin.feature.aliaslist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
