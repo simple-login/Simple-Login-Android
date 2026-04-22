@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.device
+package io.simplelogin.feature.devicesettings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

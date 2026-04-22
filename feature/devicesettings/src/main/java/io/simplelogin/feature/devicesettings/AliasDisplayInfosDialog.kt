@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.device
+package io.simplelogin.feature.devicesettings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,13 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.title
 import io.simplelogin.core.model.preferences.AliasDisplayInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AliasDisplayInfosDialog(
+internal fun AliasDisplayInfosDialog(
     selection: List<AliasDisplayInfo>,
     onSelectionChange: (List<AliasDisplayInfo>) -> Unit,
     onDismiss: () -> Unit

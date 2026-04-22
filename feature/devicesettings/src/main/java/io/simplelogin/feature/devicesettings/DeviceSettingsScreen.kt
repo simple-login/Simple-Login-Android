@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.device
+package io.simplelogin.feature.devicesettings
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -49,7 +49,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.OptionRow
 import io.simplelogin.core.designsystem.SettingsHeader
 import io.simplelogin.core.designsystem.SettingsSpacer

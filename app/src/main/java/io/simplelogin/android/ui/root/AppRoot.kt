@@ -35,12 +35,12 @@ import io.simplelogin.android.ui.home.customdomains.CustomDomainDeletedAliasesSc
 import io.simplelogin.android.ui.home.customdomains.CustomDomainDetailsScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
 import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
-import io.simplelogin.android.ui.home.settings.device.DeviceSettingsScreen
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.CustomDomain
 import io.simplelogin.feature.accountsettings.AccountSettingsScreen
 import io.simplelogin.feature.auth.ui.LoginMasterScreen
 import io.simplelogin.feature.createalias.CreateAliasScreen
+import io.simplelogin.feature.devicesettings.DeviceSettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

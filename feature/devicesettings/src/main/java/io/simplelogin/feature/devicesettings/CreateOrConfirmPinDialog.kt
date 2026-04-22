@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.settings.device
+package io.simplelogin.feature.devicesettings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.NumericKeypad
 import io.simplelogin.core.designsystem.NumericKeypadKey
 import io.simplelogin.core.designsystem.theme.Spacing
