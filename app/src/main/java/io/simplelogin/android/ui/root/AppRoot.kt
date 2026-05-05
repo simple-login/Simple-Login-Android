@@ -29,8 +29,6 @@ import io.simplelogin.android.R
 import io.simplelogin.android.ui.home.HomeScreen
 import io.simplelogin.android.ui.home.aliasactivities.AliasActivitiesScreen
 import io.simplelogin.android.ui.home.aliascontacts.AliasContactsScreen
-import io.simplelogin.android.ui.home.aliasdetail.AliasDetailPlaceholderScreen
-import io.simplelogin.android.ui.home.aliasdetail.AliasDetailScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainDeletedAliasesScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainDetailsScreen
 import io.simplelogin.android.ui.home.customdomains.CustomDomainsScreen
@@ -38,6 +36,8 @@ import io.simplelogin.android.ui.home.mailboxes.MailboxesScreen
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.CustomDomain
 import io.simplelogin.feature.accountsettings.AccountSettingsScreen
+import io.simplelogin.feature.aliasdetail.AliasDetailPlaceholderScreen
+import io.simplelogin.feature.aliasdetail.AliasDetailScreen
 import io.simplelogin.feature.auth.ui.LoginMasterScreen
 import io.simplelogin.feature.createalias.CreateAliasScreen
 import io.simplelogin.feature.devicesettings.DeviceSettingsScreen

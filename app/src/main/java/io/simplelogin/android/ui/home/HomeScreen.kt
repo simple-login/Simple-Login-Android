@@ -45,7 +45,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.home.aliasdetail.FullScreenDialog
 import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
 import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
 import io.simplelogin.android.ui.root.supportsMultiplePanes
@@ -59,6 +58,7 @@ import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.ui.AliasAction
 import io.simplelogin.core.model.ui.DialogPayload
 import io.simplelogin.core.ui.EditTextDialog
+import io.simplelogin.feature.aliasdetail.FullScreenDialog
 import io.simplelogin.feature.aliaslist.AliasList
 import io.simplelogin.feature.createalias.CreateAliasScreen
 import kotlinx.coroutines.FlowPreview

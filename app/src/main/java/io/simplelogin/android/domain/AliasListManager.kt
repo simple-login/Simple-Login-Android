@@ -3,7 +3,7 @@ package io.simplelogin.android.domain
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.simplelogin.android.PAGE_SIZE
+import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.common.getAs
 import io.simplelogin.core.model.Result
 import io.simplelogin.core.model.api.Alias
@@ -12,12 +12,12 @@ import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.ApiKey
 import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.api.Stats
+import io.simplelogin.core.model.ui.AliasFilterMode
 import io.simplelogin.core.network.EnabledResponse
 import io.simplelogin.core.network.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.core.network.datasource.AliasesRemoteDatasource
 import io.simplelogin.core.network.datasource.pin
 import io.simplelogin.core.network.datasource.unpin
-import io.simplelogin.core.model.ui.AliasFilterMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

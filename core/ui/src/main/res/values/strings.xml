@@ -7,4 +7,17 @@
     <string name="profile_picture">Profile picture</string>
     <string name="premium_trial">Premium Trial</string>
     <string name="premium">Premium</string>
+    <string name="view_details">View details</string>
+    <string name="view_contacts">View contacts</string>
+    <string name="copy_alias_address">Copy alias address</string>
+    <string name="enter_full_screen">Enter full screen</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="delete">Delete</string>
+    <string name="total">Total</string>
+    <string name="forward">Forward</string>
+    <string name="reply">Reply</string>
+    <string name="block">Block</string>
 </resources>

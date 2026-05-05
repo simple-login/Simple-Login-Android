@@ -10,8 +10,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.PAGE_SIZE
 import io.simplelogin.android.R
+import io.simplelogin.android.domain.ContactUiActionHandler
+import io.simplelogin.android.domain.ContactUiActionResult
+import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.common.di.LoadingState
 import io.simplelogin.core.common.di.LoadingStateFlow
 import io.simplelogin.core.common.usecase.ObserveDeviceSettingsUseCase
@@ -22,8 +24,6 @@ import io.simplelogin.core.model.api.Contact
 import io.simplelogin.core.model.preferences.DevicePreferences
 import io.simplelogin.core.model.ui.ContactUiAction
 import io.simplelogin.core.network.datasource.AliasDetailsRemoteDatasource
-import io.simplelogin.android.domain.ContactUiActionHandler
-import io.simplelogin.android.domain.ContactUiActionResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

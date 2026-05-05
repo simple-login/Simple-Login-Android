@@ -65,6 +65,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.ui) // TODO: Remove later on
     implementation(projects.feature.accountsettings)
+    implementation(projects.feature.aliasdetail)
     implementation(projects.feature.aliaslist)
     implementation(projects.feature.auth)
     implementation(projects.feature.createalias)
@@ -94,8 +95,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.google.zxing.core)
 
     // Dagger - Hilt
     implementation(libs.hilt.android)

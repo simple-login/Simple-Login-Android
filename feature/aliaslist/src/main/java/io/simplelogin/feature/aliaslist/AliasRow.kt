@@ -53,6 +53,10 @@ import io.simplelogin.core.model.preferences.AliasDisplayInfo
 import io.simplelogin.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.core.model.preferences.SwipeAction
 import io.simplelogin.core.model.ui.AliasAction
+import io.simplelogin.core.ui.ActivityStats
+import io.simplelogin.core.ui.AliasEmailText
+import io.simplelogin.core.ui.AliasOptionBottomSheet
+import io.simplelogin.core.ui.AliasOptionsDropdownMenu
 import kotlinx.coroutines.launch
 import io.simplelogin.core.designsystem.R as DesignSystemR
 

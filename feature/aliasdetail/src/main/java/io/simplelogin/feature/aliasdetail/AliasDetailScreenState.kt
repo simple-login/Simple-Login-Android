@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasdetail
+package io.simplelogin.feature.aliasdetail
 
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.AliasActivity

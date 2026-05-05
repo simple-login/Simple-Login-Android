@@ -3,7 +3,7 @@ package io.simplelogin.android.domain
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.simplelogin.android.PAGE_SIZE
+import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.common.getAs
 import io.simplelogin.core.model.Result
 import io.simplelogin.core.model.api.Alias

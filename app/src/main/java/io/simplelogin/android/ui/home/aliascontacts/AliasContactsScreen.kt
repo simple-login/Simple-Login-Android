@@ -66,8 +66,8 @@ import io.simplelogin.core.designsystem.clickableRippleDisabled
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.ui.AliasEmailText
 import io.simplelogin.core.ui.EditEmailDialog
-import io.simplelogin.feature.aliaslist.AliasEmailText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

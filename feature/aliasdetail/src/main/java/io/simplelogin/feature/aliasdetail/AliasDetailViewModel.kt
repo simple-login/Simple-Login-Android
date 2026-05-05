@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasdetail
+package io.simplelogin.feature.aliasdetail
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -8,8 +8,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.PAGE_SIZE
-import io.simplelogin.android.R
+import io.simplelogin.core.common.ActivityUiActionHandler
+import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.common.di.LoadingState
 import io.simplelogin.core.common.di.LoadingStateFlow
 import io.simplelogin.core.common.usecase.ObserveDeviceSettingsUseCase
@@ -31,7 +31,6 @@ import io.simplelogin.core.network.datasource.MailboxesRemoteDatasource
 import io.simplelogin.core.network.datasource.updateMailboxes
 import io.simplelogin.core.network.datasource.updateName
 import io.simplelogin.core.network.datasource.updateNote
-import io.simplelogin.android.domain.ActivityUiActionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

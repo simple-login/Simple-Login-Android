@@ -1,4 +1,4 @@
-package io.simplelogin.feature.aliaslist
+package io.simplelogin.core.ui
 
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme

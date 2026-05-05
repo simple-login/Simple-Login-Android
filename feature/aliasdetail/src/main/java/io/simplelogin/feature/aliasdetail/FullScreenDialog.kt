@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasdetail
+package io.simplelogin.feature.aliasdetail
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -55,7 +55,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Alias
 import kotlinx.coroutines.Dispatchers

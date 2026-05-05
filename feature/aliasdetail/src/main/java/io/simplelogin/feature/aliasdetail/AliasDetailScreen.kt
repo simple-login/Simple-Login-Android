@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasdetail
+package io.simplelogin.feature.aliasdetail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -46,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.RetryButton
 import io.simplelogin.core.designsystem.SettingsHeader
 import io.simplelogin.core.designsystem.SettingsSpacer
@@ -58,12 +57,12 @@ import io.simplelogin.core.model.api.AliasActivity
 import io.simplelogin.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.core.model.ui.ActivityUiAction
 import io.simplelogin.core.model.ui.AliasAction
+import io.simplelogin.core.ui.ActivityStats
+import io.simplelogin.core.ui.AliasEmailText
+import io.simplelogin.core.ui.AliasOptionBottomSheet
+import io.simplelogin.core.ui.AliasOptionsDropdownMenu
 import io.simplelogin.core.ui.EditTextDialog
 import io.simplelogin.core.ui.MailboxesSelectionDialog
-import io.simplelogin.feature.aliaslist.ActivityStats
-import io.simplelogin.feature.aliaslist.AliasEmailText
-import io.simplelogin.feature.aliaslist.AliasOptionBottomSheet
-import io.simplelogin.feature.aliaslist.AliasOptionsDropdownMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

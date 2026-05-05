@@ -6,17 +6,14 @@ import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.simplelogin.android.R
-import io.simplelogin.core.model.api.ActivityAction
-import io.simplelogin.core.model.api.AliasActivity
-import io.simplelogin.core.model.ui.ActivityUiAction
+import io.simplelogin.core.common.ActivityUiActionHandler
 import io.simplelogin.core.common.usecase.CopyToClipboardUseCase
 import io.simplelogin.core.common.usecase.ShowSnackbarFailureUseCase
 import io.simplelogin.core.common.usecase.ShowSnackbarInformationUseCase
+import io.simplelogin.core.model.api.ActivityAction
+import io.simplelogin.core.model.api.AliasActivity
+import io.simplelogin.core.model.ui.ActivityUiAction
 import javax.inject.Inject
-
-interface ActivityUiActionHandler {
-    suspend fun handleActivityAction(activity: AliasActivity, action: ActivityUiAction)
-}
 
 class ActivityUiActionHandlerImpl @Inject constructor(
     @ApplicationContext private val context: Context,

@@ -6,13 +6,13 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.PAGE_SIZE
+import io.simplelogin.core.common.ActivityUiActionHandler
+import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.AliasActivity
 import io.simplelogin.core.model.api.ApiKey
-import io.simplelogin.core.network.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.core.model.ui.ActivityUiAction
-import io.simplelogin.android.domain.ActivityUiActionHandler
+import io.simplelogin.core.network.datasource.AliasDetailsRemoteDatasource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
