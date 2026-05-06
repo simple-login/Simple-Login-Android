@@ -1,0 +1,30 @@
+<resources>
+    <string name="close">Close</string>
+    <string name="no_deleted_aliases">No deleted aliases</string>
+    <plurals name="number_of_deleted_aliases">
+        <item quantity="one">%d deleted alias</item>
+        <item quantity="other">%d deleted aliases</item>
+    </plurals>
+    <string name="updated_successfully">Updated successfully</string>
+    <string name="no_aliases">No aliases</string>
+    <plurals name="number_of_aliases">
+        <item quantity="one">%d alias</item>
+        <item quantity="other">%d aliases</item>
+    </plurals>
+    <string name="display_name">Display name</string>
+    <string name="created_at">Created at</string>
+    <string name="default_display_name">Default display name</string>
+    <string name="edit_display_name">Edit display name</string>
+    <string name="create_display_name">Create display name</string>
+    <string name="default_display_name_footer">Default display name for aliases created with %s unless overwritten by the alias display name.</string>
+    <string name="catch_all_header">Auto create/on the fly alias</string>
+    <string name="catch_all">Catch all</string>
+    <string name="catch_all_footer">Simply use anything@%s next time you need an alias. It will be automatically created the first time it receives an email. To have more fine-grained control, you can also define auto create rules.</string>
+    <string name="random_prefix_generation">Random prefix generation</string>
+    <string name="random_prefix_generation_footer">Add a random prefix for this domain when creating new aliases.</string>
+    <string name="deleted_aliases">Deleted aliases</string>
+    <string name="custom_domains">Custom domains</string>
+    <string name="no_custom_domains_message">No custom domains yet.\nAdd your first one via the web app.</string>
+    <string name="learn_more">Learn more</string>
+    <string name="use_web_app_to_add_custom_domains">To add new domains, please use your web application.</string>
+</resources>

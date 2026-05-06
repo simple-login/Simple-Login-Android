@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.customdomains
+package io.simplelogin.feature.customdomains
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,7 +44,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.common.relativeDateTime
 import io.simplelogin.core.designsystem.RetryButton
 import io.simplelogin.core.designsystem.SettingsFooter

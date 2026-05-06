@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.customdomains
+package io.simplelogin.feature.customdomains
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = CustomDomainDeletedAliasesViewModel.Factory::class)
-class CustomDomainDeletedAliasesViewModel @AssistedInject constructor(
+internal class CustomDomainDeletedAliasesViewModel @AssistedInject constructor(
     @Assisted private val domain: CustomDomain,
     @Assisted private val apiKeyValue: String,
     private val datasource: CustomDomainsRemoteDatasource

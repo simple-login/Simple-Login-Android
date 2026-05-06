@@ -69,6 +69,7 @@ dependencies {
     implementation(projects.feature.aliaslist)
     implementation(projects.feature.auth)
     implementation(projects.feature.createalias)
+    implementation(projects.feature.customdomains)
     implementation(projects.feature.devicesettings)
     implementation(projects.feature.mailboxes)
     implementation(projects.core.model)
