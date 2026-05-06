@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.mailboxes
+package io.simplelogin.feature.mailboxes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = MailboxesViewModel.Factory::class)
-class MailboxesViewModel @AssistedInject constructor(
+internal class MailboxesViewModel @AssistedInject constructor(
     @Assisted private val apiKeyValue: String,
     private val datasource: MailboxesRemoteDatasource
 ) : ViewModel() {

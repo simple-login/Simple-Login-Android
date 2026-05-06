@@ -1,10 +1,9 @@
-package io.simplelogin.android.ui.home.mailboxes
+package io.simplelogin.feature.mailboxes
 
 import android.content.Context
-import io.simplelogin.android.R
 import io.simplelogin.core.model.api.Mailbox
 
-sealed class MailboxDeleteOption(open val mailbox: Mailbox?) {
+internal sealed class MailboxDeleteOption(open val mailbox: Mailbox?) {
     data object DeleteAliases : MailboxDeleteOption(null)
     data class TransferAliases(override val mailbox: Mailbox) : MailboxDeleteOption(mailbox)
 

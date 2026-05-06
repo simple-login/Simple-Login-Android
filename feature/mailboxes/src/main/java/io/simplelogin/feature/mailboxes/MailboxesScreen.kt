@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.mailboxes
+package io.simplelogin.feature.mailboxes
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -58,7 +58,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.common.relativeDateTime
 import io.simplelogin.core.designsystem.DefaultBadge
 import io.simplelogin.core.designsystem.RetryButton

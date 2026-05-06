@@ -47,24 +47,11 @@
     <string name="random_characters">Random characters</string>
     <string name="account_settings">Account settings</string>
     <string name="edit_display_name">Edit display name</string>
-    <string name="mailbox_options">Mailbox options</string>
-    <string name="set_as_default">Set as default</string>
     <plurals name="number_of_aliases">
         <item quantity="one">%d alias</item>
         <item quantity="other">%d aliases</item>
     </plurals>
-    <string name="add_mailbox">Add mailbox</string>
-    <string name="add_mailbox_description">A verification email will be sent to this email address</string>
-    <string name="add">Add</string>
     <string name="updated_successfully">Updated successfully</string>
-    <string name="mailbox_verification_message">We\'ve sent a verification email to %s</string>
-    <string name="delete_mailbox">Delete mailbox</string>
-    <string name="delete_mailbox_explanation">Depending on your alias deletion setting, all aliases owned by the mailbox %s will be either immediately deleted or moved to the trash.\nYou can choose to transfer them to a different mailbox.</string>
-    <string name="select_an_option">Select an option</string>
-    <string name="delete_aliases">Delete aliases</string>
-    <string name="transfer_aliases_to_mailbox">Transfer aliases to %s</string>
-    <string name="mailbox_deleted">Mailbox %s deleted</string>
-    <string name="mailbox_set_as_default">Mailbox %s is set as default</string>
     <string name="custom_domains">Custom domains</string>
     <string name="no_custom_domains_message">No custom domains yet.\nAdd your first one via the web app.</string>
     <string name="learn_more">Learn more</string>

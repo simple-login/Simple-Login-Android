@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.mailboxes
+package io.simplelogin.feature.mailboxes
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,12 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Mailbox
 
 @Composable
-fun DeleteMailboxDialog(
+internal fun DeleteMailboxDialog(
     mailboxToDelete: Mailbox,
     mailboxes: List<Mailbox>,
     onDelete: (MailboxDeleteOption) -> Unit,

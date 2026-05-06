@@ -1,9 +1,9 @@
-package io.simplelogin.android.ui.home.mailboxes
+package io.simplelogin.feature.mailboxes
 
 import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.Mailbox
 
-data class MailboxesState(
+internal data class MailboxesState(
     val mailboxes: List<Mailbox>?,
     val isFetching: Boolean,
     val fetchError: ApiError?,

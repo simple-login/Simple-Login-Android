@@ -70,6 +70,7 @@ dependencies {
     implementation(projects.feature.auth)
     implementation(projects.feature.createalias)
     implementation(projects.feature.devicesettings)
+    implementation(projects.feature.mailboxes)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
