@@ -1,0 +1,7 @@
+<resources>
+    <string name="alias_activity">Alias activity</string>
+    <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>
+    <string name="email_address_copied">Email address copied to clipboard</string>
+    <string name="back">Back</string>
+    <string name="last_14_days">Last 14 days</string>
+</resources>

@@ -7,7 +7,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.simplelogin.android.BuildConfig
-import io.simplelogin.android.domain.ActivityUiActionHandlerImpl
 import io.simplelogin.core.common.ActivityUiActionHandler
 import io.simplelogin.core.common.di.AppVersion
 import io.simplelogin.core.common.di.DeviceName
@@ -15,6 +14,7 @@ import io.simplelogin.core.common.di.LoadingState
 import io.simplelogin.core.common.di.LoadingStateFlow
 import io.simplelogin.core.designsystem.snackbar.SnackbarManager
 import io.simplelogin.core.designsystem.snackbar.SnackbarManagerImpl
+import io.simplelogin.feature.aliasactivities.ActivityUiActionHandlerImpl
 import io.simplelogin.feature.aliascontacts.ContactUiActionHandler
 import io.simplelogin.feature.aliascontacts.ContactUiActionHandlerImpl
 import kotlinx.coroutines.flow.MutableStateFlow

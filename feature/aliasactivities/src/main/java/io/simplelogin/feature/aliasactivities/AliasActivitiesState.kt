@@ -1,9 +1,9 @@
-package io.simplelogin.android.ui.home.aliasactivities
+package io.simplelogin.feature.aliasactivities
 
 import io.simplelogin.core.model.api.AliasActivity
 import io.simplelogin.core.model.api.ApiError
 
-data class AliasActivitiesState(
+internal data class AliasActivitiesState(
     val activities: List<AliasActivity> = emptyList(),
     val page: Int = 0,
     val isRefreshing: Boolean = true,

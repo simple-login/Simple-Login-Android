@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasactivities
+package io.simplelogin.feature.aliasactivities
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,14 +33,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.RetryButton
 import io.simplelogin.core.designsystem.SettingsHeader
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Alias
+import io.simplelogin.core.ui.AliasActivityRow
 import io.simplelogin.core.ui.AliasEmailText
-import io.simplelogin.feature.aliasdetail.AliasActivityRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

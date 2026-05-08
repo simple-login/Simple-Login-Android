@@ -20,4 +20,9 @@
     <string name="forward">Forward</string>
     <string name="reply">Reply</string>
     <string name="block">Block</string>
+    <string name="view_options">View options</string>
+    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
+    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
+    <string name="copy_email_address">Copy email address</string>
+    <string name="open_default_email_client">Open default email client</string>
 </resources>

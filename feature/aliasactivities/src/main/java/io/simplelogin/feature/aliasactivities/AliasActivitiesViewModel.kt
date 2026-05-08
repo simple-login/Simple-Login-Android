@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliasactivities
+package io.simplelogin.feature.aliasactivities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasActivitiesViewModel.Factory::class)
-class AliasActivitiesViewModel @AssistedInject constructor(
+internal class AliasActivitiesViewModel @AssistedInject constructor(
     @Assisted private val alias: Alias,
     @Assisted private val apiKeyValue: String,
     private val datasource: AliasDetailsRemoteDatasource,

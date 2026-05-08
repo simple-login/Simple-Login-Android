@@ -65,6 +65,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.ui) // TODO: Remove later on
     implementation(projects.feature.accountsettings)
+    implementation(projects.feature.aliasactivities)
     implementation(projects.feature.aliascontacts)
     implementation(projects.feature.aliasdetail)
     implementation(projects.feature.aliaslist)

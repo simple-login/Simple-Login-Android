@@ -58,6 +58,7 @@ import io.simplelogin.core.model.preferences.AliasOptionsDisplay
 import io.simplelogin.core.model.ui.ActivityUiAction
 import io.simplelogin.core.model.ui.AliasAction
 import io.simplelogin.core.ui.ActivityStats
+import io.simplelogin.core.ui.AliasActivityRow
 import io.simplelogin.core.ui.AliasEmailText
 import io.simplelogin.core.ui.AliasOptionBottomSheet
 import io.simplelogin.core.ui.AliasOptionsDropdownMenu

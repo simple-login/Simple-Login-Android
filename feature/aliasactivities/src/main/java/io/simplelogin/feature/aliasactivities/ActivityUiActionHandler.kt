@@ -1,11 +1,10 @@
-package io.simplelogin.android.domain
+package io.simplelogin.feature.aliasactivities
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.R
 import io.simplelogin.core.common.ActivityUiActionHandler
 import io.simplelogin.core.common.usecase.CopyToClipboardUseCase
 import io.simplelogin.core.common.usecase.ShowSnackbarFailureUseCase
