@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliascontacts
+package io.simplelogin.feature.aliascontacts
 
 import android.content.Context
 import android.net.Uri
@@ -10,9 +10,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.R
-import io.simplelogin.android.domain.ContactUiActionHandler
-import io.simplelogin.android.domain.ContactUiActionResult
 import io.simplelogin.core.common.PAGE_SIZE
 import io.simplelogin.core.common.di.LoadingState
 import io.simplelogin.core.common.di.LoadingStateFlow
@@ -33,7 +30,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AliasContactsViewModel.Factory::class)
-class AliasContactsViewModel @AssistedInject constructor(
+internal class AliasContactsViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @Assisted private val alias: Alias,
     @Assisted private val apiKeyValue: String,

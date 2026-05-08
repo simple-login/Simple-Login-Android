@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.aliascontacts
+package io.simplelogin.feature.aliascontacts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.simplelogin.android.R
 import io.simplelogin.core.common.relativeDateTime
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.designsystem.theme.Spacing
@@ -49,7 +48,7 @@ import io.simplelogin.core.model.preferences.ContactCellSelection
 import io.simplelogin.core.model.ui.ContactUiAction
 
 @Composable
-fun AliasContactRow(
+internal fun AliasContactRow(
     modifier: Modifier = Modifier,
     clipShape: Shape,
     contact: Contact,

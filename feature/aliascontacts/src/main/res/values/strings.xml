@@ -1,0 +1,24 @@
+<resources>
+    <string name="view_options">View options</string>
+    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
+    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
+    <string name="copy_email_address">Copy email address</string>
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+    <string name="open_default_email_client">Open default email client</string>
+    <string name="delete">Delete</string>
+    <string name="back">Back</string>
+    <string name="contacts">Contacts</string>
+    <string name="no_contacts">No contacts</string>
+    <string name="create_new_contact">Create new contact</string>
+    <string name="pick_from_contacts">Pick from Contacts</string>
+    <string name="enter_contact_email">Enter contact email</string>
+    <string name="create">Create</string>
+    <string name="contact_exists">%s already exists</string>
+    <string name="contact_created">%s created</string>
+    <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>
+    <string name="email_address_copied">Email address copied to clipboard</string>
+    <string name="contact_deleted">%s deleted</string>
+    <string name="contact_blocked">%s blocked</string>
+    <string name="contact_unblocked">%s unblocked</string>
+</resources>

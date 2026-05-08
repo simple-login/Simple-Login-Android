@@ -1,6 +1,7 @@
-package io.simplelogin.android.ui.home.aliascontacts
+package io.simplelogin.feature.aliascontacts
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
@@ -58,7 +59,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.RetryButton
 import io.simplelogin.core.designsystem.SettingsHeader
 import io.simplelogin.core.designsystem.TitledFAB
@@ -227,7 +227,7 @@ private fun ContactsScreenFAB(
 
     val pickContactsLauncher = rememberLauncherForActivityResult(
         contract = object : ActivityResultContract<Unit, Uri?>() {
-            override fun createIntent(context: android.content.Context, input: Unit) =
+            override fun createIntent(context: Context, input: Unit) =
                 Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
 
             override fun parseResult(resultCode: Int, intent: Intent?) =

@@ -1,11 +1,10 @@
-package io.simplelogin.android.domain
+package io.simplelogin.feature.aliascontacts
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.core.net.toUri
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.simplelogin.android.R
 import io.simplelogin.core.common.di.LoadingState
 import io.simplelogin.core.common.di.LoadingStateFlow
 import io.simplelogin.core.common.usecase.CopyToClipboardUseCase

@@ -1,9 +1,9 @@
-package io.simplelogin.android.ui.home.aliascontacts
+package io.simplelogin.feature.aliascontacts
 
 import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.Contact
 
-data class AliasContactsState(
+internal data class AliasContactsState(
     val contacts: List<Contact> = emptyList(),
     val page: Int = 0,
     val isRefreshing: Boolean = true,

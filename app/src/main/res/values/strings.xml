@@ -4,7 +4,6 @@
     <string name="missing_api_key">Missing API key</string>
     <string name="sign_in">Sign in</string>
     <string name="simplelogin_scheme" translatable="false">auth.simplelogin</string>
-    <string name="delete">Delete</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_out_message">Are you sure you want to sign out of your account?</string>
     <string name="cancel">Cancel</string>
@@ -19,9 +18,6 @@
     <string name="contact_us">Contact us</string>
     <string name="close">Close</string>
     <string name="back">Back</string>
-    <string name="block">Block</string>
-    <string name="unblock">Unblock</string>
-    <string name="view_options">View options</string>
     <string name="alias_address_label">Alias address</string>
     <string name="alias_address_copied">Copied \"%s\" to clipboard</string>
     <string name="last_14_days">Last 14 days</string>
@@ -32,36 +28,21 @@
     <string name="alias_is_deleted">\"%s\" is deleted</string>
     <string name="note">Note</string>
     <string name="mailboxes">Mailboxes</string>
-    <string name="contacts">Contacts</string>
-    <string name="no_contacts">No contacts</string>
     <string name="create_new_alias">Create new alias</string>
     <string name="random_alias_by_word">Random by word</string>
     <string name="random_alias_by_uuid">Random by UUID</string>
     <string name="custom_alias">Custom alias</string>
     <string name="alias_created">\"%s\" is created</string>
     <string name="alias_created_and_copied_to_clipboard">\"%s\" is created and copied to clipboard</string>
-    <string name="create">Create</string>
     <string name="random_word">Random word</string>
     <string name="random_characters">Random characters</string>
     <string name="account_settings">Account settings</string>
     <string name="custom_domains">Custom domains</string>
-    <string name="create_new_contact">Create new contact</string>
-    <string name="pick_from_contacts">Pick from Contacts</string>
-    <string name="enter_contact_email">Enter contact email</string>
     <string name="please_authenticate">Please authenticate</string>
     <string name="unlock">Unlock</string>
     <string name="last_attempt_title">Final attempt</string>
     <string name="last_attempt_description">One more failed attempt will sign you out</string>
-    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
-    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
-    <string name="copy_email_address">Copy email address</string>
-    <string name="open_default_email_client">Open default email client</string>
     <string name="alias_activity">Alias activity</string>
     <string name="reverse_alias_copied">Reverse-alias copied to clipboard</string>
     <string name="email_address_copied">Email address copied to clipboard</string>
-    <string name="contact_blocked">%s blocked</string>
-    <string name="contact_unblocked">%s unblocked</string>
-    <string name="contact_deleted">%s deleted</string>
-    <string name="contact_exists">%s already exists</string>
-    <string name="contact_created">%s created</string>
 </resources>
