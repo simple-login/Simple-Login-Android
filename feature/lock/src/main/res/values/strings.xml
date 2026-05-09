@@ -1,0 +1,7 @@
+<resources>
+    <string name="please_authenticate">Please authenticate</string>
+    <string name="unlock">Unlock</string>
+    <string name="last_attempt_title">Final attempt</string>
+    <string name="last_attempt_description">One more failed attempt will sign you out</string>
+    <string name="close">Close</string>
+</resources>

@@ -16,7 +16,6 @@
     <string name="filter_options">Filter options</string>
     <string name="device_settings">Device settings</string>
     <string name="contact_us">Contact us</string>
-    <string name="close">Close</string>
     <string name="alias_address_label">Alias address</string>
     <string name="alias_address_copied">Copied \"%s\" to clipboard</string>
     <string name="alias_is_enabled">\"%s\" is enabled</string>
@@ -36,8 +35,4 @@
     <string name="random_characters">Random characters</string>
     <string name="account_settings">Account settings</string>
     <string name="custom_domains">Custom domains</string>
-    <string name="please_authenticate">Please authenticate</string>
-    <string name="unlock">Unlock</string>
-    <string name="last_attempt_title">Final attempt</string>
-    <string name="last_attempt_description">One more failed attempt will sign you out</string>
 </resources>

@@ -70,7 +70,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.ui.home.lockscreen.LockScreen
 import io.simplelogin.android.ui.root.AppRoot
 import io.simplelogin.android.ui.root.AppRootViewModel
 import io.simplelogin.android.ui.root.supportsMultiplePanes
@@ -90,6 +89,7 @@ import io.simplelogin.core.model.preferences.DevicePreferences
 import io.simplelogin.core.model.preferences.Theme
 import io.simplelogin.core.network.BaseUrlProvider
 import io.simplelogin.core.ui.UserInfoCard
+import io.simplelogin.feature.lock.LockScreen
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

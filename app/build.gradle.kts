@@ -73,6 +73,7 @@ dependencies {
     implementation(projects.feature.createalias)
     implementation(projects.feature.customdomains)
     implementation(projects.feature.devicesettings)
+    implementation(projects.feature.lock)
     implementation(projects.feature.mailboxes)
     implementation(projects.core.model)
     implementation(libs.androidx.core.ktx)

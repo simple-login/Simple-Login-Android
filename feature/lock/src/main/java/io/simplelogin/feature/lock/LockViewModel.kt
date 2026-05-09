@@ -1,17 +1,17 @@
-package io.simplelogin.android.ui.home.lockscreen
+package io.simplelogin.feature.lock
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.core.model.preferences.DeviceLockType
 import io.simplelogin.core.common.usecase.ObserveSessionSettingsUseCase
 import io.simplelogin.core.common.usecase.UpdateSessionSettingsUseCase
-import javax.inject.Inject
+import io.simplelogin.core.model.preferences.DeviceLockType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 @HiltViewModel
-class LockViewModel @Inject constructor(
+internal class LockViewModel @Inject constructor(
     private val observeSessionSettings: ObserveSessionSettingsUseCase,
     private val updateSessionSettings: UpdateSessionSettingsUseCase
 ) : ViewModel() {

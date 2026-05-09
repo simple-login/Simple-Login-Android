@@ -1,8 +1,8 @@
-package io.simplelogin.android.ui.home.lockscreen
+package io.simplelogin.feature.lock
 
 import io.simplelogin.core.model.preferences.DeviceLockType
 
-sealed class LockScreenState {
+internal sealed class LockScreenState {
     data object Loading : LockScreenState()
     data object Unprotected : LockScreenState()
     data class Protected(val lockType: DeviceLockType, val pinCode: String?) : LockScreenState()

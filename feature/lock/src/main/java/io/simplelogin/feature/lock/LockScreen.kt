@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.lockscreen
+package io.simplelogin.feature.lock
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +37,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.simplelogin.android.R
 import io.simplelogin.core.designsystem.rememberBiometricAuthenticator
 import io.simplelogin.feature.devicesettings.CreateOrConfirmPinDialog
 import io.simplelogin.feature.devicesettings.CreateOrEditPinMode
