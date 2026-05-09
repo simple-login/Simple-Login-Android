@@ -14,8 +14,6 @@ import io.simplelogin.core.common.usecase.ShowSnackbarFailureUseCase
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.ApiKey
 import io.simplelogin.core.model.api.CustomDomain
-import io.simplelogin.core.model.ui.DialogPayload
-import io.simplelogin.core.model.ui.ObjectDialogPayload
 import io.simplelogin.feature.auth.usecase.LogOutUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -45,20 +43,8 @@ class AppRootViewModel @Inject constructor(
     private val _createdAlias = Channel<Alias>(Channel.BUFFERED)
     val createdAlias = _createdAlias.receiveAsFlow()
 
-    var showLogOutDialog = MutableStateFlow(false)
-
-    var showDeviceSettingsDialog = MutableStateFlow(false)
-
-    var accountSettingsDialogPayload = MutableStateFlow<DialogPayload?>(null)
-
-    var mailboxesDialogPayload = MutableStateFlow<DialogPayload?>(null)
-
-    var customDomainsDialogPayload = MutableStateFlow<DialogPayload?>(null)
-
-    var customDomainDetailsDialogPayload =
-        MutableStateFlow<ObjectDialogPayload<CustomDomain>?>(null)
-    var customDomainDeletedAliasesDialogPayload =
-        MutableStateFlow<ObjectDialogPayload<CustomDomain>?>(null)
+    private val _dialogStack = MutableStateFlow<List<AppRootDialog>>(emptyList())
+    val dialogStack = _dialogStack.asStateFlow()
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettings()
         .map {
@@ -100,24 +86,23 @@ class AppRootViewModel @Inject constructor(
 
     //region Drawer
     fun showLogOutDialog() {
-        showLogOutDialog.value = true
+        _dialogStack.value = listOf(AppRootDialog.LogOut)
     }
 
-    fun dismissLogOutDialog() {
-        showLogOutDialog.value = false
+    fun dismissActiveDialog() {
+        _dialogStack.value = _dialogStack.value.dropLast(1)
     }
 
     fun logOut() {
-        showLogOutDialog.value = false
+        _dialogStack.value = emptyList()
         viewModelScope.launch {
             logOutUseCase()
         }
     }
 
-
     fun showDeviceSettingsScreen(asDialog: Boolean) {
         if (asDialog) {
-            showDeviceSettingsDialog.value = true
+            _dialogStack.value = listOf(AppRootDialog.DeviceSettings)
         } else {
             _navBackStack.value.apply {
                 add(DeviceSettingsDestination)
@@ -125,14 +110,10 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun dismissDeviceSettingsDialog() {
-        showDeviceSettingsDialog.value = false
-    }
-
     fun showAccountSettingsScreen(asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                accountSettingsDialogPayload.value = DialogPayload(apiKey)
+                _dialogStack.value = listOf(AppRootDialog.AccountSettings(apiKey))
             } else {
                 _navBackStack.value.apply {
                     add(AccountSettingsDestination(apiKey.value))
@@ -141,14 +122,10 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun dismissAccountSettingsDialog() {
-        accountSettingsDialogPayload.value = null
-    }
-
     fun showMailboxesScreen(asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                mailboxesDialogPayload.value = DialogPayload(apiKey)
+                _dialogStack.value = listOf(AppRootDialog.Mailboxes(apiKey))
             } else {
                 _navBackStack.value.apply {
                     add(MailboxesDestination(apiKey.value))
@@ -157,14 +134,10 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun dismissMailboxesDialog() {
-        mailboxesDialogPayload.value = null
-    }
-
     fun showCustomDomainsScreen(asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                customDomainsDialogPayload.value = DialogPayload(apiKey)
+                _dialogStack.value = listOf(AppRootDialog.CustomDomains(apiKey))
             } else {
                 _navBackStack.value.apply {
                     add(CustomDomainsDestination(apiKey.value))
@@ -173,15 +146,11 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun dismissCustomDomainsDialog() {
-        customDomainsDialogPayload.value = null
-    }
-
     fun showCustomDomainDetails(domain: CustomDomain, asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                customDomainDetailsDialogPayload.value =
-                    ObjectDialogPayload(apiKey = apiKey, value = domain)
+                _dialogStack.value =
+                    _dialogStack.value + AppRootDialog.CustomDomainDetails(apiKey = apiKey, domain = domain)
             } else {
                 _navBackStack.value.apply {
                     add(CustomDomainDetailsDestination(domain = domain, apiKey = apiKey.value))
@@ -190,15 +159,11 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun dismissCustomDomainDetailsDialog() {
-        customDomainDetailsDialogPayload.value = null
-    }
-
     fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                customDomainDeletedAliasesDialogPayload.value =
-                    ObjectDialogPayload(apiKey = apiKey, value = domain)
+                _dialogStack.value =
+                    _dialogStack.value + AppRootDialog.CustomDomainDeletedAliases(apiKey = apiKey, domain = domain)
             } else {
                 _navBackStack.value.apply {
                     add(
@@ -211,11 +176,6 @@ class AppRootViewModel @Inject constructor(
             }
         }
     }
-
-    fun dismissCustomDomainDeletedAliasesDialog() {
-        customDomainDeletedAliasesDialogPayload.value = null
-    }
-
     //endregion
 
     //region Home

@@ -94,14 +94,8 @@ fun AppRoot(
     onOpenDrawer: () -> Unit
 ) = with(viewModel) {
     val backStack by navBackStack.collectAsState()
-
-    val showLogOutDialog by showLogOutDialog.collectAsState()
-    val showDeviceSettingsDialog by showDeviceSettingsDialog.collectAsState()
-    val accountSettingsDialogPayload by accountSettingsDialogPayload.collectAsState()
-    val mailboxesDialogPayload by mailboxesDialogPayload.collectAsState()
-    val customDomainsDialogPayload by customDomainsDialogPayload.collectAsState()
-    val customDomainDetailsAsDialog by customDomainDetailsDialogPayload.collectAsState()
-    val customDomainDeletedAliasesDialogPayload by customDomainDeletedAliasesDialogPayload.collectAsState()
+    val dialogStack by dialogStack.collectAsState()
+    val activeDialog = dialogStack.lastOrNull()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -243,9 +237,9 @@ fun AppRoot(
         }
     )
 
-    if (showLogOutDialog) {
-        AlertDialog(
-            onDismissRequest = ::dismissLogOutDialog,
+    when (activeDialog) {
+        AppRootDialog.LogOut -> AlertDialog(
+            onDismissRequest = ::dismissActiveDialog,
             title = { Text(stringResource(R.string.sign_out)) },
             text = { Text(stringResource(R.string.sign_out_message)) },
             confirmButton = {
@@ -254,70 +248,61 @@ fun AppRoot(
                 }
             },
             dismissButton = {
-                TextButton(onClick = ::dismissLogOutDialog) {
+                TextButton(onClick = ::dismissActiveDialog) {
                     Text(stringResource(R.string.cancel))
                 }
             }
         )
-    }
 
-    if (showDeviceSettingsDialog) {
-        Dialog(onDismissRequest = ::dismissDeviceSettingsDialog) {
-            DeviceSettingsScreen(onDismiss = ::dismissDeviceSettingsDialog)
+        AppRootDialog.DeviceSettings -> Dialog(onDismissRequest = ::dismissActiveDialog) {
+            DeviceSettingsScreen(onDismiss = ::dismissActiveDialog)
         }
-    }
 
-    accountSettingsDialogPayload?.let { payload ->
-        Dialog(onDismissRequest = ::dismissAccountSettingsDialog) {
+        is AppRootDialog.AccountSettings -> Dialog(onDismissRequest = ::dismissActiveDialog) {
             AccountSettingsScreen(
-                apiKeyValue = payload.apiKey.value,
-                onDismiss = ::dismissAccountSettingsDialog
+                apiKeyValue = activeDialog.apiKey.value,
+                onDismiss = ::dismissActiveDialog
             )
         }
-    }
 
-    mailboxesDialogPayload?.let { payload ->
-        Dialog(onDismissRequest = ::dismissMailboxesDialog) {
+        is AppRootDialog.Mailboxes -> Dialog(onDismissRequest = ::dismissActiveDialog) {
             MailboxesScreen(
-                apiKeyValue = payload.apiKey.value,
-                onDismiss = ::dismissMailboxesDialog
+                apiKeyValue = activeDialog.apiKey.value,
+                onDismiss = ::dismissActiveDialog
             )
         }
-    }
 
-    customDomainsDialogPayload?.let { payload ->
-        Dialog(onDismissRequest = ::dismissCustomDomainsDialog) {
+        is AppRootDialog.CustomDomains -> Dialog(onDismissRequest = ::dismissActiveDialog) {
             CustomDomainsScreen(
-                apiKeyValue = payload.apiKey.value,
+                apiKeyValue = activeDialog.apiKey.value,
                 onViewDetails = { showCustomDomainDetails(domain = it, asDialog = true) },
-                onDismiss = ::dismissCustomDomainsDialog
+                onDismiss = ::dismissActiveDialog
             )
         }
-    }
 
-    customDomainDetailsAsDialog?.let { payload ->
-        Dialog(onDismissRequest = ::dismissCustomDomainDetailsDialog) {
+        is AppRootDialog.CustomDomainDetails -> Dialog(onDismissRequest = ::dismissActiveDialog) {
             CustomDomainDetailsScreen(
-                domain = payload.value,
-                apiKeyValue = payload.apiKey.value,
-                onDismiss = ::dismissCustomDomainDetailsDialog,
+                domain = activeDialog.domain,
+                apiKeyValue = activeDialog.apiKey.value,
+                onDismiss = ::dismissActiveDialog,
                 onViewDeletedAliases = {
                     viewModel.showCustomDomainDeletedAliases(
-                        domain = payload.value,
+                        domain = activeDialog.domain,
                         asDialog = true
                     )
-                })
-        }
-    }
-
-    customDomainDeletedAliasesDialogPayload?.let { payload ->
-        Dialog(onDismissRequest = ::dismissCustomDomainDeletedAliasesDialog) {
-            CustomDomainDeletedAliasesScreen(
-                domain = payload.value,
-                apiKeyValue = payload.apiKey.value,
-                onDismiss = ::dismissCustomDomainDeletedAliasesDialog
+                }
             )
         }
+
+        is AppRootDialog.CustomDomainDeletedAliases -> Dialog(onDismissRequest = ::dismissActiveDialog) {
+            CustomDomainDeletedAliasesScreen(
+                domain = activeDialog.domain,
+                apiKeyValue = activeDialog.apiKey.value,
+                onDismiss = ::dismissActiveDialog
+            )
+        }
+
+        null -> Unit
     }
 }
 
