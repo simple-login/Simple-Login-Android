@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.root
+package io.simplelogin.android.root
 
 import io.simplelogin.core.model.api.ApiKey
 

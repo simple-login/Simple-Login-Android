@@ -70,9 +70,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.simplelogin.android.ui.root.AppRoot
-import io.simplelogin.android.ui.root.AppRootViewModel
-import io.simplelogin.android.ui.root.supportsMultiplePanes
+import io.simplelogin.android.root.AppRoot
+import io.simplelogin.android.root.AppRootViewModel
+import io.simplelogin.android.root.supportsMultiplePanes
 import io.simplelogin.core.common.ProtonLinkManager
 import io.simplelogin.core.common.ProtonLoginManager
 import io.simplelogin.core.common.di.LoadingState

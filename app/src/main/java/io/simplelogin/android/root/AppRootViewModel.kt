@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.root
+package io.simplelogin.android.root
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateListOf

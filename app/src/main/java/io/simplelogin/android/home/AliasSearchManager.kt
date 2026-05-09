@@ -1,4 +1,4 @@
-package io.simplelogin.android.domain
+package io.simplelogin.android.home
 
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -10,9 +10,6 @@ import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.AliasId
 import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.ApiKey
-import io.simplelogin.core.model.api.RandomMode
-import io.simplelogin.core.model.api.Stats
-import io.simplelogin.core.model.ui.AliasFilterMode
 import io.simplelogin.core.network.EnabledResponse
 import io.simplelogin.core.network.datasource.AliasDetailsRemoteDatasource
 import io.simplelogin.core.network.datasource.AliasesRemoteDatasource
@@ -21,99 +18,87 @@ import io.simplelogin.core.network.datasource.unpin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 
-data class AliasListState(
-    val stats: Stats?,
-    val aliases: List<Alias>,
-    val fetchError: ApiError?,
-    val isRefreshing: Boolean,
-    val isFetching: Boolean,
-    val isModifying: Boolean
+data class AliasSearchState(
+    val query: String = "",
+    val aliases: List<Alias> = emptyList(),
+    val fetchError: ApiError? = null,
+    val isRefreshing: Boolean = false,
+    val isFetching: Boolean = false,
+    val isModifying: Boolean = false
 ) {
     companion object {
-        val Default = AliasListState(
-            stats = null,
-            aliases = emptyList(),
-            fetchError = null,
-            isRefreshing = false,
-            isFetching = false,
-            isModifying = false
-        )
+        val Default = AliasSearchState()
     }
 }
 
-interface AliasListManager {
-    val state: Flow<AliasListState>
-    suspend fun refresh(filterMode: AliasFilterMode? = null): Result<Unit, ApiError>
+interface AliasSearchManager {
+    val state: Flow<AliasSearchState>
+    fun updateQuery(query: String)
+    suspend fun refresh(): Result<Unit, ApiError>
     suspend fun fetchMore(): Result<Unit, ApiError>
     suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError>
     suspend fun pin(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun unpin(aliasId: AliasId): Result<Unit, ApiError>
     suspend fun delete(aliasId: AliasId): Result<Unit, ApiError>
-    suspend fun randomAlias(mode: RandomMode, note: String?): Result<Alias, ApiError>
-    suspend fun handleNewlyCreatedAlias(alias: Alias)
 }
 
 @AssistedFactory
-interface AliasListManagerFactory {
-    fun create(apiKeyValue: String): AliasListManagerImpl
+interface AliasSearchManagerFactory {
+    fun create(apiKeyValue: String): AliasSearchManagerImpl
 }
 
-class AliasListManagerImpl @AssistedInject constructor(
+class AliasSearchManagerImpl @AssistedInject constructor(
     @Assisted apiKeyValue: String,
     private val aliasesDatasource: AliasesRemoteDatasource,
     private val aliasDetailsDatasource: AliasDetailsRemoteDatasource
-) :
-    AliasListManager {
+) : AliasSearchManager {
     private val apiKey = ApiKey(value = apiKeyValue)
-    private val stats = MutableStateFlow<Stats?>(null)
-    private val aliases = MutableStateFlow<List<Alias>>(listOf())
+    private val query = MutableStateFlow("")
+    private val aliases = MutableStateFlow<List<Alias>>(emptyList())
     private val fetchError = MutableStateFlow<ApiError?>(null)
-    private val isFetching = MutableStateFlow(false)
     private val isRefreshing = MutableStateFlow(false)
+    private val isFetching = MutableStateFlow(false)
     private val isModifying = MutableStateFlow(false)
 
     override val state = combine(
         listOf(
-            stats,
+            query,
             aliases,
             fetchError,
-            isFetching,
             isRefreshing,
+            isFetching,
             isModifying
         )
     ) { values ->
-        AliasListState(
-            stats = values.getAs(index = 0),
-            aliases = values.getAs(index = 1) ?: listOf(),
+        AliasSearchState(
+            query = values.getAs(index = 0) ?: "",
+            aliases = values.getAs(index = 1) ?: emptyList(),
             fetchError = values.getAs(index = 2),
-            isFetching = values.getAs(index = 3, default = false),
-            isRefreshing = values.getAs(index = 4, default = false),
-            isModifying = values.getAs(index = 5, default = false),
+            isRefreshing = values.getAs(index = 3, default = false),
+            isFetching = values.getAs(index = 4, default = false),
+            isModifying = values.getAs(index = 5, default = false)
         )
-    }
-        .stateIn(
-            scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = AliasListState.Default
-        )
+    }.stateIn(
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = AliasSearchState.Default
+    )
 
     private var canFetchMore = true
     private var currentPage = 0
-    private var filterMode: AliasFilterMode? = null
 
-    override suspend fun refresh(filterMode: AliasFilterMode?): Result<Unit, ApiError> {
-        filterMode?.let { this.filterMode = it }
-        stats.value = null
-        aliases.value = listOf()
+    override fun updateQuery(query: String) {
+        this.query.value = query
+    }
+
+    override suspend fun refresh(): Result<Unit, ApiError> {
+        aliases.value = emptyList()
         isFetching.value = false
         isRefreshing.value = false
         isModifying.value = false
@@ -123,59 +108,29 @@ class AliasListManagerImpl @AssistedInject constructor(
     }
 
     override suspend fun fetchMore(): Result<Unit, ApiError> {
-        if (isFetching.value || isRefreshing.value || isModifying.value || !canFetchMore) {
+        if (query.value.isEmpty() || isFetching.value || isRefreshing.value || isModifying.value || !canFetchMore) {
             return Result.Success(Unit)
         }
-        val filterMode = requireNotNull(filterMode) { "Filter mode is not set" }
 
         fetchError.value = null
         isFetching.value = true
         isRefreshing.value = aliases.value.isEmpty()
-
-        return coroutineScope {
-            val statsDeferred = if (stats.value == null) {
-                async { aliasesDatasource.fetchStats(apiKey) }
-            } else {
-                null
-            }
-
-            val aliasesDeferred = async {
-                aliasesDatasource.fetchAliases(
-                    apiKey = apiKey,
-                    pageId = currentPage,
-                    filterMode = filterMode
-                )
-            }
-
-            val statsResult = statsDeferred?.await()
-            val aliasesResult = aliasesDeferred.await()
-
+        return aliasesDatasource.searchAliases(
+            apiKey = apiKey,
+            query = query.value,
+            pageId = currentPage
+        ).fold(onSuccess = { result ->
+            val newAliases = result.aliases
             isFetching.value = false
             isRefreshing.value = false
-
-            aliasesResult.fold(
-                onSuccess = {
-                    if (statsResult is Result.Failure) {
-                        return@fold statsResult
-                    }
-
-                    if (statsResult is Result.Success) {
-                        stats.value = statsResult.value
-                    }
-
-                    aliases.value = aliases.value + it.aliases
-
-                    currentPage += 1
-                    canFetchMore = it.aliases.isNotEmpty() && it.aliases.size <= PAGE_SIZE
-
-                    Result.Success(Unit)
-                },
-                onFailure = {
-                    fetchError.value = it
-                    Result.Failure(it)
-                }
-            )
-        }
+            this.aliases.value += newAliases
+            currentPage += 1
+            canFetchMore = newAliases.isNotEmpty() && newAliases.size <= PAGE_SIZE
+            Result.Success(Unit)
+        }, onFailure = {
+            fetchError.value = it
+            Result.Failure(it)
+        })
     }
 
     override suspend fun toggle(aliasId: AliasId): Result<EnabledResponse, ApiError> {
@@ -255,30 +210,5 @@ class AliasListManagerImpl @AssistedInject constructor(
                 isModifying.value = false
                 Result.Failure(it)
             })
-    }
-
-    override suspend fun randomAlias(mode: RandomMode, note: String?): Result<Alias, ApiError> {
-        isModifying.value = true
-        return aliasesDatasource.random(apiKey = apiKey, mode = mode, note = note)
-            .fold(onSuccess = { randomAlias ->
-                if (filterMode == AliasFilterMode.ALL || filterMode == AliasFilterMode.ENABLED) {
-                    aliases.update { currentAliases ->
-                        listOf(randomAlias) + currentAliases
-                    }
-                }
-                isModifying.value = false
-                Result.Success(randomAlias)
-            }, onFailure = { error ->
-                isModifying.value = false
-                Result.Failure(error)
-            })
-    }
-
-    override suspend fun handleNewlyCreatedAlias(alias: Alias) {
-        if (filterMode == AliasFilterMode.ALL || filterMode == AliasFilterMode.ENABLED) {
-            aliases.update { currentAliases ->
-                listOf(alias) + currentAliases
-            }
-        }
     }
 }

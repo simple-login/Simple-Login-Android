@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.root
+package io.simplelogin.android.root
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -26,7 +26,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.home.HomeScreen
+import io.simplelogin.android.home.HomeScreen
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.CustomDomain
 import io.simplelogin.feature.accountsettings.AccountSettingsScreen

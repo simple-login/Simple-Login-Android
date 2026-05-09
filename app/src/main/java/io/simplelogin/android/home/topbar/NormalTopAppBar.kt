@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.topbar
+package io.simplelogin.android.home.topbar
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box

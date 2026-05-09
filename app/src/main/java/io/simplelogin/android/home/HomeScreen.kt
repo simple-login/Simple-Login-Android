@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home
+package io.simplelogin.android.home
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -45,9 +45,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
-import io.simplelogin.android.ui.home.topbar.NormalTopAppBar
-import io.simplelogin.android.ui.home.topbar.SearchTopAppBar
-import io.simplelogin.android.ui.root.supportsMultiplePanes
+import io.simplelogin.android.home.topbar.NormalTopAppBar
+import io.simplelogin.android.home.topbar.SearchTopAppBar
+import io.simplelogin.android.root.supportsMultiplePanes
 import io.simplelogin.core.designsystem.TitledFAB
 import io.simplelogin.core.designsystem.clickableRippleDisabled
 import io.simplelogin.core.designsystem.noAliasesMessage

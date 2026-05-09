@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home.topbar
+package io.simplelogin.android.home.topbar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

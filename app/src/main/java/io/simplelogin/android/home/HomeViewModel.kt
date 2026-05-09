@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home
+package io.simplelogin.android.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -21,8 +21,6 @@ import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.ApiError
 import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.ui.AliasFilterMode
-import io.simplelogin.android.domain.AliasListManagerFactory
-import io.simplelogin.android.domain.AliasSearchManagerFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine

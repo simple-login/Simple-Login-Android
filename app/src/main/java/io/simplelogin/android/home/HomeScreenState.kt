@@ -1,4 +1,4 @@
-package io.simplelogin.android.ui.home
+package io.simplelogin.android.home
 
 import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.model.api.ApiError
