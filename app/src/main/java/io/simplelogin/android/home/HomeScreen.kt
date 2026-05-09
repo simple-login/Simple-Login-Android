@@ -240,10 +240,14 @@ private fun HomeScreenScaffold(
                     .padding(innerPadding),
                 stats = null,
                 aliases = searchState.aliases,
-                noAliasesMessage = if (searchQuery.isEmpty()) null else stringResource(
-                    R.string.no_search_results,
-                    searchQuery
-                ),
+                noAliasesMessage = if (searchQuery.isEmpty()) {
+                    null
+                } else {
+                    stringResource(
+                        R.string.no_search_results,
+                        searchQuery
+                    )
+                },
                 fetchError = searchState.fetchError,
                 isFetching = searchState.isFetching,
                 isRefreshing = searchState.isRefreshing,

@@ -37,7 +37,8 @@ internal fun StatsGrid(
     stats: Stats
 ) {
     Row(
-        modifier = modifier, horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Spacing.medium)
     ) {
         Column(
             modifier = Modifier.weight(1f),

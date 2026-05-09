@@ -2,8 +2,8 @@ package io.simplelogin.core.common.usecase
 
 import androidx.datastore.core.DataStore
 import io.simplelogin.core.model.preferences.UserSessionPreferences
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 interface ObserveSessionSettingsUseCase {
     operator fun invoke(): Flow<UserSessionPreferences>

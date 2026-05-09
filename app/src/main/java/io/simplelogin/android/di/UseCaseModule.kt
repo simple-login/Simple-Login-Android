@@ -25,7 +25,9 @@ import javax.inject.Singleton
 @[Module InstallIn(SingletonComponent::class)]
 abstract class UseCaseModule {
     @[Binds Singleton]
-    abstract fun bindObserveSessionSettingsUseCase(impl: ObserveSessionSettingsUseCaseImpl): ObserveSessionSettingsUseCase
+    abstract fun bindObserveSessionSettingsUseCase(
+        impl: ObserveSessionSettingsUseCaseImpl
+    ): ObserveSessionSettingsUseCase
 
     @[Binds Singleton]
     abstract fun bindUpdateSessionSettingsUseCase(impl: UpdateSessionSettingsUseCaseImpl): UpdateSessionSettingsUseCase

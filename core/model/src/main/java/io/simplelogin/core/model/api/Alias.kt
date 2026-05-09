@@ -35,14 +35,13 @@ data class Alias(
             @SerializedName("name") val name: String?,
             @SerializedName("reverse_alias") val reverseAlias: String
         )
-
     }
 
     val hasActivities: Boolean
         get() = (forwardCount + replyCount + blockCount) > 0
 
     val mailtoEmail: String
-        get() = "mailto:${email}"
+        get() = "mailto:$email"
 
     val displayedEmail: String
         get() {

@@ -266,7 +266,8 @@ fun AliasDetailContent(
                     .fillMaxWidth()
                     .primaryContentBackground()
                     .clickable { onEditNote() }
-                    .padding(Spacing.regular)) {
+                    .padding(Spacing.regular)
+            ) {
                 val note = alias.note
                 if (note.isNullOrBlank()) {
                     Text(
@@ -289,7 +290,8 @@ fun AliasDetailContent(
                     .fillMaxWidth()
                     .primaryContentBackground()
                     .clickable { onEditDisplayName() }
-                    .padding(Spacing.regular)) {
+                    .padding(Spacing.regular)
+            ) {
                 val name = alias.name
                 if (name.isNullOrBlank()) {
                     Text(

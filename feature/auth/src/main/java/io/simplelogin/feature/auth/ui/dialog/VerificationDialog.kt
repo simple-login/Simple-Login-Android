@@ -176,7 +176,6 @@ internal fun VerificationDialog(
                         Text(stringResource(R.string.enter_manually))
                     }
 
-
                     when (mode) {
                         is VerificationMode.Activation -> {
                             AnimatedVisibility(!resentCode) {

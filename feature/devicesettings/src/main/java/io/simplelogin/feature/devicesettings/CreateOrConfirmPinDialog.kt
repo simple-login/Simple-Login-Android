@@ -49,7 +49,13 @@ fun CreateOrConfirmPinDialog(
         title = {
             val text = when (mode) {
                 is CreateOrEditPinMode.Create ->
-                    if (isRepeating) stringResource(R.string.repeat_pin_code) else stringResource(R.string.choose_a_pin_code)
+                    if (isRepeating) {
+                        stringResource(
+                            R.string.repeat_pin_code
+                        )
+                    } else {
+                        stringResource(R.string.choose_a_pin_code)
+                    }
 
                 is CreateOrEditPinMode.Confirm -> stringResource(R.string.enter_current_pin_code)
             }
@@ -63,8 +69,11 @@ fun CreateOrConfirmPinDialog(
                 Spacer(modifier = Modifier.height(Spacing.regular))
 
                 Text(
-                    text = if (isRepeating) repeatedPin.map { "*" }.joinToString("")
-                    else pin.map { "*" }.joinToString(""),
+                    text = if (isRepeating) {
+                        repeatedPin.map { "*" }.joinToString("")
+                    } else {
+                        pin.map { "*" }.joinToString("")
+                    },
                     style = MaterialTheme.typography.headlineLarge
                 )
 

@@ -92,7 +92,6 @@ class AliasesRemoteDatasourceImpl @Inject constructor(private val apiService: Ap
             apiService.deleteAlias(apiKey = apiKey, aliasId = aliasId)
         }.mapValue {}
 
-
     override suspend fun random(
         apiKey: ApiKey,
         mode: RandomMode,

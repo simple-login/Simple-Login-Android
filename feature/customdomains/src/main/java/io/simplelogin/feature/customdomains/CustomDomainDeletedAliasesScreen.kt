@@ -53,7 +53,9 @@ fun CustomDomainDeletedAliasesScreen(
     onDismiss: () -> Unit
 ) {
     val viewModel =
-        hiltViewModel(key = "custom_domain_deleted_aliases_${domain.id}") { factory: CustomDomainDeletedAliasesViewModel.Factory ->
+        hiltViewModel(
+            key = "custom_domain_deleted_aliases_${domain.id}"
+        ) { factory: CustomDomainDeletedAliasesViewModel.Factory ->
             factory.create(domain = domain, apiKeyValue = apiKeyValue)
         }
     val context = LocalContext.current

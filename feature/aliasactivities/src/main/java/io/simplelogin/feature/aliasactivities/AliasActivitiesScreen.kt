@@ -61,8 +61,8 @@ fun AliasActivitiesScreen(
             val layoutInfo = listState.layoutInfo
             val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
             state.activities.count() > 0 &&
-                    lastVisibleItem != null &&
-                    lastVisibleItem.index >= layoutInfo.totalItemsCount - 1
+                lastVisibleItem != null &&
+                lastVisibleItem.index >= layoutInfo.totalItemsCount - 1
         }
     }
 

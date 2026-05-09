@@ -163,8 +163,11 @@ internal fun AliasContactRow(
                 DropdownMenuItem(
                     leadingIcon = {
                         Icon(
-                            imageVector = if (contact.blockForward)
-                                Icons.Default.ThumbUpOffAlt else Icons.Default.Block,
+                            imageVector = if (contact.blockForward) {
+                                Icons.Default.ThumbUpOffAlt
+                            } else {
+                                Icons.Default.Block
+                            },
                             contentDescription = null
                         )
                     },

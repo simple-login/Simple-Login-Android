@@ -86,14 +86,20 @@ fun AliasRow(
 
             when (action) {
                 SwipeAction.DISABLE_ENABLE -> {
-                    if (alias.enabled) onAction?.invoke(AliasAction.Disable(alias))
-                    else onAction?.invoke(AliasAction.Enable(alias))
+                    if (alias.enabled) {
+                        onAction?.invoke(AliasAction.Disable(alias))
+                    } else {
+                        onAction?.invoke(AliasAction.Enable(alias))
+                    }
                     dismissState.reset()
                 }
 
                 SwipeAction.PIN_UNPIN -> {
-                    if (alias.pinned) onAction?.invoke(AliasAction.Unpin(alias))
-                    else onAction?.invoke(AliasAction.Pin(alias))
+                    if (alias.pinned) {
+                        onAction?.invoke(AliasAction.Unpin(alias))
+                    } else {
+                        onAction?.invoke(AliasAction.Pin(alias))
+                    }
                     dismissState.reset()
                 }
 
@@ -132,8 +138,11 @@ fun AliasRow(
                 contentAlignment = alignment
             ) {
                 if (isSwiping) {
-                    val action = if (direction == SwipeToDismissBoxValue.StartToEnd)
-                        swipeFromStartToEndAction else swipeFromEndToStartAction
+                    val action = if (direction == SwipeToDismissBoxValue.StartToEnd) {
+                        swipeFromStartToEndAction
+                    } else {
+                        swipeFromEndToStartAction
+                    }
 
                     action.Label(alias = alias)
                 }

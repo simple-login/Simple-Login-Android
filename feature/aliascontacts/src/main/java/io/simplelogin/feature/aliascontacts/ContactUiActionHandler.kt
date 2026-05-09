@@ -109,7 +109,6 @@ class ContactUiActionHandlerImpl @Inject constructor(
             }
         }
 
-
     private suspend fun handleBlockForward(
         contact: Contact,
         blockForward: BlockForward

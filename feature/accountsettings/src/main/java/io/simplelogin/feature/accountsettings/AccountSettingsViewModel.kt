@@ -87,8 +87,8 @@ class AccountSettingsViewModel @AssistedInject constructor(
     ) {
         when {
             userInfoResult is Result.Success &&
-                    userSettingsResult is Result.Success &&
-                    usableDomainsResult is Result.Success -> {
+                userSettingsResult is Result.Success &&
+                usableDomainsResult is Result.Success -> {
                 val sortedUsableDomains = usableDomainsResult.value.sortedWith(
                     compareByDescending { it.isCustom }
                 )
@@ -145,7 +145,6 @@ class AccountSettingsViewModel @AssistedInject constructor(
                     updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
                 }
             } catch (e: Exception) {
-
             }
         }
     }
@@ -251,7 +250,6 @@ class AccountSettingsViewModel @AssistedInject constructor(
         scope: CoroutineScope = viewModelScope,
         block: suspend CoroutineScope.(ApiKey) -> Unit
     ) = scope.launch { block(ApiKey(apiKeyValue)) }
-
 
     private fun handleError(error: ApiError) {
         _stateFlow.update {

@@ -5,4 +5,21 @@ plugins {
     alias(libs.plugins.kotlin.android.ksp) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.detekt)
+}
+
+dependencies {
+    detektPlugins(libs.detekt.formatting)
+}
+
+detekt {
+    autoCorrect = true
+    buildUponDefaultConfig = true
+    allRules = false
+    source.setFrom(
+        files(
+            subprojects.map { "${it.projectDir}/src/main/kotlin" } +
+                    subprojects.map { "${it.projectDir}/src/main/java" }
+        )
+    )
 }

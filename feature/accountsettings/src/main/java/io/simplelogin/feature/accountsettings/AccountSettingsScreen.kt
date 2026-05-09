@@ -353,9 +353,11 @@ private fun LazyListScope.accountSettingsScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = Spacing.medium),
-                text = if (connectedProtonAddress != null)
-                    stringResource(R.string.unlink_proton) else
-                    stringResource(R.string.link_with_proton),
+                text = if (connectedProtonAddress != null) {
+                    stringResource(R.string.unlink_proton)
+                } else {
+                    stringResource(R.string.link_with_proton)
+                },
                 color = ProtonPurple
             )
         }

@@ -39,7 +39,7 @@ internal fun DeleteMailboxDialog(
 ) {
     val context = LocalContext.current
     val options = listOf(MailboxDeleteOption.DeleteAliases) +
-            mailboxes.filter { it.verified }.map { MailboxDeleteOption.TransferAliases(it) }
+        mailboxes.filter { it.verified }.map { MailboxDeleteOption.TransferAliases(it) }
     var selectedOption by remember { mutableStateOf<MailboxDeleteOption?>(null) }
     var showMenu by remember { mutableStateOf(false) }
     AlertDialog(
@@ -56,8 +56,11 @@ internal fun DeleteMailboxDialog(
 
                 Spacer(modifier = Modifier.height(Spacing.medium))
 
-                val textColor = if (selectedOption != null) MaterialTheme.colorScheme.onBackground
-                else MaterialTheme.colorScheme.secondary
+                val textColor = if (selectedOption != null) {
+                    MaterialTheme.colorScheme.onBackground
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                }
                 Box(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -79,7 +82,8 @@ internal fun DeleteMailboxDialog(
                     Box(
                         modifier = Modifier
                             .matchParentSize()
-                            .clickable { showMenu = true })
+                            .clickable { showMenu = true }
+                    )
                 }
 
                 Box {

@@ -99,21 +99,23 @@ fun CustomDomainDetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = buildAnnotatedString {
-                        append(domain.domainName)
-                        append(" • ")
-                        if (domain.aliasCount == 0) {
-                            append(stringResource(R.string.no_aliases))
-                        } else {
-                            append(
-                                pluralStringResource(
-                                    R.plurals.number_of_aliases,
-                                    domain.aliasCount,
-                                    domain.aliasCount
+                    Text(
+                        text = buildAnnotatedString {
+                            append(domain.domainName)
+                            append(" • ")
+                            if (domain.aliasCount == 0) {
+                                append(stringResource(R.string.no_aliases))
+                            } else {
+                                append(
+                                    pluralStringResource(
+                                        R.plurals.number_of_aliases,
+                                        domain.aliasCount,
+                                        domain.aliasCount
+                                    )
                                 )
-                            )
+                            }
                         }
-                    })
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {

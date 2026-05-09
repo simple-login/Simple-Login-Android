@@ -57,7 +57,7 @@ class ActivityUiActionHandlerImpl @Inject constructor(
                 }
 
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
-                    data = "mailto:${address}".toUri()
+                    data = "mailto:$address".toUri()
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 

@@ -117,7 +117,7 @@ private fun StatItem(
 
             if (showLabel) {
                 Text(
-                    text = "${title}:",
+                    text = "$title:",
                     color = titleColor,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,

@@ -154,6 +154,7 @@ fun AliasOptionsDropdownMenu(
                 leadingIconColor = Color.Red,
                 textColor = Color.Red
             ),
-            onClick = { handleSelection(AliasAction.Delete(alias)) })
+            onClick = { handleSelection(AliasAction.Delete(alias)) }
+        )
     }
 }

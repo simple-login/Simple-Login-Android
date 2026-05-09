@@ -97,7 +97,8 @@ fun LoginMasterScreen(modifier: Modifier) = with(hiltViewModel<LoginMasterScreen
                 onResend = {
                     dismissAccountActivation()
                     resentActivationCode(payload.email)
-                }),
+                }
+            ),
             onDismiss = ::dismissAccountActivation,
             onConfirm = {
                 dismissAccountActivation()

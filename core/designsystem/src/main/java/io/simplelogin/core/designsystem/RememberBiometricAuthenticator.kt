@@ -24,7 +24,7 @@ fun rememberBiometricAuthenticator(
         {
             activity?.let { fragmentActivity ->
                 val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
                 val biometricManager = BiometricManager.from(context)
                 val canAuthenticate = biometricManager.canAuthenticate(authenticators)
 

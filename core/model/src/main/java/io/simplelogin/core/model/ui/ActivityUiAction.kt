@@ -4,7 +4,7 @@ enum class ActivityUiAction {
     COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME,
     COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME,
     COPY_ADDRESS,
-    OPEN_DEFAULT_EMAIL_CLIENT;
+    OPEN_DEFAULT_EMAIL_CLIENT
 
 //    fun title(context: Context) = when (this) {
 //        COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME ->

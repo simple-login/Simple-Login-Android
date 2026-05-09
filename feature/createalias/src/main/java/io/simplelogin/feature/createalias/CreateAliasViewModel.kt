@@ -91,7 +91,6 @@ class CreateAliasViewModel @AssistedInject constructor(
                     it.copy(isLoading = false, fetchError = mailboxesResult.error)
                 }
 
-
             optionsResult is Result.Failure -> _stateFlow.update {
                 it.copy(isLoading = false, fetchError = optionsResult.error)
             }

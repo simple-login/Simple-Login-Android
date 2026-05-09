@@ -7,7 +7,7 @@ enum class ContactUiAction {
     BLOCK,
     UNBLOCK,
     OPEN_DEFAULT_EMAIL_CLIENT,
-    DELETE;
+    DELETE
 
 //    fun title(context: Context) = when (this) {
 //        COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME ->

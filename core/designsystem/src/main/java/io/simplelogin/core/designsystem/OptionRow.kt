@@ -59,7 +59,6 @@ fun <T> OptionRow(
                     transitionSpec = { fadeIn() togetherWith fadeOut() }
                 ) { targetSelected ->
                     description(targetSelected)
-
                 }
 
                 Icon(

@@ -191,7 +191,9 @@ private fun DeviceSettingsContent(
         onNotAvailable = {
             biometricAuthenticationReason = null
             scope.launch {
-                snackbarHostState.showSnackbar(message = context.getString(R.string.biometric_or_device_credential_not_available))
+                snackbarHostState.showSnackbar(
+                    message = context.getString(R.string.biometric_or_device_credential_not_available)
+                )
             }
         }
     )
@@ -459,7 +461,8 @@ private fun DeviceSettingsContent(
                     snackbarHostState.showSnackbar(message = successMessage)
                 }
             },
-            onDismiss = { showSetPinDialog = false })
+            onDismiss = { showSetPinDialog = false }
+        )
     }
 
     if (showUpdatePinDialog) {
@@ -473,7 +476,8 @@ private fun DeviceSettingsContent(
                     snackbarHostState.showSnackbar(message = successMessage)
                 }
             },
-            onDismiss = { showUpdatePinDialog = false })
+            onDismiss = { showUpdatePinDialog = false }
+        )
     }
 
     pinConfirmationReason?.let {
@@ -499,7 +503,8 @@ private fun DeviceSettingsContent(
                 }
                 pinConfirmationReason = null
             },
-            onDismiss = { pinConfirmationReason = null })
+            onDismiss = { pinConfirmationReason = null }
+        )
     }
 }
 

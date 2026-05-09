@@ -60,7 +60,7 @@ import io.simplelogin.core.model.ui.AliasFilterMode
 fun ApiError.description(context: Context): String = when (this) {
     is ApiError.HttpError -> {
         if (errorMessage != null) {
-            return errorMessage + " (${code})"
+            return errorMessage + " ($code)"
         }
         when (this.code) {
             429 -> context.getString(R.string.too_many_requests)

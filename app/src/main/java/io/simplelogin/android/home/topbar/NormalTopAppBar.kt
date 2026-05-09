@@ -94,11 +94,17 @@ fun NormalTopAppBar(
             Box {
                 IconButton(onClick = { showFilterOptions = true }) {
                     Icon(
-                        imageVector = if (selectedAliasFilterMode == AliasFilterMode.ALL)
-                            Icons.Outlined.FilterAlt else Icons.Default.FilterAlt,
+                        imageVector = if (selectedAliasFilterMode == AliasFilterMode.ALL) {
+                            Icons.Outlined.FilterAlt
+                        } else {
+                            Icons.Default.FilterAlt
+                        },
                         contentDescription = stringResource(R.string.filter_options),
-                        tint = if (selectedAliasFilterMode == AliasFilterMode.ALL)
-                            LocalContentColor.current else MaterialTheme.colorScheme.primary
+                        tint = if (selectedAliasFilterMode == AliasFilterMode.ALL) {
+                            LocalContentColor.current
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        }
                     )
                 }
 

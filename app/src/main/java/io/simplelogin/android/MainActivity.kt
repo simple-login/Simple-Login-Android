@@ -336,7 +336,8 @@ private fun MainUi(
                         dismissActionContentColor = colors.dismissActionContentColor
                             ?: SnackbarDefaults.dismissActionContentColor,
                     )
-                })
+                }
+            )
         }
     ) { innerPadding ->
         Box(

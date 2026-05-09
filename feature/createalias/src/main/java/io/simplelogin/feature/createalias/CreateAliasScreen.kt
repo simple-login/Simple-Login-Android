@@ -140,7 +140,7 @@ fun CreateAliasScreen(
                     }
                 },
                 actions = {
-                    if (!state.isLoading && state.fetchError == null)
+                    if (!state.isLoading && state.fetchError == null) {
                         TextButton(
                             enabled = prefixValidation is PrefixValidationResult.Valid,
                             onClick = {
@@ -159,6 +159,7 @@ fun CreateAliasScreen(
                         ) {
                             Text(text = stringResource(R.string.create))
                         }
+                    }
                 }
             )
         }

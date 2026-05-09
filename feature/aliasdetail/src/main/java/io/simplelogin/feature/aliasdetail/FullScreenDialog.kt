@@ -146,7 +146,8 @@ fun FullScreenDialog(
                                 alias = alias,
                                 code = it,
                                 mailto = mailto,
-                                onChangeMode = { mailto = it })
+                                onChangeMode = { mailto = it }
+                            )
                         }
                 }
             }

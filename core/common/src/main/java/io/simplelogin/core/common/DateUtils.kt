@@ -13,10 +13,10 @@ fun Double.relativeDateTime(context: Context): String =
         DateUtils.MINUTE_IN_MILLIS,
         DateUtils.WEEK_IN_MILLIS,
         DateUtils.FORMAT_SHOW_DATE or
-                DateUtils.FORMAT_SHOW_TIME or
-                DateUtils.FORMAT_SHOW_YEAR or
-                DateUtils.FORMAT_ABBREV_RELATIVE or
-                DateUtils.FORMAT_ABBREV_MONTH
+            DateUtils.FORMAT_SHOW_TIME or
+            DateUtils.FORMAT_SHOW_YEAR or
+            DateUtils.FORMAT_ABBREV_RELATIVE or
+            DateUtils.FORMAT_ABBREV_MONTH
     ).toString()
 
 fun Double.timeAndFullDate(): String {
