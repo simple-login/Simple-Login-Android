@@ -47,15 +47,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          PRERELEASE_FLAG=""
           if [[ "${{ env.RELEASE_VERSION }}" == *"-alpha."* ]] || [[ "${{ env.RELEASE_VERSION }}" == *"-beta."* ]]; then
-            PRERELEASE_FLAG="--prerelease"
+            gh release view "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1 || \
+            gh release create "${{ env.RELEASE_VERSION }}" \
+              --title "${{ env.RELEASE_VERSION }}" \
+              --prerelease
+          else
+            gh release view "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1 || \
+            gh release create "${{ env.RELEASE_VERSION }}" \
+              --title "${{ env.RELEASE_VERSION }}" \
+              --notes "${{ steps.build_changelog.outputs.changelog }}"
           fi
-          gh release view "${{ env.RELEASE_VERSION }}" >/dev/null 2>&1 || \
-          gh release create "${{ env.RELEASE_VERSION }}" \
-            --title "${{ env.RELEASE_VERSION }}" \
-            --notes "${{ steps.build_changelog.outputs.changelog }}" \
-            $PRERELEASE_FLAG
 
       - name: Upload metadata artifact
         uses: actions/upload-artifact@v4
