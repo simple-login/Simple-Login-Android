@@ -39,6 +39,7 @@ import io.simplelogin.core.model.preferences.SwipeAction
 import io.simplelogin.core.model.ui.AliasAction
 import kotlinx.coroutines.flow.distinctUntilChanged
 
+@Suppress("CyclomaticComplexMethod", "ComplexCondition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AliasList(

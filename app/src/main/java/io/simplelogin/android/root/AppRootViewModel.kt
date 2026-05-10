@@ -149,8 +149,10 @@ class AppRootViewModel @Inject constructor(
     fun showCustomDomainDetails(domain: CustomDomain, asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                _dialogStack.value =
-                    _dialogStack.value + AppRootDialog.CustomDomainDetails(apiKey = apiKey, domain = domain)
+                _dialogStack.value += AppRootDialog.CustomDomainDetails(
+                    apiKey = apiKey,
+                    domain = domain
+                )
             } else {
                 _navBackStack.value.apply {
                     add(CustomDomainDetailsDestination(domain = domain, apiKey = apiKey.value))
@@ -162,8 +164,10 @@ class AppRootViewModel @Inject constructor(
     fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {
         withApiKey { apiKey ->
             if (asDialog) {
-                _dialogStack.value =
-                    _dialogStack.value + AppRootDialog.CustomDomainDeletedAliases(apiKey = apiKey, domain = domain)
+                _dialogStack.value += AppRootDialog.CustomDomainDeletedAliases(
+                    apiKey = apiKey,
+                    domain = domain
+                )
             } else {
                 _navBackStack.value.apply {
                     add(

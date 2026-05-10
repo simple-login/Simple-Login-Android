@@ -27,6 +27,7 @@ sealed class CreateOrEditPinMode {
     data class Confirm(val pinCode: String?) : CreateOrEditPinMode()
 }
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateOrConfirmPinDialog(

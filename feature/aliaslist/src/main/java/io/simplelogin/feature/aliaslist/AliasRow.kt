@@ -60,6 +60,7 @@ import io.simplelogin.core.ui.AliasOptionsDropdownMenu
 import kotlinx.coroutines.launch
 import io.simplelogin.core.designsystem.R as DesignSystemR
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 fun AliasRow(
     modifier: Modifier = Modifier,
@@ -184,6 +185,7 @@ fun AliasRow(
     }
 }
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 private fun AliasCellContent(
     modifier: Modifier = Modifier,

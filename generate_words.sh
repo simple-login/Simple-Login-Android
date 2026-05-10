@@ -2,8 +2,8 @@
 
 # Configuration
 URL="https://raw.githubusercontent.com/simple-login/app/master/local_data/words.txt"
-OUTPUT_FILE="models/src/main/java/io/simplelogin/android/models/preferences/WordList.kt"
-PACKAGE_NAME="io.simplelogin.android.data.models.preferences"
+OUTPUT_FILE="core/model/src/main/java/io/simplelogin/core/model/preferences/WordList.kt"
+PACKAGE_NAME="io.simplelogin.core.model.preferences"
 
 # 1. Ensure the directory exists before writing
 mkdir -p "$(dirname "$OUTPUT_FILE")"
@@ -25,7 +25,8 @@ package $PACKAGE_NAME
  * Automatically generated word list.
  * Do not modify but run generate_words.sh instead
  */
-object WordList {
+@Suppress("LargeClass")
+internal object WordList {
     val words: List<String> = listOf(
 EOF
 

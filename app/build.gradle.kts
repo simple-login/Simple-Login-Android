@@ -60,10 +60,9 @@ android {
 
 dependencies {
     implementation(projects.core.common)
-    implementation(projects.core.datastore) // TODO: Remove later on
-    implementation(projects.core.network) // TODO: Remove later on
+    implementation(projects.core.network)
     implementation(projects.core.designsystem)
-    implementation(projects.core.ui) // TODO: Remove later on
+    implementation(projects.core.ui)
     implementation(projects.feature.accountsettings)
     implementation(projects.feature.aliasactivities)
     implementation(projects.feature.aliascontacts)
@@ -91,7 +90,6 @@ dependencies {
     implementation(libs.androidx.compose.adaptive.navigation3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.browser) // TODO: Remove later on
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
@@ -106,12 +104,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.androidx.compiler)
     ksp(libs.hilt.compiler)
-
-    // Retrofit
-    // TODO: Remove later on
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.okhttp.logging.interceptor)
 
     // Nav 3
     implementation(libs.nav3.runtime)

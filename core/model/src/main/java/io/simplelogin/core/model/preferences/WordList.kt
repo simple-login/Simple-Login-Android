@@ -4,6 +4,7 @@ package io.simplelogin.core.model.preferences
  * Automatically generated word list.
  * Do not modify but run generate_words.sh instead
  */
+@Suppress("LargeClass")
 internal object WordList {
     val words: List<String> = listOf(
         "abacus",

@@ -47,6 +47,7 @@ import io.simplelogin.core.model.api.Contact
 import io.simplelogin.core.model.preferences.ContactCellSelection
 import io.simplelogin.core.model.ui.ContactUiAction
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 internal fun AliasContactRow(
     modifier: Modifier = Modifier,

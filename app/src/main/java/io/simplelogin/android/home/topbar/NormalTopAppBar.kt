@@ -34,6 +34,7 @@ import io.simplelogin.core.model.preferences.Theme
 import io.simplelogin.core.model.ui.AliasFilterMode
 import io.simplelogin.core.designsystem.R as DesignSystemR
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NormalTopAppBar(

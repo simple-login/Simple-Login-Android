@@ -122,6 +122,7 @@ class AliasListManagerImpl @AssistedInject constructor(
         return fetchMore()
     }
 
+    @Suppress("ComplexCondition")
     override suspend fun fetchMore(): Result<Unit, ApiError> {
         if (isFetching.value || isRefreshing.value || isModifying.value || !canFetchMore) {
             return Result.Success(Unit)

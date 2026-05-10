@@ -107,6 +107,7 @@ class AliasSearchManagerImpl @AssistedInject constructor(
         return fetchMore()
     }
 
+    @Suppress("ComplexCondition")
     override suspend fun fetchMore(): Result<Unit, ApiError> {
         if (query.value.isEmpty() || isFetching.value || isRefreshing.value || isModifying.value || !canFetchMore) {
             return Result.Success(Unit)

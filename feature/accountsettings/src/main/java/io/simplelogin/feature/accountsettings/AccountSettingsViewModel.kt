@@ -132,6 +132,7 @@ class AccountSettingsViewModel @AssistedInject constructor(
         updateInfo(UpdateUserInfoOption.ProfilePicture(null))
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     fun updateProfilePicture(uri: Uri?, context: Context) {
         if (uri == null) return
         viewModelScope.launch(Dispatchers.IO) {
@@ -145,6 +146,7 @@ class AccountSettingsViewModel @AssistedInject constructor(
                     updateInfo(UpdateUserInfoOption.ProfilePicture(base64))
                 }
             } catch (e: Exception) {
+                // TODO: Handle error
             }
         }
     }

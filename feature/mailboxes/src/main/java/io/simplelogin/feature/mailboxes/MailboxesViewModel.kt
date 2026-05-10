@@ -38,7 +38,7 @@ internal class MailboxesViewModel @AssistedInject constructor(
         withApiKey { apiKey ->
             datasource.getMailboxes(apiKey)
                 .fold(onSuccess = { result ->
-                    _stateFlow.update { it ->
+                    _stateFlow.update {
                         val sortedMailboxes = result.value.sortedWith(
                             compareByDescending { it.creationTimestamp }
                         )

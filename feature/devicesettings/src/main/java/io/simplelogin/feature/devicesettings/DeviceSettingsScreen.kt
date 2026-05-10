@@ -139,6 +139,7 @@ private enum class BiometricAuthenticationReason {
     SET_TO_NONE, SET_TO_PIN, ENABLE
 }
 
+@Suppress("CyclomaticComplexMethod")
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 private fun DeviceSettingsContent(

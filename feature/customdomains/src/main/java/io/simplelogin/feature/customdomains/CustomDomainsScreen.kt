@@ -189,7 +189,11 @@ private fun DomainRow(
                     text = domain.domainName,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
-                    color = if (domain.isVerified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
+                    color = if (domain.isVerified) {
+                        MaterialTheme.colorScheme.onBackground
+                    } else {
+                        MaterialTheme.colorScheme.secondary
+                    }
                 )
 
                 if (!domain.isVerified) {

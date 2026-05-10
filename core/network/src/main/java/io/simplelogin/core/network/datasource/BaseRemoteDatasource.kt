@@ -5,6 +5,7 @@ import io.simplelogin.core.model.Result
 import io.simplelogin.core.model.api.ApiError
 import retrofit2.Response
 
+@Suppress("TooGenericExceptionCaught")
 open class BaseRemoteDatasource {
     suspend fun <T> safeApiCall(call: suspend () -> Response<T>): Result<T, ApiError> {
         return try {

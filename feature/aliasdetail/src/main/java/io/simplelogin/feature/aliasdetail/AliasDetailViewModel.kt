@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 class AliasDetailViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     @Assisted private val aliasIdValue: Int,
-    @Assisted private val apiKeyValue: String,
     @LoadingState private val loadingState: LoadingStateFlow,
     private val showSnackbarInformation: ShowSnackbarInformationUseCase,
     private val showSnackbarFailure: ShowSnackbarFailureUseCase,

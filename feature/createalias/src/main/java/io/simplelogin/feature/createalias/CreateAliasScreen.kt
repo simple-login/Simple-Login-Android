@@ -74,6 +74,7 @@ import io.simplelogin.core.network.CreateAliasBody
 import io.simplelogin.core.ui.MailboxesSelectionDialog
 import java.util.UUID
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAliasScreen(

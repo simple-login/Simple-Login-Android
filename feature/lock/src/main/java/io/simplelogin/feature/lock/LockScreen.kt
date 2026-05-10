@@ -43,6 +43,7 @@ import io.simplelogin.feature.devicesettings.CreateOrEditPinMode
 import kotlinx.coroutines.launch
 import io.simplelogin.core.designsystem.R as DesignSystemR
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LockScreen(onLogOut: () -> Unit) = with(hiltViewModel<LockViewModel>()) {

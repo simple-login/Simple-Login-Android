@@ -26,6 +26,7 @@ sealed class PrefixValidationResult {
     val isInvalid: Boolean get() = this is Invalid
 }
 
+@Suppress("ReturnCount")
 fun String.validatePrefix(): PrefixValidationResult {
     if (isEmpty()) {
         return PrefixValidationResult.Invalid(InvalidPrefixReason.PREFIX_EMPTY)

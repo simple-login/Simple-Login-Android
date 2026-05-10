@@ -68,6 +68,7 @@ import io.simplelogin.core.designsystem.theme.Spacing
 import io.simplelogin.core.model.api.Mailbox
 import io.simplelogin.core.ui.EditEmailDialog
 
+@Suppress("CyclomaticComplexMethod")
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -278,7 +279,11 @@ private fun MailboxRow(
                     text = mailbox.email,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
-                    color = if (mailbox.verified) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.secondary
+                    color = if (mailbox.verified) {
+                        MaterialTheme.colorScheme.onBackground
+                    } else {
+                        MaterialTheme.colorScheme.secondary
+                    }
                 )
 
                 if (mailbox.default) {

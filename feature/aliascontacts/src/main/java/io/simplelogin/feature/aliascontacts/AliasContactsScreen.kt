@@ -69,6 +69,7 @@ import io.simplelogin.core.model.api.Alias
 import io.simplelogin.core.ui.AliasEmailText
 import io.simplelogin.core.ui.EditEmailDialog
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AliasContactsScreen(

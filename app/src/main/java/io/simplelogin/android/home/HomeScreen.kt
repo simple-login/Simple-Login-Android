@@ -155,6 +155,7 @@ fun HomeScreen(
     }
 }
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 @Composable
 private fun HomeScreenScaffold(

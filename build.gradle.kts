@@ -13,6 +13,7 @@ dependencies {
 }
 
 detekt {
+    config.setFrom(files("config/detekt.yml"))
     autoCorrect = true
     buildUponDefaultConfig = true
     allRules = false

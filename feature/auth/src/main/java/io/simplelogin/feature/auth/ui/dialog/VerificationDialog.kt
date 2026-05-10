@@ -46,6 +46,7 @@ internal sealed class VerificationMode {
         }
 }
 
+@Suppress("CyclomaticComplexMethod", "ComplexCondition")
 @Composable
 internal fun VerificationDialog(
     mode: VerificationMode,
