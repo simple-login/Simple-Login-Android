@@ -1,0 +1,17 @@
+<resources>
+    <string name="forward">Forward</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="delete">Delete</string>
+    <string name="alias_options">Alias options</string>
+    <string name="delete_alias_dialog_title">Delete alias?</string>
+    <string name="delete_alias_dialog_content">You\'re about to delete \"%s\", if you don\'t want to receive any emails from this alias, you could disable it.</string>
+    <string name="cancel">Cancel</string>
+    <string name="all_aliases">All aliases</string>
+    <string name="all_time">All time</string>
+    <string name="last_14_days">Last 14 days</string>
+    <string name="replies_send">Replies/send</string>
+    <string name="blocked">Blocked</string>
+</resources>

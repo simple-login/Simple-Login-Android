@@ -1,0 +1,28 @@
+<resources>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="email_address">Email address</string>
+    <string name="invalid_email_error">Invalid email address</string>
+    <string name="clear">Clear</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="premium_trial">Premium Trial</string>
+    <string name="premium">Premium</string>
+    <string name="view_details">View details</string>
+    <string name="view_contacts">View contacts</string>
+    <string name="copy_alias_address">Copy alias address</string>
+    <string name="enter_full_screen">Enter full screen</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="delete">Delete</string>
+    <string name="total">Total</string>
+    <string name="forward">Forward</string>
+    <string name="reply">Reply</string>
+    <string name="block">Block</string>
+    <string name="view_options">View options</string>
+    <string name="copy_reverse_alias_with_display_name">Copy reverse-alias (with display name)</string>
+    <string name="copy_reverse_alias_without_display_name">Copy reverse-alias (without display name)</string>
+    <string name="copy_email_address">Copy email address</string>
+    <string name="open_default_email_client">Open default email client</string>
+</resources>

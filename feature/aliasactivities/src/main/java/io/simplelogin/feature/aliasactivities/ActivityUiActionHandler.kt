@@ -1,0 +1,72 @@
+package io.simplelogin.feature.aliasactivities
+
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import androidx.core.net.toUri
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.simplelogin.core.common.ActivityUiActionHandler
+import io.simplelogin.core.common.usecase.CopyToClipboardUseCase
+import io.simplelogin.core.common.usecase.ShowSnackbarFailureUseCase
+import io.simplelogin.core.common.usecase.ShowSnackbarInformationUseCase
+import io.simplelogin.core.model.api.ActivityAction
+import io.simplelogin.core.model.api.AliasActivity
+import io.simplelogin.core.model.ui.ActivityUiAction
+import javax.inject.Inject
+
+class ActivityUiActionHandlerImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val showSnackbarInformation: ShowSnackbarInformationUseCase,
+    private val showSnackbarFailure: ShowSnackbarFailureUseCase,
+    private val copyToClipboard: CopyToClipboardUseCase
+) : ActivityUiActionHandler {
+    override suspend fun handleActivityAction(activity: AliasActivity, action: ActivityUiAction) {
+        when (action) {
+            ActivityUiAction.COPY_REVERSE_ALIAS_WITH_DISPLAY_NAME -> {
+                copyToClipboard(
+                    label = context.getString(R.string.alias_activity),
+                    content = activity.reverseAlias
+                )
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
+            }
+
+            ActivityUiAction.COPY_REVERSE_ALIAS_WITHOUT_DISPLAY_NAME -> {
+                copyToClipboard(
+                    label = context.getString(R.string.alias_activity),
+                    content = activity.reverseAliasAddress
+                )
+                showSnackbarInformation(context.getString(R.string.reverse_alias_copied))
+            }
+
+            ActivityUiAction.COPY_ADDRESS -> {
+                val address = when (activity.action) {
+                    ActivityAction.REPLY -> activity.to
+                    else -> activity.from
+                }
+                copyToClipboard(
+                    label = context.getString(R.string.alias_activity),
+                    content = address
+                )
+                showSnackbarInformation(context.getString(R.string.email_address_copied))
+            }
+
+            ActivityUiAction.OPEN_DEFAULT_EMAIL_CLIENT -> {
+                val address = when (activity.action) {
+                    ActivityAction.REPLY -> activity.to
+                    else -> activity.from
+                }
+
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = "mailto:$address".toUri()
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+
+                try {
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    e.message?.let { showSnackbarFailure(it) }
+                }
+            }
+        }
+    }
+}

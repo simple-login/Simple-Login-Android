@@ -1,4 +1,3 @@
-## SimpleLogin on Android
 ![License](https://img.shields.io/badge/license-Apache%202-blue.svg)
 
 SimpleLogin is an open source solution to protect your email inbox. This repository contains source code of SimpleLogin Android client.
@@ -9,29 +8,8 @@ SimpleLogin is an open source solution to protect your email inbox. This reposit
 - Play Store: [https://play.google.com/store/apps/details?id=io.simplelogin.android](https://play.google.com/store/apps/details?id=io.simplelogin.android)
 - F-Droid: [https://f-droid.org/packages/io.simplelogin.android.fdroid/](https://f-droid.org/packages/io.simplelogin.android.fdroid/)
 
-## Screenshots
-|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="180" />|
-|----|----|----|
-|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="180" />|<img src="https://raw.githubusercontent.com/simple-login/Simple-Login-Android/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="180" />|
-
-## Features
-- Manage your aliases: list, create, edit, delete, enable/disable.
-- Manage your alias contacts: list, create, delete.
-- Manage your mailbox list: create, delete, make default.
-- View alias activities.
-- Share extension which allows you to create alias on the fly while using a browser.
-- Support self-hosted: you can use this application with your own SimpleLogin instance.
-- Local authentication: biometric (TouchID or FaceID) & passcode.
-- Dark mode.
-
-## TODO
-- [ ] Manage custom domains
-- [ ] Manage directories
-- [x] Manage mailboxes
-- [x] Account settings
-
 ## License
-Copyright 2021 SimpleLogin
+Copyright 2020-2026 SimpleLogin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

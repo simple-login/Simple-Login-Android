@@ -1,0 +1,28 @@
+package io.simplelogin.feature.accountsettings
+
+import io.simplelogin.core.model.api.ApiError
+import io.simplelogin.core.model.api.UsableDomain
+import io.simplelogin.core.model.api.UserInfo
+import io.simplelogin.core.model.api.UserSettings
+
+data class AccountSettings(
+    val userInfo: UserInfo,
+    val userSettings: UserSettings,
+    val usableDomains: List<UsableDomain>
+)
+
+data class AccountSettingsState(
+    val settings: AccountSettings?,
+    val isLoading: Boolean,
+    val fetchError: ApiError?,
+    val updateError: ApiError?
+) {
+    companion object {
+        val Default = AccountSettingsState(
+            settings = null,
+            isLoading = true,
+            fetchError = null,
+            updateError = null
+        )
+    }
+}

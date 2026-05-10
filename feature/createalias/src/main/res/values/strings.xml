@@ -1,0 +1,26 @@
+<resources>
+    <string name="close">Close</string>
+    <string name="create">Create</string>
+    <string name="clear">Clear</string>
+    <string name="cancel">Cancel</string>
+    <string name="note">Note</string>
+    <string name="mailboxes">Mailboxes</string>
+    <string name="random_word">Random word</string>
+    <string name="random_characters">Random characters</string>
+    <string name="an_error_occurred">An error occurred</string>
+    <string name="you_are_about_to_create">You are about to create</string>
+    <string name="select_mailboxes">Select mailboxes</string>
+    <string name="prefix">Prefix</string>
+    <string name="random_prefix">Random prefix</string>
+    <string name="suffix">Suffix</string>
+    <string name="select_suffix">Select suffix</string>
+    <string name="your_domain">Your domain</string>
+    <string name="premium_domain">Premium domain</string>
+    <string name="public_domain">Public domain</string>
+    <string name="invalid_prefix_two_consecutive_dots">Prefix can not contain 2 consecutive dots (..)</string>
+    <string name="invalid_prefix_invalid_character">Prefix must contain only lowercase alphanumeric (a–z, 0–9), dot (.), hyphen (-) &amp; underscore (_)</string>
+    <string name="invalid_prefix_dot_at_beginning">Alias can not start with a dot (.)</string>
+    <string name="invalid_prefix_dot_at_end">Alias can not contain 2 consecutive dots (..)</string>
+    <string name="invalid_prefix_too_long">The alias prefix is too long</string>
+    <string name="invalid_prefix_empty">Prefix can not be empty</string>
+</resources>

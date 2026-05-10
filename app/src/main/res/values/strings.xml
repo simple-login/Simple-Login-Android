@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">SimpleLogin</string>
+    <string name="settings">Settings</string>
+    <string name="missing_api_key">Missing API key</string>
+    <string name="sign_in">Sign in</string>
+    <string name="simplelogin_scheme" translatable="false">auth.simplelogin</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_out_message">Are you sure you want to sign out of your account?</string>
+    <string name="cancel">Cancel</string>
+    <string name="search_all_aliases">Search all aliases</string>
+    <string name="open_menu">Open menu</string>
+    <string name="search">Search</string>
+    <string name="exit_search">Exit search</string>
+    <string name="clear_search_bar">Clear search bar</string>
+    <string name="no_search_results">No results for \"%s\"</string>
+    <string name="filter_options">Filter options</string>
+    <string name="device_settings">Device settings</string>
+    <string name="contact_us">Contact us</string>
+    <string name="alias_address_label">Alias address</string>
+    <string name="alias_address_copied">Copied \"%s\" to clipboard</string>
+    <string name="alias_is_enabled">\"%s\" is enabled</string>
+    <string name="alias_is_disabled">\"%s\" is disabled</string>
+    <string name="alias_is_pinned">\"%s\" is pinned</string>
+    <string name="alias_is_unpinned">\"%s\" is unpinned</string>
+    <string name="alias_is_deleted">\"%s\" is deleted</string>
+    <string name="note">Note</string>
+    <string name="mailboxes">Mailboxes</string>
+    <string name="create_new_alias">Create new alias</string>
+    <string name="random_alias_by_word">Random by word</string>
+    <string name="random_alias_by_uuid">Random by UUID</string>
+    <string name="custom_alias">Custom alias</string>
+    <string name="alias_created">\"%s\" is created</string>
+    <string name="alias_created_and_copied_to_clipboard">\"%s\" is created and copied to clipboard</string>
+    <string name="random_word">Random word</string>
+    <string name="random_characters">Random characters</string>
+    <string name="account_settings">Account settings</string>
+    <string name="custom_domains">Custom domains</string>
+</resources>
