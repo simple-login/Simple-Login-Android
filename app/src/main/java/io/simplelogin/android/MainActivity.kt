@@ -45,7 +45,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -72,7 +71,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.simplelogin.android.root.AppRoot
 import io.simplelogin.android.root.AppRootViewModel
-import io.simplelogin.android.root.supportsMultiplePanes
 import io.simplelogin.core.common.ProtonLinkManager
 import io.simplelogin.core.common.ProtonLoginManager
 import io.simplelogin.core.common.di.LoadingState
@@ -128,8 +126,6 @@ class MainActivity : AppCompatActivity() {
             }
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
-            val windowAdaptiveInfo = currentWindowAdaptiveInfo()
-            val asDialog = windowAdaptiveInfo.supportsMultiplePanes()
             val appRooState by appRootViewModel.stateFlow.collectAsState()
             val userInfo by viewModel.userInfoStateFlow.collectAsState()
 
@@ -155,9 +151,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             fun openAccountSettings() {
-                closeDrawerAndExecute {
-                    appRootViewModel.showAccountSettingsScreen(asDialog)
-                }
+                closeDrawerAndExecute(appRootViewModel::showAccountSettingsScreen)
             }
 
             SimpleLoginTheme(darkTheme = darkTheme, dynamicColor = devicePreferences.dynamicColor) {
@@ -173,22 +167,16 @@ class MainActivity : AppCompatActivity() {
                                     openAccountSettings()
                                 },
                                 onMailboxesClick = {
-                                    closeDrawerAndExecute {
-                                        appRootViewModel.showMailboxesScreen(asDialog)
-                                    }
+                                    closeDrawerAndExecute(appRootViewModel::showMailboxesScreen)
                                 },
                                 onCustomDomainsClick = {
-                                    closeDrawerAndExecute {
-                                        appRootViewModel.showCustomDomainsScreen(asDialog)
-                                    }
+                                    closeDrawerAndExecute(appRootViewModel::showCustomDomainsScreen)
                                 },
                                 onAccountSettingsClick = {
                                     openAccountSettings()
                                 },
                                 onDeviceSettingsClick = {
-                                    closeDrawerAndExecute {
-                                        appRootViewModel.showDeviceSettingsScreen(asDialog)
-                                    }
+                                    closeDrawerAndExecute(appRootViewModel::showDeviceSettingsScreen)
                                 },
                                 onContactUsClick = {
                                     closeDrawerAndExecute(::openContactUsPage)

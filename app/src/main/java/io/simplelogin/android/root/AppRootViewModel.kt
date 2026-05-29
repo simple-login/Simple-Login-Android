@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -46,36 +47,30 @@ class AppRootViewModel @Inject constructor(
     private val _dialogStack = MutableStateFlow<List<AppRootDialog>>(emptyList())
     val dialogStack = _dialogStack.asStateFlow()
 
-    val stateFlow: StateFlow<AppRootState> = observeSessionSettings()
-        .map {
-            AppRootState(
-                isReady = true,
-                apiKey = it.apiKey
-            )
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = AppRootState.Default
-        )
+    val stateFlow: StateFlow<AppRootState> = observeSessionSettings().map {
+        AppRootState(isReady = true, apiKey = it.apiKey)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = AppRootState.Default
+    )
 
     //region Setup
     init {
         viewModelScope.launch {
-            stateFlow
-                .collect {
-                    _navBackStack.value.apply {
-                        clear()
-                        if (!it.isReady) {
-                            add(InitializationDestination)
-                            return@collect
-                        }
-
-                        it.apiKey?.let { apiKey ->
-                            add(HomeDestination(apiKey.value))
-                        } ?: add(LogInDestination)
+            stateFlow.collect {
+                _navBackStack.value.apply {
+                    clear()
+                    if (!it.isReady) {
+                        add(InitializationDestination)
+                        return@collect
                     }
+
+                    it.apiKey?.let { apiKey ->
+                        add(HomeDestination(apiKey.value))
+                    } ?: add(LogInDestination)
                 }
+            }
         }
     }
     //endregion
@@ -100,94 +95,47 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
-    fun showDeviceSettingsScreen(asDialog: Boolean) {
-        if (asDialog) {
-            _dialogStack.value = listOf(AppRootDialog.DeviceSettings)
-        } else {
-            _navBackStack.value.apply {
-                add(DeviceSettingsDestination)
-            }
+    fun showDeviceSettingsScreen() {
+        _navBackStack.value.apply {
+            add(DeviceSettingsDestination)
         }
     }
 
-    fun showAccountSettingsScreen(asDialog: Boolean) {
-        withApiKey { apiKey ->
-            if (asDialog) {
-                _dialogStack.value = listOf(AppRootDialog.AccountSettings(apiKey))
-            } else {
-                _navBackStack.value.apply {
-                    add(AccountSettingsDestination(apiKey.value))
-                }
-            }
+    fun showAccountSettingsScreen() {
+        addToBackStackWithApiKey { apiKey ->
+            AccountSettingsDestination(apiKey.value)
         }
     }
 
-    fun showMailboxesScreen(asDialog: Boolean) {
-        withApiKey { apiKey ->
-            if (asDialog) {
-                _dialogStack.value = listOf(AppRootDialog.Mailboxes(apiKey))
-            } else {
-                _navBackStack.value.apply {
-                    add(MailboxesDestination(apiKey.value))
-                }
-            }
+    fun showMailboxesScreen() {
+        addToBackStackWithApiKey { apiKey ->
+            MailboxesDestination(apiKey.value)
         }
     }
 
-    fun showCustomDomainsScreen(asDialog: Boolean) {
-        withApiKey { apiKey ->
-            if (asDialog) {
-                _dialogStack.value = listOf(AppRootDialog.CustomDomains(apiKey))
-            } else {
-                _navBackStack.value.apply {
-                    add(CustomDomainsDestination(apiKey.value))
-                }
-            }
+    fun showCustomDomainsScreen() {
+        addToBackStackWithApiKey { apiKey ->
+            CustomDomainsDestination(apiKey.value)
         }
     }
 
-    fun showCustomDomainDetails(domain: CustomDomain, asDialog: Boolean) {
-        withApiKey { apiKey ->
-            if (asDialog) {
-                _dialogStack.value += AppRootDialog.CustomDomainDetails(
-                    apiKey = apiKey,
-                    domain = domain
-                )
-            } else {
-                _navBackStack.value.apply {
-                    add(CustomDomainDetailsDestination(domain = domain, apiKey = apiKey.value))
-                }
-            }
+    fun showCustomDomainDetails(domain: CustomDomain) {
+        addToBackStackWithApiKey { apiKey ->
+            CustomDomainDetailsDestination(domain = domain, apiKey = apiKey.value)
         }
     }
 
-    fun showCustomDomainDeletedAliases(domain: CustomDomain, asDialog: Boolean) {
-        withApiKey { apiKey ->
-            if (asDialog) {
-                _dialogStack.value += AppRootDialog.CustomDomainDeletedAliases(
-                    apiKey = apiKey,
-                    domain = domain
-                )
-            } else {
-                _navBackStack.value.apply {
-                    add(
-                        CustomDomainDeletedAliasesDestination(
-                            domain = domain,
-                            apiKey = apiKey.value
-                        )
-                    )
-                }
-            }
+    fun showCustomDomainDeletedAliases(domain: CustomDomain) {
+        addToBackStackWithApiKey { apiKey ->
+            CustomDomainDeletedAliasesDestination(domain = domain, apiKey = apiKey.value)
         }
     }
     //endregion
 
     //region Home
     fun showCreateAliasScreen() {
-        withApiKey { apiKey ->
-            _navBackStack.value.apply {
-                add(CreateAliasDestination(apiKey.value))
-            }
+        addToBackStackWithApiKey { apiKey ->
+            CreateAliasDestination(apiKey.value)
         }
     }
 
@@ -235,18 +183,24 @@ class AppRootViewModel @Inject constructor(
         }
     }
 
+    private fun addToBackStackWithApiKey(block: (ApiKey) -> NavKey) {
+        withApiKey {
+            val destination = block(it)
+            _navBackStack.value.apply {
+                add(destination)
+            }
+        }
+    }
+
     private fun withApiKey(
         scope: CoroutineScope = viewModelScope,
         block: (ApiKey) -> Unit
     ) {
         scope.launch {
-            observeSessionSettings().collect { settings ->
-                settings.apiKey?.let {
-                    block(it)
-                } ?: scope.launch {
-                    showSnackbarFailure(context.getString(R.string.missing_api_key))
-                }
-            }
+            val settings = observeSessionSettings().first()
+            settings.apiKey?.let {
+                block(it)
+            } ?: showSnackbarFailure(context.getString(R.string.missing_api_key))
         }
     }
 }

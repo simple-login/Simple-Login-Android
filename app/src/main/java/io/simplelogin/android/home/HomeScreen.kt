@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,26 +40,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.simplelogin.android.R
 import io.simplelogin.android.home.topbar.NormalTopAppBar
 import io.simplelogin.android.home.topbar.SearchTopAppBar
-import io.simplelogin.android.root.supportsMultiplePanes
 import io.simplelogin.core.designsystem.TitledFAB
 import io.simplelogin.core.designsystem.clickableRippleDisabled
 import io.simplelogin.core.designsystem.noAliasesMessage
 import io.simplelogin.core.designsystem.theme.SlColor
 import io.simplelogin.core.model.api.Alias
-import io.simplelogin.core.model.api.ApiKey
 import io.simplelogin.core.model.api.RandomMode
 import io.simplelogin.core.model.ui.AliasAction
-import io.simplelogin.core.model.ui.DialogPayload
 import io.simplelogin.core.ui.EditTextDialog
 import io.simplelogin.feature.aliasdetail.FullScreenDialog
 import io.simplelogin.feature.aliaslist.AliasList
-import io.simplelogin.feature.createalias.CreateAliasScreen
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
@@ -82,12 +75,10 @@ fun HomeScreen(
     }
 
     var isSearching by rememberSaveable { mutableStateOf(false) }
-    var createAliasDialogPayload by rememberSaveable { mutableStateOf<DialogPayload?>(null) }
     var fullScreenAlias by rememberSaveable { mutableStateOf<Alias?>(null) }
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     var fabExpanded by rememberSaveable { mutableStateOf(false) }
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
 
     LaunchedEffect(Unit) {
         createdAliasFlow.collect { alias ->
@@ -121,13 +112,7 @@ fun HomeScreen(
             onViewDetails = onViewDetails,
             onViewContacts = onViewContacts,
             onEnterFullScreen = { fullScreenAlias = it },
-            onCustomAliasClick = {
-                if (windowAdaptiveInfo.supportsMultiplePanes()) {
-                    createAliasDialogPayload = DialogPayload(ApiKey(viewModel.apiKeyValue))
-                } else {
-                    onCreateAlias()
-                }
-            }
+            onCustomAliasClick = onCreateAlias
         )
     }
 
@@ -136,22 +121,6 @@ fun HomeScreen(
             alias = it,
             onDismiss = { fullScreenAlias = null }
         )
-    }
-
-    createAliasDialogPayload?.let { payload ->
-        Dialog(
-            onDismissRequest = { createAliasDialogPayload = null },
-            properties = DialogProperties(usePlatformDefaultWidth = windowAdaptiveInfo.supportsMultiplePanes())
-        ) {
-            CreateAliasScreen(
-                apiKeyValue = payload.apiKey.value,
-                onAliasCreated = {
-                    createAliasDialogPayload = null
-                    viewModel.handleCreatedAlias(it)
-                },
-                onDismiss = { createAliasDialogPayload = null }
-            )
-        }
     }
 }
 

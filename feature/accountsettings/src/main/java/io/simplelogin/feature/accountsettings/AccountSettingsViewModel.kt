@@ -87,8 +87,8 @@ class AccountSettingsViewModel @AssistedInject constructor(
     ) {
         when {
             userInfoResult is Result.Success &&
-                userSettingsResult is Result.Success &&
-                usableDomainsResult is Result.Success -> {
+                    userSettingsResult is Result.Success &&
+                    usableDomainsResult is Result.Success -> {
                 val sortedUsableDomains = usableDomainsResult.value.sortedWith(
                     compareByDescending { it.isCustom }
                 )
