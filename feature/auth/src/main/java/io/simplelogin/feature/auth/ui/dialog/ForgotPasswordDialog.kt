@@ -1,6 +1,7 @@
 package io.simplelogin.feature.auth.ui.dialog
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -37,7 +38,9 @@ internal fun ForgotPasswordDialog(
             Column {
                 Text(stringResource(R.string.forgot_password_instruction))
                 EmailTextField(
-                    modifier = Modifier.focusRequester(focusRequester),
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .fillMaxWidth(),
                     value = emailAddress,
                     onValueChange = { emailAddress = it }
                 )
