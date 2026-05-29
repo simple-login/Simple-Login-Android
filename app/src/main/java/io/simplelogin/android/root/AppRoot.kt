@@ -9,20 +9,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirective
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
 import io.simplelogin.android.R
@@ -94,8 +95,7 @@ fun AppRoot(
     onOpenDrawer: () -> Unit
 ) = with(viewModel) {
     val backStack by navBackStack.collectAsState()
-    val dialogStack by dialogStack.collectAsState()
-    val activeDialog = dialogStack.lastOrNull()
+    val showLogOutDialog by showLogOutDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -104,19 +104,22 @@ fun AppRoot(
     } else {
         screenWidth * 0.5f
     }
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
+    val windowAdaptiveInfo = currentWindowAdaptiveInfoV2()
+    val numberOfPanes = if (windowAdaptiveInfo.supportsMultiplePanes()) 2 else 1
     val listDetailSceneStrategy = rememberListDetailSceneStrategy<NavKey>(
         directive = calculatePaneScaffoldDirective(windowAdaptiveInfo).copy(
             defaultPanePreferredWidth = listPaneWidth,
-            maxHorizontalPartitions = if (windowAdaptiveInfo.supportsMultiplePanes()) 2 else 1,
+            maxHorizontalPartitions = numberOfPanes,
             horizontalPartitionSpacerSize = 0.dp
         )
     )
+    val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
+    val dialogMetadata = if (numberOfPanes > 1) DialogSceneStrategy.dialog() else emptyMap()
 
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        sceneStrategies = listOf(listDetailSceneStrategy),
+        sceneStrategies = listOf(listDetailSceneStrategy, dialogStrategy),
         entryProvider = entryProvider {
             entry<InitializationDestination> {}
 
@@ -139,7 +142,7 @@ fun AppRoot(
                 )
             }
 
-            entry<CreateAliasDestination> { key ->
+            entry<CreateAliasDestination>(metadata = dialogMetadata) { key ->
                 CreateAliasScreen(
                     apiKeyValue = key.apiKey,
                     onAliasCreated = viewModel::handleCreatedAlias,
@@ -182,52 +185,46 @@ fun AppRoot(
                 )
             }
 
-            entry<DeviceSettingsDestination> {
+            entry<DeviceSettingsDestination>(metadata = dialogMetadata) {
                 DeviceSettingsScreen(onDismiss = viewModel::goBack)
             }
 
-            entry<AccountSettingsDestination> { key ->
+            entry<AccountSettingsDestination>(metadata = dialogMetadata) { key ->
                 AccountSettingsScreen(
                     apiKeyValue = key.apiKey,
                     onDismiss = viewModel::goBack
                 )
             }
 
-            entry<MailboxesDestination> { key ->
+            entry<MailboxesDestination>(metadata = dialogMetadata) { key ->
                 MailboxesScreen(
                     apiKeyValue = key.apiKey,
                     onDismiss = viewModel::goBack
                 )
             }
 
-            entry<CustomDomainsDestination> { key ->
+            entry<CustomDomainsDestination>(metadata = dialogMetadata) { key ->
                 CustomDomainsScreen(
                     apiKeyValue = key.apiKey,
                     onViewDetails = {
-                        viewModel.showCustomDomainDetails(
-                            domain = it,
-                            asDialog = false
-                        )
+                        viewModel.showCustomDomainDetails(domain = it)
                     },
                     onDismiss = viewModel::goBack
                 )
             }
 
-            entry<CustomDomainDetailsDestination> { key ->
+            entry<CustomDomainDetailsDestination>(metadata = dialogMetadata) { key ->
                 CustomDomainDetailsScreen(
                     domain = key.domain,
                     apiKeyValue = key.apiKey,
                     onDismiss = viewModel::goBack,
                     onViewDeletedAliases = {
-                        viewModel.showCustomDomainDeletedAliases(
-                            domain = key.domain,
-                            asDialog = false
-                        )
+                        viewModel.showCustomDomainDeletedAliases(domain = key.domain)
                     }
                 )
             }
 
-            entry<CustomDomainDeletedAliasesDestination> { key ->
+            entry<CustomDomainDeletedAliasesDestination>(metadata = dialogMetadata) { key ->
                 CustomDomainDeletedAliasesScreen(
                     domain = key.domain,
                     apiKeyValue = key.apiKey,
@@ -237,8 +234,8 @@ fun AppRoot(
         }
     )
 
-    when (activeDialog) {
-        AppRootDialog.LogOut -> AlertDialog(
+    if (showLogOutDialog) {
+        AlertDialog(
             onDismissRequest = ::dismissActiveDialog,
             title = { Text(stringResource(R.string.sign_out)) },
             text = { Text(stringResource(R.string.sign_out_message)) },
@@ -253,58 +250,8 @@ fun AppRoot(
                 }
             }
         )
-
-        AppRootDialog.DeviceSettings -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            DeviceSettingsScreen(onDismiss = ::dismissActiveDialog)
-        }
-
-        is AppRootDialog.AccountSettings -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            AccountSettingsScreen(
-                apiKeyValue = activeDialog.apiKey.value,
-                onDismiss = ::dismissActiveDialog
-            )
-        }
-
-        is AppRootDialog.Mailboxes -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            MailboxesScreen(
-                apiKeyValue = activeDialog.apiKey.value,
-                onDismiss = ::dismissActiveDialog
-            )
-        }
-
-        is AppRootDialog.CustomDomains -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            CustomDomainsScreen(
-                apiKeyValue = activeDialog.apiKey.value,
-                onViewDetails = { showCustomDomainDetails(domain = it, asDialog = true) },
-                onDismiss = ::dismissActiveDialog
-            )
-        }
-
-        is AppRootDialog.CustomDomainDetails -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            CustomDomainDetailsScreen(
-                domain = activeDialog.domain,
-                apiKeyValue = activeDialog.apiKey.value,
-                onDismiss = ::dismissActiveDialog,
-                onViewDeletedAliases = {
-                    viewModel.showCustomDomainDeletedAliases(
-                        domain = activeDialog.domain,
-                        asDialog = true
-                    )
-                }
-            )
-        }
-
-        is AppRootDialog.CustomDomainDeletedAliases -> Dialog(onDismissRequest = ::dismissActiveDialog) {
-            CustomDomainDeletedAliasesScreen(
-                domain = activeDialog.domain,
-                apiKeyValue = activeDialog.apiKey.value,
-                onDismiss = ::dismissActiveDialog
-            )
-        }
-
-        null -> Unit
     }
 }
 
-fun WindowAdaptiveInfo.supportsMultiplePanes(): Boolean =
+private fun WindowAdaptiveInfo.supportsMultiplePanes(): Boolean =
     windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)

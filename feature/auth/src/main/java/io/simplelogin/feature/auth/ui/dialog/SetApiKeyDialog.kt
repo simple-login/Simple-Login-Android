@@ -2,6 +2,7 @@ package io.simplelogin.feature.auth.ui.dialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,7 +47,9 @@ internal fun SetApiKeyDialog(
                         focusRequester.requestFocus()
                     }
                     TextField(
-                        modifier = Modifier.focusRequester(focusRequester),
+                        modifier = Modifier
+                            .focusRequester(focusRequester)
+                            .fillMaxWidth(),
                         value = apiKey,
                         placeholder = { Text(stringResource(R.string.api_key)) },
                         onValueChange = { apiKey = it }
