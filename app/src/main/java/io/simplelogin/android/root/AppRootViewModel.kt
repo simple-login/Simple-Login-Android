@@ -44,8 +44,8 @@ class AppRootViewModel @Inject constructor(
     private val _createdAlias = Channel<Alias>(Channel.BUFFERED)
     val createdAlias = _createdAlias.receiveAsFlow()
 
-    private val _dialogStack = MutableStateFlow<List<AppRootDialog>>(emptyList())
-    val dialogStack = _dialogStack.asStateFlow()
+    private val _showLogOutDialog = MutableStateFlow(false)
+    val showLogOutDialog = _showLogOutDialog
 
     val stateFlow: StateFlow<AppRootState> = observeSessionSettings().map {
         AppRootState(isReady = true, apiKey = it.apiKey)
@@ -81,15 +81,15 @@ class AppRootViewModel @Inject constructor(
 
     //region Drawer
     fun showLogOutDialog() {
-        _dialogStack.value = listOf(AppRootDialog.LogOut)
+        _showLogOutDialog.value = true
     }
 
     fun dismissActiveDialog() {
-        _dialogStack.value = _dialogStack.value.dropLast(1)
+        _showLogOutDialog.value = false
     }
 
     fun logOut() {
-        _dialogStack.value = emptyList()
+        _showLogOutDialog.value = false
         viewModelScope.launch {
             logOutUseCase()
         }

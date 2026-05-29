@@ -95,8 +95,7 @@ fun AppRoot(
     onOpenDrawer: () -> Unit
 ) = with(viewModel) {
     val backStack by navBackStack.collectAsState()
-    val dialogStack by dialogStack.collectAsState()
-    val activeDialog = dialogStack.lastOrNull()
+    val showLogOutDialog by showLogOutDialog.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -235,8 +234,8 @@ fun AppRoot(
         }
     )
 
-    when (activeDialog) {
-        AppRootDialog.LogOut -> AlertDialog(
+    if (showLogOutDialog) {
+        AlertDialog(
             onDismissRequest = ::dismissActiveDialog,
             title = { Text(stringResource(R.string.sign_out)) },
             text = { Text(stringResource(R.string.sign_out_message)) },
@@ -251,8 +250,6 @@ fun AppRoot(
                 }
             }
         )
-
-        null -> Unit
     }
 }
 
