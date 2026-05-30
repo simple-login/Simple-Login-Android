@@ -319,8 +319,11 @@ private fun LazyListScope.accountSettingsScreenContent(
             }
         )
 
-        userInfo.trialEndTimestamp?.let {
-            SettingsFooter(text = stringResource(R.string.trial_end_date, it.timeAndFullDate()))
+        val trialEndTimestamp = userInfo.trialEndTimestamp
+        if (userInfo.inTrial && trialEndTimestamp != null) {
+            SettingsFooter(
+                text = stringResource(R.string.trial_end_date, trialEndTimestamp.timeAndFullDate())
+            )
             SettingsFooter(text = stringResource(R.string.trial_description))
         }
 

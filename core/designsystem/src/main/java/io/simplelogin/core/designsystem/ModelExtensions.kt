@@ -38,7 +38,6 @@ import io.simplelogin.core.model.preferences.DefaultPrefix.RANDOM_CHARACTERS
 import io.simplelogin.core.model.preferences.DefaultPrefix.RANDOM_WORD
 import io.simplelogin.core.model.preferences.DeviceLockType
 import io.simplelogin.core.model.preferences.DeviceLockType.BIOMETRIC
-import io.simplelogin.core.model.preferences.DeviceLockType.NONE
 import io.simplelogin.core.model.preferences.DeviceLockType.PIN
 import io.simplelogin.core.model.preferences.LockTimeOut
 import io.simplelogin.core.model.preferences.LockTimeOut.FIVE_MINUTES
@@ -105,6 +104,7 @@ fun AliasOptionsDisplay.title(context: Context) = when (this) {
 }
 
 fun SwipeAction.title(context: Context) = when (this) {
+    SwipeAction.NONE -> context.getString(R.string.none)
     DISABLE_ENABLE -> context.getString(R.string.disable_enable)
     PIN_UNPIN -> context.getString(R.string.pin_unpin)
     DELETE -> context.getString(R.string.delete)
@@ -144,7 +144,7 @@ fun ContactCellSelection.title(context: Context) = when (this) {
 }
 
 fun DeviceLockType.title(context: Context) = when (this) {
-    NONE -> context.getString(R.string.none)
+    DeviceLockType.NONE -> context.getString(R.string.none)
     BIOMETRIC -> context.getString(R.string.biometric)
     PIN -> context.getString(R.string.pin_code)
 }

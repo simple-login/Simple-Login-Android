@@ -41,7 +41,7 @@ enum class AliasOptionsDisplay {
 }
 
 enum class SwipeAction {
-    DISABLE_ENABLE, PIN_UNPIN, DELETE
+    NONE, DISABLE_ENABLE, PIN_UNPIN, DELETE
 }
 
 enum class AliasDisplayInfo {
