@@ -86,6 +86,8 @@ fun AliasRow(
             }
 
             when (action) {
+                SwipeAction.NONE -> dismissState.reset()
+
                 SwipeAction.DISABLE_ENABLE -> {
                     if (alias.enabled) {
                         onAction?.invoke(AliasAction.Disable(alias))
@@ -116,6 +118,8 @@ fun AliasRow(
     SwipeToDismissBox(
         modifier = modifier,
         state = dismissState,
+        enableDismissFromStartToEnd = swipeFromStartToEndAction != SwipeAction.NONE,
+        enableDismissFromEndToStart = swipeFromEndToStartAction != SwipeAction.NONE,
         backgroundContent = {
             val direction = dismissState.dismissDirection
             val isSwiping = dismissState.progress > 0.01f
@@ -317,6 +321,7 @@ private fun AliasCellContent(
 @Composable
 private fun SwipeAction.color(alias: Alias): Color =
     when (this) {
+        SwipeAction.NONE -> Color.Transparent
         SwipeAction.PIN_UNPIN -> if (alias.pinned) SlColor.Amber else MaterialTheme.colorScheme.primary
         SwipeAction.DISABLE_ENABLE -> if (alias.enabled) Color.Gray else SlColor.Green
         SwipeAction.DELETE -> Color.Red
@@ -325,6 +330,8 @@ private fun SwipeAction.color(alias: Alias): Color =
 @Composable
 private fun SwipeAction.Label(alias: Alias) {
     when (this) {
+        SwipeAction.NONE -> {}
+
         SwipeAction.DISABLE_ENABLE ->
             if (alias.enabled) {
                 SwipeActionLabel(

@@ -68,7 +68,7 @@ class DeviceSettingsViewModel @Inject constructor(
             updateDeviceSettings.invoke {
                 it.copy(swipeFromLeftToRightAction = action)
             }
-            if (action == currentSettings.swipeFromRightToLeftAction) {
+            if (action != SwipeAction.NONE && action == currentSettings.swipeFromRightToLeftAction) {
                 updateDeviceSettings.invoke {
                     it.copy(swipeFromRightToLeftAction = oldSwipeFromLeftToRight)
                 }
@@ -82,7 +82,7 @@ class DeviceSettingsViewModel @Inject constructor(
             updateDeviceSettings.invoke {
                 it.copy(swipeFromRightToLeftAction = action)
             }
-            if (action == currentSettings.swipeFromLeftToRightAction) {
+            if (action != SwipeAction.NONE && action == currentSettings.swipeFromLeftToRightAction) {
                 updateDeviceSettings.invoke {
                     it.copy(swipeFromLeftToRightAction = oldSwipeFromRightToLeft)
                 }
